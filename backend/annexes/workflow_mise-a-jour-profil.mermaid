@@ -1,0 +1,71 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% ═══════════════════════════════════════════════
+    %% Mise à jour du profil utilisateur
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur modifie un ou plusieurs champs de son profil :<br/>BirthDate?, Gender?, Height?, ActivityLevel?,<br/>Allergies?, DietaryPreferences?
+
+    Device->>API: PUT /users/me/profile<br/>Authorization: Bearer access_token<br/>{ BirthDate?, Gender?, Height?, ActivityLevel?,<br/>  Allergies?, DietaryPreferences? }
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        alt Profil introuvable
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found
+        else Profil trouvé
+            DB-->>API: User { UserId, ... }
+
+            alt Données invalides (valeur hors plage, enum inconnu)
+                API-->>Device: 400 Bad Request — détail des erreurs
+            else Données valides
+                API->>DB: UPDATE User SET<br/>BirthDate = ?, Gender = ?, Height = ?,<br/>ActivityLevel = ?, Allergies = ?,<br/>DietaryPreferences = ?<br/>WHERE Id = UserId
+                DB-->>API: Succès
+                API-->>Device: 200 OK — profil mis à jour
+                Note over Device: Seuls les champs fournis sont mis à jour
+            end
+        end
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% Retirer un aliment de la liste personnelle
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur retire un aliment de sa liste personnelle
+
+    Device->>API: DELETE /users/me/saved-food-items/{id}<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        DB-->>API: User { UserId }
+
+        API->>DB: SELECT SavedFoodItem WHERE Id = ? AND UserId = ?
+        alt Introuvable ou n'appartient pas à l'utilisateur
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found
+        else Trouvé
+            DB-->>API: SavedFoodItem trouvé
+            API->>DB: DELETE SavedFoodItem WHERE Id = ?
+            DB-->>API: Succès
+            API-->>Device: 204 No Content
+        end
+    end

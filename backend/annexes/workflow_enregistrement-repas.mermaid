@@ -1,0 +1,97 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% ═══════════════════════════════════════════════════════════
+    %% CAS 1 — Enregistrement depuis un repas sauvegardé (template)
+    %% ═══════════════════════════════════════════════════════════
+
+    Note over Device: L'utilisateur consulte sa liste de repas sauvegardés
+
+    Device->>API: GET /meals?saved=true<br/>Authorization: Bearer access_token
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+    API->>DB: SELECT Meal WHERE UserId = ? AND IsSaved = true
+    DB-->>API: Liste des repas sauvegardés (avec leurs MealItems)
+    API-->>Device: 200 OK — liste des repas sauvegardés
+
+    Note over Device: L'utilisateur sélectionne un repas sauvegardé<br/>Le système pré-remplit les aliments avec les quantités par défaut<br/>L'utilisateur ajuste les quantités si besoin puis valide
+
+    Device->>API: POST /meals<br/>Authorization: Bearer access_token<br/>{ Name, MealType, ConsumedAt, IsSaved = false,<br/>  Items: [{ FoodItemId, Quantity }, ...] }
+
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+    API->>DB: SELECT User WHERE KeycloakId = ?
+    DB-->>API: User { UserId }
+
+    alt Aucun MealItem fourni
+        API-->>Device: 400 Bad Request — un repas doit contenir au moins un aliment
+    else Au moins un MealItem
+        alt Quantité invalide (≤ 0) sur un MealItem
+            API-->>Device: 400 Bad Request — la quantité doit être supérieure à 0
+        else Quantités valides
+
+            loop Pour chaque MealItem
+                API->>DB: SELECT FoodItem WHERE Id = FoodItemId
+                DB-->>API: FoodItem { CaloriesPer100g, ProteinsPer100g, CarbsPer100g, FatsPer100g }
+                Note over API: Calcul NutritionInfo (snapshot) :<br/>Calories = CaloriesPer100g × (Quantity / 100)<br/>Proteins = ProteinsPer100g × (Quantity / 100)<br/>Carbs = CarbsPer100g × (Quantity / 100)<br/>Fats = FatsPer100g × (Quantity / 100)
+            end
+
+            API->>DB: INSERT Meal { UserId, Name, MealType, ConsumedAt, IsSaved = false, Notes }
+            API->>DB: INSERT MealItem × N { MealId, FoodItemId, Quantity, NutritionInfo }
+            DB-->>API: Succès
+            API-->>Device: 201 Created — { MealId, repas complet avec valeurs nutritionnelles }
+        end
+    end
+
+    %% ═══════════════════════════════════════════════════════════
+    %% CAS 2 — Création d'un nouveau repas from scratch
+    %% ═══════════════════════════════════════════════════════════
+
+    Note over Device: L'utilisateur crée un nouveau repas<br/>Il ajoute des aliments depuis sa liste personnelle (SavedFoodItem)<br/>ou via une recherche (voir workflow_recherche-aliment)<br/>Il saisit les quantités et choisit de sauvegarder ou non
+
+    Device->>API: POST /meals<br/>Authorization: Bearer access_token<br/>{ Name, MealType, ConsumedAt, IsSaved, Notes?,<br/>  Items: [{ FoodItemId, Quantity }, ...] }
+
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+    API->>DB: SELECT User WHERE KeycloakId = ?
+    DB-->>API: User { UserId }
+
+    alt Aucun MealItem fourni
+        API-->>Device: 400 Bad Request — un repas doit contenir au moins un aliment
+    else Au moins un MealItem
+        alt Quantité invalide (≤ 0) sur un MealItem
+            API-->>Device: 400 Bad Request — la quantité doit être supérieure à 0
+        else Quantités valides
+
+            loop Pour chaque MealItem
+                API->>DB: SELECT FoodItem WHERE Id = FoodItemId
+                DB-->>API: FoodItem { CaloriesPer100g, ProteinsPer100g, CarbsPer100g, FatsPer100g }
+                Note over API: Calcul NutritionInfo (snapshot) :<br/>Calories = CaloriesPer100g × (Quantity / 100)<br/>Proteins = ProteinsPer100g × (Quantity / 100)<br/>Carbs = CarbsPer100g × (Quantity / 100)<br/>Fats = FatsPer100g × (Quantity / 100)
+            end
+
+            %% Vérification limite tier si sauvegarde demandée
+            alt IsSaved = true
+                API->>DB: SELECT COUNT(*) FROM Meal WHERE UserId = ? AND IsSaved = true
+                DB-->>API: count
+                alt Limite atteinte (Free ≥ 5 / Pro ≥ 50 / Business : aucune)
+                    API-->>Device: 403 Forbidden — limite de repas sauvegardés atteinte pour votre abonnement
+                else Limite non atteinte
+                    API->>DB: INSERT Meal { UserId, Name, MealType, ConsumedAt, IsSaved = true, Notes }
+                    API->>DB: INSERT MealItem × N { MealId, FoodItemId, Quantity, NutritionInfo }
+                    DB-->>API: Succès
+                    API-->>Device: 201 Created — { MealId, repas sauvegardé dans la liste personnelle }
+                end
+            else IsSaved = false
+                API->>DB: INSERT Meal { UserId, Name, MealType, ConsumedAt, IsSaved = false, Notes }
+                API->>DB: INSERT MealItem × N { MealId, FoodItemId, Quantity, NutritionInfo }
+                DB-->>API: Succès
+                API-->>Device: 201 Created — { MealId, repas enregistré pour la journée }
+            end
+        end
+    end

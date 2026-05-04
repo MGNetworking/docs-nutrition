@@ -1,0 +1,47 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition : utilisateur authentifié (workflow d'authentification terminé)
+    Note over Device: Précondition — access_token valide obtenu via Keycloak
+
+    %% 1. Utilisateur remplit le formulaire de profil
+    Note over Device: Formulaire obligatoire :<br/>BirthDate, Gender, Height, Weight,<br/>ActivityLevel, Allergies*, DietaryPreferences*<br/>(*choix explicite ou "Aucune contre-indication")
+
+    %% 2. Device soumet le formulaire
+    Device->>API: POST /users/profile<br/>Authorization: Bearer access_token<br/>{ BirthDate, Gender, Height, Weight, ActivityLevel, Allergies, DietaryPreferences }
+
+    %% 3. API valide le token
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        %% 4. API vérifie si un profil existe déjà
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        alt Profil déjà existant
+            DB-->>API: User trouvé
+            API-->>Device: 409 Conflict — profil déjà créé
+        else Profil inexistant
+            DB-->>API: Aucun résultat
+
+            %% 5. API valide les données métier
+            alt Données invalides (champ manquant, valeur hors plage)
+                API-->>Device: 400 Bad Request — détail des erreurs de validation
+            else Données valides
+
+                %% 6. API crée le User et la première WeightEntry
+                API->>DB: INSERT User { KeycloakId, BirthDate, Gender, Height,<br/>ActivityLevel, Allergies, DietaryPreferences, CreatedAt }
+                API->>DB: INSERT WeightEntry { UserId, Weight, MeasuredAt = aujourd'hui }
+                DB-->>API: Succès
+
+                %% 7. API retourne le profil créé
+                API-->>Device: 201 Created — { UserId, profil complet }
+                Note over Device: Profil créé — redirection vers le dashboard utilisateur
+            end
+        end
+    end

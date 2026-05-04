@@ -1,0 +1,39 @@
+{
+  "backend": {
+    "last_import": "2026-05-04",
+    "max_epic_ref": 5,
+    "max_story_ref": 38,
+    "max_sub_ref": 171,
+    "epics": [
+      {
+        "ref": "EPIC-001",
+        "jira_id": "NM-1",
+        "name": "Domain Layer"
+      },
+      {
+        "ref": "EPIC-002",
+        "jira_id": "NM-2",
+        "name": "Application Layer"
+      },
+      {
+        "ref": "EPIC-003",
+        "jira_id": "NM-3",
+        "name": "Infrastructure Layer"
+      },
+      {
+        "ref": "EPIC-004",
+        "jira_id": "NM-4",
+        "name": "API Layer"
+      },
+      {
+        "ref": "EPIC-005",
+        "jira_id": "NM-5",
+        "name": "Tests"
+      }
+    ]
+  },
+  "frontend": null,
+  "sdk": null,
+  "devops": null,
+  "features": []
+}

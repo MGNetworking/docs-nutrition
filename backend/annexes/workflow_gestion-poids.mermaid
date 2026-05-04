@@ -1,0 +1,69 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 1 — Ajouter une entrée de poids
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur saisit son poids<br/>MeasuredAt = aujourd'hui par défaut (modifiable)
+
+    Device->>API: POST /users/me/weight-entries<br/>Authorization: Bearer access_token<br/>{ Weight, MeasuredAt }
+
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+
+    API->>DB: SELECT User WHERE KeycloakId = ?
+    DB-->>API: User { UserId }
+
+    alt Données invalides (Weight ≤ 0)
+        API-->>Device: 400 Bad Request
+    else Données valides
+        API->>DB: SELECT WeightEntry WHERE UserId = ? AND MeasuredAt = ?
+        alt Entrée existante pour cette date
+            DB-->>API: WeightEntry trouvé
+            API-->>Device: 409 Conflict — une pesée existe déjà pour cette date.<br/>Utilisez la mise à jour pour la modifier.
+        else Aucune entrée pour cette date
+            DB-->>API: Aucun résultat
+            API->>DB: INSERT WeightEntry { UserId, Weight, MeasuredAt }
+            DB-->>API: Succès
+            API-->>Device: 201 Created — { WeightEntryId, Weight, MeasuredAt }
+        end
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 2 — Modifier une entrée de poids
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur modifie une pesée existante
+
+    Device->>API: PUT /users/me/weight-entries/{id}<br/>Authorization: Bearer access_token<br/>{ Weight?, MeasuredAt? }
+
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+
+    API->>DB: SELECT User WHERE KeycloakId = ?
+    DB-->>API: User { UserId }
+
+    API->>DB: SELECT WeightEntry WHERE Id = ? AND UserId = ?
+    alt Introuvable ou n'appartient pas à l'utilisateur
+        DB-->>API: Aucun résultat
+        API-->>Device: 404 Not Found
+    else Trouvé
+        DB-->>API: WeightEntry existant
+
+        alt Nouvelle MeasuredAt déjà prise par une autre entrée
+            API->>DB: SELECT WeightEntry WHERE UserId = ? AND MeasuredAt = ? AND Id ≠ ?
+            DB-->>API: Conflit trouvé
+            API-->>Device: 409 Conflict — une pesée existe déjà pour cette date
+        else Pas de conflit
+            API->>DB: UPDATE WeightEntry SET Weight = ?, MeasuredAt = ?<br/>WHERE Id = ?
+            DB-->>API: Succès
+            API-->>Device: 200 OK — { WeightEntryId, Weight, MeasuredAt }
+        end
+    end
