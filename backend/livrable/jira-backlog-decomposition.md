@@ -5,6 +5,8 @@
 > Story Points : estimation en sprint planning avec l'équipe
 > **Commande d'import : voir bas de page**
 
+> **NB — Périmètre d'implémentation :** Ce projet est réalisé à des fins de portfolio. Seuls les items **sans** le label `hors-scope` sont implémentés. Les items tagués `hors-scope` (abonnements, templates partagés, SubscriptionGuard, admin back-office) sont spécifiés et versionnés dans Jira mais **exclus du code livré**. Ce périmètre est suffisant pour démontrer l'architecture DDD 4 couches, EF Core, Keycloak et les patterns applicatifs.
+
 ---
 
 ## Definition of Done — s'applique à toutes les Stories
