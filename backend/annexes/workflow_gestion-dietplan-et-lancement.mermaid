@@ -1,0 +1,130 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition : utilisateur authentifié + profil créé
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 1 — Création d'un DietPlan personnel
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur remplit le formulaire de plan :<br/>Name, DietType, Goal, TargetWeight, MacroDistribution
+
+    Device->>API: POST /diet-plans<br/>Authorization: Bearer access_token<br/>{ Name, DietType, Goal, TargetWeight, MacroDistribution }
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        alt Profil introuvable
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found — profil utilisateur non créé
+        else Profil trouvé
+            DB-->>API: User { UserId, SubscriptionTier }
+
+            %% Vérification limite tier
+            API->>DB: SELECT COUNT(*) FROM DietPlan WHERE UserId = ? AND IsTemplate = false
+            DB-->>API: count
+            alt Limite atteinte (Free ≥ 2 / Pro ≥ 20 / Business : aucune)
+                API-->>Device: 403 Forbidden — limite de plans personnels atteinte pour votre abonnement
+            else Limite non atteinte
+                alt Données invalides (champ manquant, MacroDistribution ≠ 100%)
+                    API-->>Device: 400 Bad Request — détail des erreurs de validation
+                else Données valides
+                    API->>DB: INSERT DietPlan { UserId, Name, DietType, Goal,<br/>TargetWeight, MacroDistribution, IsTemplate = false }
+                    DB-->>API: Succès
+                    API-->>Device: 201 Created — { DietPlanId, plan complet }
+                    Note over Device: Plan ajouté à la liste des DietPlans de l'utilisateur
+                end
+            end
+        end
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 3 — Consultation des templates partagés
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur consulte les templates partagés (Pro/Business uniquement)
+
+    Device->>API: GET /diet-plans/templates<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        DB-->>API: User { UserId, SubscriptionTier }
+
+        alt SubscriptionTier = Free
+            API-->>Device: 403 Forbidden — les templates sont disponibles à partir de l'abonnement Pro
+        else Pro ou Business
+            API->>DB: SELECT DietPlan WHERE IsTemplate = true
+            DB-->>API: Liste des templates { Id, Name, DietType, Goal, TargetWeight, MacroDistribution }
+            API-->>Device: 200 OK — liste des templates partagés
+        end
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 2 — Lancement d'un DietPlan → Diet active
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur sélectionne un DietPlan et clique "Lancer"
+
+    Device->>API: POST /diet-plans/{dietPlanId}/launch<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        DB-->>API: User { UserId }
+
+        API->>DB: SELECT DietPlan WHERE Id = dietPlanId AND UserId = ?
+        alt DietPlan introuvable ou n'appartient pas à l'utilisateur
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found
+        else DietPlan trouvé
+            DB-->>API: DietPlan { Name, DietType, Goal, TargetWeight, MacroDistribution }
+
+            %% Vérification Diet active
+            API->>DB: SELECT Diet WHERE UserId = ? AND DietStatus = Active
+            alt Diet active existante
+                DB-->>API: Diet active trouvée
+                API-->>Device: 409 Conflict — "Un régime est déjà actif.<br/>Veuillez le terminer avant d'en lancer un nouveau."
+            else Aucune Diet active
+                DB-->>API: Aucun résultat
+
+                %% Récupération du dernier WeightEntry
+                API->>DB: SELECT WeightEntry WHERE UserId = ?<br/>ORDER BY MeasuredAt DESC LIMIT 1
+                alt Aucune entrée de poids
+                    DB-->>API: Aucun résultat
+                    API-->>Device: 422 Unprocessable Entity — "Aucune mesure de poids enregistrée.<br/>Veuillez d'abord renseigner votre poids."
+                else WeightEntry trouvé
+                    DB-->>API: WeightEntry { Weight, MeasuredAt }
+
+                    %% Calcul CalorieTarget
+                    Note over API: Calcul BMR (Mifflin-St Jeor) :<br/>BMR = f(Weight, Height, BirthDate, Gender)<br/>TDEE = BMR × ActivityLevel<br/>CalorieTarget = TDEE ± ajustement selon Goal
+
+                    %% Création de la Diet (snapshot)
+                    API->>DB: INSERT Diet {<br/>  UserId,<br/>  Name (copié),<br/>  DietType (copié),<br/>  Goal (copié),<br/>  TargetWeight (copié),<br/>  MacroDistribution (copié),<br/>  CalorieTarget (calculé),<br/>  StartDate = aujourd'hui (imposé système),<br/>  EndDate = null,<br/>  DietStatus = Active<br/>}
+                    DB-->>API: Succès
+
+                    API-->>Device: 201 Created — { DietId, diet complète }
+                    Note over Device: Régime actif — redirection vers le tableau de bord du régime
+                end
+            end
+        end
+    end

@@ -1,0 +1,91 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant Cache as Cache (Redis)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition : utilisateur authentifié + profil créé
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+    Note over DB: FoodItem pré-remplie via import dump OFF quotidien (job Infrastructure)
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 1 — Recherche d'un aliment par mot-clé
+    %% ═══════════════════════════════════════════════
+
+    Device->>API: GET /food-items?search={motclé}<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide
+
+        %% Niveau 1 — Cache Redis
+        API->>Cache: GET food-items:{motclé}
+        alt Résultats trouvés en cache
+            Cache-->>API: Liste FoodItem
+            API-->>Device: 200 OK — liste des aliments (depuis cache)
+        else Cache miss
+            Cache-->>API: Aucun résultat
+
+            %% Niveau 2 — PostgreSQL
+            API->>DB: SELECT FoodItem WHERE Name LIKE %motclé%
+            alt Résultats trouvés en base
+                DB-->>API: Liste FoodItem
+                API->>Cache: SET food-items:{motclé} (TTL court)
+                API-->>Device: 200 OK — liste des aliments (depuis base)
+            else Introuvable en base
+                DB-->>API: Aucun résultat
+                API-->>Device: 200 OK — liste vide
+                Note over Device: Aliment non disponible — sera accessible<br/>après la prochaine mise à jour du dump OFF
+            end
+        end
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 2 — Sauvegarde dans la liste personnelle
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur sélectionne un aliment et clique "Sauvegarder"
+
+    Device->>API: POST /users/me/saved-food-items<br/>Authorization: Bearer access_token<br/>{ FoodItemId }
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        DB-->>API: User { UserId, SubscriptionTier }
+
+        API->>DB: SELECT FoodItem WHERE Id = FoodItemId
+        alt FoodItem introuvable
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found
+        else FoodItem trouvé
+            DB-->>API: FoodItem trouvé
+
+            API->>DB: SELECT SavedFoodItem WHERE UserId = ? AND FoodItemId = ?
+            alt Déjà sauvegardé
+                DB-->>API: SavedFoodItem trouvé
+                API-->>Device: 409 Conflict — aliment déjà dans la liste personnelle
+            else Pas encore sauvegardé
+                DB-->>API: Aucun résultat
+
+                %% Vérification limite tier
+                API->>DB: SELECT COUNT(*) FROM SavedFoodItem WHERE UserId = ?
+                DB-->>API: count
+                alt Limite atteinte (Free ≥ 10 / Pro ≥ 100 / Business : aucune)
+                    API-->>Device: 403 Forbidden — limite d'aliments sauvegardés atteinte pour votre abonnement
+                else Limite non atteinte
+                    API->>DB: INSERT SavedFoodItem { UserId, FoodItemId, SavedAt }
+                    DB-->>API: Succès
+                    API-->>Device: 201 Created — aliment ajouté à la liste personnelle
+                end
+            end
+        end
+    end

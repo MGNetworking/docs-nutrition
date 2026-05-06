@@ -1,0 +1,2237 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Documentation technique du projet Nutrition API" name="description"/>
+<meta content="Maxime Ghalem" name="author"/>
+<link href="../3.nutrition-specifications-fonctionnelles/" rel="prev"/>
+<link href="../5.nutrition-contraintes/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
+<title>Specs techniques - Nutrition API — Documentation</title>
+<link href="../../assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="teal" data-md-color-primary="teal" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#3-specifications-techniques">
+          Aller au contenu
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="En-tête" class="md-header__inner md-grid">
+<a aria-label="Nutrition API — Documentation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Specs techniques
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Mode sombre" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Mode sombre">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Mode clair" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Mode clair">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Rechercher" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Rechercher" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Recherche" class="md-search__options">
+<button aria-label="Effacer" class="md-search__icon md-icon" tabindex="-1" title="Effacer" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Onglets" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../1.nutrition-introduction/">
+          
+  
+  Backend
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Nutrition API — Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Nutrition API — Documentation
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Accueil
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+<span class="md-ellipsis">
+    Backend
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../1.nutrition-introduction/">
+<span class="md-ellipsis">
+    Introduction
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../2.nutrition-cas-usage/">
+<span class="md-ellipsis">
+    Cas d'usage
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../3.nutrition-specifications-fonctionnelles/">
+<span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Specs techniques
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Specs techniques
+  </span>
+</a>
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-specifications-techniques">
+<span class="md-ellipsis">
+      3. Spécifications techniques
+    </span>
+</a>
+<nav aria-label="3. Spécifications techniques" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-architecture-globale">
+<span class="md-ellipsis">
+      3.1 Architecture globale
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-responsabilites-du-service">
+<span class="md-ellipsis">
+      3.2 Responsabilités du service
+    </span>
+</a>
+<nav aria-label="3.2 Responsabilités du service" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gestion-des-utilisateurs">
+<span class="md-ellipsis">
+      Gestion des utilisateurs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gestion-du-regime-alimentaire">
+<span class="md-ellipsis">
+      Gestion du régime alimentaire
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gestion-des-repas">
+<span class="md-ellipsis">
+      Gestion des repas
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-gestion-de-lauthentification">
+<span class="md-ellipsis">
+      3.3 Gestion de l'authentification
+    </span>
+</a>
+<nav aria-label="3.3 Gestion de l'authentification" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#flux-dauthentification">
+<span class="md-ellipsis">
+      Flux d'authentification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-de-la-securite">
+<span class="md-ellipsis">
+      Implémentation de la sécurité
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-paradigmes-de-developpement">
+<span class="md-ellipsis">
+      3.4 Paradigmes de développement
+    </span>
+</a>
+<nav aria-label="3.4 Paradigmes de développement" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-driven-design-ddd">
+<span class="md-ellipsis">
+      Domain-Driven Design (DDD)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-driven-development-tdd">
+<span class="md-ellipsis">
+      Test-Driven Development (TDD)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#35-technologies-utilisees">
+<span class="md-ellipsis">
+      3.5 Technologies utilisées
+    </span>
+</a>
+<nav aria-label="3.5 Technologies utilisées" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backend">
+<span class="md-ellipsis">
+      Backend
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tests">
+<span class="md-ellipsis">
+      Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#metadonnees-du-projet">
+<span class="md-ellipsis">
+      Métadonnées du projet
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dependances-nuget-principales">
+<span class="md-ellipsis">
+      Dépendances NuGet principales
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#structure-du-projet-architecture-ddd-4-couches">
+<span class="md-ellipsis">
+      Structure du projet — Architecture DDD 4 couches
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#outils-et-infrastructure">
+<span class="md-ellipsis">
+      Outils et infrastructure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#36-structure-des-donnees">
+<span class="md-ellipsis">
+      3.6 Structure des données
+    </span>
+</a>
+<nav aria-label="3.6 Structure des données" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#modeles-principaux">
+<span class="md-ellipsis">
+      Modèles principaux
+    </span>
+</a>
+<nav aria-label="Modèles principaux" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#user">
+<span class="md-ellipsis">
+      User
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#diet">
+<span class="md-ellipsis">
+      Diet
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meal">
+<span class="md-ellipsis">
+      Meal
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mealitem">
+<span class="md-ellipsis">
+      MealItem
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fooditem-cache-local-open-food-facts">
+<span class="md-ellipsis">
+      FoodItem (cache local Open Food Facts)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tables-de-la-base-de-donnees">
+<span class="md-ellipsis">
+      Tables de la base de données
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#36-api-endpoints">
+<span class="md-ellipsis">
+      3.6 API Endpoints
+    </span>
+</a>
+<nav aria-label="3.6 API Endpoints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentification-via-keycloak">
+<span class="md-ellipsis">
+      Authentification (via Keycloak)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#utilisateurs">
+<span class="md-ellipsis">
+      Utilisateurs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aliments-via-open-food-facts-cache-local">
+<span class="md-ellipsis">
+      Aliments (via Open Food Facts + cache local)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#regimes-alimentaires">
+<span class="md-ellipsis">
+      Régimes alimentaires
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#nutrition">
+<span class="md-ellipsis">
+      Nutrition
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repas">
+<span class="md-ellipsis">
+      Repas
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#format-de-donnees">
+<span class="md-ellipsis">
+      Format de données
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#37-performances-et-scalabilite">
+<span class="md-ellipsis">
+      3.7 Performances et scalabilité
+    </span>
+</a>
+<nav aria-label="3.7 Performances et scalabilité" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#objectifs-de-performance">
+<span class="md-ellipsis">
+      Objectifs de performance
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#strategies-doptimisation">
+<span class="md-ellipsis">
+      Stratégies d'optimisation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scalabilite">
+<span class="md-ellipsis">
+      Scalabilité
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#38-securite">
+<span class="md-ellipsis">
+      3.8 Sécurité
+    </span>
+</a>
+<nav aria-label="3.8 Sécurité" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentification-et-autorisation">
+<span class="md-ellipsis">
+      Authentification et autorisation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#protection-des-donnees">
+<span class="md-ellipsis">
+      Protection des données
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#securite-reseau">
+<span class="md-ellipsis">
+      Sécurité réseau
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#39-orchestration-avec-kubernetes">
+<span class="md-ellipsis">
+      3.9 Orchestration avec Kubernetes
+    </span>
+</a>
+<nav aria-label="3.9 Orchestration avec Kubernetes" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deploiement-et-gestion-du-cycle-de-vie">
+<span class="md-ellipsis">
+      Déploiement et gestion du cycle de vie
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environnements">
+<span class="md-ellipsis">
+      Environnements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#structure-des-manifests-kubernetes">
+<span class="md-ellipsis">
+      Structure des manifests Kubernetes
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pipeline-cicd-github-actions">
+<span class="md-ellipsis">
+      Pipeline CI/CD (GitHub Actions)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../5.nutrition-contraintes/">
+<span class="md-ellipsis">
+    Contraintes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../6.nutrition-abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../7.nutrition-admin/">
+<span class="md-ellipsis">
+    Administration
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="">
+<span class="md-ellipsis">
+    Domaine
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_8">
+<span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../domaine/Modele-domaine/">
+<span class="md-ellipsis">
+    Modèle domaine
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../domaine/Diagramme-classes/">
+<span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../domaine/Regles-metier/">
+<span class="md-ellipsis">
+    Règles métier
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_9_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_9">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/">
+<span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/authentification/">
+<span class="md-ellipsis">
+    Authentification
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/profil-utilisateur/">
+<span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/diet-plan/">
+<span class="md-ellipsis">
+    Diet Plan
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/diet/">
+<span class="md-ellipsis">
+    Diet
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/repas/">
+<span class="md-ellipsis">
+    Repas
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/aliments/">
+<span class="md-ellipsis">
+    Aliments
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/bilan-nutritionnel/">
+<span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/suivi-poids/">
+<span class="md-ellipsis">
+    Suivi du poids
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/rgpd/">
+<span class="md-ellipsis">
+    RGPD
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/openapi/">
+<span class="md-ellipsis">
+    OpenAPI
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../features/admin-dashboard/">
+<span class="md-ellipsis">
+    Admin dashboard
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="">
+<span class="md-ellipsis">
+    Infrastructure
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_10_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_10">
+<span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../annexes/infrastructure-setup/">
+<span class="md-ellipsis">
+    Setup local &amp; production
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../annexes/infrastructure-keycloak-admin/">
+<span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../annexes/infrastructure-import-off/">
+<span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../annexes/infrastructure-hangfire/">
+<span class="md-ellipsis">
+    Hangfire
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../annexes/infrastructure-docs/">
+<span class="md-ellipsis">
+    Publication docs
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-specifications-techniques">
+<span class="md-ellipsis">
+      3. Spécifications techniques
+    </span>
+</a>
+<nav aria-label="3. Spécifications techniques" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-architecture-globale">
+<span class="md-ellipsis">
+      3.1 Architecture globale
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-responsabilites-du-service">
+<span class="md-ellipsis">
+      3.2 Responsabilités du service
+    </span>
+</a>
+<nav aria-label="3.2 Responsabilités du service" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gestion-des-utilisateurs">
+<span class="md-ellipsis">
+      Gestion des utilisateurs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gestion-du-regime-alimentaire">
+<span class="md-ellipsis">
+      Gestion du régime alimentaire
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gestion-des-repas">
+<span class="md-ellipsis">
+      Gestion des repas
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-gestion-de-lauthentification">
+<span class="md-ellipsis">
+      3.3 Gestion de l'authentification
+    </span>
+</a>
+<nav aria-label="3.3 Gestion de l'authentification" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#flux-dauthentification">
+<span class="md-ellipsis">
+      Flux d'authentification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-de-la-securite">
+<span class="md-ellipsis">
+      Implémentation de la sécurité
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-paradigmes-de-developpement">
+<span class="md-ellipsis">
+      3.4 Paradigmes de développement
+    </span>
+</a>
+<nav aria-label="3.4 Paradigmes de développement" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#domain-driven-design-ddd">
+<span class="md-ellipsis">
+      Domain-Driven Design (DDD)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#test-driven-development-tdd">
+<span class="md-ellipsis">
+      Test-Driven Development (TDD)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#35-technologies-utilisees">
+<span class="md-ellipsis">
+      3.5 Technologies utilisées
+    </span>
+</a>
+<nav aria-label="3.5 Technologies utilisées" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backend">
+<span class="md-ellipsis">
+      Backend
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tests">
+<span class="md-ellipsis">
+      Tests
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#metadonnees-du-projet">
+<span class="md-ellipsis">
+      Métadonnées du projet
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dependances-nuget-principales">
+<span class="md-ellipsis">
+      Dépendances NuGet principales
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#structure-du-projet-architecture-ddd-4-couches">
+<span class="md-ellipsis">
+      Structure du projet — Architecture DDD 4 couches
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#outils-et-infrastructure">
+<span class="md-ellipsis">
+      Outils et infrastructure
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#36-structure-des-donnees">
+<span class="md-ellipsis">
+      3.6 Structure des données
+    </span>
+</a>
+<nav aria-label="3.6 Structure des données" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#modeles-principaux">
+<span class="md-ellipsis">
+      Modèles principaux
+    </span>
+</a>
+<nav aria-label="Modèles principaux" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#user">
+<span class="md-ellipsis">
+      User
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#diet">
+<span class="md-ellipsis">
+      Diet
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meal">
+<span class="md-ellipsis">
+      Meal
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mealitem">
+<span class="md-ellipsis">
+      MealItem
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fooditem-cache-local-open-food-facts">
+<span class="md-ellipsis">
+      FoodItem (cache local Open Food Facts)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tables-de-la-base-de-donnees">
+<span class="md-ellipsis">
+      Tables de la base de données
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#36-api-endpoints">
+<span class="md-ellipsis">
+      3.6 API Endpoints
+    </span>
+</a>
+<nav aria-label="3.6 API Endpoints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentification-via-keycloak">
+<span class="md-ellipsis">
+      Authentification (via Keycloak)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#utilisateurs">
+<span class="md-ellipsis">
+      Utilisateurs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aliments-via-open-food-facts-cache-local">
+<span class="md-ellipsis">
+      Aliments (via Open Food Facts + cache local)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#regimes-alimentaires">
+<span class="md-ellipsis">
+      Régimes alimentaires
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#nutrition">
+<span class="md-ellipsis">
+      Nutrition
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repas">
+<span class="md-ellipsis">
+      Repas
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#format-de-donnees">
+<span class="md-ellipsis">
+      Format de données
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#37-performances-et-scalabilite">
+<span class="md-ellipsis">
+      3.7 Performances et scalabilité
+    </span>
+</a>
+<nav aria-label="3.7 Performances et scalabilité" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#objectifs-de-performance">
+<span class="md-ellipsis">
+      Objectifs de performance
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#strategies-doptimisation">
+<span class="md-ellipsis">
+      Stratégies d'optimisation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scalabilite">
+<span class="md-ellipsis">
+      Scalabilité
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#38-securite">
+<span class="md-ellipsis">
+      3.8 Sécurité
+    </span>
+</a>
+<nav aria-label="3.8 Sécurité" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentification-et-autorisation">
+<span class="md-ellipsis">
+      Authentification et autorisation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#protection-des-donnees">
+<span class="md-ellipsis">
+      Protection des données
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#securite-reseau">
+<span class="md-ellipsis">
+      Sécurité réseau
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#39-orchestration-avec-kubernetes">
+<span class="md-ellipsis">
+      3.9 Orchestration avec Kubernetes
+    </span>
+</a>
+<nav aria-label="3.9 Orchestration avec Kubernetes" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deploiement-et-gestion-du-cycle-de-vie">
+<span class="md-ellipsis">
+      Déploiement et gestion du cycle de vie
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#environnements">
+<span class="md-ellipsis">
+      Environnements
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#structure-des-manifests-kubernetes">
+<span class="md-ellipsis">
+      Structure des manifests Kubernetes
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pipeline-cicd-github-actions">
+<span class="md-ellipsis">
+      Pipeline CI/CD (GitHub Actions)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1>Specs techniques</h1>
+<h2 id="3-specifications-techniques">3. Spécifications techniques<a class="headerlink" href="#3-specifications-techniques" title="Permanent link">¶</a></h2>
+<h3 id="31-architecture-globale">3.1 Architecture globale<a class="headerlink" href="#31-architecture-globale" title="Permanent link">¶</a></h3>
+<p>Le système sera implémenté comme une application monolithique déployée sur Kubernetes, qui interagira avec Keycloak pour l'authentification et une API externe pour les données alimentaires.</p>
+<p><code>+------------------+       +------------------+       +------------------+
+| Client Mobile    |       | Client Web       |       | Applications     |
+| (Frontend)       |       | (Frontend)       |       | Tierces          |
++------------------+       +------------------+       +------------------+
+         |                           |                         |
+         +------------+-------------+--------------------------+
+                      |
+                      v
++------------------------------------------+
+|           Kubernetes Gateway API         |
++------------------------------------------+
+                      |
+                      v
++------------------------------------------+
+|        API Nutrition (ASP.NET Core)      |
+|                 (Pods)                   |
++------------------------------------------+
+         |                        |
+         v                        v
++-------------------+    +-------------------+    +-------------------+
+| PostgreSQL        |    | Keycloak          |    | API Food Externe  |
+| (StatefulSet)     |    | (Deployment)      |    | (Open Food Facts) |
++-------------------+    +-------------------+    +-------------------+</code></p>
+<h3 id="32-responsabilites-du-service">3.2 Responsabilités du service<a class="headerlink" href="#32-responsabilites-du-service" title="Permanent link">¶</a></h3>
+<p>L'API Nutrition est conçue comme un service monolithique qui gère l'ensemble des fonctionnalités :</p>
+<h4 id="gestion-des-utilisateurs">Gestion des utilisateurs<a class="headerlink" href="#gestion-des-utilisateurs" title="Permanent link">¶</a></h4>
+<ul>
+<li>Création et gestion des comptes utilisateurs (inscription, modification de profil)</li>
+<li>Interface avec Keycloak pour l'authentification et l'autorisation</li>
+<li>Gestion du profil utilisateur (données physiologiques, préférences, objectifs)</li>
+<li>Calcul du métabolisme de base (BMR) et des besoins caloriques</li>
+<li>Gestion des identifiants et tokens pour l'API alimentaire au nom de l'utilisateur</li>
+</ul>
+<h4 id="gestion-du-regime-alimentaire">Gestion du régime alimentaire<a class="headerlink" href="#gestion-du-regime-alimentaire" title="Permanent link">¶</a></h4>
+<ul>
+<li>Création et gestion des régimes personnalisés (un seul actif à la fois par utilisateur)</li>
+<li>Intégration avec l'API Open Food Facts pour les données nutritionnelles</li>
+<li>Planification des repas</li>
+<li>Calcul des apports nutritionnels</li>
+<li>Génération de recommandations</li>
+<li>Analyse des tendances nutritionnelles</li>
+</ul>
+<h4 id="gestion-des-repas">Gestion des repas<a class="headerlink" href="#gestion-des-repas" title="Permanent link">¶</a></h4>
+<ul>
+<li>Enregistrement des consommations alimentaires</li>
+<li>Recherche d'aliments via l'API externe (avec mise en cache local)</li>
+<li>Gestion de l'historique des repas</li>
+<li>Calcul des apports nutritionnels par repas</li>
+<li>Vérification optionnelle de la conformité avec le régime actif</li>
+</ul>
+<hr/>
+<h3 id="33-gestion-de-lauthentification">3.3 Gestion de l'authentification<a class="headerlink" href="#33-gestion-de-lauthentification" title="Permanent link">¶</a></h3>
+<p>L'authentification sera gérée par Keycloak, un serveur d'identité open-source.</p>
+<h4 id="flux-dauthentification">Flux d'authentification<a class="headerlink" href="#flux-dauthentification" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Authentification via l'application frontend</strong></li>
+<li>L'utilisateur déclenche le processus de connexion depuis l'interface web</li>
+<li>Il est redirigé vers la page d'authentification centralisée Keycloak</li>
+<li>S'il possède un compte, il se connecte ; sinon, il crée un compte</li>
+<li>
+<p>Une fois authentifié, il est redirigé vers l'application frontend avec un token JWT</p>
+</li>
+<li>
+<p><strong>Enregistrement côté API métier</strong></p>
+</li>
+<li>À la première connexion, l'application transmet les informations d'identification à l'API</li>
+<li>L'API crée un profil utilisateur interne lié à l'identifiant Keycloak</li>
+<li>
+<p>Ce lien permet d'associer l'identité Keycloak aux données métier de l'utilisateur</p>
+</li>
+<li>
+<p><strong>Contrôle des accès aux fonctionnalités</strong></p>
+</li>
+<li>Pour chaque requête, un token JWT est transmis dans l'en-tête <code>Authorization</code></li>
+<li>L'API vérifie la validité du token (signature, expiration, issuer)</li>
+<li>
+<p>Les droits d'accès sont vérifiés selon les rôles associés (User, Admin, Nutritionist)</p>
+</li>
+<li>
+<p><strong>Accès à des services externes</strong></p>
+</li>
+<li>L'API interagit avec Open Food Facts de manière transparente pour l'utilisateur</li>
+<li>Aucune authentification requise pour Open Food Facts (API publique)</li>
+</ol>
+<blockquote>
+<p>Pour une description visuelle du flux, voir l'annexe <code>workflow_Flux_authentification.mermaid</code></p>
+</blockquote>
+<h4 id="implementation-de-la-securite">Implémentation de la sécurité<a class="headerlink" href="#implementation-de-la-securite" title="Permanent link">¶</a></h4>
+<p>La sécurité est configurée dans <code>Program.cs</code> via les middlewares ASP.NET Core :</p>
+<ul>
+<li><code>AddAuthentication().AddJwtBearer()</code> pour la validation des tokens Keycloak</li>
+<li><code>AddAuthorization()</code> avec des policies basées sur les rôles</li>
+<li>Les endpoints sont protégés via les attributs <code>[Authorize]</code> et <code>[Authorize(Roles = "...")]</code></li>
+</ul>
+<hr/>
+<h3 id="34-paradigmes-de-developpement">3.4 Paradigmes de développement<a class="headerlink" href="#34-paradigmes-de-developpement" title="Permanent link">¶</a></h3>
+<h4 id="domain-driven-design-ddd">Domain-Driven Design (DDD)<a class="headerlink" href="#domain-driven-design-ddd" title="Permanent link">¶</a></h4>
+<p>Le projet est structuré selon les principes du <strong>Domain-Driven Design</strong> — le code s'organise autour du métier, pas autour de la base de données.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Rôle dans ce projet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Aggregate Root</strong></td>
+<td>Point d'entrée du domaine — <code>User</code>, <code>Diet</code>, <code>DietPlan</code>, <code>Meal</code>, <code>FoodItem</code></td>
+</tr>
+<tr>
+<td><strong>Entité enfant</strong></td>
+<td>Vit uniquement via son parent — <code>MealItem</code>, <code>WeightEntry</code>, <code>SavedFoodItem</code></td>
+</tr>
+<tr>
+<td><strong>Value Object</strong></td>
+<td>Groupe de valeurs immuables sans identité — <code>MacroDistribution</code>, <code>NutritionInfo</code>, <code>NutritionNeeds</code></td>
+</tr>
+<tr>
+<td><strong>Domain Service</strong></td>
+<td>Règle métier impliquant plusieurs agrégats — ex: vérification Diet active</td>
+</tr>
+<tr>
+<td><strong>Invariant</strong></td>
+<td>Règle toujours vraie, validée dans le constructeur — ex: somme macros = 100%</td>
+</tr>
+</tbody>
+</table>
+<p>L'architecture cible est une <strong>architecture 4 couches</strong> (Diamant) où les dépendances convergent vers le Domain. Voir section "Structure du projet" ci-dessous.</p>
+<hr/>
+<h4 id="test-driven-development-tdd">Test-Driven Development (TDD)<a class="headerlink" href="#test-driven-development-tdd" title="Permanent link">¶</a></h4>
+<p>Le développement suit le cycle <strong>Red → Green → Refactor</strong>, appliqué couche par couche dans l'ordre d'implémentation.</p>
+<p><strong>Cycle par fonctionnalité :</strong></p>
+<ol>
+<li><strong>Red</strong> — écrire un test qui échoue décrivant le comportement attendu</li>
+<li><strong>Green</strong> — écrire le minimum de code pour faire passer le test</li>
+<li><strong>Refactor</strong> — nettoyer sans changer le comportement (le test reste vert)</li>
+</ol>
+<p><strong>Ordre d'application par couche :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ordre</th>
+<th>Couche</th>
+<th>Ce qu'on teste en TDD</th>
+<th>Outils</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Domain</td>
+<td>Invariants, constructeurs, Value Objects, règles métier pures</td>
+<td>xUnit + assertions</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Application</td>
+<td>Use cases, orchestration, réponses aux cas d'erreur</td>
+<td>xUnit + Moq (mock repositories)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Infrastructure</td>
+<td>Persistance EF Core, requêtes, migrations</td>
+<td>xUnit + Testcontainers</td>
+</tr>
+<tr>
+<td>4</td>
+<td>API</td>
+<td>Contrats HTTP, codes de retour, format des réponses</td>
+<td>WebApplicationFactory</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Convention de nommage des tests :</strong></p>
+<p>```
+[Méthode_ou_Comportement]<em>[Contexte]</em>[Résultat_attendu]</p>
+<p>Exemples :
+CreateDiet_WhenNoWeightEntry_Throws422
+MacroDistribution_WhenSumIsNot100_ThrowsDomainException
+LaunchDiet_WhenDietAlreadyActive_Returns409
+```</p>
+<p><strong>Règle structurelle :</strong> chaque projet de test correspond à une couche.</p>
+<p><code>NutritionApi.Domain.Tests/          ← tests unitaires Domain
+NutritionApi.Application.Tests/     ← tests unitaires Application (Moq)
+NutritionApi.Infrastructure.Tests/  ← tests d'intégration (Testcontainers)
+NutritionApi.Api.Tests/             ← tests API end-to-end (WebApplicationFactory)</code></p>
+<hr/>
+<h3 id="35-technologies-utilisees">3.5 Technologies utilisées<a class="headerlink" href="#35-technologies-utilisees" title="Permanent link">¶</a></h3>
+<h4 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Version</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C#</strong></td>
+<td>13</td>
+<td>Langage de programmation principal</td>
+</tr>
+<tr>
+<td><strong>ASP.NET Core</strong></td>
+<td>10</td>
+<td>Framework web pour le développement d'API REST</td>
+</tr>
+<tr>
+<td><strong>Entity Framework Core</strong></td>
+<td>10</td>
+<td>ORM pour l'accès aux données et les migrations</td>
+</tr>
+<tr>
+<td><strong>ASP.NET Core Authentication</strong></td>
+<td>10</td>
+<td>Sécurisation de l'API avec OAuth2 / JWT Bearer</td>
+</tr>
+<tr>
+<td><strong>Keycloak</strong></td>
+<td>24+</td>
+<td>Serveur d'identité et de gestion des accès (OAuth2/OIDC)</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>16</td>
+<td>Base de données relationnelle principale (provider Npgsql)</td>
+</tr>
+<tr>
+<td><strong>Polly</strong></td>
+<td>8</td>
+<td>Résilience : circuit breaker, retry, timeout</td>
+</tr>
+<tr>
+<td><strong>Hangfire</strong></td>
+<td>1.8+</td>
+<td>Jobs récurrents (import OFF, purge RGPD) + dashboard</td>
+</tr>
+<tr>
+<td><strong>IHttpClientFactory</strong></td>
+<td>—</td>
+<td>Client HTTP typé pour l'API Open Food Facts</td>
+</tr>
+<tr>
+<td><strong>Swashbuckle</strong></td>
+<td>7</td>
+<td>Documentation OpenAPI / Swagger UI</td>
+</tr>
+<tr>
+<td><strong>ASP.NET Core Health Checks</strong></td>
+<td>—</td>
+<td>Endpoints de monitoring (<code>/health</code>)</td>
+</tr>
+<tr>
+<td><strong>OpenTelemetry</strong></td>
+<td>—</td>
+<td>Instrumentation des métriques et traces distribuées</td>
+</tr>
+<tr>
+<td><strong>Prometheus</strong></td>
+<td>—</td>
+<td>Collecte et stockage des métriques</td>
+</tr>
+<tr>
+<td><strong>Grafana</strong></td>
+<td>—</td>
+<td>Visualisation des métriques et tableaux de bord</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>xUnit</strong></td>
+<td>Framework de tests unitaires</td>
+</tr>
+<tr>
+<td><strong>Moq</strong></td>
+<td>Framework de mock pour les tests unitaires</td>
+</tr>
+<tr>
+<td><strong>Testcontainers for .NET</strong></td>
+<td>Tests d'intégration avec PostgreSQL en conteneur</td>
+</tr>
+<tr>
+<td><strong>WireMock.Net</strong></td>
+<td>Mock de l'API Open Food Facts pour les tests</td>
+</tr>
+<tr>
+<td><strong>Microsoft.AspNetCore.Mvc.Testing</strong></td>
+<td>Tests des contrôleurs avec <code>WebApplicationFactory</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="metadonnees-du-projet">Métadonnées du projet<a class="headerlink" href="#metadonnees-du-projet" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Commande de création</td>
+<td><code>dotnet new webapi -n NutritionApi</code></td>
+</tr>
+<tr>
+<td>Namespace racine</td>
+<td><code>NutritionApi</code></td>
+</tr>
+<tr>
+<td>Fichier solution</td>
+<td><code>NutritionApi.sln</code></td>
+</tr>
+<tr>
+<td>Packaging</td>
+<td>Container Docker (Linux)</td>
+</tr>
+<tr>
+<td>Runtime cible</td>
+<td>.NET 10</td>
+</tr>
+<tr>
+<td>Gestionnaire de paquets</td>
+<td>NuGet</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dependances-nuget-principales">Dépendances NuGet principales<a class="headerlink" href="#dependances-nuget-principales" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Microsoft.AspNetCore.Authentication.JwtBearer</code></td>
+<td>Validation tokens JWT Keycloak</td>
+</tr>
+<tr>
+<td><code>Microsoft.EntityFrameworkCore</code></td>
+<td>ORM principal</td>
+</tr>
+<tr>
+<td><code>Npgsql.EntityFrameworkCore.PostgreSQL</code></td>
+<td>Provider PostgreSQL pour EF Core</td>
+</tr>
+<tr>
+<td><code>Swashbuckle.AspNetCore</code></td>
+<td>Documentation OpenAPI</td>
+</tr>
+<tr>
+<td><code>Polly</code> + <code>Microsoft.Extensions.Http.Polly</code></td>
+<td>Résilience HTTP</td>
+</tr>
+<tr>
+<td><code>Hangfire.AspNetCore</code> + <code>Hangfire.PostgreSql</code></td>
+<td>Jobs récurrents + stockage état</td>
+</tr>
+<tr>
+<td><code>OpenTelemetry.Extensions.Hosting</code></td>
+<td>Métriques et traces</td>
+</tr>
+<tr>
+<td><code>prometheus-net.AspNetCore</code></td>
+<td>Exposition métriques Prometheus</td>
+</tr>
+<tr>
+<td><code>xunit</code> + <code>Moq</code></td>
+<td>Tests unitaires</td>
+</tr>
+<tr>
+<td><code>Testcontainers.PostgreSql</code></td>
+<td>Tests d'intégration</td>
+</tr>
+</tbody>
+</table>
+<h4 id="structure-du-projet-architecture-ddd-4-couches">Structure du projet — Architecture DDD 4 couches<a class="headerlink" href="#structure-du-projet-architecture-ddd-4-couches" title="Permanent link">¶</a></h4>
+<p>Le projet est découpé en <strong>4 projets distincts</strong> dans une solution .NET, conformément à l'architecture DDD.
+Règle fondamentale : <code>Domain</code> ne dépend de rien. Les dépendances pointent toujours vers le centre.</p>
+<p><code>API
+        /   \
+  Application  Infrastructure
+        \   /
+        Domain</code></p>
+<p><code>NutritionApi.sln
+│
+├── NutritionApi.Domain/                   ← 0 dépendance externe
+│   ├── Entities/                          ← User, Diet, Meal, MealItem, FoodItem
+│   ├── ValueObjects/                      ← MacroDistribution, NutritionNeeds
+│   ├── Enums/                             ← ActivityLevel, Goal, DietType, DietStatus, MealType, Gender
+│   ├── Interfaces/
+│   │   ├── Repositories/                  ← IUserRepository, IDietRepository, IMealRepository...
+│   │   └── Services/                      ← IDomainService (règles inter-agrégats)
+│   └── Exceptions/                        ← Exceptions métier (DomainException...)
+│
+├── NutritionApi.Application/              ← dépend uniquement de Domain
+│   ├── Services/                          ← NutritionCalculationService, DietService...
+│   ├── DTOs/
+│   │   ├── Requests/                      ← Corps des requêtes entrantes
+│   │   └── Responses/                     ← Corps des réponses sortantes
+│   └── Interfaces/                        ← IApplicationService (contrats pour l'API)
+│
+├── NutritionApi.Infrastructure/           ← dépend de Domain + Application
+│   ├── Repositories/                      ← Implémentations EF Core des IRepository
+│   ├── Data/
+│   │   ├── AppDbContext.cs                ← DbContext EF Core
+│   │   └── Migrations/                    ← Migrations auto-générées
+│   ├── Jobs/                              ← Jobs Hangfire (import OFF, purge RGPD)
+│   └── ExternalServices/
+│       └── OpenFoodFacts/                 ← Client HTTP + mise en cache FoodItem
+│
+└── NutritionApi.API/                      ← point d'entrée, dépend de tout
+    ├── Controllers/                        ← Exposition REST (un contrôleur par domaine)
+    ├── Middleware/                         ← Gestion globale des erreurs, logging
+    └── Configuration/                     ← DI, Auth Keycloak, Swagger, Polly</code></p>
+<h4 id="outils-et-infrastructure">Outils et infrastructure<a class="headerlink" href="#outils-et-infrastructure" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Docker</strong></td>
+<td>Conteneurisation de l'API</td>
+</tr>
+<tr>
+<td><strong>Kubernetes</strong></td>
+<td>Orchestration des conteneurs</td>
+</tr>
+<tr>
+<td><strong>GitHub Actions</strong></td>
+<td>Pipeline CI/CD</td>
+</tr>
+<tr>
+<td><strong>Prometheus + Grafana</strong></td>
+<td>Monitoring et alerting</td>
+</tr>
+<tr>
+<td><strong>dotnet CLI</strong></td>
+<td>Build, tests, migrations</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h3 id="36-structure-des-donnees">3.6 Structure des données<a class="headerlink" href="#36-structure-des-donnees" title="Permanent link">¶</a></h3>
+<h4 id="modeles-principaux">Modèles principaux<a class="headerlink" href="#modeles-principaux" title="Permanent link">¶</a></h4>
+<h5 id="user">User<a class="headerlink" href="#user" title="Permanent link">¶</a></h5>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type C#</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>int</td>
+<td>Identifiant unique (auto-incrémenté)</td>
+</tr>
+<tr>
+<td>KeycloakId</td>
+<td>string</td>
+<td>UUID lié à l'identité Keycloak (unique)</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>string</td>
+<td>Adresse email (unique)</td>
+</tr>
+<tr>
+<td>FirstName</td>
+<td>string</td>
+<td>Prénom</td>
+</tr>
+<tr>
+<td>LastName</td>
+<td>string</td>
+<td>Nom</td>
+</tr>
+<tr>
+<td>BirthDate</td>
+<td>DateOnly</td>
+<td>Date de naissance</td>
+</tr>
+<tr>
+<td>Gender</td>
+<td>enum Gender</td>
+<td>Sexe (Male / Female / Other)</td>
+</tr>
+<tr>
+<td>Height</td>
+<td>float</td>
+<td>Taille en centimètres</td>
+</tr>
+<tr>
+<td>Weight</td>
+<td>float</td>
+<td>Poids en kilogrammes</td>
+</tr>
+<tr>
+<td>ActivityLevel</td>
+<td>enum ActivityLevel</td>
+<td>Niveau d'activité physique</td>
+</tr>
+<tr>
+<td>Goal</td>
+<td>enum Goal</td>
+<td>Objectif nutritionnel</td>
+</tr>
+<tr>
+<td>Allergies</td>
+<td>List\&lt;string&gt;</td>
+<td>Liste des allergies alimentaires</td>
+</tr>
+<tr>
+<td>DietaryPreferences</td>
+<td>List\&lt;string&gt;</td>
+<td>Préférences alimentaires</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>DateTime</td>
+<td>Date de création du profil</td>
+</tr>
+</tbody>
+</table>
+<h5 id="diet">Diet<a class="headerlink" href="#diet" title="Permanent link">¶</a></h5>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type C#</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>int</td>
+<td>Identifiant unique</td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>int</td>
+<td>Référence à l'utilisateur</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>Nom du régime</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>enum DietType</td>
+<td>Type de régime (Balanced, Keto, etc.)</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>enum DietStatus</td>
+<td>Statut (Active / Inactive / Archived)</td>
+</tr>
+<tr>
+<td>CalorieTarget</td>
+<td>float</td>
+<td>Objectif calorique journalier (kcal)</td>
+</tr>
+<tr>
+<td>MacroDistribution</td>
+<td>value object</td>
+<td>Répartition protéines / glucides / lipides (%)</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>DateTime</td>
+<td>Date de création</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Règle métier : un seul Diet peut avoir le statut <code>Active</code> par utilisateur à la fois.</p>
+</blockquote>
+<h5 id="meal">Meal<a class="headerlink" href="#meal" title="Permanent link">¶</a></h5>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type C#</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>int</td>
+<td>Identifiant unique</td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>int</td>
+<td>Référence à l'utilisateur</td>
+</tr>
+<tr>
+<td>DietId</td>
+<td>int?</td>
+<td>Référence optionnelle au régime associé</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>Nom du repas</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>enum MealType</td>
+<td>Type de repas (Breakfast, Lunch, etc.)</td>
+</tr>
+<tr>
+<td>DateTime</td>
+<td>DateTime</td>
+<td>Date et heure du repas</td>
+</tr>
+<tr>
+<td>Notes</td>
+<td>string?</td>
+<td>Notes libres</td>
+</tr>
+<tr>
+<td>Items</td>
+<td>List\&lt;MealItem&gt;</td>
+<td>Aliments composant le repas</td>
+</tr>
+</tbody>
+</table>
+<h5 id="mealitem">MealItem<a class="headerlink" href="#mealitem" title="Permanent link">¶</a></h5>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type C#</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>int</td>
+<td>Identifiant unique</td>
+</tr>
+<tr>
+<td>MealId</td>
+<td>int</td>
+<td>Référence au repas parent</td>
+</tr>
+<tr>
+<td>FoodExternalId</td>
+<td>string</td>
+<td>Identifiant dans Open Food Facts</td>
+</tr>
+<tr>
+<td>FoodName</td>
+<td>string</td>
+<td>Nom de l'aliment</td>
+</tr>
+<tr>
+<td>Quantity</td>
+<td>float</td>
+<td>Quantité consommée en grammes</td>
+</tr>
+<tr>
+<td>CaloriesPer100g</td>
+<td>float</td>
+<td>Calories pour 100g</td>
+</tr>
+<tr>
+<td>ProteinsPer100g</td>
+<td>float</td>
+<td>Protéines pour 100g</td>
+</tr>
+<tr>
+<td>CarbsPer100g</td>
+<td>float</td>
+<td>Glucides pour 100g</td>
+</tr>
+<tr>
+<td>FatsPer100g</td>
+<td>float</td>
+<td>Lipides pour 100g</td>
+</tr>
+</tbody>
+</table>
+<h5 id="fooditem-cache-local-open-food-facts">FoodItem (cache local Open Food Facts)<a class="headerlink" href="#fooditem-cache-local-open-food-facts" title="Permanent link">¶</a></h5>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type C#</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>int</td>
+<td>Identifiant unique local</td>
+</tr>
+<tr>
+<td>ExternalId</td>
+<td>string</td>
+<td>Identifiant Open Food Facts (unique)</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>Nom de l'aliment</td>
+</tr>
+<tr>
+<td>CaloriesPer100g</td>
+<td>float</td>
+<td>Calories pour 100g</td>
+</tr>
+<tr>
+<td>ProteinsPer100g</td>
+<td>float</td>
+<td>Protéines pour 100g</td>
+</tr>
+<tr>
+<td>CarbsPer100g</td>
+<td>float</td>
+<td>Glucides pour 100g</td>
+</tr>
+<tr>
+<td>FatsPer100g</td>
+<td>float</td>
+<td>Lipides pour 100g</td>
+</tr>
+<tr>
+<td>IsVegetarian</td>
+<td>bool</td>
+<td>Convient aux végétariens</td>
+</tr>
+<tr>
+<td>IsVegan</td>
+<td>bool</td>
+<td>Convient aux végétaliens</td>
+</tr>
+<tr>
+<td>Allergens</td>
+<td>List\&lt;string&gt;</td>
+<td>Liste des allergènes</td>
+</tr>
+<tr>
+<td>CachedAt</td>
+<td>DateTime</td>
+<td>Date de mise en cache</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tables-de-la-base-de-donnees">Tables de la base de données<a class="headerlink" href="#tables-de-la-base-de-donnees" title="Permanent link">¶</a></h4>
+<p>Les migrations EF Core génèrent automatiquement le schéma SQL à partir des entités C#.</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>users</code></td>
+<td>Profils utilisateurs</td>
+</tr>
+<tr>
+<td><code>user_allergies</code></td>
+<td>Allergies (relation 1-N)</td>
+</tr>
+<tr>
+<td><code>user_preferences</code></td>
+<td>Préférences alimentaires (relation 1-N)</td>
+</tr>
+<tr>
+<td><code>diets</code></td>
+<td>Régimes alimentaires</td>
+</tr>
+<tr>
+<td><code>meals</code></td>
+<td>Repas enregistrés</td>
+</tr>
+<tr>
+<td><code>meal_items</code></td>
+<td>Aliments composant chaque repas</td>
+</tr>
+<tr>
+<td><code>food_items</code></td>
+<td>Cache local des données Open Food Facts</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h3 id="36-api-endpoints">3.6 API Endpoints<a class="headerlink" href="#36-api-endpoints" title="Permanent link">¶</a></h3>
+<p>L'API est organisée selon les principes REST :</p>
+<h4 id="authentification-via-keycloak">Authentification (via Keycloak)<a class="headerlink" href="#authentification-via-keycloak" title="Permanent link">¶</a></h4>
+<p><code>POST   /api/v1/auth/register       // Inscription d'un utilisateur
+POST   /api/v1/auth/login          // Connexion et génération de token JWT
+POST   /api/v1/auth/refresh        // Rafraîchissement du token
+POST   /api/v1/auth/logout         // Déconnexion</code></p>
+<h4 id="utilisateurs">Utilisateurs<a class="headerlink" href="#utilisateurs" title="Permanent link">¶</a></h4>
+<p><code>GET    /api/v1/users/me                  // Récupération du profil utilisateur
+PUT    /api/v1/users/me                  // Mise à jour du profil utilisateur
+POST   /api/v1/users/me/preferences      // Définition des préférences alimentaires
+GET    /api/v1/users/me/stats            // Statistiques de l'utilisateur</code></p>
+<h4 id="aliments-via-open-food-facts-cache-local">Aliments (via Open Food Facts + cache local)<a class="headerlink" href="#aliments-via-open-food-facts-cache-local" title="Permanent link">¶</a></h4>
+<p><code>GET    /api/v1/foods/search              // Recherche d'aliments
+GET    /api/v1/foods/{externalId}        // Détails d'un aliment</code></p>
+<h4 id="regimes-alimentaires">Régimes alimentaires<a class="headerlink" href="#regimes-alimentaires" title="Permanent link">¶</a></h4>
+<p><code>GET    /api/v1/diets                     // Liste des régimes de l'utilisateur
+POST   /api/v1/diets                     // Création d'un régime
+GET    /api/v1/diets/{id}                // Détails d'un régime
+PUT    /api/v1/diets/{id}                // Mise à jour d'un régime
+DELETE /api/v1/diets/{id}                // Suppression d'un régime
+PUT    /api/v1/diets/{id}/activate       // Activation d'un régime (désactive les autres)</code></p>
+<h4 id="nutrition">Nutrition<a class="headerlink" href="#nutrition" title="Permanent link">¶</a></h4>
+<p><code>GET    /api/v1/nutrition/calculate       // Calcul des besoins nutritionnels (BMR, TDEE)
+GET    /api/v1/nutrition/daily           // Bilan nutritionnel journalier
+GET    /api/v1/nutrition/weekly          // Bilan nutritionnel hebdomadaire
+GET    /api/v1/nutrition/recommendations // Recommandations alimentaires</code></p>
+<h4 id="repas">Repas<a class="headerlink" href="#repas" title="Permanent link">¶</a></h4>
+<p><code>GET    /api/v1/meals                     // Liste des repas (filtrable par date)
+POST   /api/v1/meals                     // Enregistrement d'un repas
+GET    /api/v1/meals/{id}                // Détails d'un repas
+PUT    /api/v1/meals/{id}                // Mise à jour d'un repas
+DELETE /api/v1/meals/{id}                // Suppression d'un repas</code></p>
+<h4 id="format-de-donnees">Format de données<a class="headerlink" href="#format-de-donnees" title="Permanent link">¶</a></h4>
+<p>Toutes les requêtes et réponses utilisent le format JSON.
+Exemple de réponse pour le calcul des besoins nutritionnels :</p>
+<p><code>json
+{
+  "bmr": 1762.5,
+  "tdee": 2467.5,
+  "targetCalories": 1967.5,
+  "macroDistribution": {
+    "proteins": { "percentage": 25, "grams": 123, "calories": 492 },
+    "carbs": { "percentage": 45, "grams": 221, "calories": 884 },
+    "fats": { "percentage": 30, "grams": 65, "calories": 585 }
+  },
+  "goal": "WeightLoss",
+  "activityLevel": "ModeratelyActive"
+}</code></p>
+<hr/>
+<h3 id="37-performances-et-scalabilite">3.7 Performances et scalabilité<a class="headerlink" href="#37-performances-et-scalabilite" title="Permanent link">¶</a></h3>
+<h4 id="objectifs-de-performance">Objectifs de performance<a class="headerlink" href="#objectifs-de-performance" title="Permanent link">¶</a></h4>
+<ul>
+<li>Temps de réponse moyen &lt; 100ms pour les requêtes simples</li>
+<li>Temps de réponse moyen &lt; 500ms pour les calculs complexes</li>
+<li>Capacité à gérer 200 requêtes/seconde</li>
+<li>Disponibilité &gt; 99.9%</li>
+</ul>
+<h4 id="strategies-doptimisation">Stratégies d'optimisation<a class="headerlink" href="#strategies-doptimisation" title="Permanent link">¶</a></h4>
+<ul>
+<li>Pagination pour les listes volumineuses</li>
+<li>Mise en cache avec <code>IMemoryCache</code> (Caffeine équivalent .NET)</li>
+<li>Exécution asynchrone (<code>async/await</code>) pour toutes les opérations I/O</li>
+<li>Circuit breaker Polly pour les appels vers Open Food Facts</li>
+<li>Pool de connexions à la base de données via EF Core / Npgsql</li>
+</ul>
+<h4 id="scalabilite">Scalabilité<a class="headerlink" href="#scalabilite" title="Permanent link">¶</a></h4>
+<ul>
+<li>Architecture sans état (stateless) — scaling horizontal facilité</li>
+<li>Auto-scaling des pods via Kubernetes HPA (CPU/mémoire)</li>
+<li>Rate limiting via middleware ASP.NET Core</li>
+<li>Requêtes EF Core optimisées (pas de <code>SELECT *</code>, projections, index)</li>
+</ul>
+<hr/>
+<h3 id="38-securite">3.8 Sécurité<a class="headerlink" href="#38-securite" title="Permanent link">¶</a></h3>
+<h4 id="authentification-et-autorisation">Authentification et autorisation<a class="headerlink" href="#authentification-et-autorisation" title="Permanent link">¶</a></h4>
+<ul>
+<li>Authentification via Keycloak avec support OAuth2/OIDC</li>
+<li>Support de fournisseurs externes (Google, Facebook) via Keycloak</li>
+<li>Gestion des rôles : <code>User</code>, <code>Admin</code>, <code>Nutritionist</code></li>
+<li>Validation des tokens JWT côté serveur à chaque requête</li>
+<li>Vérification des permissions par endpoint via <code>[Authorize(Roles = "...")]</code></li>
+</ul>
+<h4 id="protection-des-donnees">Protection des données<a class="headerlink" href="#protection-des-donnees" title="Permanent link">¶</a></h4>
+<ul>
+<li>Chiffrement des données sensibles au repos</li>
+<li>HTTPS/TLS pour toutes les communications</li>
+<li>Validation des entrées via Data Annotations et FluentValidation</li>
+<li>Protection contre les injections SQL via EF Core (requêtes paramétrées)</li>
+<li>Journalisation des accès et opérations sensibles</li>
+</ul>
+<h4 id="securite-reseau">Sécurité réseau<a class="headerlink" href="#securite-reseau" title="Permanent link">¶</a></h4>
+<ul>
+<li>Réseau privé Kubernetes pour isoler les composants internes</li>
+<li>Network Policies Kubernetes pour contrôler le trafic inter-pods</li>
+<li>WAF (Web Application Firewall) pour la protection contre les attaques communes</li>
+</ul>
+<hr/>
+<h3 id="39-orchestration-avec-kubernetes">3.9 Orchestration avec Kubernetes<a class="headerlink" href="#39-orchestration-avec-kubernetes" title="Permanent link">¶</a></h3>
+<h4 id="deploiement-et-gestion-du-cycle-de-vie">Déploiement et gestion du cycle de vie<a class="headerlink" href="#deploiement-et-gestion-du-cycle-de-vie" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Ressource Kubernetes</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Deployment</code></td>
+<td>Gestion du cycle de vie de l'API (rolling update)</td>
+</tr>
+<tr>
+<td><code>StatefulSet</code></td>
+<td>PostgreSQL (données persistantes)</td>
+</tr>
+<tr>
+<td><code>ConfigMap</code></td>
+<td>Configuration non sensible (URLs, paramètres)</td>
+</tr>
+<tr>
+<td><code>Secret</code></td>
+<td>Données sensibles (mots de passe, clés API)</td>
+</tr>
+<tr>
+<td><code>HorizontalPodAutoscaler</code></td>
+<td>Scaling automatique selon la charge</td>
+</tr>
+<tr>
+<td><code>Gateway API</code></td>
+<td>Routage du trafic externe vers les services</td>
+</tr>
+</tbody>
+</table>
+<h4 id="environnements">Environnements<a class="headerlink" href="#environnements" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Environnement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dev</code></td>
+<td>Développement local — données de test</td>
+</tr>
+<tr>
+<td><code>staging</code></td>
+<td>Recette — miroir de la production</td>
+</tr>
+<tr>
+<td><code>prod</code></td>
+<td>Production — données réelles</td>
+</tr>
+</tbody>
+</table>
+<h4 id="structure-des-manifests-kubernetes">Structure des manifests Kubernetes<a class="headerlink" href="#structure-des-manifests-kubernetes" title="Permanent link">¶</a></h4>
+<p><code>kubernetes/
+├── base/
+│   ├── namespace.yaml
+│   ├── postgresql.yaml
+│   ├── keycloak.yaml
+│   ├── nutrition-api.yaml
+│   ├── gateway.yaml
+│   ├── hpa.yaml
+│   ├── configmap.yaml
+│   └── secrets.yaml
+└── overlays/
+    ├── dev/
+    ├── staging/
+    └── prod/</code></p>
+<h4 id="pipeline-cicd-github-actions">Pipeline CI/CD (GitHub Actions)<a class="headerlink" href="#pipeline-cicd-github-actions" title="Permanent link">¶</a></h4>
+<p>Le pipeline automatise les étapes suivantes à chaque push :</p>
+<ol>
+<li><strong>Build</strong> — <code>dotnet build</code></li>
+<li><strong>Tests</strong> — <code>dotnet test</code> (unitaires + intégration)</li>
+<li><strong>Analyse qualité</strong> — SonarQube</li>
+<li><strong>Build image Docker</strong> — <code>docker build</code></li>
+<li><strong>Push image</strong> — vers le registry</li>
+<li><strong>Déploiement</strong> — <code>kubectl apply</code> vers l'environnement cible</li>
+</ol>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Retour en haut de la page
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+<script src="../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+</body>
+</html>

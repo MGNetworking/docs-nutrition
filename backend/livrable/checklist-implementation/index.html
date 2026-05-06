@@ -1,0 +1,1117 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Documentation technique du projet Nutrition API" name="description"/>
+<meta content="Maxime Ghalem" name="author"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
+<title>Checklist d'implémentation — API Nutrition - Nutrition API — Documentation</title>
+<link href="../../../assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="teal" data-md-color-primary="teal" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#checklist-dimplementation-api-nutrition">
+          Aller au contenu
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="En-tête" class="md-header__inner md-grid">
+<a aria-label="Nutrition API — Documentation" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Checklist d'implémentation — API Nutrition
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Mode sombre" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Mode sombre">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Mode clair" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Mode clair">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Rechercher" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Rechercher" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Recherche" class="md-search__options">
+<button aria-label="Effacer" class="md-search__icon md-icon" tabindex="-1" title="Effacer" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Onglets" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../..">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../1.nutrition-introduction/">
+          
+  
+  Backend
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Nutrition API — Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Nutrition API — Documentation
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    Accueil
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    Backend
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../1.nutrition-introduction/">
+<span class="md-ellipsis">
+    Introduction
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../2.nutrition-cas-usage/">
+<span class="md-ellipsis">
+    Cas d'usage
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../3.nutrition-specifications-fonctionnelles/">
+<span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../4.nutrition-specifications-techniques/">
+<span class="md-ellipsis">
+    Specs techniques
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../5.nutrition-contraintes/">
+<span class="md-ellipsis">
+    Contraintes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6.nutrition-abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../7.nutrition-admin/">
+<span class="md-ellipsis">
+    Administration
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+<span class="md-ellipsis">
+    Domaine
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_8">
+<span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Modele-domaine/">
+<span class="md-ellipsis">
+    Modèle domaine
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Diagramme-classes/">
+<span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Regles-metier/">
+<span class="md-ellipsis">
+    Règles métier
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+<span class="md-ellipsis">
+    Features
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_9_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_9">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/authentification/">
+<span class="md-ellipsis">
+    Authentification
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/profil-utilisateur/">
+<span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/diet-plan/">
+<span class="md-ellipsis">
+    Diet Plan
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/diet/">
+<span class="md-ellipsis">
+    Diet
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/repas/">
+<span class="md-ellipsis">
+    Repas
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/aliments/">
+<span class="md-ellipsis">
+    Aliments
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/bilan-nutritionnel/">
+<span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/suivi-poids/">
+<span class="md-ellipsis">
+    Suivi du poids
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/rgpd/">
+<span class="md-ellipsis">
+    RGPD
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/openapi/">
+<span class="md-ellipsis">
+    OpenAPI
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/admin-dashboard/">
+<span class="md-ellipsis">
+    Admin dashboard
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+<span class="md-ellipsis">
+    Infrastructure
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_10_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_10">
+<span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../annexes/infrastructure-setup/">
+<span class="md-ellipsis">
+    Setup local &amp; production
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../annexes/infrastructure-keycloak-admin/">
+<span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../annexes/infrastructure-import-off/">
+<span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../annexes/infrastructure-hangfire/">
+<span class="md-ellipsis">
+    Hangfire
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../annexes/infrastructure-docs/">
+<span class="md-ellipsis">
+    Publication docs
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#legende">
+<span class="md-ellipsis">
+      Légende
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-couche-domain">
+<span class="md-ellipsis">
+      1. Couche Domain
+    </span>
+</a>
+<nav aria-label="1. Couche Domain" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aggregate-roots">
+<span class="md-ellipsis">
+      Aggregate Roots
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entites-enfants">
+<span class="md-ellipsis">
+      Entités enfants
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#value-objects">
+<span class="md-ellipsis">
+      Value Objects
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enums">
+<span class="md-ellipsis">
+      Enums
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#abonnements-templates-ajout-2026-05-02">
+<span class="md-ellipsis">
+      Abonnements &amp; Templates (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#invariants-domaine-a-implementer">
+<span class="md-ellipsis">
+      Invariants domaine à implémenter
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-couche-application-services">
+<span class="md-ellipsis">
+      2. Couche Application (Services)
+    </span>
+</a>
+<nav aria-label="2. Couche Application (Services)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#userservice">
+<span class="md-ellipsis">
+      UserService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dietplanservice">
+<span class="md-ellipsis">
+      DietPlanService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dietservice">
+<span class="md-ellipsis">
+      DietService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mealservice">
+<span class="md-ellipsis">
+      MealService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fooditemservice">
+<span class="md-ellipsis">
+      FoodItemService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#nutritionservice">
+<span class="md-ellipsis">
+      NutritionService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#subscriptionguard-verifications-tier-ajout-2026-05-02">
+<span class="md-ellipsis">
+      SubscriptionGuard — vérifications tier (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dtos-un-dto-request-response-par-use-case">
+<span class="md-ellipsis">
+      DTOs (un DTO Request + Response par use case)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-couche-infrastructure">
+<span class="md-ellipsis">
+      3. Couche Infrastructure
+    </span>
+</a>
+<nav aria-label="3. Couche Infrastructure" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ef-core-configurations-fluent-api">
+<span class="md-ellipsis">
+      EF Core — Configurations (Fluent API)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#repositories">
+<span class="md-ellipsis">
+      Repositories
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cache-redis">
+<span class="md-ellipsis">
+      Cache Redis
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#job-dimport-open-food-facts-hangfire">
+<span class="md-ellipsis">
+      Job d'import Open Food Facts (Hangfire)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#job-de-purge-rgpd-hangfire-quotidien">
+<span class="md-ellipsis">
+      Job de purge RGPD (Hangfire — quotidien)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migrations-ef-core">
+<span class="md-ellipsis">
+      Migrations EF Core
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#abonnements-templates-infrastructure-ajout-2026-05-02">
+<span class="md-ellipsis">
+      Abonnements &amp; Templates — Infrastructure (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-couche-api-controllers-endpoints">
+<span class="md-ellipsis">
+      4. Couche API (Controllers + Endpoints)
+    </span>
+</a>
+<nav aria-label="4. Couche API (Controllers + Endpoints)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authcontroller-gere-par-keycloak">
+<span class="md-ellipsis">
+      AuthController — géré par Keycloak
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#userscontroller">
+<span class="md-ellipsis">
+      UsersController
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dietplanscontroller">
+<span class="md-ellipsis">
+      DietPlansController
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dietscontroller">
+<span class="md-ellipsis">
+      DietsController
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mealscontroller">
+<span class="md-ellipsis">
+      MealsController
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fooditemscontroller">
+<span class="md-ellipsis">
+      FoodItemsController
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#middleware">
+<span class="md-ellipsis">
+      Middleware
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#auth-abonnements-api-ajout-2026-05-02">
+<span class="md-ellipsis">
+      Auth &amp; Abonnements — API (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#admincontroller-back-office-ajout-2026-05-02">
+<span class="md-ellipsis">
+      AdminController — Back-office (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adminservice-application-ajout-2026-05-02">
+<span class="md-ellipsis">
+      AdminService — Application (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openapi-swagger-ui-ajout-2026-05-02">
+<span class="md-ellipsis">
+      OpenAPI / Swagger UI (ajout 2026-05-02)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-gaps-identifies">
+<span class="md-ellipsis">
+      5. Gaps identifiés ⚠️
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-tests">
+<span class="md-ellipsis">
+      6. Tests
+    </span>
+</a>
+<nav aria-label="6. Tests" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tests-unitaires-couche-domain">
+<span class="md-ellipsis">
+      Tests unitaires (couche Domain)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tests-dintegration-couche-infrastructure">
+<span class="md-ellipsis">
+      Tests d'intégration (couche Infrastructure)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tests-api-couche-api">
+<span class="md-ellipsis">
+      Tests API (couche API)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="checklist-dimplementation-api-nutrition">Checklist d'implémentation — API Nutrition<a class="headerlink" href="#checklist-dimplementation-api-nutrition" title="Permanent link">¶</a></h1>
+<blockquote>
+<p>Document vivant — cocher chaque item au fur et à mesure de l'implémentation.
+Généré à l'étape 8 (validation cohérence) — sert de pont entre conception et développement.
+Source de vérité : <code>docs/domaine/Modele-domaine.md</code> + workflows <code>docs/annexes/</code></p>
+</blockquote>
+<hr/>
+<h2 id="legende">Légende<a class="headerlink" href="#legende" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symbole</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔲</td>
+<td>À implémenter</td>
+</tr>
+<tr>
+<td>🔄</td>
+<td>En cours</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Terminé</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Gap identifié — à trancher avant implémentation</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="1-couche-domain">1. Couche Domain<a class="headerlink" href="#1-couche-domain" title="Permanent link">¶</a></h2>
+<h3 id="aggregate-roots">Aggregate Roots<a class="headerlink" href="#aggregate-roots" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>User</code></li>
+<li>🔲 <code>DietPlan</code></li>
+<li>🔲 <code>Diet</code></li>
+<li>🔲 <code>Meal</code></li>
+<li>🔲 <code>FoodItem</code></li>
+</ul>
+<h3 id="entites-enfants">Entités enfants<a class="headerlink" href="#entites-enfants" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>WeightEntry</code> (enfant de <code>User</code>)</li>
+<li>🔲 <code>MealItem</code> (enfant de <code>Meal</code>)</li>
+<li>🔲 <code>SavedFoodItem</code> (enfant de <code>User</code>)</li>
+</ul>
+<h3 id="value-objects">Value Objects<a class="headerlink" href="#value-objects" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>MacroDistribution</code> — invariant : somme = 100%</li>
+<li>🔲 <code>NutritionInfo</code> — snapshot calculé (Calories, Proteins, Carbs, Fats)</li>
+<li>🔲 <code>NutritionNeeds</code> — non persisté, calculé à la demande (Bmr, Tdee, TargetCalories)</li>
+</ul>
+<h3 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>ActivityLevel</code> — Sedentary, LightlyActive, ModeratelyActive, VeryActive, ExtremelyActive</li>
+<li>🔲 <code>Goal</code> — WeightLoss, Maintenance, WeightGain</li>
+<li>🔲 <code>MealType</code> — Breakfast, Lunch, Dinner, Snack</li>
+<li>🔲 <code>DietType</code> — Balanced, HighProtein, Keto, Mediterranean, LowCarb, Vegetarian, Vegan, Custom</li>
+<li>🔲 <code>DietStatus</code> — Active, Inactive, Archived</li>
+<li>🔲 <code>Gender</code> — Male, Female, Other</li>
+<li>🔲 <code>Allergen</code> — 14 valeurs EU (Gluten, Crustaceans, Eggs, Fish, Peanuts, Soybeans, Milk, Nuts, Celery, Mustard, SesameSeeds, SulphurDioxide, Lupin, Molluscs)</li>
+<li>🔲 <code>SubscriptionTier</code> — Free, Pro, Business</li>
+</ul>
+<h3 id="abonnements-templates-ajout-2026-05-02">Abonnements &amp; Templates (ajout 2026-05-02)<a class="headerlink" href="#abonnements-templates-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>User.SubscriptionTier</code> — champ ajouté (Free par défaut)</li>
+<li>🔲 <code>DietPlan.IsTemplate</code> — bool (false par défaut)</li>
+<li>🔲 <code>DietPlan.UserId</code> — passer à <code>Guid?</code> (null si template)</li>
+</ul>
+<h3 id="invariants-domaine-a-implementer">Invariants domaine à implémenter<a class="headerlink" href="#invariants-domaine-a-implementer" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>MacroDistribution</code> : CarbsPercent + ProteinsPercent + FatsPercent = 100%</li>
+<li>🔲 <code>Meal</code> : doit contenir au moins un <code>MealItem</code></li>
+<li>🔲 <code>Diet</code> : une seule <code>Active</code> par <code>User</code> — bloquer à l'activation (409)</li>
+<li>🔲 <code>SavedFoodItem</code> : un même <code>FoodItemId</code> ne peut être sauvegardé qu'une fois par <code>User</code></li>
+<li>🔲 <code>Diet.StartDate</code> : imposée par le système (= date du lancement)</li>
+<li>🔲 <code>Diet</code> : non modifiable une fois lancée (sauf <code>EndDate</code>)</li>
+</ul>
+<hr/>
+<h2 id="2-couche-application-services">2. Couche Application (Services)<a class="headerlink" href="#2-couche-application-services" title="Permanent link">¶</a></h2>
+<h3 id="userservice">UserService<a class="headerlink" href="#userservice" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Créer le profil utilisateur (+ première <code>WeightEntry</code>)</li>
+<li>🔲 Mettre à jour le profil utilisateur</li>
+<li>🔲 Ajouter une <code>WeightEntry</code></li>
+</ul>
+<h3 id="dietplanservice">DietPlanService<a class="headerlink" href="#dietplanservice" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Créer un <code>DietPlan</code></li>
+<li>🔲 Modifier un <code>DietPlan</code></li>
+<li>🔲 Supprimer un <code>DietPlan</code></li>
+<li>🔲 Lister les <code>DietPlan</code> d'un utilisateur</li>
+</ul>
+<h3 id="dietservice">DietService<a class="headerlink" href="#dietservice" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Lancer un <code>DietPlan</code> → créer une <code>Diet</code> (snapshot + calcul BMR/TDEE/CalorieTarget)</li>
+<li>🔲 Terminer une <code>Diet</code> (passer en <code>Archived</code> + renseigner <code>EndDate</code>)</li>
+<li>🔲 Calculer BMR/TDEE/CalorieTarget (interne — appelé au lancement)</li>
+<li>🔲 Déduire la <code>Diet</code> active à la date d'un <code>Meal</code> (pour le bilan)</li>
+</ul>
+<h3 id="mealservice">MealService<a class="headerlink" href="#mealservice" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Créer un <code>Meal</code> (avec calcul <code>NutritionInfo</code> pour chaque <code>MealItem</code>)</li>
+<li>🔲 Lister les repas sauvegardés (<code>IsSaved = true</code>)</li>
+<li>🔲 Supprimer un <code>Meal</code></li>
+</ul>
+<h3 id="fooditemservice">FoodItemService<a class="headerlink" href="#fooditemservice" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Rechercher des aliments par mot-clé (Redis → PostgreSQL)</li>
+<li>🔲 Sauvegarder un <code>FoodItem</code> dans la liste personnelle (<code>SavedFoodItem</code>)</li>
+<li>🔲 Supprimer un <code>SavedFoodItem</code></li>
+<li>🔲 Lister les <code>SavedFoodItem</code> d'un utilisateur</li>
+</ul>
+<h3 id="nutritionservice">NutritionService<a class="headerlink" href="#nutritionservice" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Calculer le bilan nutritionnel d'une <code>Diet</code> (agrégation <code>MealItem</code> + <code>WeightEntry</code> par période)</li>
+</ul>
+<h3 id="subscriptionguard-verifications-tier-ajout-2026-05-02">SubscriptionGuard — vérifications tier (ajout 2026-05-02)<a class="headerlink" href="#subscriptionguard-verifications-tier-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Helper <code>SubscriptionGuard</code> (ou méthode centralisée) — vérifie les limites selon <code>User.SubscriptionTier</code></li>
+<li>🔲 <code>DietPlanService</code> — bloquer création plan personnel si limite tier atteinte (Free: 2, Pro: 20)</li>
+<li>🔲 <code>DietPlanService</code> — bloquer accès templates si tier = Free (403)</li>
+<li>🔲 <code>DietPlanService</code> — lister les templates partagés (<code>IsTemplate = true</code>)</li>
+<li>🔲 <code>MealService</code> — bloquer création repas sauvegardé si limite tier atteinte (Free: 5, Pro: 50)</li>
+<li>🔲 <code>FoodItemService</code> — bloquer ajout SavedFoodItem si limite tier atteinte (Free: 10, Pro: 100)</li>
+<li>🔲 <code>NutritionService</code> — restreindre la période du bilan selon tier (Free: 7j, Pro: 1 an)</li>
+</ul>
+<h3 id="dtos-un-dto-request-response-par-use-case">DTOs (un DTO Request + Response par use case)<a class="headerlink" href="#dtos-un-dto-request-response-par-use-case" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>CreateUserProfileRequest</code> / <code>UserProfileResponse</code></li>
+<li>🔲 <code>CreateDietPlanRequest</code> / <code>DietPlanResponse</code></li>
+<li>🔲 <code>LaunchDietPlanRequest</code> / <code>DietResponse</code></li>
+<li>🔲 <code>CreateMealRequest</code> / <code>MealResponse</code></li>
+<li>🔲 <code>FoodItemSearchResponse</code></li>
+<li>🔲 <code>SaveFoodItemRequest</code></li>
+<li>🔲 <code>NutritionBilanResponse</code> (dailyData + weightEntries + summary)</li>
+</ul>
+<hr/>
+<h2 id="3-couche-infrastructure">3. Couche Infrastructure<a class="headerlink" href="#3-couche-infrastructure" title="Permanent link">¶</a></h2>
+<h3 id="ef-core-configurations-fluent-api">EF Core — Configurations (Fluent API)<a class="headerlink" href="#ef-core-configurations-fluent-api" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>UserConfiguration</code></li>
+<li>🔲 <code>DietPlanConfiguration</code></li>
+<li>🔲 <code>DietConfiguration</code></li>
+<li>🔲 <code>MealConfiguration</code></li>
+<li>🔲 <code>MealItemConfiguration</code></li>
+<li>🔲 <code>FoodItemConfiguration</code></li>
+<li>🔲 <code>WeightEntryConfiguration</code></li>
+<li>🔲 <code>SavedFoodItemConfiguration</code></li>
+<li>🔲 Value Object <code>MacroDistribution</code> (owned entity)</li>
+<li>🔲 Value Object <code>NutritionInfo</code> (owned entity)</li>
+</ul>
+<h3 id="repositories">Repositories<a class="headerlink" href="#repositories" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>IUserRepository</code> / <code>UserRepository</code></li>
+<li>🔲 <code>IDietPlanRepository</code> / <code>DietPlanRepository</code></li>
+<li>🔲 <code>IDietRepository</code> / <code>DietRepository</code></li>
+<li>🔲 <code>IMealRepository</code> / <code>MealRepository</code></li>
+<li>🔲 <code>IFoodItemRepository</code> / <code>FoodItemRepository</code></li>
+<li>🔲 <code>IWeightEntryRepository</code> / <code>WeightEntryRepository</code></li>
+<li>🔲 <code>ISavedFoodItemRepository</code> / <code>SavedFoodItemRepository</code></li>
+</ul>
+<h3 id="cache-redis">Cache Redis<a class="headerlink" href="#cache-redis" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Configuration Redis (<code>IConnectionMultiplexer</code>)</li>
+<li>🔲 <code>IFoodCacheService</code> / <code>FoodCacheService</code> — get/set par mot-clé (TTL court)</li>
+</ul>
+<h3 id="job-dimport-open-food-facts-hangfire">Job d'import Open Food Facts (Hangfire)<a class="headerlink" href="#job-dimport-open-food-facts-hangfire" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Téléchargement du dump OFF (JSONL/CSV)</li>
+<li>🔲 Traitement par batch (INSERT / UPDATE <code>FoodItem</code>)</li>
+<li>🔲 Planification quotidienne via Hangfire (<code>RecurringJob.AddOrUpdate</code>, cron <code>0 3 * * *</code>)</li>
+<li>🔲 Gestion des erreurs et reprise après échec (Hangfire retry automatique)</li>
+</ul>
+<h3 id="job-de-purge-rgpd-hangfire-quotidien">Job de purge RGPD (Hangfire — quotidien)<a class="headerlink" href="#job-de-purge-rgpd-hangfire-quotidien" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>SELECT User WHERE DeletedAt &lt;= maintenant - 30 jours</code></li>
+<li>🔲 DELETE cascade PostgreSQL : <code>MealItems → Meals → WeightEntries → SavedFoodItems → DietPlans → Diets → User</code></li>
+<li>🔲 <code>DELETE /admin/realms/{realm}/users/{KeycloakId}</code> (Keycloak Admin) pour chaque utilisateur purgé</li>
+<li>🔲 Planification quotidienne via Hangfire (<code>RecurringJob.AddOrUpdate</code>, cron <code>0 3 30 * *</code>)</li>
+<li>🔲 Gestion des erreurs (Keycloak indisponible → retry Hangfire, données déjà supprimées → ignorer)</li>
+</ul>
+<h3 id="migrations-ef-core">Migrations EF Core<a class="headerlink" href="#migrations-ef-core" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Migration initiale (toutes les tables)</li>
+<li>🔲 Import initial du dump OFF (première installation)</li>
+</ul>
+<h3 id="abonnements-templates-infrastructure-ajout-2026-05-02">Abonnements &amp; Templates — Infrastructure (ajout 2026-05-02)<a class="headerlink" href="#abonnements-templates-infrastructure-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>DietPlanConfiguration</code> — <code>UserId</code> nullable + <code>IsTemplate</code> + index sur <code>IsTemplate</code></li>
+<li>🔲 Seed des templates initiaux (données de départ — fichier JSON ou migration)</li>
+</ul>
+<hr/>
+<h2 id="4-couche-api-controllers-endpoints">4. Couche API (Controllers + Endpoints)<a class="headerlink" href="#4-couche-api-controllers-endpoints" title="Permanent link">¶</a></h2>
+<h3 id="authcontroller-gere-par-keycloak">AuthController — géré par Keycloak<a class="headerlink" href="#authcontroller-gere-par-keycloak" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Flux OAuth2/OIDC délégué à Keycloak (voir <code>workflow_Flux_authentification.mermaid</code>)</li>
+</ul>
+<h3 id="userscontroller">UsersController<a class="headerlink" href="#userscontroller" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>POST /users/me</code> — créer le profil (auto-déclenché à la première connexion Keycloak)</li>
+<li>🔲 <code>GET /users/me</code> — lire le profil + BMR/TDEE calculés à la demande</li>
+<li>🔲 <code>PUT /users/me</code> — mettre à jour le profil</li>
+<li>🔲 <code>POST /users/me/weight-entries</code> — ajouter une pesée</li>
+<li>🔲 <code>GET /users/me/weight-entries</code> — historique des pesées</li>
+<li>🔲 <code>PUT /users/me/weight-entries/{id}</code> — modifier une pesée existante</li>
+<li>🔲 <code>GET /users/me/saved-food-items</code> — liste personnelle d'aliments</li>
+<li>🔲 <code>POST /users/me/saved-food-items</code> — sauvegarder un aliment dans la liste personnelle</li>
+<li>🔲 <code>DELETE /users/me/saved-food-items/{id}</code> — retirer un aliment de la liste</li>
+<li>🔲 <code>DELETE /users/me</code> — suppression du compte (RGPD Art. 17)</li>
+<li>🔲 <code>POST /users/me/reactivate</code> — réactivation du compte pendant la grace period (RGPD)</li>
+<li>🔲 <code>GET /users/me/export</code> — export des données (RGPD Art. 20)</li>
+</ul>
+<h3 id="dietplanscontroller">DietPlansController<a class="headerlink" href="#dietplanscontroller" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>POST /diet-plans</code> — créer un plan</li>
+<li>🔲 <code>GET /diet-plans</code> — lister ses plans</li>
+<li>🔲 <code>PUT /diet-plans/{id}</code> — modifier un plan</li>
+<li>🔲 <code>DELETE /diet-plans/{id}</code> — supprimer un plan</li>
+<li>🔲 <code>POST /diet-plans/{id}/launch</code> — lancer un plan → créer une Diet active</li>
+</ul>
+<h3 id="dietscontroller">DietsController<a class="headerlink" href="#dietscontroller" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>GET /diets/active</code> — récupérer le régime actif (utilisé sur dashboard + écran Diet active)</li>
+<li>🔲 <code>GET /diets</code> — lister ses régimes (historique)</li>
+<li>🔲 <code>GET /diets/{id}</code> — détail d'un régime</li>
+<li>🔲 <code>POST /diets/{id}/archive</code> — terminer un régime actif (<code>workflow_terminer-diet.mermaid</code>)</li>
+<li>🔲 <code>GET /diets/{id}/bilan</code> — bilan nutritionnel de la période (params : <code>period</code>, <code>date</code>, <code>startDate</code>)</li>
+</ul>
+<h3 id="mealscontroller">MealsController<a class="headerlink" href="#mealscontroller" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>POST /meals</code> — créer un repas (ponctuel ou sauvegardé)</li>
+<li>🔲 <code>GET /meals</code> — lister ses repas (filtre : <code>?saved=true</code>, <code>?date=</code>)</li>
+<li>🔲 <code>GET /meals/{id}</code> — détail d'un repas</li>
+<li>🔲 <code>DELETE /meals/{id}</code> — supprimer un repas</li>
+<li>🔲 <code>POST /meals/{id}/items</code> — ajouter un MealItem à un repas</li>
+<li>🔲 <code>DELETE /meals/{id}/items/{itemId}</code> — retirer un MealItem d'un repas</li>
+</ul>
+<h3 id="fooditemscontroller">FoodItemsController<a class="headerlink" href="#fooditemscontroller" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>GET /food-items?search={motclé}</code> — rechercher un aliment</li>
+</ul>
+<h3 id="middleware">Middleware<a class="headerlink" href="#middleware" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Validation JWT Keycloak (vérification signature + audience + expiration)</li>
+<li>🔲 Extraction <code>sub</code> → résolution <code>User.KeycloakId</code> → <code>User.Id</code> (middleware ou extension)</li>
+<li>🔲 Gestion globale des erreurs (middleware exception → codes HTTP)</li>
+<li>🔲 Logging des requêtes</li>
+</ul>
+<h3 id="auth-abonnements-api-ajout-2026-05-02">Auth &amp; Abonnements — API (ajout 2026-05-02)<a class="headerlink" href="#auth-abonnements-api-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>GET /diet-plans/templates</code> — lister les templates partagés (Pro + Business uniquement)</li>
+<li>🔲 <code>POST /admin/diet-plans/templates</code> — créer un template (rôle <code>admin</code> uniquement)</li>
+<li>🔲 <code>PUT /admin/diet-plans/templates/{id}</code> — modifier un template (rôle <code>admin</code> uniquement)</li>
+<li>🔲 Politique d'autorisation <code>RequireRole("admin")</code> — appliquée sur les endpoints <code>/admin/**</code></li>
+<li>🔲 Réponses 403 — tier insuffisant + message explicite (<code>"This feature requires a Pro subscription"</code>)</li>
+</ul>
+<h3 id="admincontroller-back-office-ajout-2026-05-02">AdminController — Back-office (ajout 2026-05-02)<a class="headerlink" href="#admincontroller-back-office-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>GET /admin/dashboard</code> — KPIs consolidés (utilisateurs par tier, activité, grace period)</li>
+<li>🔲 <code>GET /admin/system/health</code> — statut jobs OFF import + purge RGPD + count FoodItems</li>
+<li>🔲 <code>DELETE /admin/diet-plans/templates/{id}</code> — supprimer un template (rôle <code>admin</code> uniquement)</li>
+</ul>
+<h3 id="adminservice-application-ajout-2026-05-02">AdminService — Application (ajout 2026-05-02)<a class="headerlink" href="#adminservice-application-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Agréger KPIs utilisateurs (total, par tier, nouveaux 7 derniers jours)</li>
+<li>🔲 Agréger métriques activité (diets actives, repas 7j, comptes en grace period)</li>
+<li>🔲 Agréger santé système depuis tables Hangfire (HangFire.Job + HangFire.State)</li>
+</ul>
+<h3 id="openapi-swagger-ui-ajout-2026-05-02">OpenAPI / Swagger UI (ajout 2026-05-02)<a class="headerlink" href="#openapi-swagger-ui-ajout-2026-05-02" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Configurer <code>AddSwaggerGen</code> — titre, version, sécurité JWT Bearer</li>
+<li>🔲 Activer <code>UseSwagger</code> + <code>UseSwaggerUI</code> uniquement hors production</li>
+<li>🔲 Activer les commentaires XML (<code>&lt;GenerateDocumentationFile&gt;true&lt;/GenerateDocumentationFile&gt;</code>) sur les projets API et Application</li>
+<li>🔲 Exclure le dashboard Hangfire (<code>/hangfire</code>) de la spec OpenAPI</li>
+</ul>
+<hr/>
+<h2 id="5-gaps-identifies">5. Gaps identifiés ⚠️<a class="headerlink" href="#5-gaps-identifies" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Gap</th>
+<th>Impact</th>
+<th>Action requise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1</td>
+<td><strong>Terminer une Diet</strong> — aucun workflow ni endpoint défini</td>
+<td>✅ Résolu — <code>workflow_terminer-diet.mermaid</code> + <code>POST /diets/{id}/archive</code>. EndDate imposée système (= aujourd'hui)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>G2</td>
+<td><strong>Ajouter une WeightEntry</strong> — aucun workflow défini</td>
+<td>✅ Résolu — <code>workflow_gestion-poids.mermaid</code>. MeasuredAt = aujourd'hui par défaut, modifiable. Une seule entrée par date (409 si doublon)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>G3</td>
+<td><strong>Mettre à jour le profil</strong> — aucun workflow défini</td>
+<td>✅ Résolu — <code>workflow_mise-a-jour-profil.mermaid</code>. Tous les champs modifiables (PATCH sémantique). <code>DietaryPreferences</code> sans impact métier en v1</td>
+<td>—</td>
+</tr>
+<tr>
+<td>G4</td>
+<td><strong>Supprimer un SavedFoodItem</strong> — endpoint manquant</td>
+<td>✅ Résolu — dans <code>workflow_mise-a-jour-profil.mermaid</code>. <code>DELETE /users/me/saved-food-items/{id}</code> → 204 No Content</td>
+<td>—</td>
+</tr>
+<tr>
+<td>G5</td>
+<td><strong>RGPD</strong> — suppression compte + export données</td>
+<td>✅ Résolu — <code>workflow_rgpd.mermaid</code> (4 parties : export, soft delete + Keycloak disable, réactivation, purge job). Connexion Keycloak Admin documentée dans <code>infrastructure-keycloak-admin.md</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="6-tests">6. Tests<a class="headerlink" href="#6-tests" title="Permanent link">¶</a></h2>
+<h3 id="tests-unitaires-couche-domain">Tests unitaires (couche Domain)<a class="headerlink" href="#tests-unitaires-couche-domain" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 <code>MacroDistribution</code> — invariant somme 100%</li>
+<li>🔲 <code>NutritionInfo</code> — calcul snapshot correct</li>
+<li>🔲 <code>Diet</code> — règles d'activation (une seule active)</li>
+</ul>
+<h3 id="tests-dintegration-couche-infrastructure">Tests d'intégration (couche Infrastructure)<a class="headerlink" href="#tests-dintegration-couche-infrastructure" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Repositories avec Testcontainers (PostgreSQL réel)</li>
+<li>🔲 Cache Redis</li>
+<li>🔲 Job import OFF (dump test)</li>
+</ul>
+<h3 id="tests-api-couche-api">Tests API (couche API)<a class="headerlink" href="#tests-api-couche-api" title="Permanent link">¶</a></h3>
+<ul>
+<li>🔲 Tous les endpoints — cas nominaux + cas d'erreur</li>
+<li>🔲 Validation JWT</li>
+</ul>
+<hr/>
+<p><em>Dernière mise à jour : 2026-04-28 — Étape 8 (validation cohérence)</em></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Retour en haut de la page
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+<script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+</body>
+</html>

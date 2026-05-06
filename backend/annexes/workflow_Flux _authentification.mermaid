@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant Front as Client Frontend
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+
+    %% 1. Front demande authentification / enregistrement
+    Front->>KC: Requête d'authentification (auth code flow) avec client_id, redirect_uri, scope=openid
+    KC-->>Front: Affiche formulaire login / inscription
+
+    %% 2. Utilisateur authentifié ou inscrit
+    Front->>KC: Envoie credentials (login ou inscription)
+    KC-->>Front: Redirige avec code d'autorisation (redirect_uri?code=xxx)
+
+    %% 3. Front échange code contre token
+    Front->>KC: POST /token avec code + client_id + redirect_uri + PKCE
+    KC-->>Front: access_token + refresh_token + id_token
+
+    %% 4. Front stocke tokens et session Keycloak active
+    Note right of Front: Gestion session KC via token
+
+    %% 5. Front appelle API avec access_token
+    Front->>API: Requête API avec access_token (Authorization: Bearer ...)
+    API->>KC: Vérifie validité token via introspection ou JWT validation
+    alt token valide
+        API->>API: Enregistre l'utilisateur dans la base métier si nouveau
+        API-->>Front: Réponse OK (données métier)
+    else token invalide
+        API-->>Front: Erreur 401 Unauthorized
+    end

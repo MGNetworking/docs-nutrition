@@ -1,0 +1,868 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Documentation technique du projet Nutrition API" name="description"/>
+<meta content="Maxime Ghalem" name="author"/>
+<link href="../infrastructure-setup/" rel="prev"/>
+<link href="../infrastructure-import-off/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
+<title>Keycloak Admin - Nutrition API — Documentation</title>
+<link href="../../../assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="teal" data-md-color-primary="teal" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#keycloak-admin-api-connexion-et-operations">
+          Aller au contenu
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="En-tête" class="md-header__inner md-grid">
+<a aria-label="Nutrition API — Documentation" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Keycloak Admin
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Mode sombre" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Mode sombre">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Mode clair" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Mode clair">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Rechercher" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Rechercher" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Recherche" class="md-search__options">
+<button aria-label="Effacer" class="md-search__icon md-icon" tabindex="-1" title="Effacer" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Onglets" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../..">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../../1.nutrition-introduction/">
+          
+  
+  Backend
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Nutrition API — Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Nutrition API — Documentation
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    Accueil
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+<span class="md-ellipsis">
+    Backend
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../1.nutrition-introduction/">
+<span class="md-ellipsis">
+    Introduction
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../2.nutrition-cas-usage/">
+<span class="md-ellipsis">
+    Cas d'usage
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../3.nutrition-specifications-fonctionnelles/">
+<span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../4.nutrition-specifications-techniques/">
+<span class="md-ellipsis">
+    Specs techniques
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../5.nutrition-contraintes/">
+<span class="md-ellipsis">
+    Contraintes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6.nutrition-abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../7.nutrition-admin/">
+<span class="md-ellipsis">
+    Administration
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="">
+<span class="md-ellipsis">
+    Domaine
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_8">
+<span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Modele-domaine/">
+<span class="md-ellipsis">
+    Modèle domaine
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Diagramme-classes/">
+<span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Regles-metier/">
+<span class="md-ellipsis">
+    Règles métier
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_9_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_9">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/authentification/">
+<span class="md-ellipsis">
+    Authentification
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/profil-utilisateur/">
+<span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/diet-plan/">
+<span class="md-ellipsis">
+    Diet Plan
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/diet/">
+<span class="md-ellipsis">
+    Diet
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/repas/">
+<span class="md-ellipsis">
+    Repas
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/aliments/">
+<span class="md-ellipsis">
+    Aliments
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/bilan-nutritionnel/">
+<span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/suivi-poids/">
+<span class="md-ellipsis">
+    Suivi du poids
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/rgpd/">
+<span class="md-ellipsis">
+    RGPD
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/openapi/">
+<span class="md-ellipsis">
+    OpenAPI
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/admin-dashboard/">
+<span class="md-ellipsis">
+    Admin dashboard
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="">
+<span class="md-ellipsis">
+    Infrastructure
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_10_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_10">
+<span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-setup/">
+<span class="md-ellipsis">
+    Setup local &amp; production
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+</a>
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pourquoi-lapi-doit-parler-a-keycloak-admin">
+<span class="md-ellipsis">
+      Pourquoi l'API doit parler à Keycloak Admin
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mecanisme-de-connexion-client-credentials">
+<span class="md-ellipsis">
+      Mécanisme de connexion — Client Credentials
+    </span>
+</a>
+<nav aria-label="Mécanisme de connexion — Client Credentials" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#principe">
+<span class="md-ellipsis">
+      Principe
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-cote-keycloak">
+<span class="md-ellipsis">
+      Configuration côté Keycloak
+    </span>
+</a>
+<nav aria-label="Configuration côté Keycloak" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-creer-un-client-de-service-dans-keycloak">
+<span class="md-ellipsis">
+      1. Créer un client de service dans Keycloak
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-attribuer-le-role-manage-users">
+<span class="md-ellipsis">
+      2. Attribuer le rôle manage-users
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-recuperer-le-secret-client">
+<span class="md-ellipsis">
+      3. Récupérer le secret client
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-cote-aspnet-core">
+<span class="md-ellipsis">
+      Configuration côté ASP.NET Core
+    </span>
+</a>
+<nav aria-label="Configuration côté ASP.NET Core" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#variables-denvironnement-secrets">
+<span class="md-ellipsis">
+      Variables d'environnement / secrets
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-dedie-ikeycloakadminservice">
+<span class="md-ellipsis">
+      Service dédié — IKeycloakAdminService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resilience-avec-polly">
+<span class="md-ellipsis">
+      Résilience avec Polly
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#flux-complet-suppression-de-compte">
+<span class="md-ellipsis">
+      Flux complet — Suppression de compte
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#donnees-partagees-entre-lapi-et-keycloak">
+<span class="md-ellipsis">
+      Données partagées entre l'API et Keycloak
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ce-que-keycloak-admin-ne-fait-pas">
+<span class="md-ellipsis">
+      Ce que Keycloak Admin NE fait PAS
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-import-off/">
+<span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-hangfire/">
+<span class="md-ellipsis">
+    Hangfire
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-docs/">
+<span class="md-ellipsis">
+    Publication docs
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pourquoi-lapi-doit-parler-a-keycloak-admin">
+<span class="md-ellipsis">
+      Pourquoi l'API doit parler à Keycloak Admin
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mecanisme-de-connexion-client-credentials">
+<span class="md-ellipsis">
+      Mécanisme de connexion — Client Credentials
+    </span>
+</a>
+<nav aria-label="Mécanisme de connexion — Client Credentials" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#principe">
+<span class="md-ellipsis">
+      Principe
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-cote-keycloak">
+<span class="md-ellipsis">
+      Configuration côté Keycloak
+    </span>
+</a>
+<nav aria-label="Configuration côté Keycloak" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-creer-un-client-de-service-dans-keycloak">
+<span class="md-ellipsis">
+      1. Créer un client de service dans Keycloak
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-attribuer-le-role-manage-users">
+<span class="md-ellipsis">
+      2. Attribuer le rôle manage-users
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-recuperer-le-secret-client">
+<span class="md-ellipsis">
+      3. Récupérer le secret client
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-cote-aspnet-core">
+<span class="md-ellipsis">
+      Configuration côté ASP.NET Core
+    </span>
+</a>
+<nav aria-label="Configuration côté ASP.NET Core" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#variables-denvironnement-secrets">
+<span class="md-ellipsis">
+      Variables d'environnement / secrets
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#service-dedie-ikeycloakadminservice">
+<span class="md-ellipsis">
+      Service dédié — IKeycloakAdminService
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resilience-avec-polly">
+<span class="md-ellipsis">
+      Résilience avec Polly
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#flux-complet-suppression-de-compte">
+<span class="md-ellipsis">
+      Flux complet — Suppression de compte
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#donnees-partagees-entre-lapi-et-keycloak">
+<span class="md-ellipsis">
+      Données partagées entre l'API et Keycloak
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ce-que-keycloak-admin-ne-fait-pas">
+<span class="md-ellipsis">
+      Ce que Keycloak Admin NE fait PAS
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="keycloak-admin-api-connexion-et-operations">Keycloak Admin API — Connexion et opérations<a class="headerlink" href="#keycloak-admin-api-connexion-et-operations" title="Permanent link">¶</a></h1>
+<blockquote>
+<p>Ce document décrit comment l'API ASP.NET Core se connecte à Keycloak Admin pour gérer les comptes utilisateur dans le cadre du workflow RGPD.
+Référence workflow : <code>workflow_rgpd.mermaid</code></p>
+</blockquote>
+<hr/>
+<h2 id="pourquoi-lapi-doit-parler-a-keycloak-admin">Pourquoi l'API doit parler à Keycloak Admin<a class="headerlink" href="#pourquoi-lapi-doit-parler-a-keycloak-admin" title="Permanent link">¶</a></h2>
+<p>L'authentification (login, token) est gérée par Keycloak de façon autonome : l'API n'intervient pas.</p>
+<p>Mais certaines opérations RGPD nécessitent que l'API agisse <strong>directement sur les comptes Keycloak</strong> :</p>
+<table>
+<thead>
+<tr>
+<th>Opération</th>
+<th>Déclencheur</th>
+<th>Endpoint Keycloak Admin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Désactiver un compte</td>
+<td><code>DELETE /users/me</code> — début de grace period</td>
+<td><code>PATCH /admin/realms/{realm}/users/{id}</code> <code>{ "enabled": false }</code></td>
+</tr>
+<tr>
+<td>Réactiver un compte</td>
+<td><code>POST /users/me/reactivate</code> — dans les 30 jours</td>
+<td><code>PATCH /admin/realms/{realm}/users/{id}</code> <code>{ "enabled": true }</code></td>
+</tr>
+<tr>
+<td>Supprimer définitivement</td>
+<td>Job purge — <code>DeletedAt</code> &gt; 30 jours</td>
+<td><code>DELETE /admin/realms/{realm}/users/{id}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ces opérations ne peuvent pas passer par le token utilisateur : elles requièrent des droits d'administration sur le realm.</p>
+<hr/>
+<h2 id="mecanisme-de-connexion-client-credentials">Mécanisme de connexion — Client Credentials<a class="headerlink" href="#mecanisme-de-connexion-client-credentials" title="Permanent link">¶</a></h2>
+<p>L'API s'authentifie auprès de Keycloak en tant que <strong>service</strong> (machine-to-machine), via le flux OAuth2 <code>client_credentials</code>.</p>
+<h3 id="principe">Principe<a class="headerlink" href="#principe" title="Permanent link">¶</a></h3>
+<p>```
+API → Keycloak Token Endpoint
+      POST /realms/{realm}/protocol/openid-connect/token
+      grant_type=client_credentials
+      client_id=nutrition-api-service
+      client_secret=<secret></secret></p>
+<p>Keycloak → access_token (service token, sans contexte utilisateur)</p>
+<p>API → Keycloak Admin API
+      Authorization: Bearer <service token="">
+      PATCH / DELETE sur les ressources utilisateur
+```</service></p>
+<p>Le service token est obtenu à la demande et mis en cache jusqu'à expiration (TTL Keycloak, typiquement 60–300 secondes).</p>
+<hr/>
+<h2 id="configuration-cote-keycloak">Configuration côté Keycloak<a class="headerlink" href="#configuration-cote-keycloak" title="Permanent link">¶</a></h2>
+<h3 id="1-creer-un-client-de-service-dans-keycloak">1. Créer un client de service dans Keycloak<a class="headerlink" href="#1-creer-un-client-de-service-dans-keycloak" title="Permanent link">¶</a></h3>
+<p>Dans le realm de l'application :</p>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client ID</td>
+<td><code>nutrition-api-service</code></td>
+</tr>
+<tr>
+<td>Client type</td>
+<td><code>confidential</code></td>
+</tr>
+<tr>
+<td>Authentication flow</td>
+<td><code>Service accounts enabled</code> uniquement (pas de login humain)</td>
+</tr>
+<tr>
+<td>Direct Access Grants</td>
+<td><code>Désactivé</code></td>
+</tr>
+<tr>
+<td>Standard Flow</td>
+<td><code>Désactivé</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ce client représente l'API elle-même, pas un utilisateur.</p>
+<h3 id="2-attribuer-le-role-manage-users">2. Attribuer le rôle <code>manage-users</code><a class="headerlink" href="#2-attribuer-le-role-manage-users" title="Permanent link">¶</a></h3>
+<p>Le client doit avoir le rôle <code>manage-users</code> du realm pour pouvoir désactiver / supprimer des comptes.</p>
+<p>Dans Keycloak Admin Console :
+- <code>Clients</code> → <code>nutrition-api-service</code> → <code>Service account roles</code>
+- Ajouter le rôle <code>manage-users</code> depuis <code>realm-management</code></p>
+<blockquote>
+<p><strong>Principe du moindre privilège</strong> : n'attribuer que <code>manage-users</code>, pas <code>realm-admin</code>. L'API ne doit pas pouvoir modifier la configuration du realm.</p>
+</blockquote>
+<h3 id="3-recuperer-le-secret-client">3. Récupérer le secret client<a class="headerlink" href="#3-recuperer-le-secret-client" title="Permanent link">¶</a></h3>
+<p>Dans <code>Clients</code> → <code>nutrition-api-service</code> → <code>Credentials</code> → copier le <code>Client Secret</code>.</p>
+<hr/>
+<h2 id="configuration-cote-aspnet-core">Configuration côté ASP.NET Core<a class="headerlink" href="#configuration-cote-aspnet-core" title="Permanent link">¶</a></h2>
+<h3 id="variables-denvironnement-secrets">Variables d'environnement / secrets<a class="headerlink" href="#variables-denvironnement-secrets" title="Permanent link">¶</a></h3>
+<p><code>Keycloak__AdminBaseUrl=https://keycloak.example.com
+Keycloak__Realm=nutrition
+Keycloak__ServiceClientId=nutrition-api-service
+Keycloak__ServiceClientSecret=&lt;secret&gt;</code></p>
+<p>Ces valeurs ne doivent jamais être dans le code source. En développement : <code>dotnet user-secrets</code>. En production : variables d'environnement injectées par Kubernetes (Secret).</p>
+<h3 id="service-dedie-ikeycloakadminservice">Service dédié — <code>IKeycloakAdminService</code><a class="headerlink" href="#service-dedie-ikeycloakadminservice" title="Permanent link">¶</a></h3>
+<p>L'API expose une interface dans la couche <strong>Infrastructure</strong> :</p>
+<p><code>csharp
+public interface IKeycloakAdminService
+{
+    Task DisableUserAsync(string keycloakId, CancellationToken ct);
+    Task EnableUserAsync(string keycloakId, CancellationToken ct);
+    Task DeleteUserAsync(string keycloakId, CancellationToken ct);
+}</code></p>
+<p>L'implémentation (<code>KeycloakAdminService</code>) :
+1. Obtient un service token via <code>client_credentials</code> (mis en cache)
+2. Appelle l'endpoint Admin avec <code>HttpClient</code>
+3. Gère les erreurs HTTP (404 = compte déjà supprimé, 401 = token expiré → retry)</p>
+<h3 id="resilience-avec-polly">Résilience avec Polly<a class="headerlink" href="#resilience-avec-polly" title="Permanent link">¶</a></h3>
+<p>Le service token peut expirer entre l'obtention et l'appel Admin. Polly gère le retry :</p>
+<p><code>- 401 Unauthorized → invalider le cache token + retry 1 fois
+- 5xx / timeout    → retry exponentiel (3 tentatives max)</code></p>
+<hr/>
+<h2 id="flux-complet-suppression-de-compte">Flux complet — Suppression de compte<a class="headerlink" href="#flux-complet-suppression-de-compte" title="Permanent link">¶</a></h2>
+<p><code>1. API reçoit DELETE /users/me
+2. API appelle KeycloakAdminService.DisableUserAsync(keycloakId)
+   └─ KeycloakAdminService :
+       a. GET service token (cache ou nouveau)
+       b. PATCH /admin/realms/nutrition/users/{keycloakId} { "enabled": false }
+       c. Keycloak refuse tous les nouveaux logins pour cet utilisateur
+3. API met à jour User.DeletedAt = maintenant (PostgreSQL)
+4. API envoie l'email de confirmation avec lien signé (30 jours)
+5. Retour 200 OK</code></p>
+<p>À partir de l'étape 2c, l'utilisateur ne peut plus se connecter — son token actuel reste valide jusqu'à expiration naturelle (durée configurée dans Keycloak, typiquement 5–15 min).</p>
+<hr/>
+<h2 id="donnees-partagees-entre-lapi-et-keycloak">Données partagées entre l'API et Keycloak<a class="headerlink" href="#donnees-partagees-entre-lapi-et-keycloak" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Donnée</th>
+<th>Stockée dans</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KeycloakId</code> (UUID)</td>
+<td>PostgreSQL <code>User.KeycloakId</code></td>
+<td>Clé de liaison — permet à l'API d'agir sur le bon compte Keycloak</td>
+</tr>
+<tr>
+<td>Email, Nom</td>
+<td>Keycloak (source de vérité)</td>
+<td>L'API ne stocke pas ces données — elle les lit depuis le token JWT à la création du profil</td>
+</tr>
+<tr>
+<td><code>enabled</code> (flag)</td>
+<td>Keycloak</td>
+<td>Bloque l'authentification pendant la grace period</td>
+</tr>
+</tbody>
+</table>
+<p>Le <code>KeycloakId</code> est extrait du JWT à chaque requête (claim <code>sub</code>) et utilisé pour retrouver le <code>User</code> en base.</p>
+<hr/>
+<h2 id="ce-que-keycloak-admin-ne-fait-pas">Ce que Keycloak Admin NE fait PAS<a class="headerlink" href="#ce-que-keycloak-admin-ne-fait-pas" title="Permanent link">¶</a></h2>
+<ul>
+<li>Il ne supprime pas les données de l'application (repas, poids, plans) — c'est la responsabilité du job de purge PostgreSQL</li>
+<li>Il ne gère pas la logique des 30 jours — c'est l'API qui contrôle <code>DeletedAt</code></li>
+<li>Il ne déclenche pas d'email — c'est le service email de l'application</li>
+</ul>
+<p>La suppression dans Keycloak (<code>DELETE /admin/realms/{realm}/users/{id}</code>) est la <strong>dernière étape</strong> de la purge, après la suppression complète des données PostgreSQL.</p>
+<hr/>
+<p><em>Référence : <a href="https://www.keycloak.org/docs-api/latest/rest-api/">Keycloak Admin REST API</a></em></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Retour en haut de la page
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+<script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+</body>
+</html>

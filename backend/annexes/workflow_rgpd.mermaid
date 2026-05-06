@@ -1,0 +1,104 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+    participant KCAdmin as Keycloak Admin API
+    participant Mail as Service Email
+
+    %% Précondition
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 1 — Export des données (RGPD Art. 20)
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur demande l'export de toutes ses données
+
+    Device->>API: GET /users/me/export<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+
+    API->>DB: SELECT User + WeightEntries + DietPlans + Diets<br/>+ Meals + MealItems + SavedFoodItems<br/>WHERE UserId = ?
+    DB-->>API: Toutes les données utilisateur
+
+    API-->>Device: 200 OK — fichier JSON contenant toutes les données<br/>{ user, weightEntries, dietPlans, diets, meals, savedFoodItems }
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 2 — Suppression du compte (RGPD Art. 17)
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur demande la suppression de son compte
+
+    Device->>API: DELETE /users/me<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token
+    KC-->>API: Token valide — KeycloakId extrait
+
+    API->>DB: SELECT User WHERE KeycloakId = ?
+    DB-->>API: User { UserId, KeycloakId }
+
+    alt Compte déjà en attente de suppression
+        API-->>Device: 409 Conflict — suppression déjà demandée
+    else Compte actif
+        API->>DB: UPDATE User SET DeletedAt = maintenant
+        DB-->>API: Succès
+
+        API->>KCAdmin: PATCH /admin/realms/{realm}/users/{KeycloakId}<br/>{ enabled: false }
+        KCAdmin-->>API: Succès — compte Keycloak désactivé
+
+        API->>Mail: Envoyer email de confirmation avec lien de réactivation<br/>(lien signé valable 30 jours)
+        Mail-->>API: Email envoyé
+
+        API-->>Device: 200 OK — compte en cours de suppression.<br/>Vous avez 30 jours pour annuler via le lien reçu par email.
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 3 — Réactivation du compte (< 30 jours)
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur clique sur le lien de réactivation reçu par email
+
+    Device->>API: POST /users/me/reactivate<br/>{ token: "lien signé reçu par email" }
+
+    API->>API: Valide le token signé (non expiré + correspond à UserId)
+
+    alt Token invalide ou expiré
+        API-->>Device: 400 Bad Request — lien invalide ou expiré
+    else Token valide
+        API->>DB: SELECT User WHERE Id = ? AND DeletedAt IS NOT NULL
+        alt DeletedAt > 30 jours (compte déjà purgé)
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found — compte définitivement supprimé
+        else Dans le délai de 30 jours
+            DB-->>API: User trouvé
+
+            API->>DB: UPDATE User SET DeletedAt = null
+            DB-->>API: Succès
+
+            API->>KCAdmin: PATCH /admin/realms/{realm}/users/{KeycloakId}<br/>{ enabled: true }
+            KCAdmin-->>API: Succès — compte Keycloak réactivé
+
+            API-->>Device: 200 OK — compte réactivé. Toutes vos données sont intactes.
+        end
+    end
+
+    %% ═══════════════════════════════════════════════
+    %% PARTIE 4 — Purge automatique après 30 jours (job Infrastructure)
+    %% ═══════════════════════════════════════════════
+
+    Note over API: Job planifié — exécuté quotidiennement
+
+    API->>DB: SELECT User WHERE DeletedAt <= maintenant - 30 jours
+    DB-->>API: Liste des utilisateurs à purger
+
+    loop Pour chaque utilisateur à purger
+        API->>DB: DELETE cascade :<br/>MealItems → Meals → WeightEntries<br/>SavedFoodItems → DietPlans → Diets → User
+        DB-->>API: Succès
+
+        API->>KCAdmin: DELETE /admin/realms/{realm}/users/{KeycloakId}
+        KCAdmin-->>API: Compte Keycloak supprimé définitivement
+    end
+
+    Note over API: Purge terminée — données irrécupérables

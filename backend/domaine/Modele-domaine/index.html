@@ -1,0 +1,2656 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+        <link rel="prev" href="../../7.nutrition-admin/">
+      
+      
+        <link rel="next" href="../Diagramme-classes/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Modèle domaine - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modele-domaine-api-de-gestion-de-regime-alimentaire" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modèle domaine
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Backend
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Backend
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Domaine
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#agregats-racines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agrégats racines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agrégats racines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user" class="md-nav__link">
+    <span class="md-ellipsis">
+      User
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dietplan" class="md-nav__link">
+    <span class="md-ellipsis">
+      DietPlan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diet-concept-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diet ← concept central
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Meal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entites-enfants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entités enfants
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entités enfants">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mealitem" class="md-nav__link">
+    <span class="md-ellipsis">
+      MealItem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savedfooditem" class="md-nav__link">
+    <span class="md-ellipsis">
+      SavedFoodItem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weightentry" class="md-nav__link">
+    <span class="md-ellipsis">
+      WeightEntry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fooditem" class="md-nav__link">
+    <span class="md-ellipsis">
+      FoodItem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Value Objects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Value Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#macrodistribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      MacroDistribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritioninfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionInfo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritionneeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionNeeds
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relations-entre-les-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relations entre les concepts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentification-autorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentification &amp; Autorisation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentification & Autorisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flux-dauthentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flux d'authentification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôles Keycloak
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation des données
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorisation-par-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Autorisation par tier
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enums
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decisions-transverses-a-traiter-avant-la-mise-en-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Décisions transverses — à traiter avant la mise en production
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Décisions transverses — à traiter avant la mise en production">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#politique-de-retention-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Politique de rétention des données
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformite-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conformité RGPD
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-qui-appartient-au-service-pas-au-domaine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui appartient au Service (pas au domaine)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/aliments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/admin-dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Infrastructure
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup local & production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-import-off/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication docs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#agregats-racines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agrégats racines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agrégats racines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user" class="md-nav__link">
+    <span class="md-ellipsis">
+      User
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dietplan" class="md-nav__link">
+    <span class="md-ellipsis">
+      DietPlan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diet-concept-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diet ← concept central
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Meal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entites-enfants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entités enfants
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entités enfants">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mealitem" class="md-nav__link">
+    <span class="md-ellipsis">
+      MealItem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savedfooditem" class="md-nav__link">
+    <span class="md-ellipsis">
+      SavedFoodItem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weightentry" class="md-nav__link">
+    <span class="md-ellipsis">
+      WeightEntry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fooditem" class="md-nav__link">
+    <span class="md-ellipsis">
+      FoodItem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Value Objects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Value Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#macrodistribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      MacroDistribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritioninfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionInfo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritionneeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionNeeds
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relations-entre-les-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relations entre les concepts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentification-autorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentification &amp; Autorisation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentification & Autorisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flux-dauthentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flux d'authentification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôles Keycloak
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation des données
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorisation-par-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Autorisation par tier
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enums
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decisions-transverses-a-traiter-avant-la-mise-en-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Décisions transverses — à traiter avant la mise en production
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Décisions transverses — à traiter avant la mise en production">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#politique-de-retention-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Politique de rétention des données
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformite-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conformité RGPD
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-qui-appartient-au-service-pas-au-domaine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui appartient au Service (pas au domaine)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="modele-domaine-api-de-gestion-de-regime-alimentaire">Modèle domaine — API de Gestion de Régime Alimentaire<a class="headerlink" href="#modele-domaine-api-de-gestion-de-regime-alimentaire" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Concepts métier et leurs interactions.
+Source : cas d'usage (UC01-UC10) + règles métier.</p>
+</blockquote>
+<hr />
+<h2 id="agregats-racines">Agrégats racines<a class="headerlink" href="#agregats-racines" title="Permanent link">&para;</a></h2>
+<p>Un agrégat racine est un concept métier autonome qui protège ses propres règles.</p>
+<h3 id="user"><code>User</code><a class="headerlink" href="#user" title="Permanent link">&para;</a></h3>
+<p>Point d'entrée du système. Tout appartient à un User.</p>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td>Identifiant interne</td>
+</tr>
+<tr>
+<td>KeycloakId</td>
+<td>string</td>
+<td>Identifiant Keycloak (OAuth2/OIDC)</td>
+</tr>
+<tr>
+<td>BirthDate</td>
+<td>DateOnly</td>
+<td>L'âge est calculé à la demande</td>
+</tr>
+<tr>
+<td>Gender</td>
+<td>enum Gender</td>
+<td></td>
+</tr>
+<tr>
+<td>Height</td>
+<td>float</td>
+<td>En centimètres — fixe sur User</td>
+</tr>
+<tr>
+<td>ActivityLevel</td>
+<td>enum ActivityLevel</td>
+<td></td>
+</tr>
+<tr>
+<td>Allergies</td>
+<td>List\&lt;Allergen&gt;</td>
+<td>Enum calqué sur les 14 allergènes EU (Open Food Facts) — liste vide = confirmé aucune allergie</td>
+</tr>
+<tr>
+<td>DietaryPreferences</td>
+<td>List\&lt;string&gt;</td>
+<td>Libre (non filtrant) — liste vide = confirmé aucune préférence</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>DateTime</td>
+<td></td>
+</tr>
+<tr>
+<td>DeletedAt</td>
+<td>DateTime?</td>
+<td>Null = compte actif / Renseigné = suppression demandée (grace period 30 jours)</td>
+</tr>
+<tr>
+<td>SubscriptionTier</td>
+<td>enum SubscriptionTier</td>
+<td>Free par défaut à la création — source de vérité en base (pas dans le JWT)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Détenir le profil physiologique (âge, sexe, taille, activité)</li>
+<li>Posséder ses Diet, ses Meal et son historique de poids (WeightEntry)</li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li>Un User ne peut avoir qu'une seule Diet active à la fois</li>
+<li>Une Diet est optionnelle — un User peut enregistrer des Meal sans Diet active</li>
+</ul>
+<p><strong>Responsabilité UX :</strong>
+- Les champs <code>Allergies</code> et <code>DietaryPreferences</code> sont <strong>obligatoires</strong> dans le formulaire de création de profil
+- L'interface doit forcer un choix explicite : sélectionner des valeurs OU cocher <em>"Aucune contre-indication"</em>
+- Une liste vide est donc non ambiguë côté domaine — elle signifie toujours <em>"confirmé : aucune"</em></p>
+<blockquote>
+<p><strong>Pourquoi un enum <code>Allergen</code> et pas une <code>List&lt;string&gt;</code> libre ?</strong> Les données alimentaires viennent d'Open Food Facts, qui normalise les allergènes sur les 14 allergènes officiels de l'Union Européenne (ex: <code>en:gluten</code>, <code>en:milk</code>). Utiliser un enum calqué sur ce référentiel permet une comparaison fiable et déterministe entre les allergènes de l'utilisateur et ceux d'un aliment. Avec des strings libres, un utilisateur pourrait écrire <code>"gluten"</code>, <code>"Gluten"</code>, <code>"blé"</code> ou <code>"wheat"</code> — la comparaison deviendrait impossible à fiabiliser.</p>
+<p><strong>Comportement de l'app :</strong> l'application <strong>signale</strong> les allergènes présents dans un aliment — elle ne bloque pas le choix de l'utilisateur.</p>
+</blockquote>
+<hr />
+<h3 id="dietplan"><code>DietPlan</code><a class="headerlink" href="#dietplan" title="Permanent link">&para;</a></h3>
+<p>Plan alimentaire réutilisable défini par l'utilisateur. Sert de base pour créer une <code>Diet</code>.</p>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td></td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>Guid?</td>
+<td>Clé étrangère vers User — null si <code>IsTemplate = true</code></td>
+</tr>
+<tr>
+<td>IsTemplate</td>
+<td>bool</td>
+<td><code>true</code> = template partagé (lecture seule, accessible à tous les utilisateurs Pro/Business) / <code>false</code> = plan personnel</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>Nom du plan défini par l'utilisateur (ex: "Mon keto habituel") — sert à différencier ses plans dans la liste</td>
+</tr>
+<tr>
+<td>DietType</td>
+<td>enum DietType</td>
+<td></td>
+</tr>
+<tr>
+<td>Goal</td>
+<td>enum Goal</td>
+<td></td>
+</tr>
+<tr>
+<td>TargetWeight</td>
+<td>float</td>
+<td>Poids cible en kg</td>
+</tr>
+<tr>
+<td>MacroDistribution</td>
+<td>MacroDistribution (VO)</td>
+<td>Répartition cible des macros en %</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Stocker un plan alimentaire réutilisable (le "moule") sans dates ni objectif calorique</li>
+<li>Servir de base pour lancer une <code>Diet</code> — l'utilisateur choisit un plan dans sa liste et clique "Lancer"</li>
+<li>Rester dans la liste de l'utilisateur après le lancement — il peut être relancé ou modifié indépendamment</li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li>Un <code>DietPlan</code> personnel (<code>IsTemplate = false</code>) est <strong>toujours modifiable</strong> — il n'a aucun lien avec les <code>Diet</code> déjà créées depuis lui</li>
+<li>La modification d'un <code>DietPlan</code> n'affecte jamais les <code>Diet</code> existantes (snapshot indépendant)</li>
+<li>Un <code>DietPlan</code> n'a pas de <code>CalorieTarget</code> — ce calcul dépend du poids réel de l'utilisateur au moment du lancement</li>
+<li>Un <code>DietPlan</code> template (<code>IsTemplate = true</code>) est <strong>non modifiable</strong> par les utilisateurs — accessible en lecture seule (Pro/Business uniquement)</li>
+<li>Un template a <code>UserId = null</code> — il n'appartient à aucun utilisateur</li>
+<li>Seul le rôle <code>admin</code> (Keycloak) peut créer ou modifier un template</li>
+</ul>
+<blockquote>
+<p><strong>Pourquoi pas de <code>DietPlanId</code> sur <code>Diet</code> ?</strong> Une fois la <code>Diet</code> lancée, c'est un snapshot complet et indépendant. Si le plan est modifié après coup, une référence <code>DietPlanId</code> pointerait vers un objet qui n'a plus rien à voir avec la <code>Diet</code> créée — elle serait trompeuse et sans valeur métier.</p>
+</blockquote>
+<hr />
+<h3 id="diet-concept-central"><code>Diet</code> ← concept central<a class="headerlink" href="#diet-concept-central" title="Permanent link">&para;</a></h3>
+<p>Plan alimentaire d'un User sur une période définie.</p>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td></td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>Guid</td>
+<td>Clé étrangère vers User</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>Copié depuis <code>DietPlan.Name</code> au lancement</td>
+</tr>
+<tr>
+<td>DietType</td>
+<td>enum DietType</td>
+<td>Copié depuis <code>DietPlan</code></td>
+</tr>
+<tr>
+<td>Goal</td>
+<td>enum Goal</td>
+<td>Copié depuis <code>DietPlan</code> — objectif porté par la Diet, pas par le User</td>
+</tr>
+<tr>
+<td>TargetWeight</td>
+<td>float</td>
+<td>Copié depuis <code>DietPlan</code> — poids cible en kg</td>
+</tr>
+<tr>
+<td>CalorieTarget</td>
+<td>float</td>
+<td>Calculé au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) — snapshot, ne change jamais</td>
+</tr>
+<tr>
+<td>MacroDistribution</td>
+<td>MacroDistribution (VO)</td>
+<td>Copié depuis <code>DietPlan</code> — répartition cible des macros en %</td>
+</tr>
+<tr>
+<td>DietStatus</td>
+<td>enum DietStatus</td>
+<td>Active / Inactive / Archived</td>
+</tr>
+<tr>
+<td>StartDate</td>
+<td>DateOnly</td>
+<td>Imposée par le système = date du lancement (aujourd'hui)</td>
+</tr>
+<tr>
+<td>EndDate</td>
+<td>DateOnly?</td>
+<td>Nullable — null si régime non terminé, modifiable après lancement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Définir le type de régime (équilibré, keto, méditerranéen...)</li>
+<li>Porter l'objectif de l'utilisateur (<code>Goal</code>) pour cette période</li>
+<li>Porter le <code>CalorieTarget</code> calculé au moment de la création (snapshot physiologique) — la Diet est un plan fixe, pas un plan adaptatif</li>
+<li>Porter la répartition des macros (<code>MacroDistribution</code>)</li>
+<li>Gérer son statut (Active / Inactive / Archived)</li>
+<li>Délimiter sa période via <code>StartDate</code> et <code>EndDate</code></li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li><strong>Une seule Diet Active par User</strong> — le système bloque (409) si une Diet est déjà active au lancement d'un nouveau plan ; l'utilisateur doit terminer la Diet en cours avant d'en lancer une autre</li>
+<li>La somme des macros (protéines + glucides + lipides) doit toujours être égale à 100%</li>
+<li><code>StartDate</code> est imposée par le système (= date du lancement) — l'utilisateur ne peut pas choisir une date future</li>
+<li><code>CalorieTarget</code> est calculé par le service au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) puis stocké en snapshot — ne change jamais, même si le poids évolue</li>
+<li>Une <code>Diet</code> est <strong>non modifiable</strong> une fois lancée (sauf <code>EndDate</code>) — elle sert de référence fixe pour le suivi nutritionnel sur la période</li>
+<li>Une <code>Diet</code> est un snapshot complet et indépendant — aucun lien avec le <code>DietPlan</code> d'origine après son lancement</li>
+</ul>
+<hr />
+<h3 id="meal"><code>Meal</code><a class="headerlink" href="#meal" title="Permanent link">&para;</a></h3>
+<p>Repas enregistré par l'utilisateur à un instant donné.</p>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td></td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>Guid</td>
+<td>Clé étrangère vers User</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td>Nom du repas</td>
+</tr>
+<tr>
+<td>MealType</td>
+<td>enum MealType</td>
+<td>Breakfast, Lunch, Dinner, Snack</td>
+</tr>
+<tr>
+<td>ConsumedAt</td>
+<td>DateTime</td>
+<td>Date et heure du repas</td>
+</tr>
+<tr>
+<td>Notes</td>
+<td>string?</td>
+<td>Notes libres, optionnelles</td>
+</tr>
+<tr>
+<td>Items</td>
+<td>List\&lt;MealItem&gt;</td>
+<td>Relation de navigation</td>
+</tr>
+<tr>
+<td>IsSaved</td>
+<td>bool</td>
+<td><code>true</code> = repas sauvegardé dans la liste personnalisée de l'utilisateur (réutilisable) / <code>false</code> = repas ponctuel (enregistrement unique)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Pourquoi <code>IsSaved</code> ?</strong> L'utilisateur peut vouloir retrouver rapidement ses repas habituels sans les recréer. La structure d'un repas ponctuel et d'un repas sauvegardé est identique — seule la persistance dans la liste personnalisée diffère. Un flag suffit, deux entités distinctes seraient une sur-ingénierie.</p>
+</blockquote>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Enregistrer ce que l'utilisateur a mangé (liste de MealItem)</li>
+<li>Porter le type de repas (petit-déjeuner, déjeuner, dîner, collation)</li>
+<li>Permettre le calcul des apports nutritionnels du repas</li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li>Un Meal appartient toujours à un User</li>
+<li>Un Meal contient au moins un MealItem pour être valide</li>
+<li>Un Meal n'a pas de lien direct vers une Diet — la Diet active à la date du repas est déduite par le service via <code>Diet.StartDate</code> / <code>EndDate</code></li>
+</ul>
+<hr />
+<h2 id="entites-enfants">Entités enfants<a class="headerlink" href="#entites-enfants" title="Permanent link">&para;</a></h2>
+<h3 id="mealitem"><code>MealItem</code><a class="headerlink" href="#mealitem" title="Permanent link">&para;</a></h3>
+<p>Un aliment dans un repas. Ne peut pas exister sans son Meal.</p>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td></td>
+</tr>
+<tr>
+<td>MealId</td>
+<td>Guid</td>
+<td>Clé étrangère vers Meal</td>
+</tr>
+<tr>
+<td>FoodItemId</td>
+<td>Guid</td>
+<td>Référence vers FoodItem</td>
+</tr>
+<tr>
+<td>Quantity</td>
+<td>float</td>
+<td>Quantité consommée en grammes</td>
+</tr>
+<tr>
+<td>Nutrition</td>
+<td>NutritionInfo (VO)</td>
+<td>Snapshot calculé à la création depuis FoodItem</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Référencer un aliment depuis la table locale <code>FoodItem</code></li>
+<li>Porter la quantité consommée en grammes</li>
+<li>Permettre le calcul des apports nutritionnels pour cette quantité</li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li>La suppression d'un Meal entraîne la suppression de ses MealItem</li>
+</ul>
+<hr />
+<h3 id="savedfooditem"><code>SavedFoodItem</code><a class="headerlink" href="#savedfooditem" title="Permanent link">&para;</a></h3>
+<p>Aliment sauvegardé par l'utilisateur dans sa liste personnelle. Ne peut pas exister sans son User.</p>
+<blockquote>
+<p><strong>Pourquoi cette entité ?</strong> <code>FoodItem</code> est une table de référence partagée entre tous les utilisateurs — on ne peut pas y stocker des préférences individuelles. <code>SavedFoodItem</code> est un lien personnel entre un utilisateur et un aliment qu'il souhaite retrouver rapidement lors de la création de ses repas.</p>
+</blockquote>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td></td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>Guid</td>
+<td>Clé étrangère vers User</td>
+</tr>
+<tr>
+<td>FoodItemId</td>
+<td>Guid</td>
+<td>Référence vers FoodItem</td>
+</tr>
+<tr>
+<td>SavedAt</td>
+<td>DateTime</td>
+<td>Date de sauvegarde</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Mémoriser les aliments fréquemment utilisés par l'utilisateur</li>
+<li>Permettre un accès rapide à ses aliments habituels lors de la création d'un repas</li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li>La suppression d'un User entraîne la suppression de ses SavedFoodItem</li>
+<li>Un même FoodItem ne peut être sauvegardé qu'une seule fois par User</li>
+</ul>
+<hr />
+<h3 id="weightentry"><code>WeightEntry</code><a class="headerlink" href="#weightentry" title="Permanent link">&para;</a></h3>
+<p>Enregistrement du poids de l'utilisateur à un instant donné. Ne peut pas exister sans son User.</p>
+<blockquote>
+<p><strong>Pourquoi <code>WeightEntry</code> et pas un champ <code>Weight</code> fixe sur <code>User</code> ?</strong> Un champ fixe écrase la valeur à chaque mise à jour — aucun historique possible. <code>WeightEntry</code> permet de suivre l'évolution du poids dans le temps, de fournir le poids de référence au moment de la création d'une Diet (WeightEntry le plus récent), et de comparer le poids réel contre <code>Diet.TargetWeight</code> pour le suivi du régime.</p>
+</blockquote>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td></td>
+</tr>
+<tr>
+<td>UserId</td>
+<td>Guid</td>
+<td>Clé étrangère vers User</td>
+</tr>
+<tr>
+<td>Weight</td>
+<td>float</td>
+<td>En kilogrammes</td>
+</tr>
+<tr>
+<td>MeasuredAt</td>
+<td>DateOnly</td>
+<td>Date de la mesure</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Stocker le poids mesuré et la date de mesure</li>
+<li>Permettre le suivi de la progression pondérale dans le temps</li>
+<li>Fournir le poids de référence pour le calcul BMR/TDEE au moment de la création d'une Diet</li>
+</ul>
+<p><strong>Invariants :</strong></p>
+<ul>
+<li>La suppression d'un User entraîne la suppression de ses WeightEntry</li>
+</ul>
+<hr />
+<h3 id="fooditem"><code>FoodItem</code><a class="headerlink" href="#fooditem" title="Permanent link">&para;</a></h3>
+<p>Table de référence locale des données alimentaires issues d'Open Food Facts. Partagée entre tous les utilisateurs.</p>
+<blockquote>
+<p><strong><code>FoodItem</code> couvre deux catégories :</strong>
+- <strong>Ingrédients bruts</strong> — farine, tomate, mozzarella, poulet...
+- <strong>Produits finis</strong> — Pizza Margherita Buitoni, Sandwich jambon-beurre, Lasagnes bolognaise...</p>
+<p>Pour le domaine, la distinction est transparente — un <code>MealItem</code> référence un <code>FoodItem</code> quel que soit son type. L'utilisateur peut donc composer un <code>Meal</code> avec des ingrédients détaillés ou simplement sélectionner un produit fini comme une pizza entière. Open Food Facts fournit les valeurs nutritionnelles pour 100g dans les deux cas.</p>
+<p><strong>Stratégie de recherche en 2 niveaux :</strong>
+1. <strong>Cache Redis</strong> — si le mot-clé a déjà été cherché récemment, réponse immédiate sans toucher la base
+2. <strong>PostgreSQL</strong> (<code>FoodItem</code>) — si absent du cache, lecture en base + alimentation du cache</p>
+<p>Si l'aliment est introuvable en base → réponse vide. Aucun appel direct à l'API Open Food Facts au moment de la recherche.</p>
+<p><strong>Alimentation de la table <code>FoodItem</code> :</strong> un job planifié (couche Infrastructure) importe le dump officiel Open Food Facts quotidiennement. La base est ainsi pré-remplie avec 3M+ produits indépendamment des actions utilisateur. Voir <code>docs/annexes/infrastructure-import-off.md</code>.</p>
+</blockquote>
+<p><strong>Attributs :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Id</td>
+<td>Guid</td>
+<td>Identifiant interne</td>
+</tr>
+<tr>
+<td>OffId</td>
+<td>string</td>
+<td>Identifiant Open Food Facts (code-barres)</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>CaloriesPer100g</td>
+<td>float</td>
+<td>kcal pour 100g</td>
+</tr>
+<tr>
+<td>ProteinsPer100g</td>
+<td>float</td>
+<td>g pour 100g</td>
+</tr>
+<tr>
+<td>CarbsPer100g</td>
+<td>float</td>
+<td>g pour 100g</td>
+</tr>
+<tr>
+<td>FatsPer100g</td>
+<td>float</td>
+<td>g pour 100g</td>
+</tr>
+<tr>
+<td>AllergensTags</td>
+<td>List\&lt;Allergen&gt;</td>
+<td>Tags normalisés OFF (ex: en:gluten)</td>
+</tr>
+<tr>
+<td>CachedAt</td>
+<td>DateTime</td>
+<td>Date de récupération depuis Open Food Facts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Responsabilités :</strong></p>
+<ul>
+<li>Stocker les informations nutritionnelles d'un aliment (calories, macros, allergènes)</li>
+<li>Servir de référence partagée entre tous les utilisateurs pour la recherche et la création de repas</li>
+</ul>
+<hr />
+<h2 id="value-objects">Value Objects<a class="headerlink" href="#value-objects" title="Permanent link">&para;</a></h2>
+<p>Valeurs immuables sans identité propre.</p>
+<h3 id="macrodistribution"><code>MacroDistribution</code><a class="headerlink" href="#macrodistribution" title="Permanent link">&para;</a></h3>
+<p>Répartition cible des macronutriments en pourcentage. Appartient à une <code>Diet</code> ou un <code>DietPlan</code>.</p>
+<blockquote>
+<p><strong>Ce que c'est :</strong> Un <strong>objectif</strong> — ce que l'utilisateur <em>devrait</em> manger sur son régime.
+Exemple : régime Keto → 5% glucides / 70% lipides / 25% protéines.</p>
+<p><strong>Ce que ce n'est pas :</strong> Ce n'est pas ce que l'utilisateur a réellement mangé. Ce n'est pas exprimé en grammes. C'est uniquement une répartition proportionnelle qui définit les règles du régime.</p>
+<p><strong>Pourquoi des pourcentages et pas des grammes ?</strong> Les grammes dépendent du <code>CalorieTarget</code> — qui lui appartient à la <code>Diet</code>. La répartition en % reste stable quel que soit l'objectif calorique. Cela permet de réutiliser <code>MacroDistribution</code> aussi bien sur <code>DietPlan</code> (sans CalorieTarget) que sur <code>Diet</code>.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ProteinPercentage</td>
+<td>float</td>
+<td>% de calories venant des protéines</td>
+</tr>
+<tr>
+<td>CarbPercentage</td>
+<td>float</td>
+<td>% de calories venant des glucides</td>
+</tr>
+<tr>
+<td>FatPercentage</td>
+<td>float</td>
+<td>% de calories venant des lipides</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Invariant :</strong> ProteinPercentage + CarbPercentage + FatPercentage = 100%</p>
+<hr />
+<h3 id="nutritioninfo"><code>NutritionInfo</code><a class="headerlink" href="#nutritioninfo" title="Permanent link">&para;</a></h3>
+<p>Valeurs nutritionnelles réelles d'un aliment pour une quantité donnée. Appartient à un <code>MealItem</code>.</p>
+<blockquote>
+<p><strong>Ce que c'est :</strong> Une <strong>réalité mesurée</strong> — ce que l'utilisateur <em>a vraiment</em> mangé pour un aliment donné à une quantité donnée.
+Exemple : 150g de poulet → 247 kcal, 46g de protéines, 5g de lipides, 0g de glucides.</p>
+<p><strong>Ce que ce n'est pas :</strong> Ce n'est pas un objectif. Ce n'est pas exprimé en pourcentages.</p>
+<p><strong>Pourquoi un snapshot ?</strong> Les données de <code>FoodItem</code> peuvent être mises à jour (cache Open Food Facts). Stocker un snapshot à la création garantit que l'historique nutritionnel de l'utilisateur ne change jamais rétroactivement.</p>
+<p><strong>Différence clé avec <code>MacroDistribution</code> :</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MacroDistribution</th>
+<th>NutritionInfo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nature</td>
+<td>Objectif du régime</td>
+<td>Valeurs réelles consommées</td>
+</tr>
+<tr>
+<td>Unité</td>
+<td>%</td>
+<td>grammes / kcal</td>
+</tr>
+<tr>
+<td>Appartient à</td>
+<td><code>Diet</code> / <code>DietPlan</code></td>
+<td><code>MealItem</code></td>
+</tr>
+<tr>
+<td>Modifiable</td>
+<td>Non (VO immuable)</td>
+<td>Non (VO immuable — snapshot)</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Calories</td>
+<td>float</td>
+<td>kcal</td>
+</tr>
+<tr>
+<td>Proteins</td>
+<td>float</td>
+<td>grammes</td>
+</tr>
+<tr>
+<td>Carbs</td>
+<td>float</td>
+<td>grammes</td>
+</tr>
+<tr>
+<td>Fats</td>
+<td>float</td>
+<td>grammes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calcul :</strong> <code>FoodItem.XxxPer100g × (MealItem.Quantity / 100)</code>
+<strong>Snapshot</strong> — calculé une fois à la création du MealItem, puis stocké définitivement.</p>
+<hr />
+<h3 id="nutritionneeds"><code>NutritionNeeds</code><a class="headerlink" href="#nutritionneeds" title="Permanent link">&para;</a></h3>
+<p>Résultat du calcul nutritionnel personnalisé. N'est pas persisté — calculé à la demande.</p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bmr</td>
+<td>float</td>
+<td>Métabolisme de base (kcal)</td>
+</tr>
+<tr>
+<td>Tdee</td>
+<td>float</td>
+<td>Dépense énergétique totale (kcal)</td>
+</tr>
+<tr>
+<td>TargetCalories</td>
+<td>float</td>
+<td>Objectif calorique selon le Goal</td>
+</tr>
+<tr>
+<td>MacroDistribution</td>
+<td>MacroDistribution (VO)</td>
+<td>Répartition cible des macros en %</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="relations-entre-les-concepts">Relations entre les concepts<a class="headerlink" href="#relations-entre-les-concepts" title="Permanent link">&para;</a></h2>
+<p>```
+User
+├── possède plusieurs DietPlan personnels (IsTemplate = false — toujours modifiables)
+│   └── sert de base pour lancer une Diet (snapshot au lancement — lien coupé ensuite)
+├── accède en lecture aux DietPlan templates (IsTemplate = true, UserId = null) — Pro/Business uniquement
+├── possède plusieurs Diet (une seule Active à la fois, optionnelle)
+│   ├── lancée depuis un DietPlan (snapshot indépendant)
+│   ├── porte un Name, Goal, DietType, TargetWeight, MacroDistribution (copiés du DietPlan)
+│   ├── porte un CalorieTarget (calculé au lancement)
+│   └── StartDate = date du lancement (imposée système)
+├── possède plusieurs Meal (indépendant de Diet)
+│   └── contient plusieurs MealItem
+│       └── référence un FoodItem
+├── possède plusieurs WeightEntry (historique du poids)
+└── possède plusieurs SavedFoodItem (liste personnelle d'aliments)
+    └── référence un FoodItem</p>
+<p>Service : déduit la Diet active à la date d'un Meal via Diet.StartDate / EndDate (uniquement pour le bilan nutritionnel)
+```</p>
+<hr />
+<h2 id="authentification-autorisation">Authentification &amp; Autorisation<a class="headerlink" href="#authentification-autorisation" title="Permanent link">&para;</a></h2>
+<h3 id="flux-dauthentification">Flux d'authentification<a class="headerlink" href="#flux-dauthentification" title="Permanent link">&para;</a></h3>
+<p>Keycloak est le fournisseur d'identité (OAuth2/OIDC). L'API ne gère pas les mots de passe.</p>
+<p><code>Client → Keycloak (login) → JWT Bearer token
+Client → API (Bearer token) → Middleware valide le JWT → extrait sub → résout User.Id</code></p>
+<ul>
+<li><code>sub</code> du JWT = <code>User.KeycloakId</code> — clé de résolution de l'identité interne</li>
+<li>Toutes les requêtes sur des données personnelles sont filtrées par <code>User.Id</code> résolu depuis le token</li>
+</ul>
+<h3 id="roles-keycloak">Rôles Keycloak<a class="headerlink" href="#roles-keycloak" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Qui</th>
+<th>Accès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td>Tous les utilisateurs authentifiés</td>
+<td>Données personnelles + données partagées selon tier</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td>Compte interne (service account)</td>
+<td>Gestion des templates, opérations RGPD, import OFF</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isolation-des-donnees">Isolation des données<a class="headerlink" href="#isolation-des-donnees" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type de donnée</th>
+<th>Règle d'accès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Diet</code>, <code>Meal</code>, <code>DietPlan</code> personnel, <code>WeightEntry</code>, <code>SavedFoodItem</code></td>
+<td>Filtrées par <code>userId</code> du token — un utilisateur ne voit jamais les données d'un autre</td>
+</tr>
+<tr>
+<td><code>FoodItem</code></td>
+<td>Partagé — accessible à tous les utilisateurs authentifiés</td>
+</tr>
+<tr>
+<td><code>DietPlan</code> template (<code>IsTemplate = true</code>)</td>
+<td>Partagé — accessible en lecture seule aux tiers Pro et Business</td>
+</tr>
+</tbody>
+</table>
+<h3 id="autorisation-par-tier">Autorisation par tier<a class="headerlink" href="#autorisation-par-tier" title="Permanent link">&para;</a></h3>
+<p>Le tier (<code>User.SubscriptionTier</code>) est <strong>toujours lu en base</strong>, jamais depuis le JWT.</p>
+<p>Les vérifications s'effectuent dans la <strong>couche Application</strong> (services), jamais dans le domaine ni dans l'API.</p>
+<table>
+<thead>
+<tr>
+<th>Violation</th>
+<th>Code HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Token absent ou invalide</td>
+<td>401 Unauthorized</td>
+</tr>
+<tr>
+<td>Rôle insuffisant (ex: user tente d'accéder à admin)</td>
+<td>403 Forbidden</td>
+</tr>
+<tr>
+<td>Tier insuffisant (ex: Free tente d'accéder aux templates)</td>
+<td>403 Forbidden</td>
+</tr>
+<tr>
+<td>Limite tier dépassée (ex: 3ème DietPlan en Free)</td>
+<td>403 Forbidden</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Enum</th>
+<th>Valeurs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ActivityLevel</code></td>
+<td>Sedentary, LightlyActive, ModeratelyActive, VeryActive, ExtremelyActive</td>
+</tr>
+<tr>
+<td><code>Goal</code></td>
+<td>WeightLoss, Maintenance, WeightGain</td>
+</tr>
+<tr>
+<td><code>DietType</code></td>
+<td>Balanced, HighProtein, Keto, Mediterranean, LowCarb, Vegetarian, Vegan, Custom</td>
+</tr>
+<tr>
+<td><code>DietStatus</code></td>
+<td>Active, Inactive, Archived</td>
+</tr>
+<tr>
+<td><code>MealType</code></td>
+<td>Breakfast, Lunch, Dinner, Snack</td>
+</tr>
+<tr>
+<td><code>Gender</code></td>
+<td>Male, Female, Other</td>
+</tr>
+<tr>
+<td><code>Allergen</code></td>
+<td>Gluten, Crustaceans, Eggs, Fish, Peanuts, Soybeans, Milk, Nuts, Celery, Mustard, SesameSeeds, SulphurDioxide, Lupin, Molluscs</td>
+</tr>
+<tr>
+<td><code>SubscriptionTier</code></td>
+<td>Free, Pro, Business</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="decisions-transverses-a-traiter-avant-la-mise-en-production">Décisions transverses — à traiter avant la mise en production<a class="headerlink" href="#decisions-transverses-a-traiter-avant-la-mise-en-production" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Ces points ne modifient pas le modèle domaine actuel mais ont un impact sur l'implémentation et la conformité légale.</p>
+</blockquote>
+<h3 id="politique-de-retention-des-donnees">Politique de rétention des données<a class="headerlink" href="#politique-de-retention-des-donnees" title="Permanent link">&para;</a></h3>
+<p><strong>Décision non tranchée.</strong> Les questions à trancher côté produit :
+- Conservation tant que le compte est actif ?
+- Suppression automatique après X mois d'inactivité ?
+- Export des données proposé à l'utilisateur avant suppression ?</p>
+<p><strong>Impact technique probable :</strong> Soft delete sur <code>User</code> (<code>DeletedAt</code>) avec cascade sur toutes ses données liées.</p>
+<h3 id="conformite-rgpd">Conformité RGPD<a class="headerlink" href="#conformite-rgpd" title="Permanent link">&para;</a></h3>
+<p>Les données alimentaires (<code>Meal</code>, <code>MealItem</code>, <code>WeightEntry</code>) sont des <strong>données de santé</strong> au sens de l'Article 9 du RGPD. Elles sont donc soumises à des obligations renforcées :</p>
+<table>
+<thead>
+<tr>
+<th>Obligation</th>
+<th>Impact technique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Droit à l'effacement (Art. 17)</td>
+<td>Endpoint de suppression de compte avec cascade complète</td>
+</tr>
+<tr>
+<td>Portabilité des données (Art. 20)</td>
+<td>Endpoint d'export des données utilisateur</td>
+</tr>
+<tr>
+<td>Consentement explicite</td>
+<td>Formulaire d'inscription avec consentement à la collecte de données de santé</td>
+</tr>
+<tr>
+<td>Durée de conservation définie</td>
+<td>Liée à la décision de politique de rétention ci-dessus</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Pourquoi c'est important ?</strong> Ces obligations s'appliquent dès le premier utilisateur en production. Ne pas les traiter comme des fonctionnalités secondaires.</p>
+</blockquote>
+<hr />
+<h2 id="ce-qui-appartient-au-service-pas-au-domaine">Ce qui appartient au Service (pas au domaine)<a class="headerlink" href="#ce-qui-appartient-au-service-pas-au-domaine" title="Permanent link">&para;</a></h2>
+<p>Ces calculs nécessitent des données externes au domaine — ils vivent dans la couche Application.</p>
+<table>
+<thead>
+<tr>
+<th>Calcul</th>
+<th>Pourquoi c'est un Service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Calcul BMR / TDEE</td>
+<td>Nécessite les formules et les facteurs NAP — règle externe au domaine</td>
+</tr>
+<tr>
+<td>Calcul CalorieTarget à la création d'une Diet</td>
+<td>Utilise le WeightEntry le plus récent + profil User + Goal de la Diet</td>
+</tr>
+<tr>
+<td>Déduction de la Diet active à la date d'un Meal</td>
+<td>Compare la date du Meal aux Diet.StartDate / EndDate du User</td>
+</tr>
+<tr>
+<td>Proposition MacroDistribution selon DietType</td>
+<td>Nécessite une table de correspondance externe</td>
+</tr>
+<tr>
+<td>Alertes de déséquilibre</td>
+<td>Compare les apports agrégés aux objectifs — implique plusieurs agrégats</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

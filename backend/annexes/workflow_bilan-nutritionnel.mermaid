@@ -1,0 +1,52 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% ═══════════════════════════════════════════════
+    %% Consultation du bilan nutritionnel d'une Diet
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur sélectionne une Diet et demande son bilan
+
+    Device->>API: GET /diets/{dietId}/bilan<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        DB-->>API: User { UserId, SubscriptionTier }
+
+        API->>DB: SELECT Diet WHERE Id = dietId AND UserId = ?
+        alt Diet introuvable ou n'appartient pas à l'utilisateur
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found
+        else Diet trouvée
+            DB-->>API: Diet { Name, CalorieTarget, MacroDistribution,<br/>TargetWeight, StartDate, EndDate, DietStatus }
+
+            Note over API: Période brute = Diet.StartDate → Diet.EndDate (ou aujourd'hui si null)<br/>Période effective clampée selon SubscriptionTier :<br/>Free → max 7 derniers jours<br/>Pro → max 1 an<br/>Business → illimité (période complète de la Diet)
+
+            %% Récupération des repas sur la période
+            API->>DB: SELECT Meal JOIN MealItem<br/>WHERE UserId = ? AND ConsumedAt BETWEEN StartDate AND EndDate
+            DB-->>API: Liste des MealItems avec NutritionInfo par jour
+
+            %% Récupération des entrées de poids sur la période
+            API->>DB: SELECT WeightEntry<br/>WHERE UserId = ? AND MeasuredAt BETWEEN StartDate AND EndDate
+            DB-->>API: Liste des WeightEntry { MeasuredAt, Weight }
+
+            %% Agrégation côté service
+            Note over API: Pour chaque jour de la période :<br/>— totalCalories = Σ MealItem.Nutrition.Calories<br/>— totalProteins = Σ MealItem.Nutrition.Proteins<br/>— totalCarbs = Σ MealItem.Nutrition.Carbs<br/>— totalFats = Σ MealItem.Nutrition.Fats<br/>— caloriesPercent = totalCalories / CalorieTarget × 100<br/>— proteinsPercent = (totalProteins × 4 / totalCalories) × 100<br/>— carbsPercent = (totalCarbs × 4 / totalCalories) × 100<br/>— fatsPercent = (totalFats × 9 / totalCalories) × 100<br/><br/>Résumé global :<br/>— avgDailyCalories = moyenne journalière calories<br/>— avgCaloriesPercent = moyenne % atteinte CalorieTarget<br/>— avgProteins / avgCarbs / avgFats = moyennes journalières macros
+
+            API-->>Device: 200 OK —<br/>{<br/>  diet: { Name, CalorieTarget, MacroDistribution,<br/>          TargetWeight, StartDate, EndDate },<br/>  dailyData: [<br/>    { date, totalCalories, totalProteins, totalCarbs, totalFats,<br/>      caloriesPercent, proteinsPercent, carbsPercent, fatsPercent }<br/>  ],<br/>  weightEntries: [{ measuredAt, weight }],<br/>  summary: {<br/>    avgDailyCalories, avgCaloriesPercent,<br/>    avgProteins, avgCarbs, avgFats<br/>  }<br/>}
+
+            Note over Device: Interface peut afficher au choix :<br/>— Courbe calories réelles vs CalorieTarget<br/>— Courbes macros réelles vs MacroDistribution<br/>— Courbe poids réel vs TargetWeight<br/>— Jauges journalières % d'atteinte<br/>— Résumé global de la période
+        end
+    end

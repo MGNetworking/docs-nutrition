@@ -1,0 +1,47 @@
+sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    %% Précondition
+    Note over Device: Précondition — access_token valide + Diet active existante
+
+    %% ═══════════════════════════════════════════════
+    %% Terminer une Diet active
+    %% ═══════════════════════════════════════════════
+
+    Note over Device: L'utilisateur clique sur "Terminer mon régime"
+
+    Device->>API: POST /diets/{dietId}/archive<br/>Authorization: Bearer access_token
+
+    API->>KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC-->>API: Token rejeté
+        API-->>Device: 401 Unauthorized
+    else Token valide
+        KC-->>API: Token valide — KeycloakId extrait
+
+        API->>DB: SELECT User WHERE KeycloakId = ?
+        DB-->>API: User { UserId }
+
+        API->>DB: SELECT Diet WHERE Id = dietId AND UserId = ?
+        alt Diet introuvable ou n'appartient pas à l'utilisateur
+            DB-->>API: Aucun résultat
+            API-->>Device: 404 Not Found
+        else Diet trouvée
+            DB-->>API: Diet { DietStatus, EndDate }
+
+            alt Diet déjà archivée
+                API-->>Device: 409 Conflict — ce régime est déjà terminé
+            else Diet active
+                Note over API: EndDate = aujourd'hui (imposée système)<br/>DietStatus = Archived
+
+                API->>DB: UPDATE Diet SET<br/>DietStatus = Archived,<br/>EndDate = aujourd'hui<br/>WHERE Id = dietId
+                DB-->>API: Succès
+
+                API-->>Device: 200 OK — { DietId, DietStatus = Archived, EndDate }
+                Note over Device: Régime terminé — l'utilisateur peut<br/>maintenant lancer un nouveau plan
+            end
+        end
+    end
