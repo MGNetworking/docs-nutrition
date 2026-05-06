@@ -422,6 +422,13 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../annexes/workflows/">
+<span class="md-ellipsis">
+    Workflows
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -462,238 +469,236 @@
 Source de vérité : <code>Modele-domaine.md</code> — modifier ce fichier en cas de changement.</p>
 </blockquote>
 <hr/>
-<p>```mermaid
-classDiagram</p>
-<pre><code>%% ─── Aggregate Roots ───────────────────────────────────────────
+<pre class="mermaid"><code>classDiagram
 
-class User {
-    &lt;&lt;Aggregate Root&gt;&gt;
-    +Guid Id
-    +string KeycloakId
-    +DateOnly BirthDate
-    +Gender Gender
-    +float Height
-    +ActivityLevel ActivityLevel
-    +List~Allergen~ Allergies
-    +List~string~ DietaryPreferences
-    +SubscriptionTier SubscriptionTier
-    +DateTime CreatedAt
-    +DateTime? DeletedAt
-}
+    %% ─── Aggregate Roots ───────────────────────────────────────────
 
-class DietPlan {
-    &lt;&lt;Aggregate Root&gt;&gt;
-    +Guid Id
-    +Guid? UserId
-    +bool IsTemplate
-    +string Name
-    +DietType DietType
-    +Goal Goal
-    +float TargetWeight
-    +MacroDistribution MacroDistribution
-}
+    class User {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        +Guid Id
+        +string KeycloakId
+        +DateOnly BirthDate
+        +Gender Gender
+        +float Height
+        +ActivityLevel ActivityLevel
+        +List~Allergen~ Allergies
+        +List~string~ DietaryPreferences
+        +SubscriptionTier SubscriptionTier
+        +DateTime CreatedAt
+        +DateTime? DeletedAt
+    }
 
-class Diet {
-    &lt;&lt;Aggregate Root&gt;&gt;
-    +Guid Id
-    +Guid UserId
-    +string Name
-    +DietType DietType
-    +Goal Goal
-    +float TargetWeight
-    +float CalorieTarget
-    +MacroDistribution MacroDistribution
-    +DietStatus DietStatus
-    +DateOnly StartDate
-    +DateOnly? EndDate
-}
+    class DietPlan {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        +Guid Id
+        +Guid? UserId
+        +bool IsTemplate
+        +string Name
+        +DietType DietType
+        +Goal Goal
+        +float TargetWeight
+        +MacroDistribution MacroDistribution
+    }
 
-class Meal {
-    &lt;&lt;Aggregate Root&gt;&gt;
-    +Guid Id
-    +Guid UserId
-    +string Name
-    +MealType MealType
-    +DateTime ConsumedAt
-    +string? Notes
-    +List~MealItem~ Items
-    +bool IsSaved
-}
+    class Diet {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        +Guid Id
+        +Guid UserId
+        +string Name
+        +DietType DietType
+        +Goal Goal
+        +float TargetWeight
+        +float CalorieTarget
+        +MacroDistribution MacroDistribution
+        +DietStatus DietStatus
+        +DateOnly StartDate
+        +DateOnly? EndDate
+    }
 
-class FoodItem {
-    &lt;&lt;Aggregate Root&gt;&gt;
-    +Guid Id
-    +string OffId
-    +string Name
-    +float CaloriesPer100g
-    +float ProteinsPer100g
-    +float CarbsPer100g
-    +float FatsPer100g
-    +List~Allergen~ AllergensTags
-    +DateTime CachedAt
-}
+    class Meal {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        +Guid Id
+        +Guid UserId
+        +string Name
+        +MealType MealType
+        +DateTime ConsumedAt
+        +string? Notes
+        +List~MealItem~ Items
+        +bool IsSaved
+    }
 
-%% ─── Entités enfants ────────────────────────────────────────────
+    class FoodItem {
+        &lt;&lt;Aggregate Root&gt;&gt;
+        +Guid Id
+        +string OffId
+        +string Name
+        +float CaloriesPer100g
+        +float ProteinsPer100g
+        +float CarbsPer100g
+        +float FatsPer100g
+        +List~Allergen~ AllergensTags
+        +DateTime CachedAt
+    }
 
-class WeightEntry {
-    &lt;&lt;Entity&gt;&gt;
-    +Guid Id
-    +Guid UserId
-    +float Weight
-    +DateOnly MeasuredAt
-}
+    %% ─── Entités enfants ────────────────────────────────────────────
 
-class MealItem {
-    &lt;&lt;Entity&gt;&gt;
-    +Guid Id
-    +Guid MealId
-    +Guid FoodItemId
-    +float Quantity
-    +NutritionInfo Nutrition
-}
+    class WeightEntry {
+        &lt;&lt;Entity&gt;&gt;
+        +Guid Id
+        +Guid UserId
+        +float Weight
+        +DateOnly MeasuredAt
+    }
 
-class SavedFoodItem {
-    &lt;&lt;Entity&gt;&gt;
-    +Guid Id
-    +Guid UserId
-    +Guid FoodItemId
-    +DateTime SavedAt
-}
+    class MealItem {
+        &lt;&lt;Entity&gt;&gt;
+        +Guid Id
+        +Guid MealId
+        +Guid FoodItemId
+        +float Quantity
+        +NutritionInfo Nutrition
+    }
 
-%% ─── Value Objects ──────────────────────────────────────────────
+    class SavedFoodItem {
+        &lt;&lt;Entity&gt;&gt;
+        +Guid Id
+        +Guid UserId
+        +Guid FoodItemId
+        +DateTime SavedAt
+    }
 
-class MacroDistribution {
-    &lt;&lt;Value Object&gt;&gt;
-    +float CarbsPercent
-    +float ProteinsPercent
-    +float FatsPercent
-    CarbsPercent + ProteinsPercent + FatsPercent = 100
-}
+    %% ─── Value Objects ──────────────────────────────────────────────
 
-class NutritionInfo {
-    &lt;&lt;Value Object&gt;&gt;
-    +float Calories
-    +float Proteins
-    +float Carbs
-    +float Fats
-}
+    class MacroDistribution {
+        &lt;&lt;Value Object&gt;&gt;
+        +float CarbsPercent
+        +float ProteinsPercent
+        +float FatsPercent
+        CarbsPercent + ProteinsPercent + FatsPercent = 100
+    }
 
-class NutritionNeeds {
-    &lt;&lt;Value Object&gt;&gt;
-    +float Bmr
-    +float Tdee
-    +float TargetCalories
-    +MacroDistribution MacroDistribution
-}
+    class NutritionInfo {
+        &lt;&lt;Value Object&gt;&gt;
+        +float Calories
+        +float Proteins
+        +float Carbs
+        +float Fats
+    }
 
-%% ─── Enums ──────────────────────────────────────────────────────
+    class NutritionNeeds {
+        &lt;&lt;Value Object&gt;&gt;
+        +float Bmr
+        +float Tdee
+        +float TargetCalories
+        +MacroDistribution MacroDistribution
+    }
 
-class ActivityLevel {
-    &lt;&lt;Enum&gt;&gt;
-    Sedentary
-    LightlyActive
-    ModeratelyActive
-    VeryActive
-    ExtremelyActive
-}
+    %% ─── Enums ──────────────────────────────────────────────────────
 
-class Allergen {
-    &lt;&lt;Enum&gt;&gt;
-    Gluten
-    Crustaceans
-    Eggs
-    Fish
-    Peanuts
-    Soybeans
-    Milk
-    Nuts
-    Celery
-    Mustard
-    SesameSeeds
-    SulphurDioxide
-    Lupin
-    Molluscs
-}
+    class ActivityLevel {
+        &lt;&lt;Enum&gt;&gt;
+        Sedentary
+        LightlyActive
+        ModeratelyActive
+        VeryActive
+        ExtremelyActive
+    }
 
-class DietStatus {
-    &lt;&lt;Enum&gt;&gt;
-    Active
-    Inactive
-    Archived
-}
+    class Allergen {
+        &lt;&lt;Enum&gt;&gt;
+        Gluten
+        Crustaceans
+        Eggs
+        Fish
+        Peanuts
+        Soybeans
+        Milk
+        Nuts
+        Celery
+        Mustard
+        SesameSeeds
+        SulphurDioxide
+        Lupin
+        Molluscs
+    }
 
-class DietType {
-    &lt;&lt;Enum&gt;&gt;
-    Balanced
-    HighProtein
-    Keto
-    Mediterranean
-    LowCarb
-    Vegetarian
-    Vegan
-    Custom
-}
+    class DietStatus {
+        &lt;&lt;Enum&gt;&gt;
+        Active
+        Inactive
+        Archived
+    }
 
-class Gender {
-    &lt;&lt;Enum&gt;&gt;
-    Male
-    Female
-    Other
-}
+    class DietType {
+        &lt;&lt;Enum&gt;&gt;
+        Balanced
+        HighProtein
+        Keto
+        Mediterranean
+        LowCarb
+        Vegetarian
+        Vegan
+        Custom
+    }
 
-class Goal {
-    &lt;&lt;Enum&gt;&gt;
-    WeightLoss
-    Maintenance
-    WeightGain
-}
+    class Gender {
+        &lt;&lt;Enum&gt;&gt;
+        Male
+        Female
+        Other
+    }
 
-class MealType {
-    &lt;&lt;Enum&gt;&gt;
-    Breakfast
-    Lunch
-    Dinner
-    Snack
-}
+    class Goal {
+        &lt;&lt;Enum&gt;&gt;
+        WeightLoss
+        Maintenance
+        WeightGain
+    }
 
-class SubscriptionTier {
-    &lt;&lt;Enum&gt;&gt;
-    Free
-    Pro
-    Business
-}
+    class MealType {
+        &lt;&lt;Enum&gt;&gt;
+        Breakfast
+        Lunch
+        Dinner
+        Snack
+    }
 
-%% ─── Relations ──────────────────────────────────────────────────
+    class SubscriptionTier {
+        &lt;&lt;Enum&gt;&gt;
+        Free
+        Pro
+        Business
+    }
 
-%% Composition — l'enfant n'existe pas sans le parent
-User "1" *-- "0..*" WeightEntry : possède
-Meal "1" *-- "0..*" MealItem : contient
-Diet "1" *-- "1" MacroDistribution : cible macros
-MealItem "1" *-- "1" NutritionInfo : snapshot nutritionnel
-NutritionNeeds "1" *-- "1" MacroDistribution : macros calculées
+    %% ─── Relations ──────────────────────────────────────────────────
 
-%% Association — référence sans dépendance de vie
-User "1" --&gt; "0..*" DietPlan : possède
-User "1" --&gt; "0..*" Diet : possède
-User "1" --&gt; "0..*" Meal : possède
-User "1" *-- "0..*" SavedFoodItem : liste personnelle
-MealItem "*" --&gt; "1" FoodItem : référence
-SavedFoodItem "*" --&gt; "1" FoodItem : référence
+    %% Composition — l'enfant n'existe pas sans le parent
+    User "1" *-- "0..*" WeightEntry : possède
+    Meal "1" *-- "0..*" MealItem : contient
+    Diet "1" *-- "1" MacroDistribution : cible macros
+    MealItem "1" *-- "1" NutritionInfo : snapshot nutritionnel
+    NutritionNeeds "1" *-- "1" MacroDistribution : macros calculées
 
-%% Dépendances vers les enums
-User ..&gt; Gender
-User ..&gt; ActivityLevel
-User ..&gt; Allergen
-User ..&gt; SubscriptionTier
-DietPlan ..&gt; DietType
-DietPlan ..&gt; Goal
-Diet ..&gt; DietType
-Diet ..&gt; Goal
-Diet ..&gt; DietStatus
-Meal ..&gt; MealType
-FoodItem ..&gt; Allergen
-</code></pre>
-<p>```</p>
+    %% Association — référence sans dépendance de vie
+    User "1" --&gt; "0..*" DietPlan : possède
+    User "1" --&gt; "0..*" Diet : possède
+    User "1" --&gt; "0..*" Meal : possède
+    User "1" *-- "0..*" SavedFoodItem : liste personnelle
+    MealItem "*" --&gt; "1" FoodItem : référence
+    SavedFoodItem "*" --&gt; "1" FoodItem : référence
+
+    %% Dépendances vers les enums
+    User ..&gt; Gender
+    User ..&gt; ActivityLevel
+    User ..&gt; Allergen
+    User ..&gt; SubscriptionTier
+    DietPlan ..&gt; DietType
+    DietPlan ..&gt; Goal
+    Diet ..&gt; DietType
+    Diet ..&gt; Goal
+    Diet ..&gt; DietStatus
+    Meal ..&gt; MealType
+    FoodItem ..&gt; Allergen</code></pre>
 <hr/>
 <h2 id="legende">Légende<a class="headerlink" href="#legende" title="Permanent link">¶</a></h2>
 <table>

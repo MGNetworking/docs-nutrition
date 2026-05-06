@@ -1,0 +1,1204 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Documentation technique du projet Nutrition API" name="description"/>
+<meta content="Maxime Ghalem" name="author"/>
+<link href="../infrastructure-docs/" rel="prev"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
+<title>Workflows - Nutrition API — Documentation</title>
+<link href="../../../assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="teal" data-md-color-primary="teal" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#workflows-flux-metier">
+          Aller au contenu
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="En-tête" class="md-header__inner md-grid">
+<a aria-label="Nutrition API — Documentation" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Workflows
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Mode sombre" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Mode sombre">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Mode clair" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="teal" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Mode clair">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Rechercher" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Rechercher" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Recherche" class="md-search__options">
+<button aria-label="Effacer" class="md-search__icon md-icon" tabindex="-1" title="Effacer" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Onglets" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../..">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../../1.nutrition-introduction/">
+          
+  
+  Backend
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Nutrition API — Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="Nutrition API — Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Nutrition API — Documentation
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    Accueil
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+<span class="md-ellipsis">
+    Backend
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../1.nutrition-introduction/">
+<span class="md-ellipsis">
+    Introduction
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../2.nutrition-cas-usage/">
+<span class="md-ellipsis">
+    Cas d'usage
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../3.nutrition-specifications-fonctionnelles/">
+<span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../4.nutrition-specifications-techniques/">
+<span class="md-ellipsis">
+    Specs techniques
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../5.nutrition-contraintes/">
+<span class="md-ellipsis">
+    Contraintes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../6.nutrition-abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../7.nutrition-admin/">
+<span class="md-ellipsis">
+    Administration
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="">
+<span class="md-ellipsis">
+    Domaine
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_8">
+<span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Modele-domaine/">
+<span class="md-ellipsis">
+    Modèle domaine
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Diagramme-classes/">
+<span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../domaine/Regles-metier/">
+<span class="md-ellipsis">
+    Règles métier
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="">
+<span class="md-ellipsis">
+    Features
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_9_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_9">
+<span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/">
+<span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/authentification/">
+<span class="md-ellipsis">
+    Authentification
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/profil-utilisateur/">
+<span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/diet-plan/">
+<span class="md-ellipsis">
+    Diet Plan
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/diet/">
+<span class="md-ellipsis">
+    Diet
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/repas/">
+<span class="md-ellipsis">
+    Repas
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/aliments/">
+<span class="md-ellipsis">
+    Aliments
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/bilan-nutritionnel/">
+<span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/suivi-poids/">
+<span class="md-ellipsis">
+    Suivi du poids
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/rgpd/">
+<span class="md-ellipsis">
+    RGPD
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/openapi/">
+<span class="md-ellipsis">
+    OpenAPI
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/abonnements/">
+<span class="md-ellipsis">
+    Abonnements
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../features/admin-dashboard/">
+<span class="md-ellipsis">
+    Admin dashboard
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="">
+<span class="md-ellipsis">
+    Infrastructure
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_2_10_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_10">
+<span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-setup/">
+<span class="md-ellipsis">
+    Setup local &amp; production
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-keycloak-admin/">
+<span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-import-off/">
+<span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-hangfire/">
+<span class="md-ellipsis">
+    Hangfire
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../infrastructure-docs/">
+<span class="md-ellipsis">
+    Publication docs
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Workflows
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Workflows
+  </span>
+</a>
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-authentification">
+<span class="md-ellipsis">
+      1. Authentification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-creation-du-profil-utilisateur">
+<span class="md-ellipsis">
+      2. Création du profil utilisateur
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-mise-a-jour-du-profil">
+<span class="md-ellipsis">
+      3. Mise à jour du profil
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-gestion-des-dietplans-et-lancement">
+<span class="md-ellipsis">
+      4. Gestion des DietPlans et lancement
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-terminer-une-diet">
+<span class="md-ellipsis">
+      5. Terminer une Diet
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-enregistrement-de-repas">
+<span class="md-ellipsis">
+      6. Enregistrement de repas
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-bilan-nutritionnel">
+<span class="md-ellipsis">
+      7. Bilan nutritionnel
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-recherche-daliment">
+<span class="md-ellipsis">
+      8. Recherche d'aliment
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-gestion-du-poids">
+<span class="md-ellipsis">
+      9. Gestion du poids
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-rgpd">
+<span class="md-ellipsis">
+      10. RGPD
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table des matières" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-authentification">
+<span class="md-ellipsis">
+      1. Authentification
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-creation-du-profil-utilisateur">
+<span class="md-ellipsis">
+      2. Création du profil utilisateur
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-mise-a-jour-du-profil">
+<span class="md-ellipsis">
+      3. Mise à jour du profil
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-gestion-des-dietplans-et-lancement">
+<span class="md-ellipsis">
+      4. Gestion des DietPlans et lancement
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-terminer-une-diet">
+<span class="md-ellipsis">
+      5. Terminer une Diet
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-enregistrement-de-repas">
+<span class="md-ellipsis">
+      6. Enregistrement de repas
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-bilan-nutritionnel">
+<span class="md-ellipsis">
+      7. Bilan nutritionnel
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-recherche-daliment">
+<span class="md-ellipsis">
+      8. Recherche d'aliment
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-gestion-du-poids">
+<span class="md-ellipsis">
+      9. Gestion du poids
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-rgpd">
+<span class="md-ellipsis">
+      10. RGPD
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="workflows-flux-metier">Workflows — Flux métier<a class="headerlink" href="#workflows-flux-metier" title="Permanent link">¶</a></h1>
+<blockquote>
+<p>Tous les flux séquentiels du système Nutrition API.
+Source : fichiers <code>.mermaid</code> dans <code>annexes/</code>.</p>
+</blockquote>
+<hr/>
+<h2 id="1-authentification">1. Authentification<a class="headerlink" href="#1-authentification" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Front as Client Frontend
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+
+    Front-&gt;&gt;KC: Requête d'authentification (auth code flow) avec client_id, redirect_uri, scope=openid
+    KC--&gt;&gt;Front: Affiche formulaire login / inscription
+
+    Front-&gt;&gt;KC: Envoie credentials (login ou inscription)
+    KC--&gt;&gt;Front: Redirige avec code d'autorisation (redirect_uri?code=xxx)
+
+    Front-&gt;&gt;KC: POST /token avec code + client_id + redirect_uri + PKCE
+    KC--&gt;&gt;Front: access_token + refresh_token + id_token
+
+    Note right of Front: Gestion session KC via token
+
+    Front-&gt;&gt;API: Requête API avec access_token (Authorization: Bearer ...)
+    API-&gt;&gt;KC: Vérifie validité token via introspection ou JWT validation
+    alt token valide
+        API-&gt;&gt;API: Enregistre l'utilisateur dans la base métier si nouveau
+        API--&gt;&gt;Front: Réponse OK (données métier)
+    else token invalide
+        API--&gt;&gt;Front: Erreur 401 Unauthorized
+    end</code></pre>
+<hr/>
+<h2 id="2-creation-du-profil-utilisateur">2. Création du profil utilisateur<a class="headerlink" href="#2-creation-du-profil-utilisateur" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide obtenu via Keycloak
+
+    Note over Device: Formulaire obligatoire :&lt;br/&gt;BirthDate, Gender, Height, Weight,&lt;br/&gt;ActivityLevel, Allergies*, DietaryPreferences*&lt;br/&gt;(*choix explicite ou "Aucune contre-indication")
+
+    Device-&gt;&gt;API: POST /users/profile&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ BirthDate, Gender, Height, Weight, ActivityLevel, Allergies, DietaryPreferences }
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        alt Profil déjà existant
+            DB--&gt;&gt;API: User trouvé
+            API--&gt;&gt;Device: 409 Conflict — profil déjà créé
+        else Profil inexistant
+            DB--&gt;&gt;API: Aucun résultat
+
+            alt Données invalides (champ manquant, valeur hors plage)
+                API--&gt;&gt;Device: 400 Bad Request — détail des erreurs de validation
+            else Données valides
+                API-&gt;&gt;DB: INSERT User { KeycloakId, BirthDate, Gender, Height,&lt;br/&gt;ActivityLevel, Allergies, DietaryPreferences, CreatedAt }
+                API-&gt;&gt;DB: INSERT WeightEntry { UserId, Weight, MeasuredAt = aujourd'hui }
+                DB--&gt;&gt;API: Succès
+                API--&gt;&gt;Device: 201 Created — { UserId, profil complet }
+                Note over Device: Profil créé — redirection vers le dashboard utilisateur
+            end
+        end
+    end</code></pre>
+<hr/>
+<h2 id="3-mise-a-jour-du-profil">3. Mise à jour du profil<a class="headerlink" href="#3-mise-a-jour-du-profil" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    Note over Device: L'utilisateur modifie un ou plusieurs champs de son profil :&lt;br/&gt;BirthDate?, Gender?, Height?, ActivityLevel?,&lt;br/&gt;Allergies?, DietaryPreferences?
+
+    Device-&gt;&gt;API: PUT /users/me/profile&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ BirthDate?, Gender?, Height?, ActivityLevel?,&lt;br/&gt;  Allergies?, DietaryPreferences? }
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        alt Profil introuvable
+            DB--&gt;&gt;API: Aucun résultat
+            API--&gt;&gt;Device: 404 Not Found
+        else Profil trouvé
+            DB--&gt;&gt;API: User { UserId, ... }
+
+            alt Données invalides (valeur hors plage, enum inconnu)
+                API--&gt;&gt;Device: 400 Bad Request — détail des erreurs
+            else Données valides
+                API-&gt;&gt;DB: UPDATE User SET&lt;br/&gt;BirthDate = ?, Gender = ?, Height = ?,&lt;br/&gt;ActivityLevel = ?, Allergies = ?,&lt;br/&gt;DietaryPreferences = ?&lt;br/&gt;WHERE Id = UserId
+                DB--&gt;&gt;API: Succès
+                API--&gt;&gt;Device: 200 OK — profil mis à jour
+                Note over Device: Seuls les champs fournis sont mis à jour
+            end
+        end
+    end</code></pre>
+<hr/>
+<h2 id="4-gestion-des-dietplans-et-lancement">4. Gestion des DietPlans et lancement<a class="headerlink" href="#4-gestion-des-dietplans-et-lancement" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% PARTIE 1 — Création d'un DietPlan personnel
+    Note over Device: L'utilisateur remplit le formulaire de plan :&lt;br/&gt;Name, DietType, Goal, TargetWeight, MacroDistribution
+
+    Device-&gt;&gt;API: POST /diet-plans&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ Name, DietType, Goal, TargetWeight, MacroDistribution }
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        alt Profil introuvable
+            DB--&gt;&gt;API: Aucun résultat
+            API--&gt;&gt;Device: 404 Not Found — profil utilisateur non créé
+        else Profil trouvé
+            DB--&gt;&gt;API: User { UserId, SubscriptionTier }
+
+            API-&gt;&gt;DB: SELECT COUNT(*) FROM DietPlan WHERE UserId = ? AND IsTemplate = false
+            DB--&gt;&gt;API: count
+            alt Limite atteinte (Free ≥ 2 / Pro ≥ 20 / Business : aucune)
+                API--&gt;&gt;Device: 403 Forbidden — limite de plans personnels atteinte
+            else Limite non atteinte
+                alt Données invalides (champ manquant, MacroDistribution ≠ 100%)
+                    API--&gt;&gt;Device: 400 Bad Request — détail des erreurs de validation
+                else Données valides
+                    API-&gt;&gt;DB: INSERT DietPlan { UserId, Name, DietType, Goal,&lt;br/&gt;TargetWeight, MacroDistribution, IsTemplate = false }
+                    DB--&gt;&gt;API: Succès
+                    API--&gt;&gt;Device: 201 Created — { DietPlanId, plan complet }
+                end
+            end
+        end
+    end
+
+    %% PARTIE 2 — Lancement d'un DietPlan → Diet active
+    Note over Device: L'utilisateur sélectionne un DietPlan et clique "Lancer"
+
+    Device-&gt;&gt;API: POST /diet-plans/{dietPlanId}/launch&lt;br/&gt;Authorization: Bearer access_token
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        DB--&gt;&gt;API: User { UserId }
+
+        API-&gt;&gt;DB: SELECT DietPlan WHERE Id = dietPlanId AND UserId = ?
+        alt DietPlan introuvable
+            DB--&gt;&gt;API: Aucun résultat
+            API--&gt;&gt;Device: 404 Not Found
+        else DietPlan trouvé
+            DB--&gt;&gt;API: DietPlan { Name, DietType, Goal, TargetWeight, MacroDistribution }
+
+            API-&gt;&gt;DB: SELECT Diet WHERE UserId = ? AND DietStatus = Active
+            alt Diet active existante
+                DB--&gt;&gt;API: Diet active trouvée
+                API--&gt;&gt;Device: 409 Conflict — un régime est déjà actif
+            else Aucune Diet active
+                DB--&gt;&gt;API: Aucun résultat
+
+                API-&gt;&gt;DB: SELECT WeightEntry WHERE UserId = ?&lt;br/&gt;ORDER BY MeasuredAt DESC LIMIT 1
+                alt Aucune entrée de poids
+                    DB--&gt;&gt;API: Aucun résultat
+                    API--&gt;&gt;Device: 422 Unprocessable Entity — aucune mesure de poids enregistrée
+                else WeightEntry trouvé
+                    DB--&gt;&gt;API: WeightEntry { Weight, MeasuredAt }
+
+                    Note over API: Calcul BMR (Mifflin-St Jeor) :&lt;br/&gt;BMR = f(Weight, Height, BirthDate, Gender)&lt;br/&gt;TDEE = BMR × ActivityLevel&lt;br/&gt;CalorieTarget = TDEE ± ajustement selon Goal
+
+                    API-&gt;&gt;DB: INSERT Diet { UserId, Name, DietType, Goal,&lt;br/&gt;TargetWeight, MacroDistribution, CalorieTarget,&lt;br/&gt;StartDate = aujourd'hui, EndDate = null, DietStatus = Active }
+                    DB--&gt;&gt;API: Succès
+                    API--&gt;&gt;Device: 201 Created — { DietId, diet complète }
+                    Note over Device: Régime actif — redirection vers le tableau de bord
+                end
+            end
+        end
+    end</code></pre>
+<hr/>
+<h2 id="5-terminer-une-diet">5. Terminer une Diet<a class="headerlink" href="#5-terminer-une-diet" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + Diet active existante
+
+    Note over Device: L'utilisateur clique sur "Terminer mon régime"
+
+    Device-&gt;&gt;API: POST /diets/{dietId}/archive&lt;br/&gt;Authorization: Bearer access_token
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        DB--&gt;&gt;API: User { UserId }
+
+        API-&gt;&gt;DB: SELECT Diet WHERE Id = dietId AND UserId = ?
+        alt Diet introuvable ou n'appartient pas à l'utilisateur
+            DB--&gt;&gt;API: Aucun résultat
+            API--&gt;&gt;Device: 404 Not Found
+        else Diet trouvée
+            DB--&gt;&gt;API: Diet { DietStatus, EndDate }
+
+            alt Diet déjà archivée
+                API--&gt;&gt;Device: 409 Conflict — ce régime est déjà terminé
+            else Diet active
+                Note over API: EndDate = aujourd'hui (imposée système)&lt;br/&gt;DietStatus = Archived
+
+                API-&gt;&gt;DB: UPDATE Diet SET&lt;br/&gt;DietStatus = Archived,&lt;br/&gt;EndDate = aujourd'hui&lt;br/&gt;WHERE Id = dietId
+                DB--&gt;&gt;API: Succès
+
+                API--&gt;&gt;Device: 200 OK — { DietId, DietStatus = Archived, EndDate }
+                Note over Device: Régime terminé — l'utilisateur peut lancer un nouveau plan
+            end
+        end
+    end</code></pre>
+<hr/>
+<h2 id="6-enregistrement-de-repas">6. Enregistrement de repas<a class="headerlink" href="#6-enregistrement-de-repas" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% CAS 1 — Depuis un repas sauvegardé
+    Note over Device: L'utilisateur consulte sa liste de repas sauvegardés
+
+    Device-&gt;&gt;API: GET /meals?saved=true&lt;br/&gt;Authorization: Bearer access_token
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+    API-&gt;&gt;DB: SELECT Meal WHERE UserId = ? AND IsSaved = true
+    DB--&gt;&gt;API: Liste des repas sauvegardés (avec leurs MealItems)
+    API--&gt;&gt;Device: 200 OK — liste des repas sauvegardés
+
+    Note over Device: L'utilisateur sélectionne un repas sauvegardé,&lt;br/&gt;ajuste les quantités et valide
+
+    Device-&gt;&gt;API: POST /meals&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ Name, MealType, ConsumedAt, IsSaved = false,&lt;br/&gt;  Items: [{ FoodItemId, Quantity }, ...] }
+
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+    API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+    DB--&gt;&gt;API: User { UserId }
+
+    alt Aucun MealItem fourni
+        API--&gt;&gt;Device: 400 Bad Request — un repas doit contenir au moins un aliment
+    else Au moins un MealItem
+        alt Quantité invalide (≤ 0)
+            API--&gt;&gt;Device: 400 Bad Request — la quantité doit être supérieure à 0
+        else Quantités valides
+            loop Pour chaque MealItem
+                API-&gt;&gt;DB: SELECT FoodItem WHERE Id = FoodItemId
+                DB--&gt;&gt;API: FoodItem { CaloriesPer100g, ProteinsPer100g, CarbsPer100g, FatsPer100g }
+                Note over API: Calcul NutritionInfo (snapshot) :&lt;br/&gt;Calories = CaloriesPer100g × (Quantity / 100)
+            end
+            API-&gt;&gt;DB: INSERT Meal + MealItems × N
+            DB--&gt;&gt;API: Succès
+            API--&gt;&gt;Device: 201 Created — { MealId, repas complet avec valeurs nutritionnelles }
+        end
+    end
+
+    %% CAS 2 — Nouveau repas from scratch
+    Note over Device: L'utilisateur crée un nouveau repas&lt;br/&gt;et choisit de le sauvegarder ou non
+
+    Device-&gt;&gt;API: POST /meals&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ Name, MealType, ConsumedAt, IsSaved, Notes?,&lt;br/&gt;  Items: [{ FoodItemId, Quantity }, ...] }
+
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+    API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+    DB--&gt;&gt;API: User { UserId }
+
+    alt IsSaved = true
+        API-&gt;&gt;DB: SELECT COUNT(*) FROM Meal WHERE UserId = ? AND IsSaved = true
+        DB--&gt;&gt;API: count
+        alt Limite atteinte (Free ≥ 5 / Pro ≥ 50 / Business : aucune)
+            API--&gt;&gt;Device: 403 Forbidden — limite de repas sauvegardés atteinte
+        else Limite non atteinte
+            API-&gt;&gt;DB: INSERT Meal { IsSaved = true } + MealItems × N
+            DB--&gt;&gt;API: Succès
+            API--&gt;&gt;Device: 201 Created — repas sauvegardé dans la liste personnelle
+        end
+    else IsSaved = false
+        API-&gt;&gt;DB: INSERT Meal { IsSaved = false } + MealItems × N
+        DB--&gt;&gt;API: Succès
+        API--&gt;&gt;Device: 201 Created — repas enregistré pour la journée
+    end</code></pre>
+<hr/>
+<h2 id="7-bilan-nutritionnel">7. Bilan nutritionnel<a class="headerlink" href="#7-bilan-nutritionnel" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    Note over Device: L'utilisateur sélectionne une Diet et demande son bilan
+
+    Device-&gt;&gt;API: GET /diets/{dietId}/bilan&lt;br/&gt;Authorization: Bearer access_token
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        DB--&gt;&gt;API: User { UserId, SubscriptionTier }
+
+        API-&gt;&gt;DB: SELECT Diet WHERE Id = dietId AND UserId = ?
+        alt Diet introuvable
+            DB--&gt;&gt;API: Aucun résultat
+            API--&gt;&gt;Device: 404 Not Found
+        else Diet trouvée
+            DB--&gt;&gt;API: Diet { Name, CalorieTarget, MacroDistribution,&lt;br/&gt;TargetWeight, StartDate, EndDate, DietStatus }
+
+            Note over API: Période effective clampée selon SubscriptionTier :&lt;br/&gt;Free → max 7 derniers jours&lt;br/&gt;Pro → max 1 an&lt;br/&gt;Business → période complète de la Diet
+
+            API-&gt;&gt;DB: SELECT Meal JOIN MealItem&lt;br/&gt;WHERE UserId = ? AND ConsumedAt BETWEEN StartDate AND EndDate
+            DB--&gt;&gt;API: Liste des MealItems avec NutritionInfo par jour
+
+            API-&gt;&gt;DB: SELECT WeightEntry&lt;br/&gt;WHERE UserId = ? AND MeasuredAt BETWEEN StartDate AND EndDate
+            DB--&gt;&gt;API: Liste des WeightEntry { MeasuredAt, Weight }
+
+            Note over API: Agrégation par jour :&lt;br/&gt;totalCalories, totalProteins, totalCarbs, totalFats&lt;br/&gt;+ pourcentages vs CalorieTarget et MacroDistribution&lt;br/&gt;+ résumé global (moyennes)
+
+            API--&gt;&gt;Device: 200 OK —&lt;br/&gt;{ diet, dailyData[], weightEntries[], summary }
+        end
+    end</code></pre>
+<hr/>
+<h2 id="8-recherche-daliment">8. Recherche d'aliment<a class="headerlink" href="#8-recherche-daliment" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant Cache as Cache (Redis)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+    Note over DB: FoodItem pré-remplie via import dump OFF quotidien
+
+    %% PARTIE 1 — Recherche par mot-clé
+    Device-&gt;&gt;API: GET /food-items?search={motclé}&lt;br/&gt;Authorization: Bearer access_token
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide
+
+        API-&gt;&gt;Cache: GET food-items:{motclé}
+        alt Résultats trouvés en cache
+            Cache--&gt;&gt;API: Liste FoodItem
+            API--&gt;&gt;Device: 200 OK — liste des aliments (depuis cache)
+        else Cache miss
+            Cache--&gt;&gt;API: Aucun résultat
+
+            API-&gt;&gt;DB: SELECT FoodItem WHERE Name LIKE %motclé%
+            alt Résultats trouvés en base
+                DB--&gt;&gt;API: Liste FoodItem
+                API-&gt;&gt;Cache: SET food-items:{motclé} (TTL court)
+                API--&gt;&gt;Device: 200 OK — liste des aliments (depuis base)
+            else Introuvable en base
+                DB--&gt;&gt;API: Aucun résultat
+                API--&gt;&gt;Device: 200 OK — liste vide
+            end
+        end
+    end
+
+    %% PARTIE 2 — Sauvegarde dans la liste personnelle
+    Note over Device: L'utilisateur sélectionne un aliment et clique "Sauvegarder"
+
+    Device-&gt;&gt;API: POST /users/me/saved-food-items&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ FoodItemId }
+
+    API-&gt;&gt;KC: Valide access_token (JWT validation)
+    alt Token invalide ou expiré
+        KC--&gt;&gt;API: Token rejeté
+        API--&gt;&gt;Device: 401 Unauthorized
+    else Token valide
+        KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+        API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+        DB--&gt;&gt;API: User { UserId, SubscriptionTier }
+
+        API-&gt;&gt;DB: SELECT SavedFoodItem WHERE UserId = ? AND FoodItemId = ?
+        alt Déjà sauvegardé
+            DB--&gt;&gt;API: SavedFoodItem trouvé
+            API--&gt;&gt;Device: 409 Conflict — aliment déjà dans la liste personnelle
+        else Pas encore sauvegardé
+            API-&gt;&gt;DB: SELECT COUNT(*) FROM SavedFoodItem WHERE UserId = ?
+            DB--&gt;&gt;API: count
+            alt Limite atteinte (Free ≥ 10 / Pro ≥ 100 / Business : aucune)
+                API--&gt;&gt;Device: 403 Forbidden — limite d'aliments sauvegardés atteinte
+            else Limite non atteinte
+                API-&gt;&gt;DB: INSERT SavedFoodItem { UserId, FoodItemId, SavedAt }
+                DB--&gt;&gt;API: Succès
+                API--&gt;&gt;Device: 201 Created — aliment ajouté à la liste personnelle
+            end
+        end
+    end</code></pre>
+<hr/>
+<h2 id="9-gestion-du-poids">9. Gestion du poids<a class="headerlink" href="#9-gestion-du-poids" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% PARTIE 1 — Ajouter une entrée de poids
+    Note over Device: L'utilisateur saisit son poids&lt;br/&gt;MeasuredAt = aujourd'hui par défaut (modifiable)
+
+    Device-&gt;&gt;API: POST /users/me/weight-entries&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ Weight, MeasuredAt }
+
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+    API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+    DB--&gt;&gt;API: User { UserId }
+
+    alt Données invalides (Weight ≤ 0)
+        API--&gt;&gt;Device: 400 Bad Request
+    else Données valides
+        API-&gt;&gt;DB: SELECT WeightEntry WHERE UserId = ? AND MeasuredAt = ?
+        alt Entrée existante pour cette date
+            DB--&gt;&gt;API: WeightEntry trouvé
+            API--&gt;&gt;Device: 409 Conflict — une pesée existe déjà pour cette date
+        else Aucune entrée pour cette date
+            DB--&gt;&gt;API: Aucun résultat
+            API-&gt;&gt;DB: INSERT WeightEntry { UserId, Weight, MeasuredAt }
+            DB--&gt;&gt;API: Succès
+            API--&gt;&gt;Device: 201 Created — { WeightEntryId, Weight, MeasuredAt }
+        end
+    end
+
+    %% PARTIE 2 — Modifier une entrée de poids
+    Note over Device: L'utilisateur modifie une pesée existante
+
+    Device-&gt;&gt;API: PUT /users/me/weight-entries/{id}&lt;br/&gt;Authorization: Bearer access_token&lt;br/&gt;{ Weight?, MeasuredAt? }
+
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+    API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+    DB--&gt;&gt;API: User { UserId }
+
+    API-&gt;&gt;DB: SELECT WeightEntry WHERE Id = ? AND UserId = ?
+    alt Introuvable ou n'appartient pas à l'utilisateur
+        DB--&gt;&gt;API: Aucun résultat
+        API--&gt;&gt;Device: 404 Not Found
+    else Trouvé
+        DB--&gt;&gt;API: WeightEntry existant
+
+        alt Nouvelle MeasuredAt déjà prise par une autre entrée
+            API-&gt;&gt;DB: SELECT WeightEntry WHERE UserId = ? AND MeasuredAt = ? AND Id ≠ ?
+            DB--&gt;&gt;API: Conflit trouvé
+            API--&gt;&gt;Device: 409 Conflict — une pesée existe déjà pour cette date
+        else Pas de conflit
+            API-&gt;&gt;DB: UPDATE WeightEntry SET Weight = ?, MeasuredAt = ? WHERE Id = ?
+            DB--&gt;&gt;API: Succès
+            API--&gt;&gt;Device: 200 OK — { WeightEntryId, Weight, MeasuredAt }
+        end
+    end</code></pre>
+<hr/>
+<h2 id="10-rgpd">10. RGPD<a class="headerlink" href="#10-rgpd" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Device as Device (Client)
+    participant KC as Keycloak
+    participant API as API ASP.NET Core
+    participant DB as PostgreSQL
+    participant KCAdmin as Keycloak Admin API
+    participant Mail as Service Email
+
+    Note over Device: Précondition — access_token valide + profil utilisateur existant
+
+    %% PARTIE 1 — Export des données (RGPD Art. 20)
+    Note over Device: L'utilisateur demande l'export de toutes ses données
+
+    Device-&gt;&gt;API: GET /users/me/export&lt;br/&gt;Authorization: Bearer access_token
+
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+    API-&gt;&gt;DB: SELECT User + WeightEntries + DietPlans + Diets&lt;br/&gt;+ Meals + MealItems + SavedFoodItems&lt;br/&gt;WHERE UserId = ?
+    DB--&gt;&gt;API: Toutes les données utilisateur
+
+    API--&gt;&gt;Device: 200 OK — fichier JSON contenant toutes les données
+
+    %% PARTIE 2 — Suppression du compte (RGPD Art. 17)
+    Note over Device: L'utilisateur demande la suppression de son compte
+
+    Device-&gt;&gt;API: DELETE /users/me&lt;br/&gt;Authorization: Bearer access_token
+
+    API-&gt;&gt;KC: Valide access_token
+    KC--&gt;&gt;API: Token valide — KeycloakId extrait
+
+    API-&gt;&gt;DB: SELECT User WHERE KeycloakId = ?
+    DB--&gt;&gt;API: User { UserId, KeycloakId }
+
+    alt Compte déjà en attente de suppression
+        API--&gt;&gt;Device: 409 Conflict — suppression déjà demandée
+    else Compte actif
+        API-&gt;&gt;DB: UPDATE User SET DeletedAt = maintenant
+        DB--&gt;&gt;API: Succès
+
+        API-&gt;&gt;KCAdmin: PATCH /admin/realms/{realm}/users/{KeycloakId}&lt;br/&gt;{ enabled: false }
+        KCAdmin--&gt;&gt;API: Succès — compte Keycloak désactivé
+
+        API-&gt;&gt;Mail: Envoyer email de confirmation avec lien de réactivation (30 jours)
+        Mail--&gt;&gt;API: Email envoyé
+
+        API--&gt;&gt;Device: 200 OK — compte en cours de suppression
+    end
+
+    %% PARTIE 3 — Réactivation du compte (&lt; 30 jours)
+    Note over Device: L'utilisateur clique sur le lien de réactivation reçu par email
+
+    Device-&gt;&gt;API: POST /users/me/reactivate&lt;br/&gt;{ token: "lien signé reçu par email" }
+
+    API-&gt;&gt;API: Valide le token signé (non expiré + correspond à UserId)
+
+    alt Token invalide ou expiré
+        API--&gt;&gt;Device: 400 Bad Request — lien invalide ou expiré
+    else Token valide
+        API-&gt;&gt;DB: SELECT User WHERE Id = ? AND DeletedAt IS NOT NULL
+        alt DeletedAt &gt; 30 jours (compte déjà purgé)
+            DB--&gt;&gt;API: Aucun résultat
+            API--&gt;&gt;Device: 404 Not Found — compte définitivement supprimé
+        else Dans le délai de 30 jours
+            DB--&gt;&gt;API: User trouvé
+            API-&gt;&gt;DB: UPDATE User SET DeletedAt = null
+            DB--&gt;&gt;API: Succès
+            API-&gt;&gt;KCAdmin: PATCH /admin/realms/{realm}/users/{KeycloakId}&lt;br/&gt;{ enabled: true }
+            KCAdmin--&gt;&gt;API: Succès — compte Keycloak réactivé
+            API--&gt;&gt;Device: 200 OK — compte réactivé. Toutes vos données sont intactes.
+        end
+    end
+
+    %% PARTIE 4 — Purge automatique après 30 jours (job Infrastructure)
+    Note over API: Job planifié — exécuté quotidiennement
+
+    API-&gt;&gt;DB: SELECT User WHERE DeletedAt &lt;= maintenant - 30 jours
+    DB--&gt;&gt;API: Liste des utilisateurs à purger
+
+    loop Pour chaque utilisateur à purger
+        API-&gt;&gt;DB: DELETE cascade :&lt;br/&gt;MealItems → Meals → WeightEntries&lt;br/&gt;SavedFoodItems → DietPlans → Diets → User
+        DB--&gt;&gt;API: Succès
+        API-&gt;&gt;KCAdmin: DELETE /admin/realms/{realm}/users/{KeycloakId}
+        KCAdmin--&gt;&gt;API: Compte Keycloak supprimé définitivement
+    end
+
+    Note over API: Purge terminée — données irrécupérables</code></pre>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Retour en haut de la page
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+<script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+</body>
+</html>
