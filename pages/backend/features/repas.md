@@ -1,7 +1,7 @@
 # Repas
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/annexes/workflow_enregistrement-repas.mermaid`
+**Référence spec :** `docs/pages/backend/annexes/workflow_enregistrement-repas.mermaid`
 
 ---
 

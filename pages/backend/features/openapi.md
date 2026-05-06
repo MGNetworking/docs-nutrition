@@ -1,7 +1,7 @@
 # OpenAPI / Swagger UI
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/4.nutrition-specifications-techniques.md`
+**Référence spec :** `docs/pages/backend/4.nutrition-specifications-techniques.md`
 
 ---
 

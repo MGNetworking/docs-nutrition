@@ -76,6 +76,10 @@ STORIES = [
      "Medium", "hors-scope", 3, "EPIC-002"),
 
     # ── Infrastructure (EPIC-003) ────────────────────────────────────────────────
+    # STORY-039 en premier — prérequis à tout le reste (DB + Keycloak doivent tourner)
+    ("STORY-039", "Setup environnement de développement local",
+     "Créer le Docker Compose (app-db, keycloak-db, keycloak, redis), le .env.example, et le realm-export-dev.json Keycloak. Voir infrastructure-setup.md.",
+     "High", "infrastructure", 3, "EPIC-003"),
     ("STORY-013", "EF Core Configurations",
      "Configurer le mapping objet-relationnel via Fluent API pour chaque entité.",
      "Medium", "infrastructure", 5, "EPIC-003"),
@@ -100,6 +104,14 @@ STORIES = [
     ("STORY-036", "Configuration Hangfire",
      "Configurer Hangfire avec stockage PostgreSQL, sécuriser le dashboard /hangfire (rôle admin) et enregistrer les jobs récurrents au démarrage.",
      "High", "hors-scope", 3, "EPIC-003"),
+    # STORY-040 avant-dernier — une fois l'API complète et testée localement
+    ("STORY-040", "Dockerfile + config connexion K3s",
+     "Créer le Dockerfile de l'API et les manifests K8s de l'API uniquement (configmap, secret.example, Deployment, Service, Ingress Traefik). PostgreSQL/Keycloak/Redis sont gérés par le projet d'infrastructure K3s séparé. Voir infrastructure-setup.md.",
+     "Medium", "infrastructure", 3, "EPIC-003"),
+    # STORY-041 en dernier — après le premier déploiement manuel validé (STORY-040)
+    ("STORY-041", "CI/CD GitHub Actions — déploiement automatique sur K3s",
+     "Configurer le Service Account K3s dédié, ajouter le secret KUBECONFIG_B64 dans GitHub, créer .github/workflows/deploy.yml (build → push GHCR → kubectl set image → rollout status). Voir infrastructure-setup.md Section 3.",
+     "Medium", "infrastructure", 3, "EPIC-003"),
 
     # ── API (EPIC-004) ───────────────────────────────────────────────────────────
     ("STORY-019", "UsersController",
@@ -742,4 +754,53 @@ SUBTASKS = [
     ("SUB-153", "Enregistrer les jobs récurrents au démarrage",
      "RecurringJob.AddOrUpdate pour OffImportJob (cron 0 3 * * *) et RgpdPurgeJob (cron 30 3 * * *) dans Program.cs.",
      "High", "infrastructure", "STORY-036"),
+
+    # ── STORY-039 : Setup environnement de développement local ──────────────────
+    # À faire EN PREMIER dans EPIC-003 — prérequis à toute migration EF Core et test JWT
+    ("SUB-172", "Créer infra/dev/docker-compose.yml",
+     "Orchestrer app-db (PostgreSQL 16), keycloak-db (PostgreSQL 16), keycloak (24.0) et redis (7). Keycloak monté avec --import-realm via realm-export-dev.json. Voir infrastructure-setup.md.",
+     "High", "infrastructure", "STORY-039"),
+    ("SUB-173", "Créer infra/dev/.env.example",
+     "Lister toutes les variables d'environnement nécessaires avec valeurs vides : POSTGRES_USER/PASSWORD, KC_DB_USER/PASSWORD, KC_ADMIN_USER/PASSWORD, ConnectionStrings, Keycloak__*. Ajouter .env au .gitignore.",
+     "High", "infrastructure", "STORY-039"),
+    ("SUB-174", "Générer et versionner infra/keycloak/realm-export-dev.json",
+     "Configurer le realm 'nutrition' manuellement : client nutrition-api (public, PKCE), client nutrition-api-service (confidential, service account, rôle manage-users), rôles realm user + admin, 2 utilisateurs de test. Exporter via Admin Console → Partial export (groupes + clients + utilisateurs). Commiter le fichier.",
+     "High", "infrastructure", "STORY-039"),
+    ("SUB-175", "Vérifier le démarrage complet et l'import automatique du realm",
+     "docker compose down && docker compose up -d. Vérifier que Keycloak importe le realm au démarrage, que les 4 services sont healthy, et que dotnet ef database update s'applique sans erreur.",
+     "Medium", "infrastructure", "STORY-039"),
+
+    # ── STORY-040 : Dockerfile + config connexion K3s ───────────────────────────
+    # À faire EN DERNIER — une fois l'API complète et testée localement
+    # PostgreSQL/Keycloak/Redis sont dans le projet infra K3s séparé — ce projet ne contient que la config de connexion
+    ("SUB-176", "Créer le Dockerfile multi-stage de l'API",
+     "Build SDK .NET 8 → runtime aspnet:8.0. COPY des 4 projets, dotnet restore, dotnet publish Release. ENTRYPOINT dotnet NutritionApi.API.dll.",
+     "High", "infrastructure", "STORY-040"),
+    ("SUB-177", "Créer infra/k8s/configmap.yaml",
+     "Variables non-sensibles : ASPNETCORE_ENVIRONMENT=Production, Keycloak__Authority, Keycloak__Realm, Keycloak__ClientId, Keycloak__ServiceClientId, Keycloak__AdminBaseUrl, ConnectionStrings__Redis. Les URLs pointent vers les services K3s du projet infra séparé.",
+     "Medium", "infrastructure", "STORY-040"),
+    ("SUB-178", "Créer infra/k8s/secret.yaml.example + documenter kubectl create secret",
+     "Fichier .example committé (valeurs vides) : ConnectionStrings__NutritionDb et Keycloak__ServiceClientSecret. Commande kubectl create secret generic documentée dans infrastructure-setup.md. Jamais de valeurs réelles committées.",
+     "High", "infrastructure", "STORY-040"),
+    ("SUB-179", "Créer infra/k8s/deployment.yaml et service.yaml",
+     "Deployment nutrition-api : image registry, envFrom configmap + secret, readinessProbe GET /health:8080. Service ClusterIP port 80 → 8080.",
+     "Medium", "infrastructure", "STORY-040"),
+    ("SUB-180", "Créer infra/k8s/ingress.yaml (Traefik K3s)",
+     "Ingress avec annotation kubernetes.io/ingress.class: traefik. TLS sur api.nutrition.example.com. Route / → nutrition-api-service:80.",
+     "Medium", "infrastructure", "STORY-040"),
+
+    # ── STORY-041 : CI/CD GitHub Actions ────────────────────────────────────────
+    # Prérequis : STORY-040 terminé et premier déploiement manuel validé
+    ("SUB-181", "Créer Service Account K3s dédié au déploiement GitHub Actions",
+     "kubectl create serviceaccount github-actions-deployer -n nutrition. RoleBinding clusterrole=edit limité au namespace nutrition. Extraire le token, construire le kubeconfig minimal, l'encoder en base64. Voir infrastructure-setup.md Section 3 étape 1.",
+     "High", "infrastructure", "STORY-041"),
+    ("SUB-182", "Ajouter le secret KUBECONFIG_B64 dans GitHub",
+     "GitHub → Settings → Secrets and variables → Actions → New repository secret. Valeur = sortie base64 du kubeconfig Service Account. Supprimer le fichier kubeconfig local immédiatement après.",
+     "High", "infrastructure", "STORY-041"),
+    ("SUB-183", "Créer .github/workflows/deploy.yml",
+     "Trigger : push sur main. Steps : checkout → login GHCR (GITHUB_TOKEN) → build+push image (tag SHA + latest) → setup kubectl → decode KUBECONFIG_B64 → kubectl set image → rollout status --timeout=120s → kubectl get pods. Voir infrastructure-setup.md Section 3 étape 2.",
+     "High", "infrastructure", "STORY-041"),
+    ("SUB-184", "Vérifier le premier déploiement automatique",
+     "Push un commit sur main. Vérifier que le pipeline passe (build OK, push GHCR OK, rollout OK). Vérifier les pods et l'endpoint via l'Ingress. Corriger si rollout timeout.",
+     "Medium", "infrastructure", "STORY-041"),
 ]

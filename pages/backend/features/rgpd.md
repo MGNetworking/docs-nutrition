@@ -1,7 +1,7 @@
 # RGPD
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/annexes/workflow_rgpd.mermaid` · `docs/backend/annexes/infrastructure-keycloak-admin.md`
+**Référence spec :** `docs/pages/backend/annexes/workflow_rgpd.mermaid` · `docs/pages/backend/annexes/infrastructure-keycloak-admin.md`
 
 ---
 

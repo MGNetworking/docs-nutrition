@@ -1,7 +1,7 @@
 # Aliments
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/annexes/workflow_recherche-aliment.mermaid` · `docs/backend/annexes/infrastructure-import-off.md`
+**Référence spec :** `docs/pages/backend/annexes/workflow_recherche-aliment.mermaid` · `docs/pages/backend/annexes/infrastructure-import-off.md`
 
 ---
 

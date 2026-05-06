@@ -1,7 +1,7 @@
 # Authentification
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/annexes/workflow_Flux_authentification.mermaid` · `docs/backend/domaine/Modele-domaine.md#authentification`
+**Référence spec :** `docs/pages/backend/annexes/workflow_Flux_authentification.mermaid` · `docs/pages/backend/domaine/Modele-domaine.md#authentification`
 
 ---
 

@@ -1,7 +1,7 @@
 # Profil utilisateur
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/annexes/workflow_creation-profil-utilisateur.mermaid` · `workflow_mise-a-jour-profil.mermaid`
+**Référence spec :** `docs/pages/backend/annexes/workflow_creation-profil-utilisateur.mermaid` · `workflow_mise-a-jour-profil.mermaid`
 
 ---
 

@@ -1,7 +1,7 @@
 # Plans alimentaires (DietPlan)
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/backend/annexes/workflow_gestion-dietplan-et-lancement.mermaid` · `docs/backend/domaine/Modele-domaine.md#dietplan`
+**Référence spec :** `docs/pages/backend/annexes/workflow_gestion-dietplan-et-lancement.mermaid` · `docs/pages/backend/domaine/Modele-domaine.md#dietplan`
 
 ---
 
