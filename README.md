@@ -117,9 +117,9 @@ Le déploiement se fait automatiquement via GitHub Actions (~2 min).
 
 Le fichier `.github/workflows/docs.yml` gère deux cas :
 
-| Événement | Action |
-|---|---|
-| `push` sur `master` | `mkdocs gh-deploy --force` → déploiement GitHub Pages |
+| Événement                    | Action                                                  |
+| ---------------------------- | ------------------------------------------------------- |
+| `push` sur `master`          | `mkdocs gh-deploy --force` → déploiement GitHub Pages   |
 | `pull_request` vers `master` | `mkdocs build --strict` → vérification sans déploiement |
 
 Le flag `--strict` bloque le build si un lien est cassé — corriger en local avant de merger.
@@ -128,12 +128,12 @@ Le flag `--strict` bloque le build si un lien est cassé — corriger en local a
 
 ## Dépendances
 
-| Package | Version | Rôle |
-|---|---|---|
-| `mkdocs` | 1.6.1 | Moteur de génération du site |
-| `mkdocs-material` | 9.5.49 | Thème Material Design |
-| `mkdocs-mermaid2-plugin` | 1.2.1 | Rendu des diagrammes Mermaid |
-| `pymdown-extensions` | 10.14.3 | Extensions markdown (superfences, tabbed…) |
+| Package                  | Version | Rôle                                       |
+| ------------------------ | ------- | ------------------------------------------ |
+| `mkdocs`                 | 1.6.1   | Moteur de génération du site               |
+| `mkdocs-material`        | 9.5.49  | Thème Material Design                      |
+| `mkdocs-mermaid2-plugin` | 1.2.1   | Rendu des diagrammes Mermaid               |
+| `pymdown-extensions`     | 10.14.3 | Extensions markdown (superfences, tabbed…) |
 
 Mettre à jour `requirements.txt` en cas de montée de version, puis relancer `pip install -r requirements.txt`.
 
@@ -155,9 +155,8 @@ Registre des imports Jira géré par `playbook/tools/import_jira.py` dans le rep
 
 ## Liens utiles
 
-| Ressource | URL |
-|---|---|
-| Site publié | https://mgnetworking.github.io/docs-nutrition/ |
+| Ressource           | URL                                            |
+| ------------------- | ---------------------------------------------- |
+| Site publié         | https://mgnetworking.github.io/docs-nutrition/ |
 | Repo docs (ce repo) | https://github.com/MGNetworking/docs-nutrition |
-| Repo code API | _(à créer — nutrition-api)_ |
-| Suivi de projet | `SUIVI-PROJET.md` dans le repo parent `nutrition-manager/` |
+| Repo code API       | _(à créer — nutrition-api)_                    |

@@ -100,7 +100,7 @@ Plan alimentaire d'un User sur une période définie.
 | DietType          | enum DietType           | Copié depuis `DietPlan`                          |
 | Goal              | enum Goal               | Copié depuis `DietPlan` — objectif porté par la Diet, pas par le User |
 | TargetWeight      | float                   | Copié depuis `DietPlan` — poids cible en kg      |
-| CalorieTarget     | float                   | Calculé au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) — snapshot, ne change jamais |
+| CalorieTarget     | int                     | Calculé au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) — snapshot, ne change jamais |
 | MacroDistribution | MacroDistribution (VO)  | Copié depuis `DietPlan` — répartition cible des macros en % |
 | DietStatus        | enum DietStatus         | Active / Inactive / Archived                     |
 | StartDate         | DateOnly                | Imposée par le système = date du lancement (aujourd'hui) |
@@ -295,11 +295,11 @@ Répartition cible des macronutriments en pourcentage. Appartient à une `Diet` 
 >
 > **Pourquoi des pourcentages et pas des grammes ?** Les grammes dépendent du `CalorieTarget` — qui lui appartient à la `Diet`. La répartition en % reste stable quel que soit l'objectif calorique. Cela permet de réutiliser `MacroDistribution` aussi bien sur `DietPlan` (sans CalorieTarget) que sur `Diet`.
 
-| Attribut          | Type  | Description                        |
-| ----------------- | ----- | ---------------------------------- |
-| ProteinPercentage | float | % de calories venant des protéines |
-| CarbPercentage    | float | % de calories venant des glucides  |
-| FatPercentage     | float | % de calories venant des lipides   |
+| Attribut          | Type | Description                        |
+| ----------------- | ---- | ---------------------------------- |
+| ProteinPercentage | int  | % de calories venant des protéines |
+| CarbPercentage    | int  | % de calories venant des glucides  |
+| FatPercentage     | int  | % de calories venant des lipides   |
 
 **Invariant :** ProteinPercentage + CarbPercentage + FatPercentage = 100%
 

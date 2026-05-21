@@ -45,7 +45,7 @@ classDiagram
         +DietType DietType
         +Goal Goal
         +float TargetWeight
-        +float CalorieTarget
+        +int CalorieTarget
         +MacroDistribution MacroDistribution
         +DietStatus DietStatus
         +DateOnly StartDate
@@ -108,10 +108,10 @@ classDiagram
 
     class MacroDistribution {
         <<Value Object>>
-        +float CarbsPercent
-        +float ProteinsPercent
-        +float FatsPercent
-        CarbsPercent + ProteinsPercent + FatsPercent = 100
+        +int ProteinPercentage
+        +int CarbPercentage
+        +int FatPercentage
+        ProteinPercentage + CarbPercentage + FatPercentage = 100
     }
 
     class NutritionInfo {
