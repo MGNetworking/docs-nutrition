@@ -508,7 +508,7 @@ Source de vérité : <code>Modele-domaine.md</code> — modifier ce fichier en c
         +DietType DietType
         +Goal Goal
         +float TargetWeight
-        +float CalorieTarget
+        +int CalorieTarget
         +MacroDistribution MacroDistribution
         +DietStatus DietStatus
         +DateOnly StartDate
@@ -571,10 +571,10 @@ Source de vérité : <code>Modele-domaine.md</code> — modifier ce fichier en c
 
     class MacroDistribution {
         &lt;&lt;Value Object&gt;&gt;
-        +float CarbsPercent
-        +float ProteinsPercent
-        +float FatsPercent
-        CarbsPercent + ProteinsPercent + FatsPercent = 100
+        +int ProteinPercentage
+        +int CarbPercentage
+        +int FatPercentage
+        ProteinPercentage + CarbPercentage + FatPercentage = 100
     }
 
     class NutritionInfo {
