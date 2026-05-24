@@ -34,6 +34,18 @@ Point d'entrée du système. Tout appartient à un User.
 - Détenir le profil physiologique (âge, sexe, taille, activité)
 - Posséder ses Diet, ses Meal et son historique de poids (WeightEntry)
 
+**Comportements :**
+
+- `ChangeBirthDate(birthDate)` — modifie la date de naissance
+- `ChangeGender(gender)` — modifie le genre
+- `ChangeActivityLevel(activityLevel)` — modifie le niveau d'activité
+- `ChangeHeight(height)` — modifie la taille en cm
+- `AddAllergen(allergen)` — ajoute un allergène (doublon interdit)
+- `RemoveAllergen(allergen)` — retire un allergène (doit exister)
+- `AddDietaryPreference(preference)` — ajoute une préférence alimentaire (doublon interdit)
+- `RemoveDietaryPreference(preference)` — retire une préférence alimentaire (doit exister)
+- `MarkAsDeleted()` — déclenche la suppression douce (grace period 30 jours)
+
 **Invariants :**
 
 - Un User ne peut avoir qu'une seule Diet active à la fois
@@ -72,6 +84,15 @@ Plan alimentaire réutilisable défini par l'utilisateur. Sert de base pour cré
 - Stocker un plan alimentaire réutilisable (le "moule") sans dates ni objectif calorique
 - Servir de base pour lancer une `Diet` — l'utilisateur choisit un plan dans sa liste et clique "Lancer"
 - Rester dans la liste de l'utilisateur après le lancement — il peut être relancé ou modifié indépendamment
+
+**Comportements :**
+
+- `Rename(name)` — renomme le plan
+- `ChangeDietType(dietType)` — modifie le type de diète
+- `ChangeGoal(goal)` — modifie l'objectif
+- `SetTargetWeight(weight)` — modifie le poids cible
+- `AdjustMacros(macroDistribution)` — modifie la répartition des macros
+- `MarkAsTemplate()` / `UnmarkAsTemplate()` — bascule entre plan personnel et template
 
 **Invariants :**
 
@@ -115,6 +136,11 @@ Plan alimentaire d'un User sur une période définie.
 - Gérer son statut (Active / Inactive / Archived)
 - Délimiter sa période via `StartDate` et `EndDate`
 
+**Comportements :**
+
+- `ChangeDietStatus(status)` — change le statut (Active → Inactive → Completed) ; fixe `EndDate` automatiquement quand Completed
+- Une `Diet` lancée est **non modifiable** — aucune autre méthode de modification exposée
+
 **Invariants :**
 
 - **Une seule Diet Active par User** — le système bloque (409) si une Diet est déjà active au lancement d'un nouveau plan ; l'utilisateur doit terminer la Diet en cours avant d'en lancer une autre
@@ -151,6 +177,12 @@ Repas enregistré par l'utilisateur à un instant donné.
 - Porter le type de repas (petit-déjeuner, déjeuner, dîner, collation)
 - Permettre le calcul des apports nutritionnels du repas
 
+**Comportements :**
+
+- `Rename(name)` — renomme le repas
+- `ChangeNote(note)` — modifie les notes (null = suppression de la note)
+- `ChangeMealType(mealType)` — modifie le type de repas
+
 **Invariants :**
 
 - Un Meal appartient toujours à un User
@@ -181,6 +213,11 @@ Un aliment dans un repas. Ne peut pas exister sans son Meal.
 - Porter la quantité consommée en grammes
 - Permettre le calcul des apports nutritionnels pour cette quantité
 
+**Comportements :**
+
+- `SetQuantity(quantity)` — modifie la quantité en grammes
+- `SetNutrition(nutrition)` — met à jour le snapshot nutritionnel
+
 **Invariants :**
 
 - La suppression d'un Meal entraîne la suppression de ses MealItem
@@ -207,6 +244,10 @@ Aliment sauvegardé par l'utilisateur dans sa liste personnelle. Ne peut pas exi
 - Mémoriser les aliments fréquemment utilisés par l'utilisateur
 - Permettre un accès rapide à ses aliments habituels lors de la création d'un repas
 
+**Comportements :**
+
+- Aucune modification après création — c'est un lien immuable entre un User et un FoodItem
+
 **Invariants :**
 
 - La suppression d'un User entraîne la suppression de ses SavedFoodItem
@@ -227,13 +268,17 @@ Enregistrement du poids de l'utilisateur à un instant donné. Ne peut pas exist
 | Id         | Guid     |                         |
 | UserId     | Guid     | Clé étrangère vers User |
 | Weight     | float    | En kilogrammes          |
-| MeasuredAt | DateOnly | Date de la mesure       |
+| MeasuredAt | DateOnly | **Fourni par l'utilisateur** — date réelle de la mesure, peut être antérieure à la date d'enregistrement |
 
 **Responsabilités :**
 
 - Stocker le poids mesuré et la date de mesure
 - Permettre le suivi de la progression pondérale dans le temps
 - Fournir le poids de référence pour le calcul BMR/TDEE au moment de la création d'une Diet
+
+**Comportements :**
+
+- Aucune modification après création — une mesure de poids est un fait historique immuable
 
 **Invariants :**
 
@@ -277,6 +322,10 @@ Table de référence locale des données alimentaires issues d'Open Food Facts. 
 
 - Stocker les informations nutritionnelles d'un aliment (calories, macros, allergènes)
 - Servir de référence partagée entre tous les utilisateurs pour la recherche et la création de repas
+
+**Comportements :**
+
+- `UpdateFromImport(name, caloriesPer100g, proteinsPer100g, carbsPer100g, fatsPer100g, allergensTags)` — appelé par le job d'import quotidien pour rafraîchir les données OFF ; remplace toutes les valeurs nutritionnelles et met à jour `CachedAt`
 
 ---
 
@@ -327,10 +376,10 @@ Valeurs nutritionnelles réelles d'un aliment pour une quantité donnée. Appart
 
 | Attribut | Type  | Description              |
 | -------- | ----- | ------------------------ |
-| Calories | float | kcal                     |
-| Proteins | float | grammes                  |
-| Carbs    | float | grammes                  |
-| Fats     | float | grammes                  |
+| Calories | float | kcal — précision nécessaire pour le bilan |
+| Proteins | int   | grammes                                   |
+| Carbs    | int   | grammes                                   |
+| Fats     | int   | grammes                                   |
 
 **Calcul :** `FoodItem.XxxPer100g × (MealItem.Quantity / 100)`
 **Snapshot** — calculé une fois à la création du MealItem, puis stocké définitivement.

@@ -117,9 +117,9 @@ classDiagram
     class NutritionInfo {
         <<Value Object>>
         +float Calories
-        +float Proteins
-        +float Carbs
-        +float Fats
+        +int Proteins
+        +int Carbs
+        +int Fats
     }
 
     class NutritionNeeds {

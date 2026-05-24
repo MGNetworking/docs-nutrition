@@ -117,3 +117,35 @@
 - **Une seule Diet active par User** — le système bloque (409 Conflict) si une Diet est déjà active au lancement d'un plan ; l'utilisateur doit terminer la Diet en cours avant d'en lancer une autre
 - **MacroDistribution totale = 100%** — protéines + glucides + lipides = 100%
 - **MealItem ne peut pas exister sans Meal** — suppression du Meal entraîne la suppression des MealItem
+
+---
+
+## 7. Conventions de modélisation
+
+### Responsabilité des champs date/heure
+
+Tout champ date ou heure doit préciser explicitement qui en est responsable.
+Il existe deux cas distincts :
+
+| Responsable | Mécanisme | Critère de décision |
+|---|---|---|
+| **Le système** | `DateTime.UtcNow` automatique dans le constructeur | La valeur est un timestamp technique — l'utilisateur ne la connaît pas et ne la choisit pas |
+| **L'utilisateur** | Passé en paramètre du constructeur | La valeur est une donnée réelle connue de l'utilisateur, potentiellement antérieure à l'enregistrement |
+
+**Exemples dans le projet :**
+
+| Champ | Entité | Responsable | Raison |
+|---|---|---|---|
+| `CreatedAt` | User | Système | Moment technique de création du compte |
+| `SavedAt` | SavedFoodItem | Système | Moment technique d'enregistrement du favori |
+| `StartDate` | Diet | Système | La Diet démarre au moment du lancement |
+| `EndDate` | Diet | Système | La Diet se termine au moment de la clôture |
+| `BirthDate` | User | Utilisateur | Donnée réelle connue de l'utilisateur |
+| `ConsumedAt` | Meal | Utilisateur | L'utilisateur peut logger un repas consommé plus tôt |
+| `MeasuredAt` | WeightEntry | Utilisateur | L'utilisateur peut enregistrer une mesure prise antérieurement |
+
+**Règle à appliquer avant tout nouveau champ date :**
+
+> *"Est-ce que l'utilisateur connaît cette valeur, ou est-ce le système qui la génère ?"*
+> - L'utilisateur la connaît → paramètre du constructeur
+> - Le système la génère → `DateTime.UtcNow` dans le constructeur
