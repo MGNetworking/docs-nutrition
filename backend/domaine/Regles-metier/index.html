@@ -750,6 +750,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#7-conventions-de-modelisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Conventions de modélisation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Conventions de modélisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responsabilite-des-champs-dateheure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Responsabilité des champs date/heure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1430,6 +1454,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#7-conventions-de-modelisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Conventions de modélisation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Conventions de modélisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responsabilite-des-champs-dateheure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Responsabilité des champs date/heure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1750,6 +1798,93 @@ Elles serviront de base pour l'étape 4 — Modèle domaine.</p>
 <li><strong>MacroDistribution totale = 100%</strong> — protéines + glucides + lipides = 100%</li>
 <li><strong>MealItem ne peut pas exister sans Meal</strong> — suppression du Meal entraîne la suppression des MealItem</li>
 </ul>
+<hr />
+<h2 id="7-conventions-de-modelisation">7. Conventions de modélisation<a class="headerlink" href="#7-conventions-de-modelisation" title="Permanent link">&para;</a></h2>
+<h3 id="responsabilite-des-champs-dateheure">Responsabilité des champs date/heure<a class="headerlink" href="#responsabilite-des-champs-dateheure" title="Permanent link">&para;</a></h3>
+<p>Tout champ date ou heure doit préciser explicitement qui en est responsable.
+Il existe deux cas distincts :</p>
+<table>
+<thead>
+<tr>
+<th>Responsable</th>
+<th>Mécanisme</th>
+<th>Critère de décision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Le système</strong></td>
+<td><code>DateTime.UtcNow</code> automatique dans le constructeur</td>
+<td>La valeur est un timestamp technique — l'utilisateur ne la connaît pas et ne la choisit pas</td>
+</tr>
+<tr>
+<td><strong>L'utilisateur</strong></td>
+<td>Passé en paramètre du constructeur</td>
+<td>La valeur est une donnée réelle connue de l'utilisateur, potentiellement antérieure à l'enregistrement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemples dans le projet :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Entité</th>
+<th>Responsable</th>
+<th>Raison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CreatedAt</code></td>
+<td>User</td>
+<td>Système</td>
+<td>Moment technique de création du compte</td>
+</tr>
+<tr>
+<td><code>SavedAt</code></td>
+<td>SavedFoodItem</td>
+<td>Système</td>
+<td>Moment technique d'enregistrement du favori</td>
+</tr>
+<tr>
+<td><code>StartDate</code></td>
+<td>Diet</td>
+<td>Système</td>
+<td>La Diet démarre au moment du lancement</td>
+</tr>
+<tr>
+<td><code>EndDate</code></td>
+<td>Diet</td>
+<td>Système</td>
+<td>La Diet se termine au moment de la clôture</td>
+</tr>
+<tr>
+<td><code>BirthDate</code></td>
+<td>User</td>
+<td>Utilisateur</td>
+<td>Donnée réelle connue de l'utilisateur</td>
+</tr>
+<tr>
+<td><code>ConsumedAt</code></td>
+<td>Meal</td>
+<td>Utilisateur</td>
+<td>L'utilisateur peut logger un repas consommé plus tôt</td>
+</tr>
+<tr>
+<td><code>MeasuredAt</code></td>
+<td>WeightEntry</td>
+<td>Utilisateur</td>
+<td>L'utilisateur peut enregistrer une mesure prise antérieurement</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Règle à appliquer avant tout nouveau champ date :</strong></p>
+<blockquote>
+<p><em>"Est-ce que l'utilisateur connaît cette valeur, ou est-ce le système qui la génère ?"</em>
+- L'utilisateur la connaît → paramètre du constructeur
+- Le système la génère → <code>DateTime.UtcNow</code> dans le constructeur</p>
+</blockquote>
 
 
 

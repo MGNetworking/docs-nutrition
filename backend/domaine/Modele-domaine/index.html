@@ -1779,6 +1779,18 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Détenir le profil physiologique (âge, sexe, taille, activité)</li>
 <li>Posséder ses Diet, ses Meal et son historique de poids (WeightEntry)</li>
 </ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li><code>ChangeBirthDate(birthDate)</code> — modifie la date de naissance</li>
+<li><code>ChangeGender(gender)</code> — modifie le genre</li>
+<li><code>ChangeActivityLevel(activityLevel)</code> — modifie le niveau d'activité</li>
+<li><code>ChangeHeight(height)</code> — modifie la taille en cm</li>
+<li><code>AddAllergen(allergen)</code> — ajoute un allergène (doublon interdit)</li>
+<li><code>RemoveAllergen(allergen)</code> — retire un allergène (doit exister)</li>
+<li><code>AddDietaryPreference(preference)</code> — ajoute une préférence alimentaire (doublon interdit)</li>
+<li><code>RemoveDietaryPreference(preference)</code> — retire une préférence alimentaire (doit exister)</li>
+<li><code>MarkAsDeleted()</code> — déclenche la suppression douce (grace period 30 jours)</li>
+</ul>
 <p><strong>Invariants :</strong></p>
 <ul>
 <li>Un User ne peut avoir qu'une seule Diet active à la fois</li>
@@ -1852,6 +1864,15 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Stocker un plan alimentaire réutilisable (le "moule") sans dates ni objectif calorique</li>
 <li>Servir de base pour lancer une <code>Diet</code> — l'utilisateur choisit un plan dans sa liste et clique "Lancer"</li>
 <li>Rester dans la liste de l'utilisateur après le lancement — il peut être relancé ou modifié indépendamment</li>
+</ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li><code>Rename(name)</code> — renomme le plan</li>
+<li><code>ChangeDietType(dietType)</code> — modifie le type de diète</li>
+<li><code>ChangeGoal(goal)</code> — modifie l'objectif</li>
+<li><code>SetTargetWeight(weight)</code> — modifie le poids cible</li>
+<li><code>AdjustMacros(macroDistribution)</code> — modifie la répartition des macros</li>
+<li><code>MarkAsTemplate()</code> / <code>UnmarkAsTemplate()</code> — bascule entre plan personnel et template</li>
 </ul>
 <p><strong>Invariants :</strong></p>
 <ul>
@@ -1944,6 +1965,11 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Gérer son statut (Active / Inactive / Archived)</li>
 <li>Délimiter sa période via <code>StartDate</code> et <code>EndDate</code></li>
 </ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li><code>ChangeDietStatus(status)</code> — change le statut (Active → Inactive → Completed) ; fixe <code>EndDate</code> automatiquement quand Completed</li>
+<li>Une <code>Diet</code> lancée est <strong>non modifiable</strong> — aucune autre méthode de modification exposée</li>
+</ul>
 <p><strong>Invariants :</strong></p>
 <ul>
 <li><strong>Une seule Diet Active par User</strong> — le système bloque (409) si une Diet est déjà active au lancement d'un nouveau plan ; l'utilisateur doit terminer la Diet en cours avant d'en lancer une autre</li>
@@ -2017,6 +2043,12 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Porter le type de repas (petit-déjeuner, déjeuner, dîner, collation)</li>
 <li>Permettre le calcul des apports nutritionnels du repas</li>
 </ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li><code>Rename(name)</code> — renomme le repas</li>
+<li><code>ChangeNote(note)</code> — modifie les notes (null = suppression de la note)</li>
+<li><code>ChangeMealType(mealType)</code> — modifie le type de repas</li>
+</ul>
 <p><strong>Invariants :</strong></p>
 <ul>
 <li>Un Meal appartient toujours à un User</li>
@@ -2070,6 +2102,11 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Porter la quantité consommée en grammes</li>
 <li>Permettre le calcul des apports nutritionnels pour cette quantité</li>
 </ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li><code>SetQuantity(quantity)</code> — modifie la quantité en grammes</li>
+<li><code>SetNutrition(nutrition)</code> — met à jour le snapshot nutritionnel</li>
+</ul>
 <p><strong>Invariants :</strong></p>
 <ul>
 <li>La suppression d'un Meal entraîne la suppression de ses MealItem</li>
@@ -2117,6 +2154,10 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Mémoriser les aliments fréquemment utilisés par l'utilisateur</li>
 <li>Permettre un accès rapide à ses aliments habituels lors de la création d'un repas</li>
 </ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li>Aucune modification après création — c'est un lien immuable entre un User et un FoodItem</li>
+</ul>
 <p><strong>Invariants :</strong></p>
 <ul>
 <li>La suppression d'un User entraîne la suppression de ses SavedFoodItem</li>
@@ -2156,7 +2197,7 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <tr>
 <td>MeasuredAt</td>
 <td>DateOnly</td>
-<td>Date de la mesure</td>
+<td><strong>Fourni par l'utilisateur</strong> — date réelle de la mesure, peut être antérieure à la date d'enregistrement</td>
 </tr>
 </tbody>
 </table>
@@ -2165,6 +2206,10 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Stocker le poids mesuré et la date de mesure</li>
 <li>Permettre le suivi de la progression pondérale dans le temps</li>
 <li>Fournir le poids de référence pour le calcul BMR/TDEE au moment de la création d'une Diet</li>
+</ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li>Aucune modification après création — une mesure de poids est un fait historique immuable</li>
 </ul>
 <p><strong>Invariants :</strong></p>
 <ul>
@@ -2245,6 +2290,10 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <ul>
 <li>Stocker les informations nutritionnelles d'un aliment (calories, macros, allergènes)</li>
 <li>Servir de référence partagée entre tous les utilisateurs pour la recherche et la création de repas</li>
+</ul>
+<p><strong>Comportements :</strong></p>
+<ul>
+<li><code>UpdateFromImport(name, caloriesPer100g, proteinsPer100g, carbsPer100g, fatsPer100g, allergensTags)</code> — appelé par le job d'import quotidien pour rafraîchir les données OFF ; remplace toutes les valeurs nutritionnelles et met à jour <code>CachedAt</code></li>
 </ul>
 <hr />
 <h2 id="value-objects">Value Objects<a class="headerlink" href="#value-objects" title="Permanent link">&para;</a></h2>
@@ -2337,21 +2386,21 @@ Exemple : 150g de poulet → 247 kcal, 46g de protéines, 5g de lipides, 0g de g
 <tr>
 <td>Calories</td>
 <td>float</td>
-<td>kcal</td>
+<td>kcal — précision nécessaire pour le bilan</td>
 </tr>
 <tr>
 <td>Proteins</td>
-<td>float</td>
+<td>int</td>
 <td>grammes</td>
 </tr>
 <tr>
 <td>Carbs</td>
-<td>float</td>
+<td>int</td>
 <td>grammes</td>
 </tr>
 <tr>
 <td>Fats</td>
-<td>float</td>
+<td>int</td>
 <td>grammes</td>
 </tr>
 </tbody>
