@@ -1,9 +1,9 @@
 {
   "backend": {
-    "last_import": "2026-05-24",
+    "last_import": "2026-05-25",
     "max_epic_ref": 5,
-    "max_story_ref": 41,
-    "max_sub_ref": 184,
+    "max_story_ref": 24,
+    "max_sub_ref": 45,
     "epics": [
       {
         "ref": "EPIC-001",
