@@ -1,0 +1,459 @@
+{
+  "project": "NTR",
+  "module": "backend",
+  "version": "2.0",
+  "description": "Règles de décomposition backlog Jira — nutrition-api. Généré depuis checklist-implementation.md avec les règles jira-scrum.md v2.",
+
+  "epics": [
+
+    {
+      "ref": "EPIC-001",
+      "label": "domain",
+      "title": "Domain Layer",
+      "description": "Entités métier, value objects, enums et invariants. Zéro dépendance externe.",
+      "stories": [
+
+        {
+          "ref": "STORY-001",
+          "title": "Modèle domaine — entités et value objects",
+          "priority": "High",
+          "description": "Implémenter l'ensemble des Aggregate Roots, entités enfants et Value Objects du modèle domaine. Chaque entité valide ses invariants intra-agrégat dans le constructeur.",
+          "subtasks": [
+            {
+              "ref": "SUB-001",
+              "title": "Implémenter les Aggregate Roots (User, DietPlan, Diet, Meal, FoodItem)",
+              "priority": "High",
+              "description": "Constructeur public avec validations + constructeur privé vide pour EF Core. Méthodes de mutation avec préconditions. Invariants intra-agrégat : Diet immuable après lancement, Meal >= 1 MealItem, StartDate imposée système."
+            },
+            {
+              "ref": "SUB-002",
+              "title": "Implémenter les entités enfants (WeightEntry, MealItem, SavedFoodItem)",
+              "priority": "High",
+              "description": "Entités sans existence indépendante. Supprimées en cascade avec leur parent. Constructeur public avec validations + constructeur privé vide pour EF Core."
+            },
+            {
+              "ref": "SUB-003",
+              "title": "Implémenter les Value Objects (MacroDistribution, NutritionInfo, NutritionNeeds)",
+              "priority": "High",
+              "description": "Records immuables, égalité par valeur. Invariant MacroDistribution : somme Carbs + Proteins + Fats = 100%. NutritionNeeds non persisté, calculé à la demande."
+            },
+            {
+              "ref": "SUB-004",
+              "title": "Déclarer les enums métier (ActivityLevel, Goal, MealType, DietType, DietStatus, Gender, Allergen, SubscriptionTier)",
+              "priority": "Medium",
+              "description": "8 enums dans NutritionApi.Domain/Enums/. Chaque enum expose Unknown = 0 utilisé uniquement par EF Core."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-002",
+          "title": "Tests unitaires Domain",
+          "priority": "High",
+          "description": "Couvrir tous les invariants et comportements du Domain. Zéro mock, zéro infrastructure — xUnit seul.",
+          "subtasks": [
+            {
+              "ref": "SUB-005",
+              "title": "Tester les Aggregate Roots et entités enfants",
+              "priority": "High",
+              "description": "User (allergène dupliqué, préférence dupliquée), Diet (immuable Active/Completed, StartDate système), Meal (aucun MealItem → exception), DietPlan (modifiable à tout moment), FoodItem (mise à jour import), WeightEntry (poids positif), MealItem (quantité positive), SavedFoodItem (validations constructeur)."
+            },
+            {
+              "ref": "SUB-006",
+              "title": "Tester les Value Objects",
+              "priority": "High",
+              "description": "MacroDistribution : somme != 100% → exception, somme = 100% → valide. NutritionInfo : calcul snapshot correct depuis MealItems. NutritionNeeds : calcul BMR Mifflin-St Jeor et Harris-Benedict correct."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "ref": "EPIC-002",
+      "label": "application",
+      "title": "Application Layer",
+      "description": "Services applicatifs et DTOs. Orchestre les use cases depuis le domaine.",
+      "stories": [
+
+        {
+          "ref": "STORY-003",
+          "title": "UserService",
+          "priority": "Medium",
+          "description": "Gestion du profil utilisateur et des pesées.",
+          "subtasks": [
+            {
+              "ref": "SUB-007",
+              "title": "Gérer le profil utilisateur et les pesées",
+              "priority": "Medium",
+              "description": "Créer le profil (+ première WeightEntry), mettre à jour le profil, ajouter une WeightEntry. Invariant cross-agrégat NTR-67 : interdire doublon SavedFoodItem pour un User (GetByUserAndFoodItemAsync → 409 si existant)."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-004",
+          "title": "DietPlanService",
+          "priority": "Medium",
+          "description": "CRUD sur les plans alimentaires réutilisables.",
+          "subtasks": [
+            {
+              "ref": "SUB-008",
+              "title": "Gérer les plans alimentaires (CRUD)",
+              "priority": "Medium",
+              "description": "Créer, modifier, supprimer et lister les DietPlan d'un utilisateur. Le DietPlan reste modifiable même après avoir servi de base à une Diet."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-005",
+          "title": "DietService",
+          "priority": "High",
+          "description": "Lancement, clôture et déduction des régimes actifs.",
+          "subtasks": [
+            {
+              "ref": "SUB-009",
+              "title": "Lancer un DietPlan et créer une Diet active",
+              "priority": "High",
+              "description": "Snapshot du DietPlan au lancement. Calcul BMR/TDEE/CalorieTarget depuis le poids réel. Invariant cross-agrégat NTR-65 : GetActiveByUserIdAsync → 409 si Diet active existe déjà. StartDate imposée système."
+            },
+            {
+              "ref": "SUB-010",
+              "title": "Terminer et déduire une Diet",
+              "priority": "High",
+              "description": "Terminer une Diet (passer en Archived + EndDate système). Déduire la Diet active à la date d'un Meal (pour le bilan nutritionnel)."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-006",
+          "title": "MealService",
+          "priority": "Medium",
+          "description": "Création et gestion des repas.",
+          "subtasks": [
+            {
+              "ref": "SUB-011",
+              "title": "Gérer les repas (création, liste, suppression)",
+              "priority": "Medium",
+              "description": "Créer un Meal avec calcul NutritionInfo pour chaque MealItem. Lister les repas sauvegardés (IsSaved = true). Supprimer un Meal."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-007",
+          "title": "FoodItemService",
+          "priority": "Medium",
+          "description": "Recherche et gestion de la liste personnelle d'aliments.",
+          "subtasks": [
+            {
+              "ref": "SUB-012",
+              "title": "Rechercher et gérer les aliments personnels",
+              "priority": "Medium",
+              "description": "Rechercher par mot-clé (Redis → PostgreSQL fallback). Sauvegarder un FoodItem dans la liste personnelle. Supprimer et lister les SavedFoodItem d'un utilisateur."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-008",
+          "title": "NutritionService",
+          "priority": "High",
+          "description": "Calcul du bilan nutritionnel d'une Diet.",
+          "subtasks": [
+            {
+              "ref": "SUB-013",
+              "title": "Calculer le bilan nutritionnel",
+              "priority": "High",
+              "description": "Agréger les MealItems par jour sur la période de la Diet. Inclure les WeightEntries. Produire un NutritionBilanResponse (dailyData + weightEntries + summary)."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-009",
+          "title": "DTOs Application",
+          "priority": "Medium",
+          "description": "Contrats d'entrée et de sortie des services.",
+          "subtasks": [
+            {
+              "ref": "SUB-014",
+              "title": "Implémenter les DTOs Request et Response",
+              "priority": "Medium",
+              "description": "Un DTO Request + Response par use case : CreateUserProfileRequest/Response, CreateDietPlanRequest/Response, LaunchDietPlanRequest/DietResponse, CreateMealRequest/Response, FoodItemSearchResponse, SaveFoodItemRequest, NutritionBilanResponse."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-010",
+          "title": "Tests unitaires Application",
+          "priority": "High",
+          "description": "Tester les use cases et invariants cross-agrégat. Moq des repositories.",
+          "subtasks": [
+            {
+              "ref": "SUB-015",
+              "title": "Tester DietService — lancement et invariants cross-agrégat",
+              "priority": "High",
+              "description": "LaunchAsync : 409 si Diet active existe déjà (NTR-65). Calcul BMR/TDEE/CalorieTarget correct. Snapshot immuable du DietPlan."
+            },
+            {
+              "ref": "SUB-016",
+              "title": "Tester UserService et FoodItemService — invariants cross-agrégat",
+              "priority": "Medium",
+              "description": "UserService : 409 si SavedFoodItem dupliqué pour un User (NTR-67). FoodItemService : recherche Redis → PostgreSQL fallback."
+            },
+            {
+              "ref": "SUB-017",
+              "title": "Tester NutritionService — calcul bilan",
+              "priority": "Medium",
+              "description": "Agrégation correcte des MealItems par jour. WeightEntries incluses. Résultat conforme au NutritionBilanResponse attendu."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "ref": "EPIC-003",
+      "label": "infrastructure",
+      "title": "Infrastructure Layer",
+      "description": "EF Core, repositories, cache Redis, jobs Hangfire et migrations.",
+      "stories": [
+
+        {
+          "ref": "STORY-011",
+          "title": "Setup environnement de développement local",
+          "priority": "High",
+          "description": "Prérequis à tout le reste.",
+          "subtasks": [
+            {
+              "ref": "SUB-018",
+              "title": "Configurer Docker Compose local (PostgreSQL, Keycloak, Redis)",
+              "priority": "High",
+              "description": "docker-compose.yml avec PostgreSQL 16, Keycloak 24, Redis 7. Fichier .env.example. Export realm Keycloak de développement (realm nutrition, 2 clients, 2 utilisateurs de test)."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-012",
+          "title": "EF Core — Mapping et repositories",
+          "priority": "High",
+          "description": "Persistance complète du modèle domaine.",
+          "subtasks": [
+            {
+              "ref": "SUB-019",
+              "title": "Configurer le mapping EF Core des Aggregate Roots",
+              "priority": "High",
+              "description": "Fluent API uniquement dans NutritionApi.Infrastructure/Configurations/. User, DietPlan, Diet, Meal, FoodItem — clés, relations, index."
+            },
+            {
+              "ref": "SUB-020",
+              "title": "Configurer les Value Objects et entités enfants EF Core",
+              "priority": "High",
+              "description": "MacroDistribution et NutritionInfo en owned entities. WeightEntry, MealItem, SavedFoodItem. Index unique sur WeightEntry(UserId+MeasuredAt) et SavedFoodItem(UserId+FoodItemId)."
+            },
+            {
+              "ref": "SUB-021",
+              "title": "Implémenter les repositories",
+              "priority": "High",
+              "description": "Interface + implémentation pour chaque Aggregate Root : IUserRepository, IDietPlanRepository, IDietRepository, IMealRepository, IFoodItemRepository, IWeightEntryRepository, ISavedFoodItemRepository."
+            },
+            {
+              "ref": "SUB-022",
+              "title": "Générer la migration initiale et l'import OFF initial",
+              "priority": "High",
+              "description": "Migration EF Core initiale couvrant toutes les tables. Seed initial du dump Open Food Facts pour la première installation."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-013",
+          "title": "Cache Redis et job import Open Food Facts",
+          "priority": "Medium",
+          "description": "Performance de recherche et fraîcheur des données alimentaires.",
+          "subtasks": [
+            {
+              "ref": "SUB-023",
+              "title": "Implémenter le cache Redis des recherches alimentaires",
+              "priority": "Medium",
+              "description": "IFoodCacheService / FoodCacheService — get/set par mot-clé avec TTL court. IConnectionMultiplexer injecté."
+            },
+            {
+              "ref": "SUB-024",
+              "title": "Télécharger et traiter le dump Open Food Facts",
+              "priority": "Medium",
+              "description": "Job Hangfire quotidien (cron 0 3 * * *). Téléchargement JSONL/CSV. Traitement par batch INSERT/UPDATE FoodItem. Retry automatique Hangfire en cas d'échec."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-014",
+          "title": "Tests d'intégration Infrastructure",
+          "priority": "High",
+          "description": "Valider la persistance avec une vraie base de données.",
+          "subtasks": [
+            {
+              "ref": "SUB-025",
+              "title": "Tester les repositories avec Testcontainers",
+              "priority": "High",
+              "description": "PostgreSQL réel via Testcontainers. Couvrir les opérations CRUD et les requêtes métier (GetActiveByUserId, GetByUserAndFoodItemId, etc.)."
+            },
+            {
+              "ref": "SUB-026",
+              "title": "Tester le cache Redis et le job import OFF",
+              "priority": "Medium",
+              "description": "Cache Redis : get miss → fallback PostgreSQL → set cache. Job import OFF : traitement d'un dump de test, vérification INSERT/UPDATE correct."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "ref": "EPIC-004",
+      "label": "api",
+      "title": "API Layer",
+      "description": "Controllers REST et middleware. Expose les services applicatifs.",
+      "stories": [
+
+        {
+          "ref": "STORY-015",
+          "title": "Middleware et configuration ASP.NET Core",
+          "priority": "High",
+          "description": "Fondations communes à tous les controllers.",
+          "subtasks": [
+            {
+              "ref": "SUB-027",
+              "title": "Configurer le middleware (JWT, extraction User, erreurs, logging)",
+              "priority": "High",
+              "description": "Validation JWT Keycloak (signature + audience + expiration). Extraction sub → résolution User.KeycloakId → User.Id. Gestion globale des erreurs (middleware exception → codes HTTP). Logging des requêtes."
+            },
+            {
+              "ref": "SUB-028",
+              "title": "Configurer OpenAPI / Swagger UI",
+              "priority": "Medium",
+              "description": "AddSwaggerGen avec titre, version, sécurité JWT Bearer. UseSwagger + UseSwaggerUI hors production uniquement. Commentaires XML activés. Dashboard Hangfire exclu de la spec."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-016",
+          "title": "UsersController",
+          "priority": "High",
+          "description": "Endpoints profil utilisateur, pesées et aliments personnels.",
+          "subtasks": [
+            {
+              "ref": "SUB-029",
+              "title": "Implémenter les endpoints profil et pesées",
+              "priority": "High",
+              "description": "POST /users/me, GET /users/me, PUT /users/me, POST /users/me/weight-entries, GET /users/me/weight-entries, PUT /users/me/weight-entries/{id}."
+            },
+            {
+              "ref": "SUB-030",
+              "title": "Implémenter les endpoints aliments personnels et RGPD",
+              "priority": "High",
+              "description": "GET /users/me/saved-food-items, POST /users/me/saved-food-items, DELETE /users/me/saved-food-items/{id}. DELETE /users/me (RGPD Art. 17), POST /users/me/reactivate, GET /users/me/export (RGPD Art. 20)."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-017",
+          "title": "DietPlansController",
+          "priority": "High",
+          "description": "Endpoints plans alimentaires.",
+          "subtasks": [
+            {
+              "ref": "SUB-031",
+              "title": "Implémenter les endpoints DietPlan",
+              "priority": "High",
+              "description": "POST /diet-plans, GET /diet-plans, PUT /diet-plans/{id}, DELETE /diet-plans/{id}, POST /diet-plans/{id}/launch."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-018",
+          "title": "DietsController",
+          "priority": "High",
+          "description": "Endpoints régimes actifs et bilan nutritionnel.",
+          "subtasks": [
+            {
+              "ref": "SUB-032",
+              "title": "Implémenter les endpoints Diet et bilan",
+              "priority": "High",
+              "description": "GET /diets/active, GET /diets, GET /diets/{id}, POST /diets/{id}/archive, GET /diets/{id}/bilan (params : period, date, startDate)."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-019",
+          "title": "MealsController et FoodItemsController",
+          "priority": "High",
+          "description": "Endpoints repas et recherche alimentaire.",
+          "subtasks": [
+            {
+              "ref": "SUB-033",
+              "title": "Implémenter les endpoints Meal",
+              "priority": "High",
+              "description": "POST /meals, GET /meals, GET /meals/{id}, DELETE /meals/{id}, POST /meals/{id}/items, DELETE /meals/{id}/items/{itemId}."
+            },
+            {
+              "ref": "SUB-034",
+              "title": "Implémenter les endpoints FoodItem",
+              "priority": "Medium",
+              "description": "GET /food-items?search={motclé} — recherche par mot-clé avec fallback Redis → PostgreSQL."
+            }
+          ]
+        },
+
+        {
+          "ref": "STORY-020",
+          "title": "Tests API end-to-end",
+          "priority": "High",
+          "description": "Valider les contrats HTTP avec WebApplicationFactory.",
+          "subtasks": [
+            {
+              "ref": "SUB-035",
+              "title": "Tester les endpoints utilisateur et régimes",
+              "priority": "High",
+              "description": "UsersController, DietPlansController, DietsController — cas nominaux + cas d'erreur (400, 401, 403, 404, 409). Validation JWT."
+            },
+            {
+              "ref": "SUB-036",
+              "title": "Tester les endpoints repas et aliments",
+              "priority": "High",
+              "description": "MealsController, FoodItemsController — cas nominaux + cas d'erreur. Bilan nutritionnel GET /diets/{id}/bilan."
+            }
+          ]
+        }
+
+      ]
+    }
+
+  ],
+
+  "hors_scope": [
+    "NTR-11 — Abonnements & Templates Domaine",
+    "NTR-19 — SubscriptionGuard Application",
+    "NTR-20 — Redis Infrastructure",
+    "NTR-24 — Job import OFF",
+    "NTR-25 — Job purge RGPD",
+    "NTR-26 — Abonnements Infrastructure",
+    "NTR-28 — Admin back-office",
+    "NTR-29 — RGPD endpoints",
+    "NTR-38 — AdminController",
+    "NTR-39 — AdminService"
+  ]
+}
