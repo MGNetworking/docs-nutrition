@@ -1,0 +1,515 @@
+{
+  "project": "NTR",
+  "module": "backend",
+  "version": "1.0",
+  "description": "Backlog complet — API Nutrition (Domain → Application → Infrastructure → API → Tests)",
+
+  "epics": [
+    {
+      "ref": "EPIC-001",
+      "label": "domain",
+      "title": "Domain Layer",
+      "description": "Modélisation complète du domaine métier : Aggregate Roots, entités enfants, Value Objects et invariants.",
+      "stories": [
+        {
+          "ref": "STORY-001",
+          "title": "Aggregate Roots du domaine",
+          "priority": "High",
+          "description": "Implémenter les cinq Aggregate Roots avec leurs constructeurs, encapsulation et invariants intra-agrégat.",
+          "subtasks": [
+            {
+              "ref": "SUB-001",
+              "title": "Implémenter User et DietPlan",
+              "priority": "High",
+              "description": "User : profil biométrique complet (âge, poids, taille, genre, niveau d'activité, objectif), tier d'abonnement (SubscriptionTier, Free par défaut). DietPlan : moule réutilisable sans dates ni CalorieTarget, IsTemplate (false par défaut), UserId nullable (null si template partagé)."
+            },
+            {
+              "ref": "SUB-002",
+              "title": "Implémenter Diet",
+              "priority": "High",
+              "description": "Diet représente un régime actif. StartDate imposée par le système au lancement (= date du jour). Non modifiable une fois lancée (sauf EndDate). Invariant : une seule Diet en statut Active par User — toute tentative de lancement quand une Diet est déjà active lève une erreur métier (409)."
+            },
+            {
+              "ref": "SUB-003",
+              "title": "Implémenter Meal et FoodItem",
+              "priority": "High",
+              "description": "Meal : repas d'un utilisateur, peut être sauvegardé (IsSaved). Invariant intra-agrégat : doit contenir au moins un MealItem. FoodItem : aliment issu du dump Open Food Facts, source des données nutritionnelles."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-002",
+          "title": "Entités enfants et Value Objects",
+          "priority": "High",
+          "description": "Implémenter les entités enfants et les Value Objects du domaine avec leurs invariants.",
+          "subtasks": [
+            {
+              "ref": "SUB-004",
+              "title": "Implémenter WeightEntry, MealItem et SavedFoodItem",
+              "priority": "High",
+              "description": "WeightEntry : pesée d'un User (poids, date mesurée). MealItem : item d'un Meal avec quantité, porte la NutritionInfo calculée au moment de la création. SavedFoodItem : lien entre un User et un FoodItem. Invariant : un même FoodItemId ne peut être sauvegardé qu'une fois par User."
+            },
+            {
+              "ref": "SUB-005",
+              "title": "Implémenter MacroDistribution et NutritionInfo",
+              "priority": "High",
+              "description": "MacroDistribution : répartition des macronutriments en pourcentages. Invariant : CarbsPercent + ProteinsPercent + FatsPercent = 100%. NutritionInfo : snapshot immuable des valeurs nutritionnelles (Calories, Proteins, Carbs, Fats) capturé au moment de la création d'un MealItem."
+            },
+            {
+              "ref": "SUB-006",
+              "title": "Implémenter NutritionNeeds",
+              "priority": "Medium",
+              "description": "Value Object calculé à la demande, non persisté. Contient BMR (Mifflin-St Jeor), TDEE et CalorieTarget selon l'objectif de l'utilisateur. Produit par le DietService au lancement d'un plan — résultat intermédiaire du calcul nutritionnel."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "EPIC-002",
+      "label": "application",
+      "title": "Application Layer",
+      "description": "Services applicatifs, orchestration des use cases, DTOs et contrôle des règles d'abonnement.",
+      "stories": [
+        {
+          "ref": "STORY-003",
+          "title": "Gestion du profil utilisateur",
+          "priority": "High",
+          "description": "Orchestration des use cases de création, mise à jour du profil et suivi du poids.",
+          "subtasks": [
+            {
+              "ref": "SUB-007",
+              "title": "Créer et mettre à jour le profil utilisateur",
+              "priority": "High",
+              "description": "À la création : initialiser le profil avec une première WeightEntry (poids actuel). À la mise à jour : tous les champs biométriques sont modifiables. Retourner un UserProfileResponse complet incluant BMR et TDEE calculés à la demande."
+            },
+            {
+              "ref": "SUB-008",
+              "title": "Gestion des pesées (WeightEntry)",
+              "priority": "Medium",
+              "description": "Ajouter une pesée avec date mesurée (par défaut aujourd'hui). Contrainte : une seule entrée par date par User (conflit → erreur métier 409). Retourner l'historique des pesées."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-004",
+          "title": "Gestion des plans diététiques",
+          "priority": "High",
+          "description": "CRUD des plans personnels et gestion des templates partagés avec contrôle des limites d'abonnement.",
+          "subtasks": [
+            {
+              "ref": "SUB-009",
+              "title": "CRUD des plans personnels avec contrôle tier",
+              "priority": "High",
+              "description": "Créer, modifier, supprimer et lister les DietPlan personnels d'un utilisateur. Contrôle tier à la création : Free max 2 plans, Pro max 20 plans — erreur métier 403 si dépassement."
+            },
+            {
+              "ref": "SUB-010",
+              "title": "Plans templates partagés",
+              "priority": "Medium",
+              "description": "Lister les DietPlan templates (IsTemplate = true). Accès restreint aux tiers Pro et Business — erreur 403 si tier Free. Création et modification des templates réservées au rôle admin."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-005",
+          "title": "Cycle de vie d'un régime (Diet)",
+          "priority": "High",
+          "description": "Orchestration du lancement d'un plan, du calcul nutritionnel et de la clôture d'un régime.",
+          "subtasks": [
+            {
+              "ref": "SUB-011",
+              "title": "Lancer un DietPlan (création d'une Diet active)",
+              "priority": "High",
+              "description": "Vérifier qu'aucune Diet n'est déjà active pour l'utilisateur (sinon 409). Calculer BMR (Mifflin-St Jeor), TDEE et CalorieTarget depuis le profil utilisateur. Créer le snapshot de la Diet avec StartDate = aujourd'hui. Les données nutritionnelles sont gelées à la date de lancement."
+            },
+            {
+              "ref": "SUB-012",
+              "title": "Archiver une Diet et déduire la Diet active par date",
+              "priority": "High",
+              "description": "Terminer une Diet active : passer en statut Archived, EndDate = date du jour (imposée par le système). Déduire la Diet active à la date d'un Meal (pour alimenter le bilan nutritionnel)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-006",
+          "title": "Gestion des repas",
+          "priority": "High",
+          "description": "Création de repas avec calcul nutritionnel en temps réel et contrôle des limites d'abonnement.",
+          "subtasks": [
+            {
+              "ref": "SUB-013",
+              "title": "Créer un repas",
+              "priority": "High",
+              "description": "Créer un Meal avec ses MealItems. Calculer NutritionInfo pour chaque MealItem à partir des données du FoodItem. Un repas peut être sauvegardé (IsSaved = true). Contrôle tier : Free max 5 repas sauvegardés, Pro max 50 — erreur 403 si dépassement."
+            },
+            {
+              "ref": "SUB-014",
+              "title": "Lister et supprimer des repas",
+              "priority": "Medium",
+              "description": "Lister les repas avec filtres (par date, sauvegardés uniquement). Supprimer un repas existant."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-007",
+          "title": "Gestion des aliments",
+          "priority": "High",
+          "description": "Recherche d'aliments et gestion des favoris personnels avec contrôle des limites d'abonnement.",
+          "subtasks": [
+            {
+              "ref": "SUB-015",
+              "title": "Rechercher des aliments",
+              "priority": "High",
+              "description": "Recherche par mot-clé avec stratégie cache-first : chercher d'abord dans Redis (TTL court), fallback sur PostgreSQL si cache miss. Retourner une liste de FoodItemSearchResponse."
+            },
+            {
+              "ref": "SUB-016",
+              "title": "Gérer les aliments favoris (SavedFoodItem)",
+              "priority": "Medium",
+              "description": "Sauvegarder un FoodItem dans la liste personnelle. Invariant : unicité par FoodItemId et UserId. Contrôle tier : Free max 10 favoris, Pro max 100 — erreur 403 si dépassement. Supprimer un favori. Lister les favoris de l'utilisateur."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-008",
+          "title": "Bilan nutritionnel",
+          "priority": "High",
+          "description": "Calcul et agrégation du bilan nutritionnel d'une période de régime.",
+          "subtasks": [
+            {
+              "ref": "SUB-017",
+              "title": "Calculer le bilan nutritionnel d'une Diet",
+              "priority": "High",
+              "description": "Agréger les MealItems et WeightEntries par période (jour, semaine, mois). Restriction par tier : Free max 7 jours d'historique, Pro max 1 an. Retourner un NutritionBilanResponse avec dailyData, weightEntries et summary."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-009",
+          "title": "Contrôle des limites d'abonnement (SubscriptionGuard)",
+          "priority": "Medium",
+          "description": "Mécanisme centralisé de vérification des limites selon le tier d'abonnement de l'utilisateur.",
+          "subtasks": [
+            {
+              "ref": "SUB-018",
+              "title": "Implémenter SubscriptionGuard",
+              "priority": "Medium",
+              "description": "Helper centralisé appelé par les services applicatifs pour vérifier les limites selon le tier (Free, Pro, Business). Lève une erreur métier 403 avec message explicite ('This feature requires a Pro subscription') si la limite est atteinte. Centralisé pour éviter la duplication des vérifications dans chaque service."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-010",
+          "title": "Administration et supervision",
+          "priority": "Medium",
+          "description": "Services applicatifs pour l'agrégation des KPIs utilisateurs et la supervision du système.",
+          "subtasks": [
+            {
+              "ref": "SUB-019",
+              "title": "KPIs utilisateurs (AdminService)",
+              "priority": "Medium",
+              "description": "Agréger : total utilisateurs par tier, nouveaux utilisateurs sur les 7 derniers jours, diets actives, repas créés sur 7 jours, comptes en grace period (suppression en cours)."
+            },
+            {
+              "ref": "SUB-020",
+              "title": "Santé système (AdminService)",
+              "priority": "Medium",
+              "description": "Agréger depuis les tables Hangfire (HangFire.Job, HangFire.State) : statut des jobs d'import OFF et de purge RGPD, nombre de FoodItems en base."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "EPIC-003",
+      "label": "infrastructure",
+      "title": "Infrastructure Layer",
+      "description": "Persistance EF Core, repositories, cache Redis, jobs Hangfire et migrations.",
+      "stories": [
+        {
+          "ref": "STORY-011",
+          "title": "Persistance EF Core et migrations",
+          "priority": "High",
+          "description": "Configurations Fluent API, migration initiale et seed des données de départ.",
+          "subtasks": [
+            {
+              "ref": "SUB-021",
+              "title": "Configurations Fluent API de toutes les entités",
+              "priority": "High",
+              "description": "Configurer le mapping EF Core pour toutes les entités : User, DietPlan (UserId nullable, IsTemplate, index sur IsTemplate), Diet, Meal, MealItem, FoodItem, WeightEntry, SavedFoodItem. Configurer MacroDistribution et NutritionInfo comme owned entities."
+            },
+            {
+              "ref": "SUB-022",
+              "title": "Migration initiale et import initial OFF",
+              "priority": "High",
+              "description": "Générer la migration initiale créant toutes les tables. Prévoir l'import initial du dump Open Food Facts à la première installation (avant mise en production)."
+            },
+            {
+              "ref": "SUB-023",
+              "title": "Seed des templates initiaux",
+              "priority": "Low",
+              "description": "Charger les DietPlan templates partagés à partir d'un fichier JSON ou d'une migration de données (IsTemplate = true, UserId = null)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-012",
+          "title": "Repositories",
+          "priority": "High",
+          "description": "Implémentation de l'accès aux données pour toutes les entités via le pattern Repository.",
+          "subtasks": [
+            {
+              "ref": "SUB-024",
+              "title": "Implémenter les repositories EF Core",
+              "priority": "High",
+              "description": "Repositories pour : User, DietPlan, Diet, Meal, FoodItem, WeightEntry, SavedFoodItem. Chaque repository expose les opérations nécessaires aux services applicatifs (pas de CRUD générique exposé — uniquement les requêtes réellement utilisées)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-013",
+          "title": "Cache Redis pour les aliments",
+          "priority": "High",
+          "description": "Mise en cache des résultats de recherche d'aliments pour réduire la charge sur PostgreSQL.",
+          "subtasks": [
+            {
+              "ref": "SUB-025",
+              "title": "Configurer Redis et implémenter FoodCacheService",
+              "priority": "High",
+              "description": "Configurer IConnectionMultiplexer. Implémenter FoodCacheService : get/set des résultats de recherche par mot-clé avec TTL court. Invalidation automatique à l'expiration (pas d'invalidation manuelle)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-014",
+          "title": "Job d'import Open Food Facts (Hangfire)",
+          "priority": "High",
+          "description": "Import quotidien automatisé du dump OFF pour maintenir la base d'aliments à jour.",
+          "subtasks": [
+            {
+              "ref": "SUB-026",
+              "title": "Implémenter le job d'import OFF",
+              "priority": "High",
+              "description": "Télécharger le dump OFF (JSONL/CSV). Traiter par batch (INSERT / UPDATE FoodItem). Planifier quotidiennement via Hangfire (cron '0 3 * * *'). Gérer les erreurs et la reprise après échec via le mécanisme de retry automatique Hangfire."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-015",
+          "title": "Job de purge RGPD (Hangfire)",
+          "priority": "High",
+          "description": "Suppression automatisée des comptes marqués pour suppression après la grace period de 30 jours.",
+          "subtasks": [
+            {
+              "ref": "SUB-027",
+              "title": "Implémenter le job de purge RGPD",
+              "priority": "High",
+              "description": "Sélectionner les utilisateurs avec DeletedAt <= aujourd'hui - 30 jours. Supprimer en cascade via PostgreSQL : MealItems → Meals → WeightEntries → SavedFoodItems → DietPlans → Diets → User. Appeler DELETE /admin/realms/{realm}/users/{KeycloakId} pour chaque utilisateur purgé. Gestion des erreurs : Keycloak indisponible → retry Hangfire, données déjà supprimées → ignorer. Planification quotidienne (cron '0 3 30 * *')."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "EPIC-004",
+      "label": "api",
+      "title": "API Layer",
+      "description": "Controllers, middleware, sécurité JWT, autorisation par rôle et documentation OpenAPI.",
+      "stories": [
+        {
+          "ref": "STORY-016",
+          "title": "Infrastructure API (middleware et OpenAPI)",
+          "priority": "High",
+          "description": "Mise en place des couches transversales : authentification JWT, gestion des erreurs, logging et documentation API.",
+          "subtasks": [
+            {
+              "ref": "SUB-028",
+              "title": "Middleware JWT Keycloak",
+              "priority": "High",
+              "description": "Valider les tokens JWT : vérification signature, audience et expiration. Extraire le claim 'sub' (KeycloakId) et résoudre l'identité en User.Id interne. Bloquer les requêtes sans token valide avec 401."
+            },
+            {
+              "ref": "SUB-029",
+              "title": "Gestion globale des erreurs et logging",
+              "priority": "High",
+              "description": "Middleware d'exception global : mapper les erreurs domaine vers les codes HTTP appropriés (409 conflit, 403 tier insuffisant, 404 non trouvé, 400 validation). Logging des requêtes entrantes et sortantes."
+            },
+            {
+              "ref": "SUB-030",
+              "title": "Configuration OpenAPI/Swagger",
+              "priority": "Medium",
+              "description": "Configurer AddSwaggerGen avec titre, version et sécurité JWT Bearer. Activer UseSwagger + UseSwaggerUI uniquement hors production. Activer les commentaires XML sur les projets API et Application. Exclure le dashboard Hangfire (/hangfire) de la spec OpenAPI."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-017",
+          "title": "UsersController — profil, pesées et RGPD",
+          "priority": "High",
+          "description": "Endpoints de gestion du profil utilisateur, historique de poids, aliments favoris et droits RGPD.",
+          "subtasks": [
+            {
+              "ref": "SUB-031",
+              "title": "Endpoints profil et pesées",
+              "priority": "High",
+              "description": "POST /users/me (création profil, déclenché à la première connexion Keycloak), GET /users/me (profil + BMR/TDEE calculés à la demande), PUT /users/me, POST /users/me/weight-entries, GET /users/me/weight-entries, PUT /users/me/weight-entries/{id}."
+            },
+            {
+              "ref": "SUB-032",
+              "title": "Endpoints aliments favoris",
+              "priority": "Medium",
+              "description": "GET /users/me/saved-food-items, POST /users/me/saved-food-items (sauvegarder un aliment), DELETE /users/me/saved-food-items/{id}."
+            },
+            {
+              "ref": "SUB-033",
+              "title": "Endpoints RGPD",
+              "priority": "High",
+              "description": "DELETE /users/me (soft delete, désactivation Keycloak, grace period 30j). POST /users/me/reactivate (réactivation pendant grace period). GET /users/me/export (export RGPD Art. 20 — toutes les données de l'utilisateur)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-018",
+          "title": "DietPlansController — plans et templates",
+          "priority": "High",
+          "description": "Endpoints de gestion des plans diététiques personnels et des templates partagés.",
+          "subtasks": [
+            {
+              "ref": "SUB-034",
+              "title": "Endpoints CRUD et lancement de plans",
+              "priority": "High",
+              "description": "POST /diet-plans, GET /diet-plans, PUT /diet-plans/{id}, DELETE /diet-plans/{id}, POST /diet-plans/{id}/launch (lancer un plan → créer une Diet active)."
+            },
+            {
+              "ref": "SUB-035",
+              "title": "Endpoints templates partagés",
+              "priority": "Medium",
+              "description": "GET /diet-plans/templates (liste des templates, Pro + Business uniquement). POST /admin/diet-plans/templates, PUT /admin/diet-plans/templates/{id} (rôle admin uniquement). Politique RequireRole('admin') sur les endpoints /admin/**."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-019",
+          "title": "DietsController — régimes et bilan",
+          "priority": "High",
+          "description": "Endpoints de consultation des régimes et du bilan nutritionnel.",
+          "subtasks": [
+            {
+              "ref": "SUB-036",
+              "title": "Endpoints consultation et archivage",
+              "priority": "High",
+              "description": "GET /diets/active, GET /diets (historique), GET /diets/{id} (détail), POST /diets/{id}/archive (terminer un régime actif)."
+            },
+            {
+              "ref": "SUB-037",
+              "title": "Endpoint bilan nutritionnel",
+              "priority": "High",
+              "description": "GET /diets/{id}/bilan — calculer et retourner le bilan de la période. Paramètres acceptés : period (day/week/month), date, startDate. Déléguer au NutritionService avec contrôle de la période autorisée selon le tier."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-020",
+          "title": "MealsController et FoodItemsController",
+          "priority": "High",
+          "description": "Endpoints de gestion des repas et de recherche d'aliments.",
+          "subtasks": [
+            {
+              "ref": "SUB-038",
+              "title": "Endpoints repas (MealsController)",
+              "priority": "High",
+              "description": "POST /meals, GET /meals (filtres : ?saved=true, ?date=), GET /meals/{id}, DELETE /meals/{id}, POST /meals/{id}/items (ajouter un MealItem), DELETE /meals/{id}/items/{itemId}."
+            },
+            {
+              "ref": "SUB-039",
+              "title": "Endpoint recherche aliments (FoodItemsController)",
+              "priority": "High",
+              "description": "GET /food-items?search={motclé} — déléguer au FoodItemService (cache Redis en priorité, fallback PostgreSQL)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-021",
+          "title": "AdminController — back-office",
+          "priority": "Medium",
+          "description": "Endpoints d'administration réservés au rôle admin pour la supervision et la gestion des templates.",
+          "subtasks": [
+            {
+              "ref": "SUB-040",
+              "title": "Endpoints supervision système",
+              "priority": "Medium",
+              "description": "GET /admin/dashboard (KPIs consolidés : utilisateurs par tier, activité, comptes en grace period). GET /admin/system/health (statut jobs OFF import + purge RGPD + count FoodItems)."
+            },
+            {
+              "ref": "SUB-041",
+              "title": "Endpoint suppression de templates",
+              "priority": "Low",
+              "description": "DELETE /admin/diet-plans/templates/{id} (rôle admin uniquement). Réponses 403 avec message explicite pour tier insuffisant sur tous les endpoints protégés."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "EPIC-005",
+      "label": "tests",
+      "title": "Tests",
+      "description": "Tests unitaires du domaine, tests d'intégration de l'infrastructure et tests end-to-end de l'API.",
+      "stories": [
+        {
+          "ref": "STORY-022",
+          "title": "Tests unitaires — Domain Layer",
+          "priority": "High",
+          "description": "Vérifier les invariants et règles métier du domaine en isolation totale.",
+          "subtasks": [
+            {
+              "ref": "SUB-042",
+              "title": "Tests des invariants et règles domaine",
+              "priority": "High",
+              "description": "MacroDistribution : rejet si somme des pourcentages ≠ 100%. NutritionInfo : calcul correct du snapshot. Diet : règles d'activation — rejet si une Diet est déjà active, StartDate imposée système, non-modifiabilité après lancement."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-023",
+          "title": "Tests d'intégration — Infrastructure Layer",
+          "priority": "High",
+          "description": "Vérifier la persistance, le cache et les jobs sur des services réels via Testcontainers.",
+          "subtasks": [
+            {
+              "ref": "SUB-043",
+              "title": "Tests repositories avec Testcontainers",
+              "priority": "High",
+              "description": "Tests d'intégration des repositories sur une instance PostgreSQL réelle via Testcontainers. Vérifier les opérations de lecture/écriture et les contraintes d'unicité (SavedFoodItem par FoodItemId+UserId, WeightEntry par date+UserId)."
+            },
+            {
+              "ref": "SUB-044",
+              "title": "Tests Redis et job import OFF",
+              "priority": "Medium",
+              "description": "Tests du FoodCacheService (get/set/expiration TTL). Tests du job d'import OFF sur un dump de test (couverture insert/update, gestion des erreurs de téléchargement)."
+            }
+          ]
+        },
+        {
+          "ref": "STORY-024",
+          "title": "Tests API — couverture end-to-end",
+          "priority": "High",
+          "description": "Vérifier le comportement de tous les endpoints sur des cas nominaux et des cas d'erreur.",
+          "subtasks": [
+            {
+              "ref": "SUB-045",
+              "title": "Tests de tous les endpoints API",
+              "priority": "High",
+              "description": "Cas nominaux et cas d'erreur pour chaque endpoint (400, 401, 403, 404, 409). Validation JWT : rejet des tokens invalides/expirés. Tests des limites tier (Free vs Pro vs Business)."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "hors_scope": [
+    "AuthController — flux OAuth2/OIDC délégué intégralement à Keycloak, aucun code API à écrire côté backend"
+  ]
+}
