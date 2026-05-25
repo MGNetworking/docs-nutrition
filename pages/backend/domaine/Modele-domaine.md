@@ -66,6 +66,14 @@ Point d'entrée du système. Tout appartient à un User.
 
 Plan alimentaire réutilisable défini par l'utilisateur. Sert de base pour créer une `Diet`.
 
+> **`DietPlan` vs `Diet` — quelle différence ?**
+>
+> `DietPlan` est le **modèle sur papier** — l'utilisateur configure son type de régime, son objectif et ses macros. Il n'a pas de dates ni de CalorieTarget. Il est toujours modifiable et peut être lancé plusieurs fois.
+>
+> `Diet` est le **régime réellement en cours** — créée au lancement d'un `DietPlan`. Le système copie tous les attributs du plan et calcule le `CalorieTarget` depuis le poids actuel (BMR/TDEE). À partir de ce moment, la `Diet` est un snapshot figé et indépendant du `DietPlan` d'origine.
+>
+> Modifier le `DietPlan` après le lancement n'affecte jamais la `Diet` en cours.
+
 **Attributs :**
 
 | Attribut          | Type                   | Notes                                       |
@@ -100,7 +108,8 @@ Plan alimentaire réutilisable défini par l'utilisateur. Sert de base pour cré
 - La modification d'un `DietPlan` n'affecte jamais les `Diet` existantes (snapshot indépendant)
 - Un `DietPlan` n'a pas de `CalorieTarget` — ce calcul dépend du poids réel de l'utilisateur au moment du lancement
 - Un `DietPlan` template (`IsTemplate = true`) est **non modifiable** par les utilisateurs — accessible en lecture seule (Pro/Business uniquement)
-- Un template a `UserId = null` — il n'appartient à aucun utilisateur
+- Un plan personnel (`IsTemplate = false`) **exige** un `UserId` non null — il appartient toujours à un utilisateur
+- Un template (`IsTemplate = true`) a `UserId = null` — il ne peut pas être attaché à un utilisateur
 - Seul le rôle `admin` (Keycloak) peut créer ou modifier un template
 
 > **Pourquoi pas de `DietPlanId` sur `Diet` ?** Une fois la `Diet` lancée, c'est un snapshot complet et indépendant. Si le plan est modifié après coup, une référence `DietPlanId` pointerait vers un objet qui n'a plus rien à voir avec la `Diet` créée — elle serait trompeuse et sans valeur métier.
@@ -123,7 +132,7 @@ Plan alimentaire d'un User sur une période définie.
 | TargetWeight      | float                   | Copié depuis `DietPlan` — poids cible en kg      |
 | CalorieTarget     | int                     | Calculé au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) — snapshot, ne change jamais |
 | MacroDistribution | MacroDistribution (VO)  | Copié depuis `DietPlan` — répartition cible des macros en % |
-| DietStatus        | enum DietStatus         | Active / Inactive / Archived                     |
+| DietStatus        | enum DietStatus         | Active / Archived / Cancelled                    |
 | StartDate         | DateOnly                | Imposée par le système = date du lancement (aujourd'hui) |
 | EndDate           | DateOnly?               | Nullable — null si régime non terminé, modifiable après lancement |
 
@@ -133,12 +142,14 @@ Plan alimentaire d'un User sur une période définie.
 - Porter l'objectif de l'utilisateur (`Goal`) pour cette période
 - Porter le `CalorieTarget` calculé au moment de la création (snapshot physiologique) — la Diet est un plan fixe, pas un plan adaptatif
 - Porter la répartition des macros (`MacroDistribution`)
-- Gérer son statut (Active / Inactive / Archived)
+- Gérer son statut (Active / Archived / Cancelled)
 - Délimiter sa période via `StartDate` et `EndDate`
 
 **Comportements :**
 
-- `ChangeDietStatus(status)` — change le statut (Active → Inactive → Completed) ; fixe `EndDate` automatiquement quand Completed
+- `ChangeDietStatus(status)` — change le statut ; fixe `EndDate` automatiquement quand `Archived` ou `Cancelled`
+  - `Active → Archived` : régime terminé normalement par l'utilisateur
+  - `Active → Cancelled` : régime abandonné en cours de route
 - Une `Diet` lancée est **non modifiable** — aucune autre méthode de modification exposée
 
 **Invariants :**
@@ -147,7 +158,7 @@ Plan alimentaire d'un User sur une période définie.
 - La somme des macros (protéines + glucides + lipides) doit toujours être égale à 100%
 - `StartDate` est imposée par le système (= date du lancement) — l'utilisateur ne peut pas choisir une date future
 - `CalorieTarget` est calculé par le service au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) puis stocké en snapshot — ne change jamais, même si le poids évolue
-- Une `Diet` est **non modifiable** une fois lancée (sauf `EndDate`) — elle sert de référence fixe pour le suivi nutritionnel sur la période
+- Une `Diet` est **non modifiable** une fois lancée — elle sert de référence fixe pour le suivi nutritionnel sur la période ; `EndDate` est fixée automatiquement par le système au moment de l'archivage
 - Une `Diet` est un snapshot complet et indépendant — aucun lien avec le `DietPlan` d'origine après son lancement
 
 ---
@@ -312,9 +323,9 @@ Table de référence locale des données alimentaires issues d'Open Food Facts. 
 | OffId           | string            | Identifiant Open Food Facts (code-barres)                  |
 | Name            | string            |                                                            |
 | CaloriesPer100g | float             | kcal pour 100g                                             |
-| ProteinsPer100g | float             | g pour 100g                                                |
-| CarbsPer100g    | float             | g pour 100g                                                |
-| FatsPer100g     | float             | g pour 100g                                                |
+| ProteinsPer100g | int               | g pour 100g                                                |
+| CarbsPer100g    | int               | g pour 100g                                                |
+| FatsPer100g     | int               | g pour 100g                                                |
 | AllergensTags   | List\<Allergen\>  | Tags normalisés OFF (ex: en:gluten)                        |
 | CachedAt        | DateTime          | Date de récupération depuis Open Food Facts                |
 
@@ -474,7 +485,7 @@ Les vérifications s'effectuent dans la **couche Application** (services), jamai
 | `ActivityLevel` | Sedentary, LightlyActive, ModeratelyActive, VeryActive, ExtremelyActive        |
 | `Goal`          | WeightLoss, Maintenance, WeightGain                                            |
 | `DietType`      | Balanced, HighProtein, Keto, Mediterranean, LowCarb, Vegetarian, Vegan, Custom |
-| `DietStatus`    | Active, Inactive, Archived                                                     |
+| `DietStatus`    | Active, Archived, Cancelled                                                    |
 | `MealType`      | Breakfast, Lunch, Dinner, Snack                                                |
 | `Gender`        | Male, Female, Other                                                            |
 | `Allergen`      | Gluten, Crustaceans, Eggs, Fish, Peanuts, Soybeans, Milk, Nuts, Celery, Mustard, SesameSeeds, SulphurDioxide, Lupin, Molluscs |

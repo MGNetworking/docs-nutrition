@@ -27,7 +27,7 @@
               "ref": "SUB-002",
               "title": "Implémenter Diet",
               "priority": "High",
-              "description": "Diet représente un régime actif. StartDate imposée par le système au lancement (= date du jour). Non modifiable une fois lancée (sauf EndDate). Invariant : une seule Diet en statut Active par User — toute tentative de lancement quand une Diet est déjà active lève une erreur métier (409)."
+              "description": "Diet représente un régime actif. StartDate imposée par le système au lancement (= date du jour). Non modifiable une fois lancée (sauf EndDate). Invariant : une seule Diet en statut Active par User — toute tentative de lancement quand une Diet est déjà active lève une ConflictException."
             },
             {
               "ref": "SUB-003",
@@ -87,7 +87,7 @@
               "ref": "SUB-008",
               "title": "Gestion des pesées (WeightEntry)",
               "priority": "Medium",
-              "description": "Ajouter une pesée avec date mesurée (par défaut aujourd'hui). Contrainte : une seule entrée par date par User (conflit → erreur métier 409). Retourner l'historique des pesées."
+              "description": "Ajouter une pesée avec date mesurée (par défaut aujourd'hui). Contrainte : une seule entrée par date par User (conflit → lève une ConflictException). Retourner l'historique des pesées."
             }
           ]
         },
@@ -101,13 +101,13 @@
               "ref": "SUB-009",
               "title": "CRUD des plans personnels avec contrôle tier",
               "priority": "High",
-              "description": "Créer, modifier, supprimer et lister les DietPlan personnels d'un utilisateur. Contrôle tier à la création : Free max 2 plans, Pro max 20 plans — erreur métier 403 si dépassement."
+              "description": "Créer, modifier, supprimer et lister les DietPlan personnels d'un utilisateur. Contrôle tier à la création : Free max 2 plans, Pro max 20 plans — lève une ForbiddenException si dépassement."
             },
             {
               "ref": "SUB-010",
               "title": "Plans templates partagés",
               "priority": "Medium",
-              "description": "Lister les DietPlan templates (IsTemplate = true). Accès restreint aux tiers Pro et Business — erreur 403 si tier Free. Création et modification des templates réservées au rôle admin."
+              "description": "Lister les DietPlan templates (IsTemplate = true). Accès restreint aux tiers Pro et Business — lève une ForbiddenException si tier Free. Création et modification des templates réservées au rôle admin."
             }
           ]
         },
@@ -121,7 +121,7 @@
               "ref": "SUB-011",
               "title": "Lancer un DietPlan (création d'une Diet active)",
               "priority": "High",
-              "description": "Vérifier qu'aucune Diet n'est déjà active pour l'utilisateur (sinon 409). Calculer BMR (Mifflin-St Jeor), TDEE et CalorieTarget depuis le profil utilisateur. Créer le snapshot de la Diet avec StartDate = aujourd'hui. Les données nutritionnelles sont gelées à la date de lancement."
+              "description": "Vérifier qu'aucune Diet n'est déjà active pour l'utilisateur (sinon lève une ConflictException). Calculer BMR (Mifflin-St Jeor), TDEE et CalorieTarget depuis le profil utilisateur. Créer le snapshot de la Diet avec StartDate = aujourd'hui. Les données nutritionnelles sont gelées à la date de lancement."
             },
             {
               "ref": "SUB-012",
@@ -141,7 +141,7 @@
               "ref": "SUB-013",
               "title": "Créer un repas",
               "priority": "High",
-              "description": "Créer un Meal avec ses MealItems. Calculer NutritionInfo pour chaque MealItem à partir des données du FoodItem. Un repas peut être sauvegardé (IsSaved = true). Contrôle tier : Free max 5 repas sauvegardés, Pro max 50 — erreur 403 si dépassement."
+              "description": "Créer un Meal avec ses MealItems. Calculer NutritionInfo pour chaque MealItem à partir des données du FoodItem. Un repas peut être sauvegardé (IsSaved = true). Contrôle tier : Free max 5 repas sauvegardés, Pro max 50 — lève une ForbiddenException si dépassement."
             },
             {
               "ref": "SUB-014",
@@ -167,7 +167,7 @@
               "ref": "SUB-016",
               "title": "Gérer les aliments favoris (SavedFoodItem)",
               "priority": "Medium",
-              "description": "Sauvegarder un FoodItem dans la liste personnelle. Invariant : unicité par FoodItemId et UserId. Contrôle tier : Free max 10 favoris, Pro max 100 — erreur 403 si dépassement. Supprimer un favori. Lister les favoris de l'utilisateur."
+              "description": "Sauvegarder un FoodItem dans la liste personnelle. Invariant : unicité par FoodItemId et UserId (conflit → lève une ConflictException). Contrôle tier : Free max 10 favoris, Pro max 100 — lève une ForbiddenException si dépassement. Supprimer un favori. Lister les favoris de l'utilisateur."
             }
           ]
         },
@@ -195,7 +195,7 @@
               "ref": "SUB-018",
               "title": "Implémenter SubscriptionGuard",
               "priority": "Medium",
-              "description": "Helper centralisé appelé par les services applicatifs pour vérifier les limites selon le tier (Free, Pro, Business). Lève une erreur métier 403 avec message explicite ('This feature requires a Pro subscription') si la limite est atteinte. Centralisé pour éviter la duplication des vérifications dans chaque service."
+              "description": "Helper centralisé appelé par les services applicatifs pour vérifier les limites selon le tier (Free, Pro, Business). Lève une ForbiddenException avec message explicite ('This feature requires a Pro subscription') si la limite est atteinte. Centralisé pour éviter la duplication des vérifications dans chaque service."
             }
           ]
         },
@@ -419,7 +419,7 @@
               "ref": "SUB-038",
               "title": "Endpoints repas (MealsController)",
               "priority": "High",
-              "description": "POST /meals, GET /meals (filtres : ?saved=true, ?date=), GET /meals/{id}, DELETE /meals/{id}, POST /meals/{id}/items (ajouter un MealItem), DELETE /meals/{id}/items/{itemId}."
+              "description": "POST /meals, GET /meals (filtres : ?saved=true, ?date=), GET /meals/{id}, PATCH /meals/{id} (name, mealType, notes, consumedAt — modifier consumedAt déplace le repas dans le bilan), DELETE /meals/{id}, POST /meals/{id}/items (ajouter un MealItem), DELETE /meals/{id}/items/{itemId}."
             },
             {
               "ref": "SUB-039",
@@ -445,7 +445,7 @@
               "ref": "SUB-041",
               "title": "Endpoint suppression de templates",
               "priority": "Low",
-              "description": "DELETE /admin/diet-plans/templates/{id} (rôle admin uniquement). Réponses 403 avec message explicite pour tier insuffisant sur tous les endpoints protégés."
+              "description": "DELETE /admin/diet-plans/templates/{id} (rôle admin uniquement). Les accès non autorisés lèvent une ForbiddenException — mappée par l'exception filter."
             }
           ]
         }
@@ -465,9 +465,15 @@
           "subtasks": [
             {
               "ref": "SUB-042",
-              "title": "Tests des invariants et règles domaine",
+              "title": "Tests unitaires — Aggregate Roots",
               "priority": "High",
-              "description": "MacroDistribution : rejet si somme des pourcentages ≠ 100%. NutritionInfo : calcul correct du snapshot. Diet : règles d'activation — rejet si une Diet est déjà active, StartDate imposée système, non-modifiabilité après lancement."
+              "description": "User : keycloakId vide → ArgumentException · BirthDate dans le futur → ArgumentException · Gender/ActivityLevel Unknown → ArgumentException · Height <= 0 → ArgumentOutOfRangeException · AddAllergen doublon → ArgumentException · RemoveAllergen allergen absent → ArgumentException · MarkAsDeleted doublon → InvalidOperationException · SubscriptionTier Free par défaut à la création. DietPlan : plan personnel sans UserId → ArgumentException · plan personnel avec UserId vide → ArgumentException · template avec UserId → ArgumentException · template avec UserId null → OK · DietType Unknown → ArgumentException · Goal Unknown → ArgumentException · TargetWeight <= 0 → ArgumentOutOfRangeException. Diet : constructeur → StatusDiet = Active · Rename/ChangeDietType/ChangeGoal/AdjustMacros sur Active → InvalidOperationException · ChangeDietStatus → Archived pose EndDate · ChangeDietStatus → Cancelled pose EndDate · ChangeDietStatus sur Archived → InvalidOperationException · ChangeDietStatus Unknown → ArgumentException. Meal : UserId vide → ArgumentException · 0 MealItems → ArgumentException · consumedAt default → ArgumentException · RemoveMealItem quand <= 1 item → InvalidOperationException · ChangeConsumedAt default → ArgumentException · ChangeMealType Unknown → ArgumentException. FoodItem : offId vide → ArgumentException · UpdateFromImport name vide → ArgumentException · UpdateFromImport calories < 0 → ArgumentOutOfRangeException · UpdateFromImport macros < 0 → ArgumentOutOfRangeException · UpdateFromImport met à jour CachedAt."
+            },
+            {
+              "ref": "SUB-046",
+              "title": "Tests unitaires — Entités enfants et Value Objects",
+              "priority": "High",
+              "description": "WeightEntry : UserId vide → ArgumentException · weight <= 0 → ArgumentOutOfRangeException · measuredAt default → ArgumentException · Update() applique les mêmes validations. MealItem : MealId vide → ArgumentException · FoodItemId vide → ArgumentException · quantité <= 0 → ArgumentOutOfRangeException · nutrition null → ArgumentNullException. SavedFoodItem : UserId vide → ArgumentException · FoodItemId vide → ArgumentException. MacroDistribution : somme ≠ 100 → ArgumentException · valeur <= 0 → ArgumentOutOfRangeException · somme = 100 → construction OK. NutritionInfo : valeur négative → ArgumentOutOfRangeException · valeur = 0 → construction OK (ex : eau). NutritionNeeds : BMR <= 0 → ArgumentOutOfRangeException · TDEE <= 0 → ArgumentOutOfRangeException · CalorieTarget <= 0 → ArgumentOutOfRangeException · MacroDistribution null → ArgumentNullException."
             }
           ]
         },

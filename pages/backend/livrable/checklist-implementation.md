@@ -201,6 +201,7 @@
 - 🔲 `POST /meals` — créer un repas (ponctuel ou sauvegardé)
 - 🔲 `GET /meals` — lister ses repas (filtre : `?saved=true`, `?date=`)
 - 🔲 `GET /meals/{id}` — détail d'un repas
+- 🔲 `PATCH /meals/{id}` — modifier les propriétés d'un repas (name, mealType, notes, consumedAt)
 - 🔲 `DELETE /meals/{id}` — supprimer un repas
 - 🔲 `POST /meals/{id}/items` — ajouter un MealItem à un repas
 - 🔲 `DELETE /meals/{id}/items/{itemId}` — retirer un MealItem d'un repas
@@ -254,9 +255,23 @@
 ## 6. Tests
 
 ### Tests unitaires (couche Domain)
-- 🔲 `MacroDistribution` — invariant somme 100%
-- 🔲 `NutritionInfo` — calcul snapshot correct
-- 🔲 `Diet` — règles d'activation (une seule active)
+
+#### Aggregate Roots
+- 🔲 `User` — UserId non vide, SubscriptionTier valide, UpdateProfile validations
+- 🔲 `DietPlan` — template : UserId null obligatoire · personnel : UserId requis · invariants DietType/Goal
+- 🔲 `Diet` — constructeur → Active · EnsureEditable bloque Active/Archived/Cancelled · ChangeDietStatus transitions · EndDate posée sur Archived et Cancelled
+- 🔲 `Meal` — au moins 1 MealItem · UserId non vide · RemoveMealItem refuse si <= 1 item · ChangeConsumedAt valide
+- 🔲 `FoodItem` — UpdateFromImport validations · setters internes uniquement
+
+#### Entités enfants
+- 🔲 `WeightEntry` — poids > 0 · measuredAt non default · Update() valide
+- 🔲 `MealItem` — mealId/foodItemId non vides · quantité > 0 · NutritionInfo non null
+- 🔲 `SavedFoodItem` — userId/foodItemId non vides
+
+#### Value Objects
+- 🔲 `MacroDistribution` — invariant somme = 100%
+- 🔲 `NutritionInfo` — calcul snapshot (calories/protéines/glucides/lipides × quantité)
+- 🔲 `NutritionNeeds` — calcul BMR Mifflin-St Jeor · calcul TDEE
 
 ### Tests d'intégration (couche Infrastructure)
 - 🔲 Repositories avec Testcontainers (PostgreSQL réel)
