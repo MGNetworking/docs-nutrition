@@ -254,6 +254,13 @@
 
 ## 6. Tests
 
+### Configuration couverture de code
+- 🔲 `coverlet.collector` installé dans les 3 projets de test (Domain, Application, Infrastructure)
+- 🔲 `tests/coverage.runsettings` créé (format Cobertura, exclusion des projets Tests)
+- 🔲 Seuils définis : Domain 90% · Application 80% · Infrastructure 70% · API 70%
+- 🔲 Commande de génération du rapport documentée (`reportgenerator`)
+- 🔲 Étape couverture ajoutée dans le workflow CI
+
 ### Tests unitaires (couche Domain)
 
 #### Aggregate Roots
