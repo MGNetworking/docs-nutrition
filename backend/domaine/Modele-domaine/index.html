@@ -1807,6 +1807,12 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <hr />
 <h3 id="dietplan"><code>DietPlan</code><a class="headerlink" href="#dietplan" title="Permanent link">&para;</a></h3>
 <p>Plan alimentaire réutilisable défini par l'utilisateur. Sert de base pour créer une <code>Diet</code>.</p>
+<blockquote>
+<p><strong><code>DietPlan</code> vs <code>Diet</code> — quelle différence ?</strong></p>
+<p><code>DietPlan</code> est le <strong>modèle sur papier</strong> — l'utilisateur configure son type de régime, son objectif et ses macros. Il n'a pas de dates ni de CalorieTarget. Il est toujours modifiable et peut être lancé plusieurs fois.</p>
+<p><code>Diet</code> est le <strong>régime réellement en cours</strong> — créée au lancement d'un <code>DietPlan</code>. Le système copie tous les attributs du plan et calcule le <code>CalorieTarget</code> depuis le poids actuel (BMR/TDEE). À partir de ce moment, la <code>Diet</code> est un snapshot figé et indépendant du <code>DietPlan</code> d'origine.</p>
+<p>Modifier le <code>DietPlan</code> après le lancement n'affecte jamais la <code>Diet</code> en cours.</p>
+</blockquote>
 <p><strong>Attributs :</strong></p>
 <table>
 <thead>
@@ -1880,7 +1886,8 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>La modification d'un <code>DietPlan</code> n'affecte jamais les <code>Diet</code> existantes (snapshot indépendant)</li>
 <li>Un <code>DietPlan</code> n'a pas de <code>CalorieTarget</code> — ce calcul dépend du poids réel de l'utilisateur au moment du lancement</li>
 <li>Un <code>DietPlan</code> template (<code>IsTemplate = true</code>) est <strong>non modifiable</strong> par les utilisateurs — accessible en lecture seule (Pro/Business uniquement)</li>
-<li>Un template a <code>UserId = null</code> — il n'appartient à aucun utilisateur</li>
+<li>Un plan personnel (<code>IsTemplate = false</code>) <strong>exige</strong> un <code>UserId</code> non null — il appartient toujours à un utilisateur</li>
+<li>Un template (<code>IsTemplate = true</code>) a <code>UserId = null</code> — il ne peut pas être attaché à un utilisateur</li>
 <li>Seul le rôle <code>admin</code> (Keycloak) peut créer ou modifier un template</li>
 </ul>
 <blockquote>
@@ -1942,7 +1949,7 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <tr>
 <td>DietStatus</td>
 <td>enum DietStatus</td>
-<td>Active / Inactive / Archived</td>
+<td>Active / Archived / Cancelled</td>
 </tr>
 <tr>
 <td>StartDate</td>
@@ -1962,12 +1969,14 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>Porter l'objectif de l'utilisateur (<code>Goal</code>) pour cette période</li>
 <li>Porter le <code>CalorieTarget</code> calculé au moment de la création (snapshot physiologique) — la Diet est un plan fixe, pas un plan adaptatif</li>
 <li>Porter la répartition des macros (<code>MacroDistribution</code>)</li>
-<li>Gérer son statut (Active / Inactive / Archived)</li>
+<li>Gérer son statut (Active / Archived / Cancelled)</li>
 <li>Délimiter sa période via <code>StartDate</code> et <code>EndDate</code></li>
 </ul>
 <p><strong>Comportements :</strong></p>
 <ul>
-<li><code>ChangeDietStatus(status)</code> — change le statut (Active → Inactive → Completed) ; fixe <code>EndDate</code> automatiquement quand Completed</li>
+<li><code>ChangeDietStatus(status)</code> — change le statut ; fixe <code>EndDate</code> automatiquement quand <code>Archived</code> ou <code>Cancelled</code></li>
+<li><code>Active → Archived</code> : régime terminé normalement par l'utilisateur</li>
+<li><code>Active → Cancelled</code> : régime abandonné en cours de route</li>
 <li>Une <code>Diet</code> lancée est <strong>non modifiable</strong> — aucune autre méthode de modification exposée</li>
 </ul>
 <p><strong>Invariants :</strong></p>
@@ -1976,7 +1985,7 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <li>La somme des macros (protéines + glucides + lipides) doit toujours être égale à 100%</li>
 <li><code>StartDate</code> est imposée par le système (= date du lancement) — l'utilisateur ne peut pas choisir une date future</li>
 <li><code>CalorieTarget</code> est calculé par le service au lancement (BMR/TDEE + Goal + WeightEntry le plus récent) puis stocké en snapshot — ne change jamais, même si le poids évolue</li>
-<li>Une <code>Diet</code> est <strong>non modifiable</strong> une fois lancée (sauf <code>EndDate</code>) — elle sert de référence fixe pour le suivi nutritionnel sur la période</li>
+<li>Une <code>Diet</code> est <strong>non modifiable</strong> une fois lancée — elle sert de référence fixe pour le suivi nutritionnel sur la période ; <code>EndDate</code> est fixée automatiquement par le système au moment de l'archivage</li>
 <li>Une <code>Diet</code> est un snapshot complet et indépendant — aucun lien avec le <code>DietPlan</code> d'origine après son lancement</li>
 </ul>
 <hr />
@@ -2261,17 +2270,17 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 </tr>
 <tr>
 <td>ProteinsPer100g</td>
-<td>float</td>
+<td>int</td>
 <td>g pour 100g</td>
 </tr>
 <tr>
 <td>CarbsPer100g</td>
-<td>float</td>
+<td>int</td>
 <td>g pour 100g</td>
 </tr>
 <tr>
 <td>FatsPer100g</td>
-<td>float</td>
+<td>int</td>
 <td>g pour 100g</td>
 </tr>
 <tr>
@@ -2569,7 +2578,7 @@ Client → API (Bearer token) → Middleware valide le JWT → extrait sub → r
 </tr>
 <tr>
 <td><code>DietStatus</code></td>
-<td>Active, Inactive, Archived</td>
+<td>Active, Archived, Cancelled</td>
 </tr>
 <tr>
 <td><code>MealType</code></td>

@@ -1,0 +1,2366 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Design technique — Couche Infrastructure - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-technique-couche-infrastructure" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design technique — Couche Infrastructure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Backend
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Backend
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Domaine
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domaine/Modele-domaine/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domaine/Diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domaine/Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/aliments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/admin-dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Infrastructure
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup local & production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-import-off/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication docs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-structure-des-dossiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Structure des dossiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configuration-ef-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration EF Core
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Configuration EF Core">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dbcontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      DbContext
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convention-de-nommage-snake_case-automatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convention de nommage — snake_case automatique
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approche-fluent-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approche Fluent API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enums-stockage-en-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enums — stockage en string
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-objects-owned-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Value Objects — Owned Entities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listes-primitives-colonnes-postgresql-array" class="md-nav__link">
+    <span class="md-ellipsis">
+      Listes primitives — colonnes PostgreSQL array
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-schema-de-la-base-de-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Schéma de la base de données
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Schéma de la base de données">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#table-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-diet_plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table diet_plans
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-diets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table diets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-meals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table meals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-meal_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table meal_items
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-weight_entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table weight_entries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-food_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table food_items
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-saved_food_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table saved_food_items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-pattern-des-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Pattern des repositories
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Pattern des repositories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iunitofwork" class="md-nav__link">
+    <span class="md-ellipsis">
+      IUnitOfWork
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repositories-specialises" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repositories spécialisés
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gestion-du-soft-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gestion du soft delete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-configuration-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Configuration Redis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Configuration Redis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#package-nuget" class="md-nav__link">
+    <span class="md-ellipsis">
+      Package NuGet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-des-cles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Structure des clés
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ttl" class="md-nav__link">
+    <span class="md-ellipsis">
+      TTL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-dinvalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie d'invalidation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-redisfoodcacheservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implémentation — RedisFoodCacheService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-dans-programcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration dans Program.cs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-configuration-hangfire" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Configuration Hangfire
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Configuration Hangfire">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jobs-planifies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jobs planifiés
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interfaces-des-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interfaces des jobs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stockage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stockage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-dattente-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      File d'attente (queue)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-structure-des-migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Structure des migrations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Structure des migrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convention-de-nommage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convention de nommage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commandes-ef-core-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commandes EF Core CLI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="design-technique-couche-infrastructure">Design technique — Couche Infrastructure<a class="headerlink" href="#design-technique-couche-infrastructure" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Document de référence obligatoire avant tout ticket de la couche Infrastructure.
+Source de vérité : <code>docs/pages/backend/livrable/checklist-implementation.md</code>
+Modèle domaine : <code>docs/pages/backend/domaine/Modele-domaine.md</code></p>
+</blockquote>
+<hr />
+<h2 id="1-structure-des-dossiers">1. Structure des dossiers<a class="headerlink" href="#1-structure-des-dossiers" title="Permanent link">&para;</a></h2>
+<p><code>src/NutritionApi.Infrastructure/
+├── Persistence/
+│   ├── AppDbContext.cs                    ← DbContext principal + IUnitOfWork
+│   ├── Configurations/                    ← Fluent API, un fichier par entité
+│   │   ├── UserConfiguration.cs
+│   │   ├── DietPlanConfiguration.cs
+│   │   ├── DietConfiguration.cs
+│   │   ├── MealConfiguration.cs
+│   │   ├── MealItemConfiguration.cs
+│   │   ├── WeightEntryConfiguration.cs
+│   │   ├── FoodItemConfiguration.cs
+│   │   └── SavedFoodItemConfiguration.cs
+│   ├── Repositories/
+│   │   ├── UserRepository.cs
+│   │   ├── DietPlanRepository.cs
+│   │   ├── DietRepository.cs
+│   │   ├── MealRepository.cs
+│   │   ├── FoodItemRepository.cs
+│   │   ├── WeightEntryRepository.cs
+│   │   └── SavedFoodItemRepository.cs
+│   └── Migrations/                        ← générées par EF Core CLI
+├── Cache/
+│   └── RedisFoodCacheService.cs           ← implémente IFoodCacheService
+├── Jobs/
+│   ├── IOffImportJob.cs
+│   ├── OffImportJob.cs
+│   ├── IRgpdPurgeJob.cs
+│   └── RgpdPurgeJob.cs
+├── ExternalServices/
+│   └── KeycloakAdminService.cs            ← implémente IKeycloakAdminService
+└── DependencyInjection.cs                 ← enregistrement des services Infrastructure</code></p>
+<hr />
+<h2 id="2-configuration-ef-core">2. Configuration EF Core<a class="headerlink" href="#2-configuration-ef-core" title="Permanent link">&para;</a></h2>
+<h3 id="dbcontext">DbContext<a class="headerlink" href="#dbcontext" title="Permanent link">&para;</a></h3>
+<p>```csharp
+// Infrastructure/Persistence/AppDbContext.cs
+public class AppDbContext : DbContext, IUnitOfWork
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }</p>
+<pre><code>public DbSet&lt;User&gt; Users =&gt; Set&lt;User&gt;();
+public DbSet&lt;DietPlan&gt; DietPlans =&gt; Set&lt;DietPlan&gt;();
+public DbSet&lt;Diet&gt; Diets =&gt; Set&lt;Diet&gt;();
+public DbSet&lt;Meal&gt; Meals =&gt; Set&lt;Meal&gt;();
+public DbSet&lt;MealItem&gt; MealItems =&gt; Set&lt;MealItem&gt;();
+public DbSet&lt;WeightEntry&gt; WeightEntries =&gt; Set&lt;WeightEntry&gt;();
+public DbSet&lt;FoodItem&gt; FoodItems =&gt; Set&lt;FoodItem&gt;();
+public DbSet&lt;SavedFoodItem&gt; SavedFoodItems =&gt; Set&lt;SavedFoodItem&gt;();
+
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+}
+
+public async Task&lt;int&gt; SaveChangesAsync(CancellationToken ct = default)
+    =&gt; await base.SaveChangesAsync(ct);
+</code></pre>
+<p>}
+```</p>
+<h3 id="convention-de-nommage-snake_case-automatique">Convention de nommage — snake_case automatique<a class="headerlink" href="#convention-de-nommage-snake_case-automatique" title="Permanent link">&para;</a></h3>
+<p>Le package Npgsql applique automatiquement la conversion PascalCase → snake_case.</p>
+<p><code>csharp
+// Program.cs / DependencyInjection.cs
+services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
+    options.UseNpgsql(connectionString)
+           .UseSnakeCaseNamingConvention());</code></p>
+<table>
+<thead>
+<tr>
+<th>Propriété C#</th>
+<th>Colonne PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UserId</code></td>
+<td><code>user_id</code></td>
+</tr>
+<tr>
+<td><code>CreatedAt</code></td>
+<td><code>created_at</code></td>
+</tr>
+<tr>
+<td><code>MacroProteinPercentage</code></td>
+<td><code>macro_protein_percentage</code></td>
+</tr>
+<tr>
+<td><code>CaloriesPer100g</code></td>
+<td><code>calories_per_100g</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="approche-fluent-api">Approche Fluent API<a class="headerlink" href="#approche-fluent-api" title="Permanent link">&para;</a></h3>
+<p><strong>Règle :</strong> Fluent API uniquement — aucune Data Annotation sur les entités Domain.</p>
+<p>Les entités Domain ne doivent pas connaître la persistance. Toute configuration EF Core est dans <code>Configurations/</code>.</p>
+<h3 id="enums-stockage-en-string">Enums — stockage en string<a class="headerlink" href="#enums-stockage-en-string" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+// Exemple dans UserConfiguration.cs
+builder.Property(u =&gt; u.Gender)
+       .HasConversion&lt;string&gt;()
+       .HasMaxLength(20);</code></p>
+<p>Toutes les propriétés enum sont stockées en <code>VARCHAR</code> pour la lisibilité en base.</p>
+<h3 id="value-objects-owned-entities">Value Objects — Owned Entities<a class="headerlink" href="#value-objects-owned-entities" title="Permanent link">&para;</a></h3>
+<p><code>MacroDistribution</code> et <code>NutritionInfo</code> sont des Value Objects mappés via <code>OwnsOne</code> — leurs colonnes sont stockées dans la table de l'entité propriétaire.</p>
+<p>```csharp
+// Dans DietConfiguration.cs (et DietPlanConfiguration.cs)
+builder.OwnsOne(d =&gt; d.MacroDistribution, macro =&gt;
+{
+    macro.Property(m =&gt; m.ProteinPercentage).HasColumnName("macro_protein_pct");
+    macro.Property(m =&gt; m.CarbPercentage).HasColumnName("macro_carb_pct");
+    macro.Property(m =&gt; m.FatPercentage).HasColumnName("macro_fat_pct");
+});</p>
+<p>// Dans MealItemConfiguration.cs
+builder.OwnsOne(mi =&gt; mi.Nutrition, n =&gt;
+{
+    n.Property(x =&gt; x.Calories).HasColumnName("nutrition_calories");
+    n.Property(x =&gt; x.Proteins).HasColumnName("nutrition_proteins");
+    n.Property(x =&gt; x.Carbs).HasColumnName("nutrition_carbs");
+    n.Property(x =&gt; x.Fats).HasColumnName("nutrition_fats");
+});
+```</p>
+<h3 id="listes-primitives-colonnes-postgresql-array">Listes primitives — colonnes PostgreSQL array<a class="headerlink" href="#listes-primitives-colonnes-postgresql-array" title="Permanent link">&para;</a></h3>
+<p><code>User.Allergies</code> (<code>List&lt;Allergen&gt;</code>) et <code>User.DietaryPreferences</code> (<code>List&lt;string&gt;</code>) ainsi que <code>FoodItem.AllergensTags</code> sont mappées sur des colonnes PostgreSQL array via Npgsql.</p>
+<p>```csharp
+// Dans UserConfiguration.cs
+builder.Property(u =&gt; u.Allergies)
+       .HasColumnType("text[]")
+       .HasConversion(
+           v =&gt; v.Select(a =&gt; a.ToString()).ToArray(),
+           v =&gt; v.Select(s =&gt; Enum.Parse<Allergen>(s)).ToList());</p>
+<p>builder.Property(u =&gt; u.DietaryPreferences)
+       .HasColumnType("text[]");
+```</p>
+<hr />
+<h2 id="3-schema-de-la-base-de-donnees">3. Schéma de la base de données<a class="headerlink" href="#3-schema-de-la-base-de-donnees" title="Permanent link">&para;</a></h2>
+<h3 id="table-users">Table <code>users</code><a class="headerlink" href="#table-users" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>keycloak_id</code></td>
+<td><code>VARCHAR(255)</code></td>
+<td>NOT NULL, UNIQUE</td>
+</tr>
+<tr>
+<td><code>birth_date</code></td>
+<td><code>DATE</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>gender</code></td>
+<td><code>VARCHAR(20)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>activity_level</code></td>
+<td><code>VARCHAR(30)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>allergies</code></td>
+<td><code>TEXT[]</code></td>
+<td>NOT NULL DEFAULT '{}'</td>
+</tr>
+<tr>
+<td><code>dietary_preferences</code></td>
+<td><code>TEXT[]</code></td>
+<td>NOT NULL DEFAULT '{}'</td>
+</tr>
+<tr>
+<td><code>subscription_tier</code></td>
+<td><code>VARCHAR(20)</code></td>
+<td>NOT NULL DEFAULT 'Free'</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TIMESTAMPTZ</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>deleted_at</code></td>
+<td><code>TIMESTAMPTZ</code></td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-diet_plans">Table <code>diet_plans</code><a class="headerlink" href="#table-diet_plans" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>UUID</code></td>
+<td>NULL, FK → <code>users(id)</code></td>
+</tr>
+<tr>
+<td><code>is_template</code></td>
+<td><code>BOOLEAN</code></td>
+<td>NOT NULL DEFAULT false</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>VARCHAR(200)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>diet_type</code></td>
+<td><code>VARCHAR(30)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td><code>VARCHAR(30)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>target_weight</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>macro_protein_pct</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>macro_carb_pct</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>macro_fat_pct</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-diets">Table <code>diets</code><a class="headerlink" href="#table-diets" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>users(id)</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>VARCHAR(200)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>diet_type</code></td>
+<td><code>VARCHAR(30)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td><code>VARCHAR(30)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>target_weight</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>calorie_target</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>macro_protein_pct</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>macro_carb_pct</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>macro_fat_pct</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>diet_status</code></td>
+<td><code>VARCHAR(20)</code></td>
+<td>NOT NULL DEFAULT 'Active'</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td><code>DATE</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>end_date</code></td>
+<td><code>DATE</code></td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-meals">Table <code>meals</code><a class="headerlink" href="#table-meals" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>users(id)</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>VARCHAR(200)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>meal_type</code></td>
+<td><code>VARCHAR(20)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>consumed_at</code></td>
+<td><code>TIMESTAMPTZ</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>notes</code></td>
+<td><code>TEXT</code></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td><code>is_saved</code></td>
+<td><code>BOOLEAN</code></td>
+<td>NOT NULL DEFAULT false</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-meal_items">Table <code>meal_items</code><a class="headerlink" href="#table-meal_items" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>meal_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>meals(id)</code> ON DELETE CASCADE</td>
+</tr>
+<tr>
+<td><code>food_item_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>food_items(id)</code></td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL (grammes)</td>
+</tr>
+<tr>
+<td><code>nutrition_calories</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>nutrition_proteins</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>nutrition_carbs</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>nutrition_fats</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-weight_entries">Table <code>weight_entries</code><a class="headerlink" href="#table-weight_entries" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>users(id)</code></td>
+</tr>
+<tr>
+<td><code>weight</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL (kg)</td>
+</tr>
+<tr>
+<td><code>measured_at</code></td>
+<td><code>DATE</code></td>
+<td>NOT NULL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-food_items">Table <code>food_items</code><a class="headerlink" href="#table-food_items" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>off_id</code></td>
+<td><code>VARCHAR(100)</code></td>
+<td>NOT NULL, UNIQUE</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>VARCHAR(500)</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>calories_per_100g</code></td>
+<td><code>REAL</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>proteins_per_100g</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>carbs_per_100g</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>fats_per_100g</code></td>
+<td><code>INTEGER</code></td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td><code>allergens_tags</code></td>
+<td><code>TEXT[]</code></td>
+<td>NOT NULL DEFAULT '{}'</td>
+</tr>
+<tr>
+<td><code>cached_at</code></td>
+<td><code>TIMESTAMPTZ</code></td>
+<td>NOT NULL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-saved_food_items">Table <code>saved_food_items</code><a class="headerlink" href="#table-saved_food_items" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type PostgreSQL</th>
+<th>Contraintes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>UUID</code></td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>users(id)</code></td>
+</tr>
+<tr>
+<td><code>food_item_id</code></td>
+<td><code>UUID</code></td>
+<td>NOT NULL, FK → <code>food_items(id)</code></td>
+</tr>
+<tr>
+<td><code>saved_at</code></td>
+<td><code>TIMESTAMPTZ</code></td>
+<td>NOT NULL</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Contrainte unique :</strong> <code>(user_id, food_item_id)</code> — un aliment ne peut être sauvegardé qu'une fois par utilisateur.</p>
+<hr />
+<h2 id="4-pattern-des-repositories">4. Pattern des repositories<a class="headerlink" href="#4-pattern-des-repositories" title="Permanent link">&para;</a></h2>
+<h3 id="iunitofwork">IUnitOfWork<a class="headerlink" href="#iunitofwork" title="Permanent link">&para;</a></h3>
+<p>Défini dans la couche <strong>Application</strong> (<code>Application/Interfaces/IUnitOfWork.cs</code>). <code>AppDbContext</code> l'implémente dans Infrastructure.</p>
+<p><code>csharp
+// Application/Interfaces/IUnitOfWork.cs
+public interface IUnitOfWork
+{
+    Task&lt;int&gt; SaveChangesAsync(CancellationToken ct = default);
+}</code></p>
+<p><strong>Règle :</strong> Les méthodes <code>AddAsync</code>, <code>UpdateAsync</code>, <code>DeleteAsync</code> des repositories <strong>ne sauvegardent pas</strong> — elles trackent seulement les changements dans le contexte EF Core. Le service applicatif appelle <code>IUnitOfWork.SaveChangesAsync()</code> en fin d'opération pour persister tout en une seule transaction.</p>
+<p><code>csharp
+// Exemple dans UserService.CreateProfileAsync
+await _userRepository.AddAsync(user);
+await _weightEntryRepository.AddAsync(entry);
+await _unitOfWork.SaveChangesAsync();   // ← persistance atomique</code></p>
+<h3 id="repositories-specialises">Repositories spécialisés<a class="headerlink" href="#repositories-specialises" title="Permanent link">&para;</a></h3>
+<p>Pas de repository générique — chaque repository implémente l'interface définie dans la couche Application.</p>
+<p><strong>Structure type d'un repository :</strong></p>
+<p>```csharp
+// Infrastructure/Persistence/Repositories/UserRepository.cs
+public sealed class UserRepository : IUserRepository
+{
+    private readonly AppDbContext _context;</p>
+<pre><code>public UserRepository(AppDbContext context) =&gt; _context = context;
+
+public async Task&lt;User?&gt; GetByIdAsync(Guid id)
+    =&gt; await _context.Users.FirstOrDefaultAsync(u =&gt; u.Id == id);
+
+public async Task&lt;User?&gt; GetByKeycloakIdAsync(string keycloakId)
+    =&gt; await _context.Users.FirstOrDefaultAsync(u =&gt; u.KeycloakId == keycloakId);
+
+public async Task AddAsync(User user)
+    =&gt; await _context.Users.AddAsync(user);
+
+public Task UpdateAsync(User user)
+{
+    _context.Users.Update(user);
+    return Task.CompletedTask;
+}
+</code></pre>
+<p>}
+```</p>
+<h3 id="gestion-du-soft-delete">Gestion du soft delete<a class="headerlink" href="#gestion-du-soft-delete" title="Permanent link">&para;</a></h3>
+<p><code>User.DeletedAt</code> n'est <strong>pas</strong> un filtre global EF Core (Query Filter) — les services filtrent explicitement selon le besoin (certains endpoints admin doivent voir les comptes supprimés).</p>
+<hr />
+<h2 id="5-configuration-redis">5. Configuration Redis<a class="headerlink" href="#5-configuration-redis" title="Permanent link">&para;</a></h2>
+<h3 id="package-nuget">Package NuGet<a class="headerlink" href="#package-nuget" title="Permanent link">&para;</a></h3>
+<p><code>xml
+&lt;PackageReference Include="StackExchange.Redis" Version="2.8.*" /&gt;
+&lt;PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.*" /&gt;</code></p>
+<h3 id="structure-des-cles">Structure des clés<a class="headerlink" href="#structure-des-cles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cas d'usage</th>
+<th>Clé Redis</th>
+<th>Type de valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Résultats de recherche par mot-clé</td>
+<td><code>food:search:{keyword_normalisé}</code></td>
+<td>JSON (<code>List&lt;FoodItemSearchResponse&gt;</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Le mot-clé est normalisé : minuscules + trim avant d'être utilisé comme clé.</p>
+<p><code>csharp
+var cacheKey = $"food:search:{keyword.ToLowerInvariant().Trim()}";</code></p>
+<h3 id="ttl">TTL<a class="headerlink" href="#ttl" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>food:search:*</code></td>
+<td><strong>24 heures</strong> — aligné sur la fréquence du job d'import OFF</td>
+</tr>
+</tbody>
+</table>
+<h3 id="strategie-dinvalidation">Stratégie d'invalidation<a class="headerlink" href="#strategie-dinvalidation" title="Permanent link">&para;</a></h3>
+<p>Le job <code>OffImportJob</code> invalide le cache après chaque import réussi en supprimant toutes les clés <code>food:search:*</code>.</p>
+<p><code>csharp
+// Dans OffImportJob, après l'import
+await _cache.KeyDeleteByPatternAsync("food:search:*");</code></p>
+<h3 id="implementation-redisfoodcacheservice">Implémentation — <code>RedisFoodCacheService</code><a class="headerlink" href="#implementation-redisfoodcacheservice" title="Permanent link">&para;</a></h3>
+<p><code>RedisFoodCacheService</code> implémente <code>IFoodCacheService</code> (interface définie dans Application).</p>
+<p>```csharp
+public sealed class RedisFoodCacheService : IFoodCacheService
+{
+    private readonly IDistributedCache _cache;
+    private static readonly TimeSpan Ttl = TimeSpan.FromHours(24);</p>
+<pre><code>public async Task&lt;List&lt;FoodItemSearchResponse&gt;?&gt; GetSearchResultsAsync(string keyword) { ... }
+public async Task SetSearchResultsAsync(string keyword, List&lt;FoodItemSearchResponse&gt; results) { ... }
+public async Task InvalidateSearchCacheAsync() { ... }
+</code></pre>
+<p>}
+```</p>
+<h3 id="configuration-dans-programcs">Configuration dans <code>Program.cs</code><a class="headerlink" href="#configuration-dans-programcs" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+builder.Services.AddStackExchangeRedisCache(options =&gt;
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "nutrition:";
+});</code></p>
+<hr />
+<h2 id="6-configuration-hangfire">6. Configuration Hangfire<a class="headerlink" href="#6-configuration-hangfire" title="Permanent link">&para;</a></h2>
+<p>Voir <code>docs/pages/backend/annexes/infrastructure-hangfire.md</code> pour le détail complet.</p>
+<h3 id="jobs-planifies">Jobs planifiés<a class="headerlink" href="#jobs-planifies" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Job</th>
+<th>Classe</th>
+<th>Schedule (cron)</th>
+<th>Heure UTC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Import Open Food Facts</td>
+<td><code>OffImportJob</code></td>
+<td><code>0 3 * * *</code></td>
+<td>03h00</td>
+</tr>
+<tr>
+<td>Purge RGPD</td>
+<td><code>RgpdPurgeJob</code></td>
+<td><code>30 3 * * *</code></td>
+<td>03h30</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interfaces-des-jobs">Interfaces des jobs<a class="headerlink" href="#interfaces-des-jobs" title="Permanent link">&para;</a></h3>
+<p>```csharp
+// Infrastructure/Jobs/IOffImportJob.cs
+public interface IOffImportJob
+{
+    Task RunAsync();
+}</p>
+<p>// Infrastructure/Jobs/IRgpdPurgeJob.cs
+public interface IRgpdPurgeJob
+{
+    Task RunAsync();
+}
+```</p>
+<h3 id="stockage">Stockage<a class="headerlink" href="#stockage" title="Permanent link">&para;</a></h3>
+<p>Schéma PostgreSQL dédié <code>HangFire</code> — créé automatiquement au démarrage (<code>PrepareSchemaIfNecessary = true</code>).</p>
+<p><strong>Aucune migration EF Core</strong> pour les tables Hangfire — elles sont gérées par le package lui-même.</p>
+<h3 id="file-dattente-queue">File d'attente (queue)<a class="headerlink" href="#file-dattente-queue" title="Permanent link">&para;</a></h3>
+<p>File par défaut (<code>default</code>) pour les deux jobs. Pas de file dédiée par job — le volume est trop faible pour justifier une ségrégation.</p>
+<hr />
+<h2 id="7-structure-des-migrations">7. Structure des migrations<a class="headerlink" href="#7-structure-des-migrations" title="Permanent link">&para;</a></h2>
+<h3 id="convention-de-nommage">Convention de nommage<a class="headerlink" href="#convention-de-nommage" title="Permanent link">&para;</a></h3>
+<p><code>{Description}</code></p>
+<p>Exemples :
+- <code>InitialSchema</code>
+- <code>AddIndexOnFoodItemOffId</code>
+- <code>AddDeletedAtToUser</code></p>
+<p>Le timestamp est géré automatiquement par EF Core dans le nom de fichier généré.</p>
+<h3 id="commandes-ef-core-cli">Commandes EF Core CLI<a class="headerlink" href="#commandes-ef-core-cli" title="Permanent link">&para;</a></h3>
+<p>```bash</p>
+<h1 id="creer-une-migration">Créer une migration<a class="headerlink" href="#creer-une-migration" title="Permanent link">&para;</a></h1>
+<p>dotnet ef migrations add InitialSchema \
+  --project src/NutritionApi.Infrastructure \
+  --startup-project src/NutritionApi.Api \
+  --output-dir Persistence/Migrations</p>
+<h1 id="appliquer-les-migrations">Appliquer les migrations<a class="headerlink" href="#appliquer-les-migrations" title="Permanent link">&para;</a></h1>
+<p>dotnet ef database update \
+  --project src/NutritionApi.Infrastructure \
+  --startup-project src/NutritionApi.Api</p>
+<h1 id="rollback-vers-une-migration-precedente">Rollback vers une migration précédente<a class="headerlink" href="#rollback-vers-une-migration-precedente" title="Permanent link">&para;</a></h1>
+<p>dotnet ef database update NomDeLaMigrationCible \
+  --project src/NutritionApi.Infrastructure \
+  --startup-project src/NutritionApi.Api
+```</p>
+<h3 id="regles">Règles<a class="headerlink" href="#regles" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Une migration = un changement logique.</strong> Ne pas regrouper des modifications sans rapport dans une seule migration.</li>
+<li><strong>Jamais de migration manuelle</strong> — toujours générée par <code>dotnet ef migrations add</code>.</li>
+<li>Les migrations sont <strong>committées dans git</strong> avec le code qui les nécessite.</li>
+</ul>
+<hr />
+<h2 id="8-injection-de-dependances">8. Injection de dépendances<a class="headerlink" href="#8-injection-de-dependances" title="Permanent link">&para;</a></h2>
+<p>```csharp
+// Infrastructure/DependencyInjection.cs
+public static class InfrastructureExtensions
+{
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // EF Core + PostgreSQL
+        services.AddDbContext<AppDbContext>(options =&gt;
+            options.UseNpgsql(configuration.GetConnectionString("Default"))
+                   .UseSnakeCaseNamingConvention());</p>
+<pre><code>    services.AddScoped&lt;IUnitOfWork&gt;(sp =&gt; sp.GetRequiredService&lt;AppDbContext&gt;());
+
+    // Repositories
+    services.AddScoped&lt;IUserRepository, UserRepository&gt;();
+    services.AddScoped&lt;IDietPlanRepository, DietPlanRepository&gt;();
+    services.AddScoped&lt;IDietRepository, DietRepository&gt;();
+    services.AddScoped&lt;IMealRepository, MealRepository&gt;();
+    services.AddScoped&lt;IFoodItemRepository, FoodItemRepository&gt;();
+    services.AddScoped&lt;IWeightEntryRepository, WeightEntryRepository&gt;();
+    services.AddScoped&lt;ISavedFoodItemRepository, SavedFoodItemRepository&gt;();
+
+    // Cache Redis
+    services.AddScoped&lt;IFoodCacheService, RedisFoodCacheService&gt;();
+
+    // Services externes
+    services.AddScoped&lt;IKeycloakAdminService, KeycloakAdminService&gt;();
+
+    // Hangfire
+    services.AddHangfire(config =&gt; config
+        .UsePostgreSqlStorage(configuration.GetConnectionString("Default"),
+            new PostgreSqlStorageOptions
+            {
+                SchemaName = "HangFire",
+                PrepareSchemaIfNecessary = true
+            }));
+    services.AddHangfireServer();
+
+    // Jobs Hangfire
+    services.AddScoped&lt;IOffImportJob, OffImportJob&gt;();
+    services.AddScoped&lt;IRgpdPurgeJob, RgpdPurgeJob&gt;();
+
+    return services;
+}
+</code></pre>
+<p>}
+```</p>
+<p><code>csharp
+// Api/Program.cs
+builder.Services.AddInfrastructure(builder.Configuration);</code></p>
+<hr />
+<h2 id="9-regles-transverses">9. Règles transverses<a class="headerlink" href="#9-regles-transverses" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Aucune logique métier dans les repositories.</strong> Un repository lit et écrit — c'est tout. Les invariants restent dans le Domain, les orchestrations dans l'Application.</li>
+<li><strong><code>SaveChangesAsync()</code> est appelé exclusivement par les services via <code>IUnitOfWork</code>.</strong> Les repositories ne sauvegardent jamais eux-mêmes.</li>
+<li><strong>Les requêtes sont filtrées par <code>userId</code> dans les repositories</strong>, pas dans les services — c'est la responsabilité du repository de retourner uniquement les données appartenant à l'utilisateur demandé.</li>
+<li><strong><code>FoodItem</code> est la seule table sans filtre <code>userId</code></strong> — c'est une table de référence partagée.</li>
+<li><strong>Pas de lazy loading</strong> — toutes les relations sont chargées explicitement avec <code>Include()</code> quand nécessaire.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

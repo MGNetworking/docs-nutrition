@@ -290,9 +290,34 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#strategie-de-couverture-de-code">
+<span class="md-ellipsis">
+      Stratégie de couverture de code
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#installer-reportgenerator-une-seule-fois-outil-global">
+<span class="md-ellipsis">
+      Installer ReportGenerator (une seule fois, outil global)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generer-le-rapport">
+<span class="md-ellipsis">
+      Générer le rapport
+    </span>
+</a>
+<nav aria-label="Générer le rapport" class="md-nav">
+<ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#35-technologies-utilisees">
 <span class="md-ellipsis">
@@ -916,9 +941,34 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#strategie-de-couverture-de-code">
+<span class="md-ellipsis">
+      Stratégie de couverture de code
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#installer-reportgenerator-une-seule-fois-outil-global">
+<span class="md-ellipsis">
+      Installer ReportGenerator (une seule fois, outil global)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generer-le-rapport">
+<span class="md-ellipsis">
+      Générer le rapport
+    </span>
+</a>
+<nav aria-label="Générer le rapport" class="md-nav">
+<ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#35-technologies-utilisees">
 <span class="md-ellipsis">
@@ -1209,7 +1259,6 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1>Specs techniques</h1>
 <h2 id="3-specifications-techniques">3. Spécifications techniques<a class="headerlink" href="#3-specifications-techniques" title="Permanent link">¶</a></h2>
 <h3 id="31-architecture-globale">3.1 Architecture globale<a class="headerlink" href="#31-architecture-globale" title="Permanent link">¶</a></h3>
 <p>Le système sera implémenté comme une application monolithique déployée sur Kubernetes, qui interagira avec Keycloak pour l'authentification et une API externe pour les données alimentaires.</p>
@@ -1392,6 +1441,51 @@ LaunchDiet_WhenDietAlreadyActive_Returns409
 NutritionApi.Application.Tests/     ← tests unitaires Application (Moq)
 NutritionApi.Infrastructure.Tests/  ← tests d'intégration (Testcontainers)
 NutritionApi.Api.Tests/             ← tests API end-to-end (WebApplicationFactory)</code></p>
+<h4 id="strategie-de-couverture-de-code">Stratégie de couverture de code<a class="headerlink" href="#strategie-de-couverture-de-code" title="Permanent link">¶</a></h4>
+<p>La couverture est mesurée avec <code>coverlet.collector</code> (déjà installé dans les 3 projets de test) et visualisée avec <code>ReportGenerator</code>.</p>
+<p><strong>Seuils minimum par couche :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Seuil</th>
+<th>Métrique prioritaire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain</td>
+<td><strong>90 %</strong></td>
+<td>Branch coverage — chaque invariant testé dans les deux sens</td>
+</tr>
+<tr>
+<td>Application</td>
+<td><strong>80 %</strong></td>
+<td>Line coverage</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td><strong>70 %</strong></td>
+<td>Line coverage</td>
+</tr>
+<tr>
+<td>API</td>
+<td><strong>70 %</strong></td>
+<td>Line coverage</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lancer les tests avec couverture :</strong></p>
+<p><code>bash
+dotnet test --settings tests/coverage.runsettings --collect:"XPlat Code Coverage" --results-directory ./coverage</code></p>
+<p><strong>Générer le rapport HTML :</strong></p>
+<p>```bash</p>
+<h1 id="installer-reportgenerator-une-seule-fois-outil-global">Installer ReportGenerator (une seule fois, outil global)<a class="headerlink" href="#installer-reportgenerator-une-seule-fois-outil-global" title="Permanent link">¶</a></h1>
+<p>dotnet tool install -g dotnet-reportgenerator-globaltool</p>
+<h1 id="generer-le-rapport">Générer le rapport<a class="headerlink" href="#generer-le-rapport" title="Permanent link">¶</a></h1>
+<p>reportgenerator -reports:"coverage/**/coverage.cobertura.xml" -targetdir:"coverage/report" -reporttypes:Html
+```</p>
+<p>Le fichier <code>tests/coverage.runsettings</code> est à la racine du dossier <code>tests/</code> — il configure le format Cobertura et exclut les projets de tests eux-mêmes de la mesure.</p>
 <hr/>
 <h3 id="35-technologies-utilisees">3.5 Technologies utilisées<a class="headerlink" href="#35-technologies-utilisees" title="Permanent link">¶</a></h3>
 <h4 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">¶</a></h4>

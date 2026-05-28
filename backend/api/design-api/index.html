@@ -1,0 +1,2282 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Design technique — Couche API - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-technique-couche-api" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design technique — Couche API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Backend
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Backend
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Backend
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Domaine
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domaine/Modele-domaine/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domaine/Diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domaine/Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/aliments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/admin-dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Infrastructure
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup local & production
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-import-off/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication docs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-structure-des-dossiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Structure des dossiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Routing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#table-des-routes-par-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table des routes par controller
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpoints-complets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Endpoints complets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Endpoints complets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#userscontroller-apiv1users" class="md-nav__link">
+    <span class="md-ellipsis">
+      UsersController — /api/v1/users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dietplanscontroller-apiv1diet-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      DietPlansController — /api/v1/diet-plans
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dietscontroller-apiv1diets" class="md-nav__link">
+    <span class="md-ellipsis">
+      DietsController — /api/v1/diets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mealscontroller-apiv1meals" class="md-nav__link">
+    <span class="md-ellipsis">
+      MealsController — /api/v1/meals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fooditemscontroller-apiv1food-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      FoodItemsController — /api/v1/food-items
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admincontroller-apiv1admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      AdminController — /api/v1/admin
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-pattern-de-reponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Pattern de réponse
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Pattern de réponse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reponses-de-succes-format-raw-sans-enveloppe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Réponses de succès — format raw (sans enveloppe)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reponses-derreur-rfc-7807-problemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Réponses d'erreur — RFC 7807 ProblemDetails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codes-http-par-cas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Codes HTTP par cas
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-middleware-ordre-de-la-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Middleware — ordre de la pipeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Middleware — ordre de la pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-de-chaque-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôle de chaque middleware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptionmiddleware-mapping-exceptions-problemdetails" class="md-nav__link">
+    <span class="md-ellipsis">
+      ExceptionMiddleware — mapping exceptions → ProblemDetails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#userresolutionmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      UserResolutionMiddleware
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-authentification-autorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Authentification / Autorisation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Authentification / Autorisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-jwt-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation JWT Keycloak
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôles Keycloak
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declaration-des-policies-dautorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Déclaration des policies d'autorisation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routes-protegees-vs-publiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Routes protégées vs publiques
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-documentation-openapi-swagger" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Documentation OpenAPI (Swagger)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Documentation OpenAPI (Swagger)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convention-dannotation-sur-les-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convention d'annotation sur les controllers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-injection-de-dependances" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Injection de dépendances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-structure-type-dun-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Structure type d'un controller
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-regles-transverses" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Règles transverses
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="design-technique-couche-api">Design technique — Couche API<a class="headerlink" href="#design-technique-couche-api" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Document de référence obligatoire avant tout ticket de la couche API.
+Source de vérité : <code>docs/pages/backend/livrable/checklist-implementation.md</code>
+Contrats API par écran : <code>docs/pages/backend/livrable/specs-frontend.md</code></p>
+</blockquote>
+<hr />
+<h2 id="1-structure-des-dossiers">1. Structure des dossiers<a class="headerlink" href="#1-structure-des-dossiers" title="Permanent link">&para;</a></h2>
+<p><code>src/NutritionApi.Api/
+├── Controllers/
+│   ├── UsersController.cs
+│   ├── DietPlansController.cs
+│   ├── DietsController.cs
+│   ├── MealsController.cs
+│   ├── FoodItemsController.cs
+│   └── AdminController.cs
+├── Middleware/
+│   ├── ExceptionMiddleware.cs         ← traduit les exceptions Application en ProblemDetails
+│   └── UserResolutionMiddleware.cs    ← résout KeycloakId → User.Id à chaque requête
+├── Extensions/
+│   ├── ClaimsPrincipalExtensions.cs   ← HttpContext.GetUserId(), HttpContext.GetKeycloakId()
+│   └── ServiceCollectionExtensions.cs ← helpers d'enregistrement
+├── Filters/
+│   └── HangfireAdminAuthorizationFilter.cs
+├── Properties/
+│   └── launchSettings.json
+├── appsettings.json
+├── appsettings.Development.json
+└── Program.cs</code></p>
+<hr />
+<h2 id="2-routing">2. Routing<a class="headerlink" href="#2-routing" title="Permanent link">&para;</a></h2>
+<p><strong>Préfixe global :</strong> <code>/api/v1/</code></p>
+<p>Appliqué via attribut sur chaque controller — pas de préfixe global dans <code>Program.cs</code> pour garder la flexibilité des routes <code>/admin</code> et <code>/hangfire</code>.</p>
+<p><code>csharp
+[ApiController]
+[Route("api/v1/[controller]")]
+[Authorize]
+public class UsersController : ControllerBase { ... }</code></p>
+<h3 id="table-des-routes-par-controller">Table des routes par controller<a class="headerlink" href="#table-des-routes-par-controller" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Controller</th>
+<th>Route de base</th>
+<th>Rôle requis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UsersController</code></td>
+<td><code>/api/v1/users</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>DietPlansController</code></td>
+<td><code>/api/v1/diet-plans</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>DietsController</code></td>
+<td><code>/api/v1/diets</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>MealsController</code></td>
+<td><code>/api/v1/meals</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>FoodItemsController</code></td>
+<td><code>/api/v1/food-items</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>AdminController</code></td>
+<td><code>/api/v1/admin</code></td>
+<td><code>admin</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="endpoints-complets">Endpoints complets<a class="headerlink" href="#endpoints-complets" title="Permanent link">&para;</a></h3>
+<h4 id="userscontroller-apiv1users">UsersController — <code>/api/v1/users</code><a class="headerlink" href="#userscontroller-apiv1users" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/users/me</code></td>
+<td>Créer le profil (1ère connexion)</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/users/me</code></td>
+<td>Lire le profil + BMR/TDEE</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/users/me</code></td>
+<td>Mettre à jour le profil</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/users/me</code></td>
+<td>Demande suppression RGPD</td>
+<td>204</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/users/me/reactivate</code></td>
+<td>Réactivation pendant grace period</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/users/me/export</code></td>
+<td>Export données RGPD</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/users/me/weight-entries</code></td>
+<td>Ajouter une pesée</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/users/me/weight-entries</code></td>
+<td>Historique des pesées</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/users/me/weight-entries/{id}</code></td>
+<td>Modifier une pesée</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/users/me/saved-food-items</code></td>
+<td>Liste des favoris</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/users/me/saved-food-items</code></td>
+<td>Sauvegarder un aliment</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/users/me/saved-food-items/{id}</code></td>
+<td>Retirer un aliment des favoris</td>
+<td>204</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dietplanscontroller-apiv1diet-plans">DietPlansController — <code>/api/v1/diet-plans</code><a class="headerlink" href="#dietplanscontroller-apiv1diet-plans" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/diet-plans</code></td>
+<td>Lister ses plans personnels</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/diet-plans</code></td>
+<td>Créer un plan</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/diet-plans/{id}</code></td>
+<td>Modifier un plan</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/diet-plans/{id}</code></td>
+<td>Supprimer un plan</td>
+<td>204</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/diet-plans/{id}/launch</code></td>
+<td>Lancer un plan → Diet active</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/diet-plans/templates</code></td>
+<td>Lister les templates (Pro/Business)</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dietscontroller-apiv1diets">DietsController — <code>/api/v1/diets</code><a class="headerlink" href="#dietscontroller-apiv1diets" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/diets/active</code></td>
+<td>Récupérer le régime actif</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/diets</code></td>
+<td>Historique des régimes</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/diets/{id}</code></td>
+<td>Détail d'un régime</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/diets/{id}/archive</code></td>
+<td>Terminer le régime actif</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/diets/{id}/bilan</code></td>
+<td>Bilan nutritionnel (params : <code>period</code>, <code>date</code>, <code>startDate</code>)</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mealscontroller-apiv1meals">MealsController — <code>/api/v1/meals</code><a class="headerlink" href="#mealscontroller-apiv1meals" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/meals</code></td>
+<td>Créer un repas</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/meals</code></td>
+<td>Lister ses repas (<code>?saved=true</code>, <code>?date=</code>)</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/meals/{id}</code></td>
+<td>Détail d'un repas</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/meals/{id}</code></td>
+<td>Modifier un repas (name, mealType, notes, consumedAt)</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/meals/{id}</code></td>
+<td>Supprimer un repas</td>
+<td>204</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/meals/{id}/items</code></td>
+<td>Ajouter un MealItem</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/meals/{id}/items/{itemId}</code></td>
+<td>Retirer un MealItem</td>
+<td>204</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fooditemscontroller-apiv1food-items">FoodItemsController — <code>/api/v1/food-items</code><a class="headerlink" href="#fooditemscontroller-apiv1food-items" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/food-items?search={motclé}</code></td>
+<td>Rechercher un aliment</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h4 id="admincontroller-apiv1admin">AdminController — <code>/api/v1/admin</code><a class="headerlink" href="#admincontroller-apiv1admin" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/admin/dashboard</code></td>
+<td>KPIs consolidés</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/admin/system/health</code></td>
+<td>Statut jobs Hangfire + count FoodItems</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/admin/diet-plans/templates</code></td>
+<td>Créer un template</td>
+<td>201</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/admin/diet-plans/templates/{id}</code></td>
+<td>Modifier un template</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/admin/diet-plans/templates/{id}</code></td>
+<td>Supprimer un template</td>
+<td>204</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-pattern-de-reponse">3. Pattern de réponse<a class="headerlink" href="#3-pattern-de-reponse" title="Permanent link">&para;</a></h2>
+<h3 id="reponses-de-succes-format-raw-sans-enveloppe">Réponses de succès — format raw (sans enveloppe)<a class="headerlink" href="#reponses-de-succes-format-raw-sans-enveloppe" title="Permanent link">&para;</a></h3>
+<p>Les réponses de succès retournent directement l'objet ou la liste — pas d'enveloppe <code>{ data: ... }</code>.</p>
+<p><code>GET /users/me          → UserProfileResponse          (200)
+GET /diet-plans        → List&lt;DietPlanResponse&gt;        (200)
+POST /diet-plans       → DietPlanResponse              (201 + Location header)
+POST /diets/{id}/archive → DietResponse               (200)
+DELETE /meals/{id}     → (aucun corps)                 (204)</code></p>
+<p><strong>Header <code>Location</code> sur les 201 :</strong></p>
+<p><code>csharp
+return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);</code></p>
+<h3 id="reponses-derreur-rfc-7807-problemdetails">Réponses d'erreur — RFC 7807 ProblemDetails<a class="headerlink" href="#reponses-derreur-rfc-7807-problemdetails" title="Permanent link">&para;</a></h3>
+<p>Toutes les erreurs utilisent le format <code>ProblemDetails</code> standard ASP.NET Core.</p>
+<p><code>json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "DietPlan introuvable.",
+  "traceId": "00-abc123..."
+}</code></p>
+<h3 id="codes-http-par-cas">Codes HTTP par cas<a class="headerlink" href="#codes-http-par-cas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Code</th>
+<th>Déclenché par</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Succès lecture</td>
+<td>200 OK</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Ressource créée</td>
+<td>201 Created</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Succès sans corps</td>
+<td>204 No Content</td>
+<td>suppressions</td>
+</tr>
+<tr>
+<td>Corps invalide / validation</td>
+<td>400 Bad Request</td>
+<td><code>[ApiController]</code> automatique</td>
+</tr>
+<tr>
+<td>Token absent ou invalide</td>
+<td>401 Unauthorized</td>
+<td>Middleware JWT</td>
+</tr>
+<tr>
+<td>Rôle insuffisant</td>
+<td>403 Forbidden</td>
+<td><code>[Authorize(Roles = "admin")]</code></td>
+</tr>
+<tr>
+<td>Tier insuffisant</td>
+<td>403 Forbidden</td>
+<td><code>ForbiddenException</code> → ExceptionMiddleware</td>
+</tr>
+<tr>
+<td>Ressource introuvable</td>
+<td>404 Not Found</td>
+<td><code>NotFoundException</code> → ExceptionMiddleware</td>
+</tr>
+<tr>
+<td>Conflit d'état</td>
+<td>409 Conflict</td>
+<td><code>ConflictException</code> → ExceptionMiddleware</td>
+</tr>
+<tr>
+<td>Règle métier violée</td>
+<td>422 Unprocessable Entity</td>
+<td><code>UnprocessableException</code> → ExceptionMiddleware</td>
+</tr>
+<tr>
+<td>Erreur inattendue</td>
+<td>500 Internal Server Error</td>
+<td>ExceptionMiddleware (sans détail en prod)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-middleware-ordre-de-la-pipeline">4. Middleware — ordre de la pipeline<a class="headerlink" href="#4-middleware-ordre-de-la-pipeline" title="Permanent link">&para;</a></h2>
+<p>L'ordre est critique — chaque middleware est listé dans l'ordre d'appel dans <code>Program.cs</code>.</p>
+<p><code>csharp
+// Program.cs
+app.UseExceptionHandler("/error");       // 1. Capture toutes les exceptions non gérées
+app.UseHttpsRedirection();               // 2.
+app.UseCors();                           // 3.
+app.UseAuthentication();                 // 4. Valide le JWT Bearer
+app.UseAuthorization();                  // 5. Vérifie les rôles / policies
+app.UseMiddleware&lt;UserResolutionMiddleware&gt;(); // 6. Résout KeycloakId → User.Id
+app.MapControllers();                    // 7.
+app.MapHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = [new HangfireAdminAuthorizationFilter()]
+});</code></p>
+<h3 id="role-de-chaque-middleware">Rôle de chaque middleware<a class="headerlink" href="#role-de-chaque-middleware" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Middleware</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ExceptionHandler</code></td>
+<td>Capture les exceptions non gérées, retourne un <code>ProblemDetails</code></td>
+</tr>
+<tr>
+<td><code>HttpsRedirection</code></td>
+<td>Force HTTPS</td>
+</tr>
+<tr>
+<td><code>Cors</code></td>
+<td>Autorise les requêtes cross-origin (configuré par environnement)</td>
+</tr>
+<tr>
+<td><code>Authentication</code></td>
+<td>Valide le token JWT Bearer (signature, audience, expiration)</td>
+</tr>
+<tr>
+<td><code>Authorization</code></td>
+<td>Vérifie <code>[Authorize]</code> et <code>[Authorize(Roles = "admin")]</code></td>
+</tr>
+<tr>
+<td><code>UserResolutionMiddleware</code></td>
+<td>Extrait le <code>sub</code> Keycloak du token, résout <code>User.Id</code> en base</td>
+</tr>
+<tr>
+<td><code>MapControllers</code></td>
+<td>Route vers les controllers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exceptionmiddleware-mapping-exceptions-problemdetails">ExceptionMiddleware — mapping exceptions → ProblemDetails<a class="headerlink" href="#exceptionmiddleware-mapping-exceptions-problemdetails" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+// Middleware/ExceptionMiddleware.cs
+public class ExceptionMiddleware : IMiddleware
+{
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    {
+        try { await next(context); }
+        catch (NotFoundException ex)    { await WriteProblem(context, 404, ex.Message); }
+        catch (ConflictException ex)    { await WriteProblem(context, 409, ex.Message); }
+        catch (ForbiddenException ex)   { await WriteProblem(context, 403, ex.Message); }
+        catch (UnprocessableException ex){ await WriteProblem(context, 422, ex.Message); }
+        catch (Exception ex)            { await WriteProblem(context, 500, "Une erreur interne est survenue."); }
+    }
+}</code></p>
+<h3 id="userresolutionmiddleware">UserResolutionMiddleware<a class="headerlink" href="#userresolutionmiddleware" title="Permanent link">&para;</a></h3>
+<p>Résout le <code>sub</code> Keycloak en <code>User.Id</code> interne à chaque requête authentifiée, et l'ajoute au <code>HttpContext.Items</code>.</p>
+<p><code>csharp
+// Middleware/UserResolutionMiddleware.cs
+public class UserResolutionMiddleware : IMiddleware
+{
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    {
+        if (context.User.Identity?.IsAuthenticated == true)
+        {
+            var keycloakId = context.User.FindFirstValue("sub");
+            var user = await _userRepository.GetByKeycloakIdAsync(keycloakId!);
+            if (user is null) { context.Response.StatusCode = 401; return; }
+            context.Items["UserId"] = user.Id;
+        }
+        await next(context);
+    }
+}</code></p>
+<p><strong>Accès dans les controllers :</strong></p>
+<p>```csharp
+// Extensions/ClaimsPrincipalExtensions.cs
+public static Guid GetUserId(this HttpContext context)
+    =&gt; (Guid)context.Items["UserId"]!;</p>
+<p>// Dans un controller
+var userId = HttpContext.GetUserId();
+```</p>
+<hr />
+<h2 id="5-authentification-autorisation">5. Authentification / Autorisation<a class="headerlink" href="#5-authentification-autorisation" title="Permanent link">&para;</a></h2>
+<h3 id="validation-jwt-keycloak">Validation JWT Keycloak<a class="headerlink" href="#validation-jwt-keycloak" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+// Program.cs
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =&gt;
+    {
+        options.Authority = builder.Configuration["Keycloak:Authority"];
+        options.Audience  = builder.Configuration["Keycloak:Audience"];
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer           = true,
+            ValidateAudience         = true,
+            ValidateLifetime         = true,
+            ValidateIssuerSigningKey = true
+        };
+    });</code></p>
+<p><strong>Variables de configuration (<code>appsettings.json</code>) :</strong></p>
+<p><code>json
+"Keycloak": {
+  "Authority": "https://{keycloak-host}/realms/{realm}",
+  "Audience":  "nutrition-api"
+}</code></p>
+<p>Keycloak expose ses clés publiques sur <code>{Authority}/.well-known/openid-configuration</code> — le middleware JWT les récupère automatiquement.</p>
+<h3 id="roles-keycloak">Rôles Keycloak<a class="headerlink" href="#roles-keycloak" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Claim dans le JWT</th>
+<th>Accès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td><code>realm_access.roles[]</code></td>
+<td>Toutes les routes <code>/api/v1/**</code> (hors <code>/admin</code>)</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td><code>realm_access.roles[]</code></td>
+<td>Routes <code>/api/v1/admin/**</code> + dashboard Hangfire</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Extraction du rôle Keycloak</strong> (le claim <code>realm_access.roles</code> n'est pas le claim standard <code>role</code>) :</p>
+<p><code>csharp
+// Program.cs — mapper le claim Keycloak vers le claim standard
+builder.Services.AddAuthentication(...)
+    .AddJwtBearer(options =&gt;
+    {
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = ctx =&gt;
+            {
+                var roles = ctx.Principal!
+                    .FindFirst("realm_access")?.Value;
+                // Parser le JSON et ajouter des ClaimsIdentity avec Role
+                return Task.CompletedTask;
+            }
+        };
+    });</code></p>
+<blockquote>
+<p>Alternative plus simple : utiliser <code>options.MapInboundClaims = false</code> + un <code>IClaimsTransformation</code> personnalisé qui lit <code>realm_access.roles</code> et crée des claims <code>ClaimTypes.Role</code> standards.</p>
+</blockquote>
+<h3 id="declaration-des-policies-dautorisation">Déclaration des policies d'autorisation<a class="headerlink" href="#declaration-des-policies-dautorisation" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+builder.Services.AddAuthorization(options =&gt;
+{
+    options.AddPolicy("AdminOnly", policy =&gt;
+        policy.RequireRole("admin"));
+});</code></p>
+<p><strong>Usage dans les controllers :</strong></p>
+<p>```csharp
+[Authorize]                          // toutes les routes du controller → rôle user
+public class DietPlansController : ControllerBase</p>
+<p>[Authorize(Policy = "AdminOnly")]    // rôle admin requis
+public class AdminController : ControllerBase</p>
+<p>[AllowAnonymous]                     // aucune route anonyme prévue en v1
+```</p>
+<h3 id="routes-protegees-vs-publiques">Routes protégées vs publiques<a class="headerlink" href="#routes-protegees-vs-publiques" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Routes</th>
+<th>Protection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/**</code></td>
+<td><code>[Authorize]</code> — JWT valide requis</td>
+</tr>
+<tr>
+<td><code>/api/v1/admin/**</code></td>
+<td><code>[Authorize(Policy = "AdminOnly")]</code> — rôle <code>admin</code> requis</td>
+</tr>
+<tr>
+<td><code>/hangfire</code></td>
+<td><code>HangfireAdminAuthorizationFilter</code> — rôle <code>admin</code> requis</td>
+</tr>
+<tr>
+<td><code>/swagger</code></td>
+<td>Accessible uniquement hors production</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-documentation-openapi-swagger">6. Documentation OpenAPI (Swagger)<a class="headerlink" href="#6-documentation-openapi-swagger" title="Permanent link">&para;</a></h2>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>```csharp
+// Program.cs
+builder.Services.AddSwaggerGen(options =&gt;
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title   = "Nutrition API",
+        Version = "v1"
+    });</p>
+<pre><code>// Authentification JWT dans l'UI Swagger
+options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+{
+    Type        = SecuritySchemeType.Http,
+    Scheme      = "bearer",
+    BearerFormat = "JWT",
+    Description = "Token JWT Keycloak — format : Bearer {token}"
+});
+
+options.AddSecurityRequirement(new OpenApiSecurityRequirement
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+                { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+        },
+        Array.Empty&lt;string&gt;()
+    }
+});
+
+// Commentaires XML pour la documentation des endpoints
+var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
+</code></pre>
+<p>});</p>
+<p>// Uniquement hors production
+if (!app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =&gt;
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutrition API v1"));
+}
+```</p>
+<p><strong>Activer les commentaires XML dans le <code>.csproj</code> :</strong></p>
+<p><code>xml
+&lt;PropertyGroup&gt;
+  &lt;GenerateDocumentationFile&gt;true&lt;/GenerateDocumentationFile&gt;
+  &lt;NoWarn&gt;$(NoWarn);1591&lt;/NoWarn&gt;
+&lt;/PropertyGroup&gt;</code></p>
+<h3 id="convention-dannotation-sur-les-controllers">Convention d'annotation sur les controllers<a class="headerlink" href="#convention-dannotation-sur-les-controllers" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+/// &lt;summary&gt;Créer le profil utilisateur à la première connexion.&lt;/summary&gt;
+[HttpPost("me")]
+[ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status201Created)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+public async Task&lt;IActionResult&gt; CreateProfile([FromBody] CreateUserProfileRequest request)</code></p>
+<p><strong>Règle :</strong> Déclarer <code>[ProducesResponseType]</code> pour tous les codes HTTP possibles (succès + erreurs métier). Le code 401 et 403 sont implicites sur toutes les routes <code>[Authorize]</code> — pas besoin de les répéter.</p>
+<hr />
+<h2 id="7-injection-de-dependances">7. Injection de dépendances<a class="headerlink" href="#7-injection-de-dependances" title="Permanent link">&para;</a></h2>
+<p>```csharp
+// Program.cs
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApplication();        // ← couche Application
+builder.Services.AddInfrastructure(builder.Configuration);  // ← couche Infrastructure</p>
+<p>// Middleware custom
+builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddTransient<UserResolutionMiddleware>();</p>
+<p>// CORS
+builder.Services.AddCors(options =&gt;
+    options.AddDefaultPolicy(policy =&gt;
+        policy.WithOrigins(builder.Configuration.GetSection("Cors:Origins").Get<string[]>()!)
+              .AllowAnyHeader()
+              .AllowAnyMethod()));
+```</p>
+<hr />
+<h2 id="8-structure-type-dun-controller">8. Structure type d'un controller<a class="headerlink" href="#8-structure-type-dun-controller" title="Permanent link">&para;</a></h2>
+<p>```csharp
+[ApiController]
+[Route("api/v1/[controller]")]
+[Authorize]
+public class DietPlansController : ControllerBase
+{
+    private readonly DietPlanService _service;</p>
+<pre><code>public DietPlansController(DietPlanService service) =&gt; _service = service;
+
+/// &lt;summary&gt;Lister les plans personnels de l'utilisateur.&lt;/summary&gt;
+[HttpGet]
+[ProducesResponseType(typeof(List&lt;DietPlanResponse&gt;), StatusCodes.Status200OK)]
+public async Task&lt;IActionResult&gt; GetAll()
+{
+    var userId = HttpContext.GetUserId();
+    var result = await _service.GetUserPlansAsync(userId);
+    return Ok(result);
+}
+
+/// &lt;summary&gt;Créer un plan diététique personnel.&lt;/summary&gt;
+[HttpPost]
+[ProducesResponseType(typeof(DietPlanResponse), StatusCodes.Status201Created)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+public async Task&lt;IActionResult&gt; Create([FromBody] CreateDietPlanRequest request)
+{
+    var userId = HttpContext.GetUserId();
+    var result = await _service.CreateAsync(userId, request);
+    return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+}
+</code></pre>
+<p>}
+```</p>
+<p><strong>Règles :</strong></p>
+<ul>
+<li>Le controller extrait <code>userId</code> depuis <code>HttpContext</code> — il ne le passe jamais via <code>[FromBody]</code> ou <code>[FromQuery]</code>.</li>
+<li>Le controller ne contient aucune logique métier — il délègue au service applicatif.</li>
+<li>Le controller ne mappe jamais manuellement des entités Domain — il reçoit et retourne des DTOs.</li>
+<li><code>[FromBody]</code> pour les requêtes POST/PUT/PATCH, <code>[FromRoute]</code> pour les ids, <code>[FromQuery]</code> pour les filtres.</li>
+</ul>
+<hr />
+<h2 id="9-regles-transverses">9. Règles transverses<a class="headerlink" href="#9-regles-transverses" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Un controller = un agrégat ou une ressource.</strong> Ne pas créer de controller <code>BaseController</code> avec de la logique partagée.</li>
+<li><strong><code>[ApiController]</code></strong> est obligatoire sur chaque controller — active la validation automatique du <code>ModelState</code> (400 sur corps invalide).</li>
+<li><strong>Aucun <code>try/catch</code> dans les controllers.</strong> L'<code>ExceptionMiddleware</code> capture toutes les exceptions.</li>
+<li><strong>Le <code>UserResolutionMiddleware</code> garantit que <code>HttpContext.GetUserId()</code> est toujours disponible</strong> dans une action <code>[Authorize]</code> — inutile de vérifier la nullité.</li>
+<li><strong><code>[AllowAnonymous]</code></strong> est interdit sauf décision explicite et documentée.</li>
+<li><strong>Hangfire dashboard</strong> (<code>/hangfire</code>) est exclu de la spec OpenAPI — pas de <code>[ApiExplorerSettings(IgnoreApi = true)]</code> nécessaire car il n'est pas un controller.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

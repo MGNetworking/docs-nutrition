@@ -716,11 +716,43 @@
 <nav aria-label="6. Tests" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-couverture-de-code">
+<span class="md-ellipsis">
+      Configuration couverture de code
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#tests-unitaires-couche-domain">
 <span class="md-ellipsis">
       Tests unitaires (couche Domain)
     </span>
 </a>
+<nav aria-label="Tests unitaires (couche Domain)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aggregate-roots_1">
+<span class="md-ellipsis">
+      Aggregate Roots
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#entites-enfants_1">
+<span class="md-ellipsis">
+      Entités enfants
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#value-objects_1">
+<span class="md-ellipsis">
+      Value Objects
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#tests-dintegration-couche-infrastructure">
@@ -984,6 +1016,7 @@ Source de vérité : <code>docs/domaine/Modele-domaine.md</code> + workflows <co
 <li>🔲 <code>POST /meals</code> — créer un repas (ponctuel ou sauvegardé)</li>
 <li>🔲 <code>GET /meals</code> — lister ses repas (filtre : <code>?saved=true</code>, <code>?date=</code>)</li>
 <li>🔲 <code>GET /meals/{id}</code> — détail d'un repas</li>
+<li>🔲 <code>PATCH /meals/{id}</code> — modifier les propriétés d'un repas (name, mealType, notes, consumedAt)</li>
 <li>🔲 <code>DELETE /meals/{id}</code> — supprimer un repas</li>
 <li>🔲 <code>POST /meals/{id}/items</code> — ajouter un MealItem à un repas</li>
 <li>🔲 <code>DELETE /meals/{id}/items/{itemId}</code> — retirer un MealItem d'un repas</li>
@@ -1072,11 +1105,34 @@ Source de vérité : <code>docs/domaine/Modele-domaine.md</code> + workflows <co
 </table>
 <hr/>
 <h2 id="6-tests">6. Tests<a class="headerlink" href="#6-tests" title="Permanent link">¶</a></h2>
-<h3 id="tests-unitaires-couche-domain">Tests unitaires (couche Domain)<a class="headerlink" href="#tests-unitaires-couche-domain" title="Permanent link">¶</a></h3>
+<h3 id="configuration-couverture-de-code">Configuration couverture de code<a class="headerlink" href="#configuration-couverture-de-code" title="Permanent link">¶</a></h3>
 <ul>
-<li>🔲 <code>MacroDistribution</code> — invariant somme 100%</li>
-<li>🔲 <code>NutritionInfo</code> — calcul snapshot correct</li>
-<li>🔲 <code>Diet</code> — règles d'activation (une seule active)</li>
+<li>🔲 <code>coverlet.collector</code> installé dans les 3 projets de test (Domain, Application, Infrastructure)</li>
+<li>🔲 <code>tests/coverage.runsettings</code> créé (format Cobertura, exclusion des projets Tests)</li>
+<li>🔲 Seuils définis : Domain 90% · Application 80% · Infrastructure 70% · API 70%</li>
+<li>🔲 Commande de génération du rapport documentée (<code>reportgenerator</code>)</li>
+<li>🔲 Étape couverture ajoutée dans le workflow CI</li>
+</ul>
+<h3 id="tests-unitaires-couche-domain">Tests unitaires (couche Domain)<a class="headerlink" href="#tests-unitaires-couche-domain" title="Permanent link">¶</a></h3>
+<h4 id="aggregate-roots_1">Aggregate Roots<a class="headerlink" href="#aggregate-roots_1" title="Permanent link">¶</a></h4>
+<ul>
+<li>🔲 <code>User</code> — UserId non vide, SubscriptionTier valide, UpdateProfile validations</li>
+<li>🔲 <code>DietPlan</code> — template : UserId null obligatoire · personnel : UserId requis · invariants DietType/Goal</li>
+<li>🔲 <code>Diet</code> — constructeur → Active · EnsureEditable bloque Active/Archived/Cancelled · ChangeDietStatus transitions · EndDate posée sur Archived et Cancelled</li>
+<li>🔲 <code>Meal</code> — au moins 1 MealItem · UserId non vide · RemoveMealItem refuse si &lt;= 1 item · ChangeConsumedAt valide</li>
+<li>🔲 <code>FoodItem</code> — UpdateFromImport validations · setters internes uniquement</li>
+</ul>
+<h4 id="entites-enfants_1">Entités enfants<a class="headerlink" href="#entites-enfants_1" title="Permanent link">¶</a></h4>
+<ul>
+<li>🔲 <code>WeightEntry</code> — poids &gt; 0 · measuredAt non default · Update() valide</li>
+<li>🔲 <code>MealItem</code> — mealId/foodItemId non vides · quantité &gt; 0 · NutritionInfo non null</li>
+<li>🔲 <code>SavedFoodItem</code> — userId/foodItemId non vides</li>
+</ul>
+<h4 id="value-objects_1">Value Objects<a class="headerlink" href="#value-objects_1" title="Permanent link">¶</a></h4>
+<ul>
+<li>🔲 <code>MacroDistribution</code> — invariant somme = 100%</li>
+<li>🔲 <code>NutritionInfo</code> — calcul snapshot (calories/protéines/glucides/lipides × quantité)</li>
+<li>🔲 <code>NutritionNeeds</code> — calcul BMR Mifflin-St Jeor · calcul TDEE</li>
 </ul>
 <h3 id="tests-dintegration-couche-infrastructure">Tests d'intégration (couche Infrastructure)<a class="headerlink" href="#tests-dintegration-couche-infrastructure" title="Permanent link">¶</a></h3>
 <ul>

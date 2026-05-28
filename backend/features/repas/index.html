@@ -568,6 +568,7 @@ Repas sauvegardés limités selon le tier : Free = 5 · Pro = 50 · Business = i
 <li>Calcule automatiquement <code>NutritionInfo</code> pour chaque MealItem (snapshot depuis FoodItem × quantité)</li>
 <li>Permet de marquer un repas comme sauvegardé (<code>IsSaved = true</code>) pour le réutiliser</li>
 <li>Vérifie la limite de repas sauvegardés selon le tier avant sauvegarde</li>
+<li>Permet de modifier les propriétés d'un repas (nom, type, notes, date de consommation)</li>
 <li>Permet d'ajouter ou retirer des MealItems d'un repas</li>
 <li>Supprime un repas et ses MealItems en cascade</li>
 </ul>
@@ -602,6 +603,11 @@ Repas sauvegardés limités selon le tier : Free = 5 · Pro = 50 · Business = i
 <td>Détail d'un repas</td>
 </tr>
 <tr>
+<td><code>PATCH</code></td>
+<td><code>/meals/{id}</code></td>
+<td>Modifier les propriétés d'un repas (<code>name</code>, <code>mealType</code>, <code>notes</code>, <code>consumedAt</code>)</td>
+</tr>
+<tr>
 <td><code>DELETE</code></td>
 <td><code>/meals/{id}</code></td>
 <td>Supprimer un repas</td>
@@ -618,6 +624,9 @@ Repas sauvegardés limités selon le tier : Free = 5 · Pro = 50 · Business = i
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Impact bilan :</strong> modifier <code>name</code>, <code>mealType</code> ou <code>notes</code> n'a aucun effet sur le bilan nutritionnel (le bilan agrège les <code>NutritionInfo</code> des <code>MealItems</code>, pas les métadonnées). Modifier <code>consumedAt</code> déplace le repas vers un autre jour — le bilan est recalculé automatiquement à la prochaine requête <code>GET /diets/{id}/bilan</code> (pas d'entité persistée à invalider).</p>
+</blockquote>
 <h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">¶</a></h2>
 <ul>
 <li><code>Aliments</code> — chaque MealItem référence un FoodItem</li>
