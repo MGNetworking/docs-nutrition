@@ -497,7 +497,505 @@ public class DietPlansController : ControllerBase
 
 ---
 
-## 9. Règles transverses
+## 9. Contrats par endpoint
+
+> Pour chaque endpoint : Request body (champs + types), Response body, codes d'erreur métier.
+> Le 400 (validation automatique `[ApiController]`) et le 401 (JWT) sont implicites sur toutes les routes — non répétés.
+
+---
+
+### UsersController — `/api/v1/users`
+
+#### `POST /users/me` — Créer le profil
+
+**Request** `CreateUserProfileRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `birthDate` | `DateOnly` | ✅ |
+| `gender` | `Gender` | ✅ |
+| `activityLevel` | `ActivityLevel` | ✅ |
+| `height` | `float` (cm) | ✅ |
+| `weight` | `float` (kg) | ✅ — crée la première `WeightEntry` |
+| `allergies` | `List<Allergen>` | ✅ — liste vide = aucune allergie confirmée |
+| `dietaryPreferences` | `List<string>` | ✅ — liste vide = aucune préférence confirmée |
+
+**Response 201** `UserProfileResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `keycloakId` | `string` |
+| `birthDate` | `DateOnly` |
+| `gender` | `Gender` |
+| `activityLevel` | `ActivityLevel` |
+| `height` | `float` |
+| `allergies` | `List<Allergen>` |
+| `dietaryPreferences` | `List<string>` |
+| `subscriptionTier` | `SubscriptionTier` |
+| `createdAt` | `DateTime` |
+
+**Erreurs :** 409 profil déjà existant pour ce `keycloakId`
+
+---
+
+#### `GET /users/me` — Lire le profil + BMR/TDEE
+
+**Response 200** `UserProfileResponse` + champs nutritionnels calculés
+
+| Champ supplémentaire | Type |
+|---|---|
+| `bmr` | `float` (kcal) |
+| `tdee` | `float` (kcal) |
+| `targetCalories` | `float` (kcal) |
+| `latestWeight` | `float?` (kg) — dernière `WeightEntry`, null si aucune |
+
+**Erreurs :** 404 profil inexistant
+
+---
+
+#### `PUT /users/me` — Mettre à jour le profil
+
+**Request** `UpdateUserProfileRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `birthDate` | `DateOnly` | ✅ |
+| `gender` | `Gender` | ✅ |
+| `activityLevel` | `ActivityLevel` | ✅ |
+| `height` | `float` (cm) | ✅ |
+| `allergies` | `List<Allergen>` | ✅ |
+| `dietaryPreferences` | `List<string>` | ✅ |
+
+**Response 200** `UserProfileResponse`
+
+**Erreurs :** 404 profil inexistant
+
+---
+
+#### `DELETE /users/me` — Demande suppression RGPD
+
+Aucun body. **Response 204.** Déclenche soft delete + désactivation Keycloak.
+
+---
+
+#### `POST /users/me/reactivate` — Réactivation pendant grace period
+
+Aucun body. **Response 200** `UserProfileResponse`. **Erreurs :** 404, 409 (compte non en grace period)
+
+---
+
+#### `GET /users/me/export` — Export données RGPD
+
+Aucun body. **Response 200** JSON complet avec toutes les données de l'utilisateur (profil, diets, repas, pesées).
+
+---
+
+#### `POST /users/me/weight-entries` — Ajouter une pesée
+
+**Request** `AddWeightEntryRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `weight` | `float` (kg) | ✅ |
+| `measuredAt` | `DateOnly` | ❌ — défaut : aujourd'hui |
+
+**Response 201** `WeightEntryResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `weight` | `float` |
+| `measuredAt` | `DateOnly` |
+
+**Erreurs :** 409 entrée déjà existante pour cette date
+
+---
+
+#### `GET /users/me/weight-entries` — Historique des pesées
+
+Aucun body. **Response 200** `List<WeightEntryResponse>` — trié par `measuredAt` décroissant.
+
+---
+
+#### `PUT /users/me/weight-entries/{id}` — Modifier une pesée
+
+**Request** `UpdateWeightEntryRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `weight` | `float` (kg) | ✅ |
+| `measuredAt` | `DateOnly` | ✅ |
+
+**Response 200** `WeightEntryResponse`
+
+**Erreurs :** 404, 409 (doublon date)
+
+---
+
+#### `GET /users/me/saved-food-items` — Liste des favoris
+
+Aucun body. **Response 200** `List<SavedFoodItemResponse>`
+
+`SavedFoodItemResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `foodItemId` | `Guid` |
+| `name` | `string` |
+| `caloriesPer100g` | `float` |
+| `savedAt` | `DateTime` |
+
+---
+
+#### `POST /users/me/saved-food-items` — Sauvegarder un aliment
+
+**Request** `SaveFoodItemRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `foodItemId` | `Guid` | ✅ |
+
+**Response 201** `SavedFoodItemResponse`
+
+**Erreurs :** 404 aliment introuvable, 403 limite tier atteinte, 409 aliment déjà sauvegardé
+
+---
+
+#### `DELETE /users/me/saved-food-items/{id}` — Retirer un favori
+
+Aucun body. **Response 204.** **Erreurs :** 404
+
+---
+
+### DietPlansController — `/api/v1/diet-plans`
+
+`DietPlanResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `name` | `string` |
+| `dietType` | `DietType` |
+| `goal` | `Goal` |
+| `targetWeight` | `float` |
+| `macroDistribution` | `MacroDistributionDto` (proteinPct, carbPct, fatPct) |
+| `isTemplate` | `bool` |
+
+---
+
+#### `GET /diet-plans` — Lister ses plans personnels
+
+Aucun body. **Response 200** `List<DietPlanResponse>` — plans personnels uniquement (`IsTemplate = false`).
+
+---
+
+#### `POST /diet-plans` — Créer un plan
+
+**Request** `CreateDietPlanRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `name` | `string` | ✅ |
+| `dietType` | `DietType` | ✅ |
+| `goal` | `Goal` | ✅ |
+| `targetWeight` | `float` (kg) | ✅ |
+| `macroDistribution` | `MacroDistributionDto` | ✅ — somme des % doit = 100 |
+
+**Response 201** `DietPlanResponse`
+
+**Erreurs :** 403 limite tier atteinte (Free max 2, Pro max 20), 422 macros ≠ 100%
+
+---
+
+#### `PUT /diet-plans/{id}` — Modifier un plan
+
+**Request** `UpdateDietPlanRequest` — mêmes champs que `CreateDietPlanRequest`
+
+**Response 200** `DietPlanResponse`
+
+**Erreurs :** 404, 403 (template non modifiable par un user)
+
+---
+
+#### `DELETE /diet-plans/{id}` — Supprimer un plan
+
+Aucun body. **Response 204.** **Erreurs :** 404
+
+---
+
+#### `POST /diet-plans/{id}/launch` — Lancer un plan → crée une Diet
+
+Aucun body — `StartDate` imposée par le système (aujourd'hui).
+
+**Response 201** `DietResponse`
+
+**Erreurs :** 404, 409 diet déjà active, 422 aucune `WeightEntry` disponible (CalorieTarget incalculable)
+
+---
+
+#### `GET /diet-plans/templates` — Lister les templates
+
+Aucun body. **Response 200** `List<DietPlanResponse>` — `IsTemplate = true` uniquement.
+
+**Erreurs :** 403 tier Free
+
+---
+
+### DietsController — `/api/v1/diets`
+
+`DietResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `name` | `string` |
+| `dietType` | `DietType` |
+| `goal` | `Goal` |
+| `targetWeight` | `float` |
+| `calorieTarget` | `int` |
+| `macroDistribution` | `MacroDistributionDto` |
+| `status` | `DietStatus` |
+| `startDate` | `DateOnly` |
+| `endDate` | `DateOnly?` |
+
+---
+
+#### `GET /diets/active` — Régime actif
+
+Aucun body. **Response 200** `DietResponse`. **Erreurs :** 404 aucun régime actif
+
+---
+
+#### `GET /diets` — Historique des régimes
+
+Aucun body. **Response 200** `List<DietResponse>` — trié par `startDate` décroissant.
+
+---
+
+#### `GET /diets/{id}` — Détail d'un régime
+
+Aucun body. **Response 200** `DietResponse`. **Erreurs :** 404
+
+---
+
+#### `POST /diets/{id}/archive` — Terminer le régime
+
+Aucun body — `EndDate` imposée par le système (aujourd'hui).
+
+**Response 200** `DietResponse`. **Erreurs :** 404, 422 régime non actif
+
+---
+
+#### `GET /diets/{id}/bilan` — Bilan nutritionnel
+
+**Query params**
+
+| Param | Type | Description |
+|---|---|---|
+| `period` | `string` — `day` / `week` / `month` / `custom` | Période du bilan |
+| `date` | `DateOnly?` | Pour `period=day` |
+| `startDate` | `DateOnly?` | Pour `period=custom` |
+| `endDate` | `DateOnly?` | Pour `period=custom` |
+
+**Response 200** `NutritionBilanResponse`
+
+| Champ | Type |
+|---|---|
+| `dietId` | `Guid` |
+| `startDate` | `DateOnly` |
+| `endDate` | `DateOnly` |
+| `totalCalories` | `float` |
+| `totalProteins` | `float` |
+| `totalCarbs` | `float` |
+| `totalFats` | `float` |
+| `dailyBreakdown` | `List<DailyNutritionDto>` — date, calories, proteins, carbs, fats |
+| `weightProgression` | `List<WeightEntryResponse>` — pesées sur la période |
+
+**Erreurs :** 404, 403 période dépassant la limite tier (Free : 7j, Pro : 1 an)
+
+---
+
+### MealsController — `/api/v1/meals`
+
+`MealResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `name` | `string` |
+| `mealType` | `MealType` |
+| `consumedAt` | `DateTime` |
+| `notes` | `string?` |
+| `isSaved` | `bool` |
+| `items` | `List<MealItemResponse>` |
+
+`MealItemResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `foodItemId` | `Guid` |
+| `foodName` | `string` |
+| `quantity` | `float` (g) |
+| `calories` | `float` |
+| `proteins` | `float` |
+| `carbs` | `float` |
+| `fats` | `float` |
+
+---
+
+#### `POST /meals` — Créer un repas
+
+**Request** `CreateMealRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `name` | `string` | ✅ |
+| `mealType` | `MealType` | ✅ |
+| `consumedAt` | `DateTime` | ✅ |
+| `notes` | `string?` | ❌ |
+| `isSaved` | `bool` | ✅ — `false` = ponctuel |
+| `items` | `List<MealItemInputDto>` (foodItemId, quantity) | ✅ — au moins 1 |
+
+**Response 201** `MealResponse`
+
+**Erreurs :** 403 limite repas sauvegardés atteinte, 404 FoodItem introuvable
+
+---
+
+#### `GET /meals` — Lister les repas
+
+**Query** `?saved=true|false`, `?date=2026-05-31`
+
+**Response 200** `List<MealResponse>`
+
+---
+
+#### `GET /meals/{id}` — Détail d'un repas
+
+**Response 200** `MealResponse`. **Erreurs :** 404
+
+---
+
+#### `PATCH /meals/{id}` — Modifier un repas
+
+**Request** `UpdateMealRequest` — tous les champs optionnels
+
+| Champ | Type |
+|---|---|
+| `name` | `string?` |
+| `mealType` | `MealType?` |
+| `notes` | `string?` |
+| `consumedAt` | `DateTime?` |
+| `isSaved` | `bool?` |
+
+**Response 200** `MealResponse`. **Erreurs :** 404
+
+---
+
+#### `DELETE /meals/{id}` — Supprimer un repas
+
+Aucun body. **Response 204.** **Erreurs :** 404
+
+---
+
+#### `POST /meals/{id}/items` — Ajouter un aliment au repas
+
+**Request** `AddMealItemRequest`
+
+| Champ | Type | Obligatoire |
+|---|---|---|
+| `foodItemId` | `Guid` | ✅ |
+| `quantity` | `float` (g) | ✅ |
+
+**Response 201** `MealResponse` mis à jour. **Erreurs :** 404 (meal ou foodItem introuvable)
+
+---
+
+#### `DELETE /meals/{id}/items/{itemId}` — Retirer un aliment
+
+Aucun body. **Response 204.** **Erreurs :** 404
+
+---
+
+### FoodItemsController — `/api/v1/food-items`
+
+`FoodItemSearchResponse`
+
+| Champ | Type |
+|---|---|
+| `id` | `Guid` |
+| `name` | `string` |
+| `caloriesPer100g` | `float` |
+| `proteinsPer100g` | `float` |
+| `carbsPer100g` | `float` |
+| `fatsPer100g` | `float` |
+| `allergensTags` | `List<Allergen>` |
+
+---
+
+#### `GET /food-items?search={motclé}` — Rechercher un aliment
+
+**Query** `search` (string, obligatoire), `limit` (int, défaut 20)
+
+**Response 200** `List<FoodItemSearchResponse>` — liste vide si aucun résultat (pas de 404)
+
+---
+
+### AdminController — `/api/v1/admin`
+
+#### `GET /admin/dashboard` — KPIs consolidés
+
+**Response 200** `AdminDashboardResponse`
+
+| Champ | Type |
+|---|---|
+| `totalUsers` | `int` |
+| `usersByTier` | `{ free, pro, business }` |
+| `newUsersLast7Days` | `int` |
+| `activeDiets` | `int` |
+| `mealsLast7Days` | `int` |
+| `usersInGracePeriod` | `int` |
+
+---
+
+#### `GET /admin/system/health` — Santé système
+
+**Response 200** `SystemHealthResponse`
+
+| Champ | Type |
+|---|---|
+| `foodItemsCount` | `int` |
+| `lastImportAt` | `DateTime?` |
+| `hangfireJobs` | `List<HangfireJobDto>` (jobName, lastRun, nextRun, status) |
+
+---
+
+#### `POST /admin/diet-plans/templates` — Créer un template
+
+**Request** `CreateDietPlanRequest` — `IsTemplate` forcé à `true` côté service.
+
+**Response 201** `DietPlanResponse`. **Erreurs :** 422 macros ≠ 100%
+
+---
+
+#### `PUT /admin/diet-plans/templates/{id}` — Modifier un template
+
+**Request** `UpdateDietPlanRequest`
+
+**Response 200** `DietPlanResponse`. **Erreurs :** 404
+
+---
+
+#### `DELETE /admin/diet-plans/templates/{id}` — Supprimer un template
+
+Aucun body. **Response 204.** **Erreurs :** 404
+
+---
+
+## 10. Règles transverses
 
 - **Un controller = un agrégat ou une ressource.** Ne pas créer de controller `BaseController` avec de la logique partagée.
 - **`[ApiController]`** est obligatoire sur chaque controller — active la validation automatique du `ModelState` (400 sur corps invalide).

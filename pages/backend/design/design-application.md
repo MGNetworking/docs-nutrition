@@ -349,9 +349,53 @@ Les DTOs sont des `record` C# — immuables, égalité par valeur.
 |---|---|
 | `CreateUserProfileRequest` | `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Weight`, `Allergies`, `DietaryPreferences` |
 | `UpdateUserProfileRequest` | `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Allergies`, `DietaryPreferences` |
-| `UserProfileResponse` | `Id`, `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Allergies`, `DietaryPreferences`, `SubscriptionTier`, `CreatedAt` |
+| `UserProfileResponse` | `Id`, `KeycloakId`, `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Allergies`, `DietaryPreferences`, `SubscriptionTier`, `CreatedAt`, `Bmr?`, `Tdee?`, `TargetCalories?`, `LatestWeight?` |
+| `AddWeightEntryRequest` | `Weight`, `MeasuredAt?` (défaut aujourd'hui) |
+| `UpdateWeightEntryRequest` | `Weight`, `MeasuredAt` |
+| `WeightEntryResponse` | `Id`, `Weight`, `MeasuredAt` |
+| `SaveFoodItemRequest` | `FoodItemId` |
+| `SavedFoodItemResponse` | `Id`, `FoodItemId`, `Name`, `CaloriesPer100g`, `SavedAt` |
 
-> `UserProfileResponse` ne contient pas `Bmr`/`Tdee` à la création — ces valeurs sont calculées uniquement sur `GetProfileAsync` (`GET /users/me`).
+> `UserProfileResponse` — `Bmr`, `Tdee`, `TargetCalories`, `LatestWeight` sont `null` à la création (POST) et calculés uniquement sur `GetProfileAsync` (GET /users/me).
+
+**Champs des DTOs DietPlans :**
+
+| DTO | Champs |
+|---|---|
+| `CreateDietPlanRequest` | `Name`, `DietType`, `Goal`, `TargetWeight`, `MacroDistribution` (ProteinPct, CarbPct, FatPct) |
+| `UpdateDietPlanRequest` | `Name`, `DietType`, `Goal`, `TargetWeight`, `MacroDistribution` |
+| `DietPlanResponse` | `Id`, `Name`, `DietType`, `Goal`, `TargetWeight`, `MacroDistribution`, `IsTemplate` |
+
+**Champs des DTOs Diets :**
+
+| DTO | Champs |
+|---|---|
+| `LaunchDietPlanRequest` | *(aucun champ — StartDate imposée système)* |
+| `DietResponse` | `Id`, `Name`, `DietType`, `Goal`, `TargetWeight`, `CalorieTarget`, `MacroDistribution`, `Status`, `StartDate`, `EndDate?` |
+| `NutritionBilanResponse` | `DietId`, `StartDate`, `EndDate`, `TotalCalories`, `TotalProteins`, `TotalCarbs`, `TotalFats`, `DailyBreakdown[]`, `WeightProgression[]` |
+
+**Champs des DTOs Meals :**
+
+| DTO | Champs |
+|---|---|
+| `CreateMealRequest` | `Name`, `MealType`, `ConsumedAt`, `Notes?`, `IsSaved`, `Items[]` (FoodItemId, Quantity) |
+| `UpdateMealRequest` | `Name?`, `MealType?`, `Notes?`, `ConsumedAt?`, `IsSaved?` |
+| `AddMealItemRequest` | `FoodItemId`, `Quantity` (grammes) |
+| `MealResponse` | `Id`, `Name`, `MealType`, `ConsumedAt`, `Notes?`, `IsSaved`, `Items[]` |
+| `MealItemResponse` | `Id`, `FoodItemId`, `FoodName`, `Quantity`, `Calories`, `Proteins`, `Carbs`, `Fats` |
+
+**Champs des DTOs FoodItems :**
+
+| DTO | Champs |
+|---|---|
+| `FoodItemSearchResponse` | `Id`, `Name`, `CaloriesPer100g`, `ProteinsPer100g`, `CarbsPer100g`, `FatsPer100g`, `AllergensTags[]` |
+
+**Champs des DTOs Admin :**
+
+| DTO | Champs |
+|---|---|
+| `AdminDashboardResponse` | `TotalUsers`, `UsersByTier` (Free/Pro/Business), `NewUsersLast7Days`, `ActiveDiets`, `MealsLast7Days`, `UsersInGracePeriod` |
+| `SystemHealthResponse` | `FoodItemsCount`, `LastImportAt?`, `HangfireJobs[]` (JobName, LastRun, NextRun, Status) |
 
 ---
 
