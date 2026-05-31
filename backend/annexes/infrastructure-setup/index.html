@@ -1487,8 +1487,7 @@ Il complète <code>infrastructure-keycloak-admin.md</code> (Admin API RGPD) et <
 <h2 id="section-1-environnement-de-developpement-local-docker-compose">Section 1 — Environnement de développement local (Docker Compose)<a class="headerlink" href="#section-1-environnement-de-developpement-local-docker-compose" title="Permanent link">&para;</a></h2>
 <h3 id="architecture-locale">Architecture locale<a class="headerlink" href="#architecture-locale" title="Permanent link">&para;</a></h3>
 <p>L'API ASP.NET Core tourne en dehors de Docker (<code>dotnet run</code>). Docker Compose fournit uniquement les dépendances :</p>
-<p><code>text
-┌─────────────────────────────────────────────────────────┐
+<p><code>┌─────────────────────────────────────────────────────────┐
 │  Docker Compose                                         │
 │                                                         │
 │  app-db (PostgreSQL 16)   ← base de données de l'API   │
@@ -1499,8 +1498,7 @@ Il complète <code>infrastructure-keycloak-admin.md</code> (Admin API RGPD) et <
          ↑
   dotnet run (ASP.NET Core) — lit .env pour se connecter</code></p>
 <h3 id="fichiers-a-creer">Fichiers à créer<a class="headerlink" href="#fichiers-a-creer" title="Permanent link">&para;</a></h3>
-<p><code>text
-nutrition-api/
+<p><code>nutrition-api/
 └── infra/
     ├── dev/
     │   ├── docker-compose.yml      ← orchestration locale
@@ -1669,8 +1667,7 @@ docker compose up -d          # démarre app-db, keycloak-db, keycloak, redis</p
 - Le <code>Dockerfile</code> pour builder l'image de l'API
 - La configuration de connexion de l'API vers les services K3s
 - Les manifests K8s de l'API elle-même (Deployment + Service + Ingress)</p>
-<p><code>text
-K3s cluster (projet infra séparé)
+<p><code>K3s cluster (projet infra séparé)
 ├── PostgreSQL  ←─┐
 ├── Keycloak    ←─┤  nutrition-api se connecte via variables d'environnement
 └── Redis       ←─┘
@@ -1678,8 +1675,7 @@ K3s cluster (projet infra séparé)
   nutrition-api (Deployment — ce projet)</code></p>
 <hr />
 <h3 id="fichiers-a-creer_1">Fichiers à créer<a class="headerlink" href="#fichiers-a-creer_1" title="Permanent link">&para;</a></h3>
-<p><code>text
-nutrition-api/
+<p><code>nutrition-api/
 ├── Dockerfile                              ← build de l'image API
 └── infra/
     └── k8s/
@@ -1842,8 +1838,7 @@ kubectl logs -n nutrition deployment/nutrition-api
   → kubectl set image sur le cluster K3s
   → rollout status (succès ou rollback)</code></p>
 <h3 id="fichier-cree-dans-ce-projet">Fichier créé dans ce projet<a class="headerlink" href="#fichier-cree-dans-ce-projet" title="Permanent link">&para;</a></h3>
-<p><code>text
-.github/
+<p><code>.github/
 └── workflows/
     └── deploy.yml     ← committé dans le repo</code></p>
 <hr />
@@ -1986,8 +1981,7 @@ name: Build &amp; Deploy</p>
 <p>Distinct du pipeline de déploiement — se déclenche sur chaque Pull Request avant merge.
 Fichier créé dans le repo <code>nutrition-api</code>.</p>
 </blockquote>
-<p><code>text
-.github/
+<p><code>.github/
 └── workflows/
     ├── ci.yml        ← build + tests (PR)
     └── deploy.yml    ← déploiement (push main)</code></p>

@@ -1638,7 +1638,7 @@ Le produit sera disponible après le prochain import quotidien.</p>
 <hr />
 <h2 id="impact-sur-larchitecture-de-recherche">Impact sur l'architecture de recherche<a class="headerlink" href="#impact-sur-larchitecture-de-recherche" title="Permanent link">&para;</a></h2>
 <p>La recherche utilisateur n'appelle <strong>jamais</strong> l'API OFF directement. Elle opère sur 2 niveaux :</p>
-<p>```text
+<p>```
 Recherche utilisateur
 ├── Niveau 1 — Cache Redis   → réponse immédiate si mot-clé récent
 └── Niveau 2 — PostgreSQL    → lecture FoodItem + alimentation cache

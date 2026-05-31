@@ -2332,8 +2332,7 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <p><strong>Règle fondamentale :</strong> le Domain ne dépend de rien — ni EF Core, ni HTTP, ni Redis. Zéro import d'infrastructure.</p>
 <hr />
 <h2 id="2-structure-des-dossiers">2. Structure des dossiers<a class="headerlink" href="#2-structure-des-dossiers" title="Permanent link">&para;</a></h2>
-<p><code>text
-src/NutritionApi.Domain/
+<p><code>src/NutritionApi.Domain/
 ├── Entity/
 │   ├── User.cs
 │   ├── DietPlan.cs
@@ -3159,7 +3158,7 @@ Exemple : 150g de poulet → 247 kcal, 46g de protéines, 5g de lipides, 0g de g
 </table>
 <hr />
 <h2 id="relations-entre-les-concepts">Relations entre les concepts<a class="headerlink" href="#relations-entre-les-concepts" title="Permanent link">&para;</a></h2>
-<p>```text
+<p>```
 User
 ├── possède plusieurs DietPlan personnels (IsTemplate = false — toujours modifiables)
 │   └── sert de base pour lancer une Diet (snapshot au lancement — lien coupé ensuite)
