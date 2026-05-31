@@ -47,8 +47,16 @@ src/NutritionApi.Application/
 │   │   ├── IFoodItemRepository.cs
 │   │   ├── IWeightEntryRepository.cs
 │   │   └── ISavedFoodItemRepository.cs
-│   └── Services/
-│       ├── IFoodCacheService.cs          ← contrat du cache Redis (implémenté en Infrastructure)
+│   ├── Services/
+│   │   ├── IUserService.cs               ← contrat pour UsersController
+│   │   ├── IDietPlanService.cs           ← contrat pour DietPlansController
+│   │   ├── IDietService.cs               ← contrat pour DietsController
+│   │   ├── IMealService.cs               ← contrat pour MealsController
+│   │   ├── IFoodItemService.cs           ← contrat pour FoodItemsController
+│   │   ├── INutritionService.cs          ← contrat pour DietsController (bilan)
+│   │   └── IAdminService.cs              ← contrat pour AdminController
+│   └── ExternalServices/
+│       ├── IFoodCacheService.cs          ← contrat cache Redis (implémenté en Infrastructure)
 │       └── IKeycloakAdminService.cs      ← contrat Keycloak Admin (implémenté en Infrastructure)
 ├── DTOs/
 │   ├── Users/
@@ -93,7 +101,8 @@ src/NutritionApi.Application/
 | DTO request action | `[Verbe]XxxRequest` | `LaunchDietPlanRequest` |
 | DTO response | `XxxResponse` | `UserProfileResponse`, `DietPlanResponse` |
 | Interface repository | `IXxxRepository` | `IUserRepository` |
-| Interface service externe | `IXxxService` | `IFoodCacheService` |
+| Interface service applicatif | `IXxxService` | `IUserService`, `IDietPlanService` |
+| Interface service externe | `IXxxService` | `IFoodCacheService`, `IKeycloakAdminService` |
 | Exception applicative | `XxxException` | `NotFoundException` |
 
 ---
@@ -207,6 +216,111 @@ public interface IUnitOfWork
 ```
 
 > `AppDbContext` (Infrastructure) implémente cette interface. Elle est injectée dans tous les services qui effectuent des opérations d'écriture atomiques.
+
+---
+
+## 4bis. Interfaces de services applicatifs
+
+Ces interfaces définissent le **contrat entre la couche API et la couche Application**. Elles permettent à l'API de dépendre d'abstractions plutôt que de classes concrètes — prérequis pour une implémentation API-first.
+
+**Règle :** chaque controller injecte `IXxxService`, jamais `XxxService` directement.
+
+```
+API layer         → dépend de IXxxService      (défini ici)
+Application layer → implémente IXxxService     (XxxService.cs)
+```
+
+### IUserService
+
+```csharp
+public interface IUserService
+{
+    Task<UserProfileResponse> CreateUserProfileAsync(string keycloakId, CreateUserProfileRequest request);
+    Task<UserProfileResponse> GetUserProfileAsync(string keycloakId);
+    Task<UserProfileResponse> UpdateUserProfileAsync(string keycloakId, UpdateUserProfileRequest request);
+    Task DeleteUserAsync(string keycloakId);
+    Task<UserProfileResponse> ReactivateUserAsync(string keycloakId);
+    Task<WeightEntryResponse> AddWeightEntryAsync(Guid userId, AddWeightEntryRequest request);
+    Task<List<WeightEntryResponse>> GetWeightHistoryAsync(Guid userId);
+    Task<WeightEntryResponse> UpdateWeightEntryAsync(Guid userId, Guid entryId, UpdateWeightEntryRequest request);
+}
+```
+
+### IDietPlanService
+
+```csharp
+public interface IDietPlanService
+{
+    Task<List<DietPlanResponse>> GetUserPlansAsync(Guid userId);
+    Task<DietPlanResponse> CreateAsync(Guid userId, CreateDietPlanRequest request);
+    Task<DietPlanResponse> UpdateAsync(Guid userId, Guid planId, UpdateDietPlanRequest request);
+    Task DeleteAsync(Guid userId, Guid planId);
+    Task<DietResponse> LaunchAsync(Guid userId, Guid planId);
+    Task<List<DietPlanResponse>> GetTemplatesAsync(Guid userId);
+}
+```
+
+### IDietService
+
+```csharp
+public interface IDietService
+{
+    Task<DietResponse> GetActiveAsync(Guid userId);
+    Task<List<DietResponse>> GetHistoryAsync(Guid userId);
+    Task<DietResponse> GetByIdAsync(Guid userId, Guid dietId);
+    Task<DietResponse> ArchiveAsync(Guid userId, Guid dietId);
+    Task<NutritionBilanResponse> GetBilanAsync(Guid userId, Guid dietId, string period, DateOnly? date, DateOnly? startDate, DateOnly? endDate);
+}
+```
+
+### IMealService
+
+```csharp
+public interface IMealService
+{
+    Task<MealResponse> CreateAsync(Guid userId, CreateMealRequest request);
+    Task<List<MealResponse>> GetAllAsync(Guid userId, bool? saved, DateOnly? date);
+    Task<MealResponse> GetByIdAsync(Guid userId, Guid mealId);
+    Task<MealResponse> UpdateAsync(Guid userId, Guid mealId, UpdateMealRequest request);
+    Task DeleteAsync(Guid userId, Guid mealId);
+    Task<MealResponse> AddItemAsync(Guid userId, Guid mealId, AddMealItemRequest request);
+    Task<MealResponse> RemoveItemAsync(Guid userId, Guid mealId, Guid itemId);
+}
+```
+
+### IFoodItemService
+
+```csharp
+public interface IFoodItemService
+{
+    Task<List<FoodItemSearchResponse>> SearchAsync(string keyword, int limit = 20);
+    Task<List<SavedFoodItemResponse>> GetSavedAsync(Guid userId);
+    Task<SavedFoodItemResponse> SaveAsync(Guid userId, SaveFoodItemRequest request);
+    Task RemoveSavedAsync(Guid userId, Guid savedId);
+}
+```
+
+### INutritionService
+
+```csharp
+public interface INutritionService
+{
+    Task<NutritionBilanResponse> GetBilanAsync(Guid userId, Guid dietId, string period, DateOnly? date, DateOnly? startDate, DateOnly? endDate);
+}
+```
+
+### IAdminService
+
+```csharp
+public interface IAdminService
+{
+    Task<AdminDashboardResponse> GetDashboardAsync();
+    Task<SystemHealthResponse> GetSystemHealthAsync();
+    Task<DietPlanResponse> CreateTemplateAsync(CreateDietPlanRequest request);
+    Task<DietPlanResponse> UpdateTemplateAsync(Guid templateId, UpdateDietPlanRequest request);
+    Task DeleteTemplateAsync(Guid templateId);
+}
+```
 
 ---
 
