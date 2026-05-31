@@ -88,7 +88,7 @@ RecurringJob.AddOrUpdate<IRgpdPurgeJob>(
 
 ## Structure des classes — `NutritionApi.Infrastructure/Jobs/`
 
-```text
+```
 Jobs/
 ├── IOffImportJob.cs          ← interface (enregistrée dans DI)
 ├── OffImportJob.cs           ← implémentation

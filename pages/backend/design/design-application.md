@@ -27,7 +27,7 @@ Controller → XxxService → IXxxRepository (interface)
 
 ## 2. Structure des dossiers
 
-```text
+```
 src/NutritionApi.Application/
 ├── Services/
 │   ├── UserService.cs

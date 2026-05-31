@@ -8,7 +8,7 @@
 
 ## 1. Structure des dossiers
 
-```text
+```
 src/NutritionApi.Api/
 ├── Controllers/
 │   ├── UsersController.cs

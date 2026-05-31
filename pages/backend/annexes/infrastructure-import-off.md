@@ -63,7 +63,7 @@ Le produit sera disponible après le prochain import quotidien.
 
 La recherche utilisateur n'appelle **jamais** l'API OFF directement. Elle opère sur 2 niveaux :
 
-```text
+```
 Recherche utilisateur
 ├── Niveau 1 — Cache Redis   → réponse immédiate si mot-clé récent
 └── Niveau 2 — PostgreSQL    → lecture FoodItem + alimentation cache
