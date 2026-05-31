@@ -1774,35 +1774,35 @@ Règle fondamentale : <code>Domain</code> ne dépend de rien. Les dépendances p
         Domain</code></p>
 <p><code>NutritionApi.sln
 │
-├── NutritionApi.Domain/                   ← 0 dépendance externe
-│   ├── Entities/                          ← User, Diet, Meal, MealItem, FoodItem
-│   ├── ValueObjects/                      ← MacroDistribution, NutritionNeeds
-│   ├── Enums/                             ← ActivityLevel, Goal, DietType, DietStatus, MealType, Gender
+├── NutritionApi.Domain/
+│   ├── Entities/
+│   ├── ValueObjects/
+│   ├── Enums/
 │   ├── Interfaces/
-│   │   ├── Repositories/                  ← IUserRepository, IDietRepository, IMealRepository...
-│   │   └── Services/                      ← IDomainService (règles inter-agrégats)
-│   └── Exceptions/                        ← Exceptions métier (DomainException...)
+│   │   ├── Repositories/
+│   │   └── Services/
+│   └── Exceptions/
 │
-├── NutritionApi.Application/              ← dépend uniquement de Domain
-│   ├── Services/                          ← NutritionCalculationService, DietService...
+├── NutritionApi.Application/
+│   ├── Services/
 │   ├── DTOs/
-│   │   ├── Requests/                      ← Corps des requêtes entrantes
-│   │   └── Responses/                     ← Corps des réponses sortantes
-│   └── Interfaces/                        ← IApplicationService (contrats pour l'API)
+│   │   ├── Requests/
+│   │   └── Responses/
+│   └── Interfaces/
 │
-├── NutritionApi.Infrastructure/           ← dépend de Domain + Application
-│   ├── Repositories/                      ← Implémentations EF Core des IRepository
+├── NutritionApi.Infrastructure/
+│   ├── Repositories/
 │   ├── Data/
-│   │   ├── AppDbContext.cs                ← DbContext EF Core
-│   │   └── Migrations/                    ← Migrations auto-générées
-│   ├── Jobs/                              ← Jobs Hangfire (import OFF, purge RGPD)
+│   │   ├── AppDbContext.cs
+│   │   └── Migrations/
+│   ├── Jobs/
 │   └── ExternalServices/
-│       └── OpenFoodFacts/                 ← Client HTTP + mise en cache FoodItem
+│       └── OpenFoodFacts/
 │
-└── NutritionApi.API/                      ← point d'entrée, dépend de tout
-    ├── Controllers/                        ← Exposition REST (un contrôleur par domaine)
-    ├── Middleware/                         ← Gestion globale des erreurs, logging
-    └── Configuration/                     ← DI, Auth Keycloak, Swagger, Polly</code></p>
+└── NutritionApi.API/
+    ├── Controllers/
+    ├── Middleware/
+    └── Configuration/</code></p>
 <h4 id="outils-et-infrastructure">Outils et infrastructure<a class="headerlink" href="#outils-et-infrastructure" title="Permanent link">¶</a></h4>
 <table>
 <thead>

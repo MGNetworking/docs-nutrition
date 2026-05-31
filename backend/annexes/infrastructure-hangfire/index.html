@@ -1633,8 +1633,8 @@ RecurringJob.AddOrUpdate<IOffImportJob>(
 <hr />
 <h2 id="structure-des-classes-nutritionapiinfrastructurejobs">Structure des classes — <code>NutritionApi.Infrastructure/Jobs/</code><a class="headerlink" href="#structure-des-classes-nutritionapiinfrastructurejobs" title="Permanent link">&para;</a></h2>
 <p><code>Jobs/
-├── IOffImportJob.cs          ← interface (enregistrée dans DI)
-├── OffImportJob.cs           ← implémentation
+├── IOffImportJob.cs
+├── OffImportJob.cs
 ├── IRgpdPurgeJob.cs
 └── RgpdPurgeJob.cs</code></p>
 <p>Les interfaces permettent à Hangfire de résoudre les jobs via le conteneur DI.</p>

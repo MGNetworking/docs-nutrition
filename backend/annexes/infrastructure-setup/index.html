@@ -1490,10 +1490,10 @@ Il complète <code>infrastructure-keycloak-admin.md</code> (Admin API RGPD) et <
 <p><code>┌─────────────────────────────────────────────────────────┐
 │  Docker Compose                                         │
 │                                                         │
-│  app-db (PostgreSQL 16)   ← base de données de l'API   │
-│  keycloak-db (PostgreSQL 16) ← base de données KC      │
-│  keycloak (Keycloak 24)   ← authentification            │
-│  redis (Redis 7)          ← cache FoodItem              │
+│  app-db (PostgreSQL 16)
+│  keycloak-db (PostgreSQL 16)
+│  keycloak (Keycloak 24)
+│  redis (Redis 7)
 └─────────────────────────────────────────────────────────┘
          ↑
   dotnet run (ASP.NET Core) — lit .env pour se connecter</code></p>
@@ -1501,11 +1501,11 @@ Il complète <code>infrastructure-keycloak-admin.md</code> (Admin API RGPD) et <
 <p><code>nutrition-api/
 └── infra/
     ├── dev/
-    │   ├── docker-compose.yml      ← orchestration locale
-    │   └── .env.example            ← modèle variables (committé)
-    │   # .env                      ← vraies valeurs (non committé — dans .gitignore)
+    │   ├── docker-compose.yml
+    │   └── .env.example
+    │   # .env
     └── keycloak/
-        └── realm-export-dev.json   ← config realm + utilisateurs de test (committé)</code></p>
+        └── realm-export-dev.json</code></p>
 <blockquote>
 <p><strong><code>.gitignore</code> — ajouter :</strong> <code>infra/dev/.env</code></p>
 </blockquote>
@@ -1668,22 +1668,22 @@ docker compose up -d          # démarre app-db, keycloak-db, keycloak, redis</p
 - La configuration de connexion de l'API vers les services K3s
 - Les manifests K8s de l'API elle-même (Deployment + Service + Ingress)</p>
 <p><code>K3s cluster (projet infra séparé)
-├── PostgreSQL  ←─┐
-├── Keycloak    ←─┤  nutrition-api se connecte via variables d'environnement
-└── Redis       ←─┘
+├── PostgreSQL
+├── Keycloak
+└── Redis
         ↑
   nutrition-api (Deployment — ce projet)</code></p>
 <hr />
 <h3 id="fichiers-a-creer_1">Fichiers à créer<a class="headerlink" href="#fichiers-a-creer_1" title="Permanent link">&para;</a></h3>
 <p><code>nutrition-api/
-├── Dockerfile                              ← build de l'image API
+├── Dockerfile
 └── infra/
     └── k8s/
-        ├── configmap.yaml                  ← variables non-sensibles (committé)
-        ├── secret.yaml.example             ← structure uniquement, valeurs vides (committé)
-        ├── deployment.yaml                 ← Deployment nutrition-api
-        ├── service.yaml                    ← Service ClusterIP
-        └── ingress.yaml                    ← Ingress TLS</code></p>
+        ├── configmap.yaml
+        ├── secret.yaml.example
+        ├── deployment.yaml
+        ├── service.yaml
+        └── ingress.yaml</code></p>
 <blockquote>
 <p><strong><code>.gitignore</code> — ajouter :</strong> <code>infra/k8s/secret.yaml</code> (garder uniquement <code>secret.yaml.example</code>)</p>
 </blockquote>
@@ -1840,7 +1840,7 @@ kubectl logs -n nutrition deployment/nutrition-api
 <h3 id="fichier-cree-dans-ce-projet">Fichier créé dans ce projet<a class="headerlink" href="#fichier-cree-dans-ce-projet" title="Permanent link">&para;</a></h3>
 <p><code>.github/
 └── workflows/
-    └── deploy.yml     ← committé dans le repo</code></p>
+    └── deploy.yml</code></p>
 <hr />
 <h3 id="etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique">Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)<a class="headerlink" href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" title="Permanent link">&para;</a></h3>
 <h4 id="1a-creer-un-service-account-k3s-dedie-au-deploiement">1a. Créer un Service Account K3s dédié au déploiement<a class="headerlink" href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" title="Permanent link">&para;</a></h4>
@@ -1983,8 +1983,8 @@ Fichier créé dans le repo <code>nutrition-api</code>.</p>
 </blockquote>
 <p><code>.github/
 └── workflows/
-    ├── ci.yml        ← build + tests (PR)
-    └── deploy.yml    ← déploiement (push main)</code></p>
+    ├── ci.yml
+    └── deploy.yml</code></p>
 <h4 id="githubworkflowsciyml"><code>.github/workflows/ci.yml</code><a class="headerlink" href="#githubworkflowsciyml" title="Permanent link">&para;</a></h4>
 <p>```yaml
 name: CI</p>
