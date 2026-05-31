@@ -57,7 +57,8 @@ src/NutritionApi.Application/
 │   │   └── IAdminService.cs              ← contrat pour AdminController
 │   └── ExternalServices/
 │       ├── IFoodCacheService.cs          ← contrat cache Redis (implémenté en Infrastructure)
-│       └── IKeycloakAdminService.cs      ← contrat Keycloak Admin (implémenté en Infrastructure)
+│       ├── IKeycloakAdminService.cs      ← contrat Keycloak Admin (implémenté en Infrastructure)
+│       └── IEmailService.cs             ← contrat envoi email (implémenté en Infrastructure)
 ├── DTOs/
 │   ├── Users/
 │   │   ├── CreateUserProfileRequest.cs
@@ -240,6 +241,7 @@ public interface IUserService
     Task<UserProfileResponse> UpdateUserProfileAsync(string keycloakId, UpdateUserProfileRequest request);
     Task DeleteUserAsync(string keycloakId);
     Task<UserProfileResponse> ReactivateUserAsync(string keycloakId);
+    Task<object> ExportUserDataAsync(string keycloakId);
     Task<WeightEntryResponse> AddWeightEntryAsync(Guid userId, AddWeightEntryRequest request);
     Task<List<WeightEntryResponse>> GetWeightHistoryAsync(Guid userId);
     Task<WeightEntryResponse> UpdateWeightEntryAsync(Guid userId, Guid entryId, UpdateWeightEntryRequest request);
@@ -321,6 +323,46 @@ public interface IAdminService
     Task DeleteTemplateAsync(Guid templateId);
 }
 ```
+
+---
+
+## 4ter. Interfaces de services externes
+
+Ces interfaces définissent le **contrat entre la couche Application et les services externes** (Infrastructure les implémente). L'Application ne connaît jamais les détails d'implémentation (Redis, Keycloak, SMTP...).
+
+### IFoodCacheService
+
+```csharp
+public interface IFoodCacheService
+{
+    Task<List<FoodItemSearchResponse>?> GetAsync(string keyword);
+    Task SetAsync(string keyword, List<FoodItemSearchResponse> results);
+    Task InvalidateAsync(string keyword);
+}
+```
+
+### IKeycloakAdminService
+
+```csharp
+public interface IKeycloakAdminService
+{
+    Task DisableUserAsync(string keycloakId);
+    Task EnableUserAsync(string keycloakId);
+    Task DeleteUserAsync(string keycloakId);
+}
+```
+
+### IEmailService
+
+```csharp
+public interface IEmailService
+{
+    Task SendReactivationEmailAsync(string toEmail, string reactivationLink, TimeSpan validity);
+}
+```
+
+> Utilisé par `UserService.DeleteUserAsync()` — envoie le lien signé de réactivation valable 30 jours (workflow RGPD).
+> Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'infrastructure.
 
 ---
 
