@@ -48,7 +48,8 @@ markdown_extensions:
 
 nav:
   - Accueil: index.md
-  - Backend:
+
+  - Spécifications:
     - Introduction: backend/1.nutrition-introduction.md
     - Cas d'usage: backend/2.nutrition-cas-usage.md
     - Specs fonctionnelles: backend/3.nutrition-specifications-fonctionnelles.md
@@ -56,33 +57,37 @@ nav:
     - Contraintes: backend/5.nutrition-contraintes.md
     - Abonnements: backend/6.nutrition-abonnements.md
     - Administration: backend/7.nutrition-admin.md
-    - Domaine:
-      - Modèle domaine: backend/design/design-domain.md
-      - Diagramme de classes: backend/annexes/Diagramme-classes.md
-      - Règles métier: backend/design/Regles-metier.md
-    - Design:
-      - Domain: backend/design/design-domain.md
-      - Application: backend/design/design-application.md
-      - Infrastructure: backend/design/design-infrastructure.md
-      - API: backend/design/design-api.md
-    - Features:
-      - Vue d'ensemble: backend/features/README.md
-      - Authentification: backend/features/authentification.md
-      - Profil utilisateur: backend/features/profil-utilisateur.md
-      - Diet Plan: backend/features/diet-plan.md
-      - Diet: backend/features/diet.md
-      - Repas: backend/features/repas.md
-      - Aliments: backend/features/aliments.md
-      - Bilan nutritionnel: backend/features/bilan-nutritionnel.md
-      - Suivi du poids: backend/features/suivi-poids.md
-      - RGPD: backend/features/rgpd.md
-      - OpenAPI: backend/features/openapi.md
-      - Abonnements: backend/features/abonnements.md
-      - Admin dashboard: backend/features/admin-dashboard.md
-    - Infrastructure:
-      - Setup local & production: backend/annexes/infrastructure-setup.md
-      - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
-      - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
-      - Hangfire: backend/annexes/infrastructure-hangfire.md
-      - Publication docs: backend/annexes/infrastructure-docs.md
-      - Workflows: backend/annexes/workflows.md
+
+  - Domaine:
+    - Modèle domaine: backend/design/design-domain.md
+    - Règles métier: backend/design/Regles-metier.md
+    - Diagramme de classes: backend/annexes/Diagramme-classes.md
+
+  - Design:
+    - Domain Layer: backend/design/design-domain.md
+    - Application Layer: backend/design/design-application.md
+    - Infrastructure Layer: backend/design/design-infrastructure.md
+    - API Layer: backend/design/design-api.md
+
+  - Features:
+    - Vue d'ensemble: backend/features/README.md
+    - Authentification: backend/features/authentification.md
+    - Profil utilisateur: backend/features/profil-utilisateur.md
+    - Diet Plan: backend/features/diet-plan.md
+    - Diet: backend/features/diet.md
+    - Repas: backend/features/repas.md
+    - Aliments: backend/features/aliments.md
+    - Bilan nutritionnel: backend/features/bilan-nutritionnel.md
+    - Suivi du poids: backend/features/suivi-poids.md
+    - RGPD: backend/features/rgpd.md
+    - OpenAPI: backend/features/openapi.md
+    - Abonnements: backend/features/abonnements.md
+    - Admin dashboard: backend/features/admin-dashboard.md
+
+  - Infrastructure:
+    - Setup: backend/annexes/infrastructure-setup.md
+    - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
+    - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
+    - Hangfire: backend/annexes/infrastructure-hangfire.md
+    - Publication docs: backend/annexes/infrastructure-docs.md
+    - Workflows: backend/annexes/workflows.md
