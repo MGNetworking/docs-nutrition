@@ -2,3 +2,4 @@ mkdocs==1.6.1
 mkdocs-material==9.5.49
 mkdocs-mermaid2-plugin==1.2.1
 pymdown-extensions==10.14.3
+pygments>=2.16,<2.18
