@@ -11,7 +11,7 @@
 
 L'API ASP.NET Core tourne en dehors de Docker (`dotnet run`). Docker Compose fournit uniquement les dépendances :
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │  Docker Compose                                         │
 │                                                         │
@@ -26,7 +26,7 @@ L'API ASP.NET Core tourne en dehors de Docker (`dotnet run`). Docker Compose fou
 
 ### Fichiers à créer
 
-```
+```text
 nutrition-api/
 └── infra/
     ├── dev/
@@ -218,7 +218,7 @@ PostgreSQL, Keycloak et Redis sont déployés et gérés par un **projet d'infra
 - La configuration de connexion de l'API vers les services K3s
 - Les manifests K8s de l'API elle-même (Deployment + Service + Ingress)
 
-```
+```text
 K3s cluster (projet infra séparé)
 ├── PostgreSQL  ←─┐
 ├── Keycloak    ←─┤  nutrition-api se connecte via variables d'environnement
@@ -231,7 +231,7 @@ K3s cluster (projet infra séparé)
 
 ### Fichiers à créer
 
-```
+```text
 nutrition-api/
 ├── Dockerfile                              ← build de l'image API
 └── infra/
@@ -438,7 +438,7 @@ push main
 
 ### Fichier créé dans ce projet
 
-```
+```text
 .github/
 └── workflows/
     └── deploy.yml     ← committé dans le repo
@@ -600,7 +600,7 @@ jobs:
 > Distinct du pipeline de déploiement — se déclenche sur chaque Pull Request avant merge.
 > Fichier créé dans le repo `nutrition-api`.
 
-```
+```text
 .github/
 └── workflows/
     ├── ci.yml        ← build + tests (PR)

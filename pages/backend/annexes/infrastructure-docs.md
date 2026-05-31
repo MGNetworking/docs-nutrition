@@ -33,7 +33,7 @@ GitHub Actions — build MkDocs
 
 ### Fichiers à créer à la racine du repo docs
 
-```
+```text
 nutrition-docs/
 ├── mkdocs.yml           ← configuration MkDocs
 ├── requirements.txt     ← dépendances Python
@@ -159,7 +159,7 @@ API SaaS de gestion nutritionnelle — backend ASP.NET Core 10, architecture DDD
 
 ### Fichier à créer dans le repo docs
 
-```
+```text
 nutrition-docs/
 └── .github/
     └── workflows/

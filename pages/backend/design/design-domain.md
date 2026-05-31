@@ -23,7 +23,7 @@
 
 ## 2. Structure des dossiers
 
-```
+```text
 src/NutritionApi.Domain/
 ├── Entity/
 │   ├── User.cs
@@ -482,7 +482,7 @@ Résultat du calcul nutritionnel personnalisé. N'est pas persisté — calculé
 
 ## Relations entre les concepts
 
-```
+```text
 User
 ├── possède plusieurs DietPlan personnels (IsTemplate = false — toujours modifiables)
 │   └── sert de base pour lancer une Diet (snapshot au lancement — lien coupé ensuite)
