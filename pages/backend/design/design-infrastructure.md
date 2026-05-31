@@ -2,7 +2,7 @@
 
 > Document de référence obligatoire avant tout ticket de la couche Infrastructure.
 > Source de vérité : `docs/pages/backend/livrable/checklist-implementation.md`
-> Modèle domaine : `docs/pages/backend/domaine/Modele-domaine.md`
+> Modèle domaine : `docs/pages/backend/design/design-domain.md`
 
 ---
 

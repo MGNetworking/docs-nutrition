@@ -1,7 +1,7 @@
 # Régimes (Diet)
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/pages/backend/annexes/workflow_gestion-dietplan-et-lancement.mermaid` · `workflow_terminer-diet.mermaid` · `docs/pages/backend/domaine/Modele-domaine.md#diet`
+**Référence spec :** `docs/pages/backend/annexes/workflow_gestion-dietplan-et-lancement.mermaid` · `workflow_terminer-diet.mermaid` · `docs/pages/backend/design/design-domain.md#diet`
 
 ---
 

@@ -1,7 +1,7 @@
 # Diagramme de classes — API Nutrition
 
-> Généré depuis `Modele-domaine.md`.
-> Source de vérité : `Modele-domaine.md` — modifier ce fichier en cas de changement.
+> Généré depuis `design/design-domain.md`.
+> Source de vérité : `design/design-domain.md` — modifier ce fichier en cas de changement.
 
 ---
 

@@ -57,9 +57,14 @@ nav:
     - Abonnements: backend/6.nutrition-abonnements.md
     - Administration: backend/7.nutrition-admin.md
     - Domaine:
-      - Modèle domaine: backend/domaine/Modele-domaine.md
-      - Diagramme de classes: backend/domaine/Diagramme-classes.md
-      - Règles métier: backend/domaine/Regles-metier.md
+      - Modèle domaine: backend/design/design-domain.md
+      - Diagramme de classes: backend/annexes/Diagramme-classes.md
+      - Règles métier: backend/design/Regles-metier.md
+    - Design:
+      - Domain: backend/design/design-domain.md
+      - Application: backend/design/design-application.md
+      - Infrastructure: backend/design/design-infrastructure.md
+      - API: backend/design/design-api.md
     - Features:
       - Vue d'ensemble: backend/features/README.md
       - Authentification: backend/features/authentification.md

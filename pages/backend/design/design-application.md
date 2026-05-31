@@ -2,7 +2,7 @@
 
 > Document de référence obligatoire avant tout ticket de la couche Application.
 > Source de vérité : `docs/pages/backend/livrable/checklist-implementation.md`
-> Modèle domaine : `docs/pages/backend/domaine/Modele-domaine.md`
+> Modèle domaine : `docs/pages/backend/design/design-domain.md`
 
 ---
 
@@ -197,6 +197,17 @@ public interface ISavedFoodItemRepository
 }
 ```
 
+### IUnitOfWork
+
+```csharp
+public interface IUnitOfWork
+{
+    Task SaveChangesAsync();
+}
+```
+
+> `AppDbContext` (Infrastructure) implémente cette interface. Elle est injectée dans tous les services qui effectuent des opérations d'écriture atomiques.
+
 ---
 
 ## 5. Services applicatifs
@@ -207,9 +218,17 @@ public interface ISavedFoodItemRepository
 - Créer le profil utilisateur + première `WeightEntry`
 - Mettre à jour les données biométriques
 - Ajouter une `WeightEntry`
-- Calculer `NutritionNeeds` (BMR/TDEE) à la demande — via le Domain, sans persistance
+- Retourner le profil avec calcul `NutritionNeeds` (BMR/TDEE) — uniquement sur `GetProfileAsync`, pas à la création
 
-**Dépendances :** `IUserRepository`, `IWeightEntryRepository`
+**Signatures :**
+```csharp
+Task<UserProfileResponse> CreateUserProfileAsync(string keycloakId, CreateUserProfileRequest request);
+Task<UserProfileResponse> UpdateUserProfileAsync(string keycloakId, UpdateUserProfileRequest request);
+```
+
+> `keycloakId` vient du token JWT (claim `sub`) — jamais dans le body de la requête. Le controller l'extrait depuis `HttpContext.User` et le passe en paramètre séparé.
+
+**Dépendances :** `IUserRepository`, `IWeightEntryRepository`, `IUnitOfWork`
 
 ---
 
@@ -324,7 +343,15 @@ Les DTOs sont des `record` C# — immuables, égalité par valeur.
 | — | `AdminDashboardResponse` | `AdminService` |
 | — | `SystemHealthResponse` | `AdminService` |
 
-**`UserProfileResponse`** doit inclure : données biométriques + `Bmr` + `Tdee` calculés à la demande (non persistés).
+**Champs des DTOs Users :**
+
+| DTO | Champs |
+|---|---|
+| `CreateUserProfileRequest` | `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Weight`, `Allergies`, `DietaryPreferences` |
+| `UpdateUserProfileRequest` | `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Allergies`, `DietaryPreferences` |
+| `UserProfileResponse` | `Id`, `BirthDate`, `Gender`, `ActivityLevel`, `Height`, `Allergies`, `DietaryPreferences`, `SubscriptionTier`, `CreatedAt` |
+
+> `UserProfileResponse` ne contient pas `Bmr`/`Tdee` à la création — ces valeurs sont calculées uniquement sur `GetProfileAsync` (`GET /users/me`).
 
 ---
 
@@ -347,6 +374,15 @@ Les exceptions applicatives vivent dans `Application/Exceptions/`. La couche API
 
 Chaque couche expose une extension `AddXxx()` appelée dans `Program.cs`.
 
+**Prérequis — package NuGet à ajouter dans `NutritionApi.Application` :**
+
+```bash
+dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions
+```
+
+> Ce package fournit `IServiceCollection`. Il est nécessaire dans les projets class library — il n'est pas inclus automatiquement contrairement aux projets ASP.NET Core.
+> `NutritionApi.Infrastructure` aura besoin du même package pour son propre `DependencyInjection.cs`.
+
 ```csharp
 // Application/DependencyInjection.cs
 public static class ApplicationExtensions
@@ -368,6 +404,8 @@ public static class ApplicationExtensions
 
 ```csharp
 // Api/Program.cs
+using NutritionApi.Application; // ← using obligatoire pour résoudre AddApplication()
+
 builder.Services.AddApplication();
 // Les repositories (IXxxRepository → XxxRepository) sont enregistrés dans AddInfrastructure()
 ```
@@ -383,3 +421,4 @@ builder.Services.AddApplication();
 - **`SubscriptionGuard` est appelé en début de méthode**, avant toute opération de lecture ou d'écriture.
 - **Les DTOs Request ne sont jamais passés au Domain.** Le service extrait les valeurs primitives et les passe aux constructeurs/méthodes des entités.
 - **Les entités Domain ne traversent jamais la frontière Application → API.** Seuls les DTOs Response sortent du service.
+- **Workflow API-first.** Avant de coder les DTOs et services d'un ticket, définir les champs exacts des endpoints dans `design-api.md`. Les DTOs découlent des contrats d'endpoint, pas l'inverse.

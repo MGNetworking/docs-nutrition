@@ -2,7 +2,7 @@
 
 > Document vivant — cocher chaque item au fur et à mesure de l'implémentation.
 > Généré à l'étape 8 (validation cohérence) — sert de pont entre conception et développement.
-> Source de vérité : `docs/domaine/Modele-domaine.md` + workflows `docs/annexes/`
+> Source de vérité : `docs/pages/backend/design/design-domain.md` + workflows `docs/annexes/`
 
 ---
 

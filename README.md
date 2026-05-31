@@ -28,12 +28,15 @@ docs-nutrition/                         ← racine du repo (ce dépôt)
         ├── 5.nutrition-contraintes.md
         ├── 6.nutrition-abonnements.md
         ├── 7.nutrition-admin.md
-        ├── domaine/
-        │   ├── Modele-domaine.md
-        │   ├── Diagramme-classes.md    ← diagramme Mermaid classDiagram
-        │   └── Regles-metier.md
+        ├── design/                     ← documents de design technique par couche
+        │   ├── design-domain.md        ← modèle domaine, agrégats, invariants
+        │   ├── design-application.md   ← services, DTOs, interfaces, DI
+        │   ├── design-infrastructure.md ← EF Core, PostgreSQL, Redis, Hangfire
+        │   ├── design-api.md           ← controllers, routing, middleware, auth
+        │   └── Regles-metier.md        ← formules BMR/TDEE + invariants domaine
         ├── features/                   ← une page par fonctionnalité
         ├── annexes/
+        │   ├── Diagramme-classes.md    ← diagramme Mermaid classDiagram
         │   ├── infrastructure-*.md     ← guides setup (Keycloak, Hangfire, OFF, MkDocs, CI)
         │   ├── workflows.md            ← 10 flux séquentiels Mermaid
         │   └── workflow_*.mermaid      ← sources brutes des diagrammes (non publiées)

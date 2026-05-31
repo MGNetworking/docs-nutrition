@@ -116,9 +116,9 @@ nav:
     - Specs techniques: backend/4.nutrition-specifications-techniques.md
     - Contraintes: backend/5.nutrition-contraintes.md
     - Domaine:
-      - Modèle domaine: backend/domaine/Modele-domaine.md
-      - Diagramme de classes: backend/domaine/Diagramme-classes.md
-      - Règles métier: backend/domaine/Regles-metier.md
+      - Modèle domaine: backend/design/design-domain.md
+      - Diagramme de classes: backend/annexes/Diagramme-classes.md
+      - Règles métier: backend/design/Regles-metier.md
     - Livrables:
       - Specs frontend: backend/livrable/specs-frontend.md
       - Checklist implémentation: backend/livrable/checklist-implementation.md

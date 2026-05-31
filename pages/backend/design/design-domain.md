@@ -1,7 +1,77 @@
 # Modèle domaine — API de Gestion de Régime Alimentaire
 
+> Document de référence obligatoire avant tout ticket de la couche Domain.
 > Concepts métier et leurs interactions.
 > Source : cas d'usage (UC01-UC10) + règles métier.
+
+---
+
+## 1. Pattern DDD retenu
+
+**Domain-Driven Design** — le modèle s'organise autour du métier, pas de la base de données.
+
+| Concept | Rôle | Exemples dans ce projet |
+|---|---|---|
+| **Aggregate Root** | Entité centrale qui protège ses propres invariants — seul point d'entrée pour modifier l'agrégat | `User`, `Diet`, `DietPlan`, `Meal`, `FoodItem` |
+| **Entity enfant** | Entité avec identité propre, qui ne peut exister sans son agrégat racine | `MealItem`, `WeightEntry`, `SavedFoodItem` |
+| **Value Object** | Valeur immuable sans identité propre — l'égalité est par valeur, pas par référence | `MacroDistribution`, `NutritionInfo`, `NutritionNeeds` |
+| **Enum** | Ensemble fini de valeurs métier nommées | `ActivityLevel`, `Goal`, `DietType`, `DietStatus`… |
+
+**Règle fondamentale :** le Domain ne dépend de rien — ni EF Core, ni HTTP, ni Redis. Zéro import d'infrastructure.
+
+---
+
+## 2. Structure des dossiers
+
+```
+src/NutritionApi.Domain/
+├── Entity/
+│   ├── User.cs
+│   ├── DietPlan.cs
+│   ├── Diet.cs
+│   ├── Meal.cs
+│   ├── MealItem.cs
+│   ├── FoodItem.cs
+│   ├── WeightEntry.cs
+│   └── SavedFoodItem.cs
+├── ValueObjects/
+│   ├── MacroDistribution.cs
+│   ├── NutritionInfo.cs
+│   └── NutritionNeeds.cs
+└── Enums/
+    ├── ActivityLevel.cs
+    ├── Allergen.cs
+    ├── DietStatus.cs
+    ├── DietType.cs
+    ├── Gender.cs
+    ├── Goal.cs
+    ├── MealType.cs
+    └── SubscriptionTier.cs
+```
+
+---
+
+## 3. Conventions de nommage
+
+| Type | Convention | Exemple |
+|---|---|---|
+| Aggregate Root / Entity | `PascalCase` — nom métier direct | `User`, `DietPlan`, `MealItem` |
+| Value Object | `PascalCase` — décrit la valeur portée | `MacroDistribution`, `NutritionInfo` |
+| Enum | `PascalCase` — nom du concept | `ActivityLevel`, `DietStatus` |
+| Valeur d'enum | `PascalCase` | `ActivityLevel.Sedentary`, `Goal.WeightLoss` |
+| Méthode de mutation | `Change***` / `Add***` / `Remove***` / `Mark***` | `ChangeGender()`, `AddAllergen()`, `MarkAsDeleted()` |
+| Méthode interne Update | `Update***` | `UpdateProfile()` — appelé par le constructeur et les méthodes publiques |
+
+---
+
+## 4. Règles d'implémentation
+
+- **Constructeur public + méthodes `Update***` internes.** Les propriétés mutables passent par une méthode `Update***` appelée à la fois par le constructeur et par les méthodes de mutation publiques — évite la duplication de validation.
+- **`Id` et `UserId` sont initialisés directement dans le constructeur**, jamais via `Update***` — ce sont des identités immuables.
+- **Les Value Objects sont immuables.** Pas de setter public. Toute modification crée une nouvelle instance.
+- **Les invariants sont validés dans le constructeur et dans chaque méthode de mutation.** Une entité invalide ne peut pas exister.
+- **`ThrowIfNegative` pour les numériques** (`Height`, `Weight`, `Quantity`…). `ArgumentException` custom uniquement pour enum inconnu, Guid vide, ou invariant combiné.
+- **`NutritionNeeds` n'est pas persisté** — calculé à la demande dans la couche Application, jamais stocké en base.
 
 ---
 
