@@ -1599,23 +1599,23 @@ Dernière mise à jour : 2026-05-02</p>
 <h3 id="get-admindashboard"><code>GET /admin/dashboard</code><a class="headerlink" href="#get-admindashboard" title="Permanent link">&para;</a></h3>
 <p>Vue consolidée des KPIs de l'application.</p>
 <p><strong>Réponse 200 OK :</strong>
-<code>json
-{
-  "users": {
-    "total": 1240,
-    "byTier": {
-      "free": 980,
-      "pro": 220,
-      "business": 40
-    },
-    "newLast7Days": 34
-  },
-  "activity": {
-    "activeDiets": 187,
-    "mealsLast7Days": 4312,
-    "accountsInGracePeriod": 3
-  }
-}</code></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;users&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1240</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;byTier&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;free&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">980</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;pro&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">220</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;business&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;newLast7Days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;activity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;activeDiets&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">187</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;mealsLast7Days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4312</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;accountsInGracePeriod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <hr />
 <h3 id="get-adminsystemhealth"><code>GET /admin/system/health</code><a class="headerlink" href="#get-adminsystemhealth" title="Permanent link">&para;</a></h3>
 <p>Statut opérationnel des jobs planifiés et du catalogue alimentaire.</p>
@@ -1623,19 +1623,19 @@ Dernière mise à jour : 2026-05-02</p>
 <p><strong>Implémentation :</strong> les données <code>lastRunAt</code> et <code>status</code> sont lues depuis les tables Hangfire (<code>[HangFire].[Job]</code>, <code>[HangFire].[State]</code>) — aucune entité domaine nécessaire. Voir <code>docs/pages/backend/annexes/infrastructure-hangfire.md</code>.</p>
 </blockquote>
 <p><strong>Réponse 200 OK :</strong>
-<code>json
-{
-  "offImport": {
-    "lastRunAt": "2026-05-02T03:00:00Z",
-    "status": "success",
-    "foodItemsCount": 3247891
-  },
-  "rgpdPurge": {
-    "lastRunAt": "2026-05-02T03:30:00Z",
-    "status": "success",
-    "purgedCount": 1
-  }
-}</code></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;offImport&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;lastRunAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-02T03:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;foodItemsCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3247891</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;rgpdPurge&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;lastRunAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-02T03:30:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;purgedCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <p><strong>Statuts possibles :</strong> <code>success</code> · <code>failed</code> · <code>never_run</code></p>
 <hr />
 <h3 id="contenu-partage-dietplan-templates">Contenu partagé — DietPlan templates<a class="headerlink" href="#contenu-partage-dietplan-templates" title="Permanent link">&para;</a></h3>

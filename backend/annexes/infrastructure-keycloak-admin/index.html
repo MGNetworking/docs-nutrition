@@ -786,17 +786,18 @@ Référence workflow : <code>workflow_rgpd.mermaid</code></p>
 <h2 id="mecanisme-de-connexion-client-credentials">Mécanisme de connexion — Client Credentials<a class="headerlink" href="#mecanisme-de-connexion-client-credentials" title="Permanent link">¶</a></h2>
 <p>L'API s'authentifie auprès de Keycloak en tant que <strong>service</strong> (machine-to-machine), via le flux OAuth2 <code>client_credentials</code>.</p>
 <h3 id="principe">Principe<a class="headerlink" href="#principe" title="Permanent link">¶</a></h3>
-<p>```
-API → Keycloak Token Endpoint
+<div class="language-text highlight"><pre><span></span><code>API → Keycloak Token Endpoint
       POST /realms/{realm}/protocol/openid-connect/token
       grant_type=client_credentials
       client_id=nutrition-api-service
-      client_secret=<secret></secret></p>
-<p>Keycloak → access_token (service token, sans contexte utilisateur)</p>
-<p>API → Keycloak Admin API
-      Authorization: Bearer <service token="">
+      client_secret=&lt;secret&gt;
+
+Keycloak → access_token (service token, sans contexte utilisateur)
+
+API → Keycloak Admin API
+      Authorization: Bearer &lt;service token&gt;
       PATCH / DELETE sur les ressources utilisateur
-```</service></p>
+</code></pre></div>
 <p>Le service token est obtenu à la demande et mis en cache jusqu'à expiration (TTL Keycloak, typiquement 60–300 secondes).</p>
 <hr/>
 <h2 id="configuration-cote-keycloak">Configuration côté Keycloak<a class="headerlink" href="#configuration-cote-keycloak" title="Permanent link">¶</a></h2>
@@ -846,31 +847,33 @@ API → Keycloak Token Endpoint
 <hr/>
 <h2 id="configuration-cote-aspnet-core">Configuration côté ASP.NET Core<a class="headerlink" href="#configuration-cote-aspnet-core" title="Permanent link">¶</a></h2>
 <h3 id="variables-denvironnement-secrets">Variables d'environnement / secrets<a class="headerlink" href="#variables-denvironnement-secrets" title="Permanent link">¶</a></h3>
-<p><code>Keycloak__AdminBaseUrl=https://keycloak.example.com
+<div class="language-text highlight"><pre><span></span><code>Keycloak__AdminBaseUrl=https://keycloak.example.com
 Keycloak__Realm=nutrition
 Keycloak__ServiceClientId=nutrition-api-service
-Keycloak__ServiceClientSecret=&lt;secret&gt;</code></p>
+Keycloak__ServiceClientSecret=&lt;secret&gt;
+</code></pre></div>
 <p>Ces valeurs ne doivent jamais être dans le code source. En développement : <code>dotnet user-secrets</code>. En production : variables d'environnement injectées par Kubernetes (Secret).</p>
 <h3 id="service-dedie-ikeycloakadminservice">Service dédié — <code>IKeycloakAdminService</code><a class="headerlink" href="#service-dedie-ikeycloakadminservice" title="Permanent link">¶</a></h3>
 <p>L'API expose une interface dans la couche <strong>Infrastructure</strong> :</p>
-<p><code>csharp
-public interface IKeycloakAdminService
-{
-    Task DisableUserAsync(string keycloakId, CancellationToken ct);
-    Task EnableUserAsync(string keycloakId, CancellationToken ct);
-    Task DeleteUserAsync(string keycloakId, CancellationToken ct);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IKeycloakAdminService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DisableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">EnableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>L'implémentation (<code>KeycloakAdminService</code>) :
 1. Obtient un service token via <code>client_credentials</code> (mis en cache)
 2. Appelle l'endpoint Admin avec <code>HttpClient</code>
 3. Gère les erreurs HTTP (404 = compte déjà supprimé, 401 = token expiré → retry)</p>
 <h3 id="resilience-avec-polly">Résilience avec Polly<a class="headerlink" href="#resilience-avec-polly" title="Permanent link">¶</a></h3>
 <p>Le service token peut expirer entre l'obtention et l'appel Admin. Polly gère le retry :</p>
-<p><code>- 401 Unauthorized → invalider le cache token + retry 1 fois
-- 5xx / timeout    → retry exponentiel (3 tentatives max)</code></p>
+<div class="language-text highlight"><pre><span></span><code>- 401 Unauthorized → invalider le cache token + retry 1 fois
+- 5xx / timeout    → retry exponentiel (3 tentatives max)
+</code></pre></div>
 <hr/>
 <h2 id="flux-complet-suppression-de-compte">Flux complet — Suppression de compte<a class="headerlink" href="#flux-complet-suppression-de-compte" title="Permanent link">¶</a></h2>
-<p><code>1. API reçoit DELETE /users/me
+<div class="language-text highlight"><pre><span></span><code>1. API reçoit DELETE /users/me
 2. API appelle KeycloakAdminService.DisableUserAsync(keycloakId)
    └─ KeycloakAdminService :
        a. GET service token (cache ou nouveau)
@@ -878,7 +881,8 @@ public interface IKeycloakAdminService
        c. Keycloak refuse tous les nouveaux logins pour cet utilisateur
 3. API met à jour User.DeletedAt = maintenant (PostgreSQL)
 4. API envoie l'email de confirmation avec lien signé (30 jours)
-5. Retour 200 OK</code></p>
+5. Retour 200 OK
+</code></pre></div>
 <p>À partir de l'étape 2c, l'utilisateur ne peut plus se connecter — son token actuel reste valide jusqu'à expiration naturelle (durée configurée dans Keycloak, typiquement 5–15 min).</p>
 <hr/>
 <h2 id="donnees-partagees-entre-lapi-et-keycloak">Données partagées entre l'API et Keycloak<a class="headerlink" href="#donnees-partagees-entre-lapi-et-keycloak" title="Permanent link">¶</a></h2>

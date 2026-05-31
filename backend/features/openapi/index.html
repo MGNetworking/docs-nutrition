@@ -1574,33 +1574,33 @@
 </tbody>
 </table>
 <h2 id="configuration-cle">Configuration clé<a class="headerlink" href="#configuration-cle" title="Permanent link">&para;</a></h2>
-<p>```csharp
-// Program.cs
-builder.Services.AddSwaggerGen(c =&gt;
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nutrition API", Version = "v1" });</p>
-<pre><code>// Authentification JWT Bearer dans l'UI
-c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-{
-    Type = SecuritySchemeType.Http,
-    Scheme = "bearer",
-    BearerFormat = "JWT",
-    Description = "Token JWT Keycloak"
-});
-c.AddSecurityRequirement(/* Bearer requis sur endpoints [Authorize] */);
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddSwaggerGen</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">c</span><span class="p">.</span><span class="n">SwaggerDoc</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiInfo</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Nutrition API&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;v1&quot;</span><span class="w"> </span><span class="p">});</span>
 
-// Commentaires XML des controllers et DTOs
-var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
-</code></pre>
-<p>});</p>
-<p>// Activé uniquement hors prod
-if (!app.Environment.IsProduction())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =&gt; c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutrition API v1"));
-}
-```</p>
+<span class="w">    </span><span class="c1">// Authentification JWT Bearer dans l&#39;UI</span>
+<span class="w">    </span><span class="n">c</span><span class="p">.</span><span class="n">AddSecurityDefinition</span><span class="p">(</span><span class="s">&quot;Bearer&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityScheme</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SecuritySchemeType</span><span class="p">.</span><span class="n">Http</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bearer&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">BearerFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;JWT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Token JWT Keycloak&quot;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">c</span><span class="p">.</span><span class="n">AddSecurityRequirement</span><span class="p">(</span><span class="cm">/* Bearer requis sur endpoints [Authorize] */</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Commentaires XML des controllers et DTOs</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">xmlFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;{Assembly.GetExecutingAssembly().GetName().Name}.xml&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">c</span><span class="p">.</span><span class="n">IncludeXmlComments</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">AppContext</span><span class="p">.</span><span class="n">BaseDirectory</span><span class="p">,</span><span class="w"> </span><span class="n">xmlFile</span><span class="p">));</span>
+<span class="p">});</span>
+
+<span class="c1">// Activé uniquement hors prod</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">app</span><span class="p">.</span><span class="n">Environment</span><span class="p">.</span><span class="n">IsProduction</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">app</span><span class="p">.</span><span class="n">UseSwagger</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app</span><span class="p">.</span><span class="n">UseSwaggerUI</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">SwaggerEndpoint</span><span class="p">(</span><span class="s">&quot;/swagger/v1/swagger.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Nutrition API v1&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>Swashbuckle.AspNetCore</code> (NuGet) — déjà listé dans les dépendances du projet</li>

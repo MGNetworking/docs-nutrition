@@ -682,13 +682,13 @@
 </tbody>
 </table>
 <h2 id="reponse">Réponse<a class="headerlink" href="#reponse" title="Permanent link">¶</a></h2>
-<p><code>json
-{
-  "diet": { "name", "calorieTarget", "macroDistribution", "startDate", "endDate" },
-  "dailyData": [{ "date", "totalCalories", "totalProteins", "totalCarbs", "totalFats", "caloriesPercent" }],
-  "weightEntries": [{ "measuredAt", "weight" }],
-  "summary": { "avgDailyCalories", "avgCaloriesPercent", "avgProteins", "avgCarbs", "avgFats" }
-}</code></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"diet"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w"> </span><span class="s2">"calorieTarget"</span><span class="p">,</span><span class="w"> </span><span class="s2">"macroDistribution"</span><span class="p">,</span><span class="w"> </span><span class="s2">"startDate"</span><span class="p">,</span><span class="w"> </span><span class="s2">"endDate"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"dailyData"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="s2">"date"</span><span class="p">,</span><span class="w"> </span><span class="s2">"totalCalories"</span><span class="p">,</span><span class="w"> </span><span class="s2">"totalProteins"</span><span class="p">,</span><span class="w"> </span><span class="s2">"totalCarbs"</span><span class="p">,</span><span class="w"> </span><span class="s2">"totalFats"</span><span class="p">,</span><span class="w"> </span><span class="s2">"caloriesPercent"</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"weightEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="s2">"measuredAt"</span><span class="p">,</span><span class="w"> </span><span class="s2">"weight"</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"avgDailyCalories"</span><span class="p">,</span><span class="w"> </span><span class="s2">"avgCaloriesPercent"</span><span class="p">,</span><span class="w"> </span><span class="s2">"avgProteins"</span><span class="p">,</span><span class="w"> </span><span class="s2">"avgCarbs"</span><span class="p">,</span><span class="w"> </span><span class="s2">"avgFats"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">¶</a></h2>
 <ul>
 <li><code>Diet</code> — source du CalorieTarget et MacroDistribution</li>

@@ -1583,73 +1583,75 @@
 </ol>
 <hr />
 <h2 id="packages-nuget">Packages NuGet<a class="headerlink" href="#packages-nuget" title="Permanent link">&para;</a></h2>
-<p><code>xml
-&lt;PackageReference Include="Hangfire.AspNetCore" Version="1.8.*" /&gt;
-&lt;PackageReference Include="Hangfire.PostgreSql" Version="1.20.*" /&gt;</code></p>
+<div class="language-xml highlight"><pre><span></span><code><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Hangfire.AspNetCore&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;1.8.*&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Hangfire.PostgreSql&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;1.20.*&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</code></pre></div>
 <hr />
 <h2 id="configuration-programcs">Configuration — <code>Program.cs</code><a class="headerlink" href="#configuration-programcs" title="Permanent link">&para;</a></h2>
-<p>```csharp
-// Stockage dans PostgreSQL (mêmes tables que l'app, schéma "HangFire")
-builder.Services.AddHangfire(config =&gt; config
-    .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Default"),
-        new PostgreSqlStorageOptions
-        {
-            SchemaName = "HangFire",
-            PrepareSchemaIfNecessary = true
-        }));</p>
-<p>builder.Services.AddHangfireServer();</p>
-<p>// Dashboard restreint au rôle admin
-app.MapHangfireDashboard("/hangfire", new DashboardOptions
-{
-    Authorization = [new HangfireAdminAuthorizationFilter()]
-});
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Stockage dans PostgreSQL (mêmes tables que l&#39;app, schéma &quot;HangFire&quot;)</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddHangfire</span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">config</span>
+<span class="w">    </span><span class="p">.</span><span class="n">UsePostgreSqlStorage</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">PostgreSqlStorageOptions</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SchemaName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;HangFire&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PrepareSchemaIfNecessary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span>
+<span class="w">        </span><span class="p">}));</span>
+
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddHangfireServer</span><span class="p">();</span>
+
+<span class="c1">// Dashboard restreint au rôle admin</span>
+<span class="n">app</span><span class="p">.</span><span class="n">MapHangfireDashboard</span><span class="p">(</span><span class="s">&quot;/hangfire&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DashboardOptions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Authorization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="k">new</span><span class="w"> </span><span class="n">HangfireAdminAuthorizationFilter</span><span class="p">()]</span>
+<span class="p">});</span>
+</code></pre></div>
 <h3 id="filtre-dautorisation-dashboard">Filtre d'autorisation dashboard<a class="headerlink" href="#filtre-dautorisation-dashboard" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public class HangfireAdminAuthorizationFilter : IDashboardAuthorizationFilter
-{
-    public bool Authorize(DashboardContext context)
-    {
-        var http = context.GetHttpContext();
-        return http.User.Identity?.IsAuthenticated == true
-            &amp;&amp; http.User.HasClaim("realm_access_roles", "admin");
-    }
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">HangfireAdminAuthorizationFilter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDashboardAuthorizationFilter</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Authorize</span><span class="p">(</span><span class="n">DashboardContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">GetHttpContext</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">http</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">Identity</span><span class="o">?.</span><span class="n">IsAuthenticated</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">true</span>
+<span class="w">            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">http</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">HasClaim</span><span class="p">(</span><span class="s">&quot;realm_access_roles&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;admin&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="enregistrement-des-jobs-recurrents">Enregistrement des jobs récurrents<a class="headerlink" href="#enregistrement-des-jobs-recurrents" title="Permanent link">&para;</a></h2>
 <p>À faire dans <code>Program.cs</code> après <code>app.UseAuthorization()</code> :</p>
-<p>```csharp
-RecurringJob.AddOrUpdate<IOffImportJob>(
-    "off-import",
-    job =&gt; job.RunAsync(),
-    "0 3 * * *",            // chaque nuit à 03h00 UTC
-    new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc });</p>
-<p>RecurringJob.AddOrUpdate<IRgpdPurgeJob>(
-    "rgpd-purge",
-    job =&gt; job.RunAsync(),
-    "30 3 * * *",           // chaque nuit à 03h30 UTC
-    new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc });
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">RecurringJob</span><span class="p">.</span><span class="n">AddOrUpdate</span><span class="o">&lt;</span><span class="n">IOffImportJob</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;off-import&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">job</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">job</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">(),</span>
+<span class="w">    </span><span class="s">&quot;0 3 * * *&quot;</span><span class="p">,</span><span class="w">            </span><span class="c1">// chaque nuit à 03h00 UTC</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">RecurringJobOptions</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">TimeZone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeZoneInfo</span><span class="p">.</span><span class="n">Utc</span><span class="w"> </span><span class="p">});</span>
+
+<span class="n">RecurringJob</span><span class="p">.</span><span class="n">AddOrUpdate</span><span class="o">&lt;</span><span class="n">IRgpdPurgeJob</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;rgpd-purge&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">job</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">job</span><span class="p">.</span><span class="n">RunAsync</span><span class="p">(),</span>
+<span class="w">    </span><span class="s">&quot;30 3 * * *&quot;</span><span class="p">,</span><span class="w">           </span><span class="c1">// chaque nuit à 03h30 UTC</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">RecurringJobOptions</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">TimeZone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeZoneInfo</span><span class="p">.</span><span class="n">Utc</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
 <hr />
 <h2 id="structure-des-classes-nutritionapiinfrastructurejobs">Structure des classes — <code>NutritionApi.Infrastructure/Jobs/</code><a class="headerlink" href="#structure-des-classes-nutritionapiinfrastructurejobs" title="Permanent link">&para;</a></h2>
-<p><code>Jobs/
+<div class="language-text highlight"><pre><span></span><code>Jobs/
 ├── IOffImportJob.cs
 ├── OffImportJob.cs
 ├── IRgpdPurgeJob.cs
-└── RgpdPurgeJob.cs</code></p>
+└── RgpdPurgeJob.cs
+</code></pre></div>
 <p>Les interfaces permettent à Hangfire de résoudre les jobs via le conteneur DI.</p>
 <hr />
 <h2 id="lecture-de-lhistorique-pour-get-adminsystemhealth">Lecture de l'historique pour <code>GET /admin/system/health</code><a class="headerlink" href="#lecture-de-lhistorique-pour-get-adminsystemhealth" title="Permanent link">&para;</a></h2>
 <p>Hangfire stocke chaque exécution dans la table <code>HangFire.Job</code> (état final dans <code>HangFire.State</code>).<br />
 L'<code>AdminService</code> interroge directement ces tables via EF Core (ou Dapper) :</p>
-<p><code>sql
--- Dernière exécution du job "off-import"
-SELECT j.CreatedAt, s.Name AS StateName, s.Data
-FROM "HangFire"."Job" j
-JOIN "HangFire"."State" s ON s.Id = j.StateId
-WHERE j.InvocationData::text LIKE '%OffImportJob%'
-ORDER BY j.CreatedAt DESC
-LIMIT 1;</code></p>
+<div class="language-sql highlight"><pre><span></span><code><span class="c1">-- Dernière exécution du job &quot;off-import&quot;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">CreatedAt</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">Name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">StateName</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">Data</span>
+<span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;HangFire&quot;</span><span class="p">.</span><span class="ss">&quot;Job&quot;</span><span class="w"> </span><span class="n">j</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="ss">&quot;HangFire&quot;</span><span class="p">.</span><span class="ss">&quot;State&quot;</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">StateId</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">InvocationData</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;%OffImportJob%&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">CreatedAt</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</code></pre></div>
 <p><strong>Mapping des états Hangfire → statuts API :</strong></p>
 <table>
 <thead>

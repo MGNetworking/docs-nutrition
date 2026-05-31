@@ -1260,6 +1260,279 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#infrakeycloakrealm-export-devjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/keycloak/realm-export-dev.json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demarrage-complet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Démarrage complet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seed-de-donnees-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Seed de données PostgreSQL
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-production-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2 — Production (K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2 — Production (K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perimetre-de-ce-projet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Périmètre de ce projet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichiers-a-creer_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichiers à créer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dockerfile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sconfigmapyaml-variables-non-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/configmap.yaml — variables non-sensibles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8ssecretyamlexample-structure-valeurs-vides-committe" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/secret.yaml.example — structure (valeurs vides, committé)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sdeploymentyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/deployment.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sserviceyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/service.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8singressyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/ingress.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#premier-deploiement-manuel-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Premier déploiement manuel (vérification)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-cicd-github-actions-deploiement-automatique-sur-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vue d'ensemble
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichier-cree-dans-ce-projet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichier créé dans ce projet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1a. Créer un Service Account K3s dédié au déploiement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-extraire-le-kubeconfig-du-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      1b. Extraire le kubeconfig du Service Account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-ajouter-les-secrets-dans-le-depot-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      1c. Ajouter les secrets dans le dépôt GitHub
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1d-activer-ghcr-pour-le-depot" class="md-nav__link">
+    <span class="md-ellipsis">
+      1d. Activer GHCR pour le dépôt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1e-verifier-que-le-namespace-et-les-secrets-k3s-existent" class="md-nav__link">
+    <span class="md-ellipsis">
+      1e. Vérifier que le namespace et les secrets K3s existent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-workflow-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 2 — Workflow GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 2 — Workflow GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsdeployyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/deploy.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-pipeline-ci-tests-build-tests-sur-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 3 — Pipeline CI tests (build + tests sur PR)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 3 — Pipeline CI tests (build + tests sur PR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/ci.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordre-global-quand-faire-quoi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ordre global — quand faire quoi
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1458,6 +1731,279 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#infrakeycloakrealm-export-devjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/keycloak/realm-export-dev.json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demarrage-complet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Démarrage complet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seed-de-donnees-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Seed de données PostgreSQL
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-production-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2 — Production (K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2 — Production (K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perimetre-de-ce-projet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Périmètre de ce projet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichiers-a-creer_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichiers à créer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dockerfile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sconfigmapyaml-variables-non-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/configmap.yaml — variables non-sensibles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8ssecretyamlexample-structure-valeurs-vides-committe" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/secret.yaml.example — structure (valeurs vides, committé)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sdeploymentyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/deployment.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sserviceyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/service.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8singressyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/ingress.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#premier-deploiement-manuel-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Premier déploiement manuel (vérification)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-cicd-github-actions-deploiement-automatique-sur-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vue d'ensemble
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichier-cree-dans-ce-projet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichier créé dans ce projet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1a. Créer un Service Account K3s dédié au déploiement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-extraire-le-kubeconfig-du-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      1b. Extraire le kubeconfig du Service Account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-ajouter-les-secrets-dans-le-depot-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      1c. Ajouter les secrets dans le dépôt GitHub
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1d-activer-ghcr-pour-le-depot" class="md-nav__link">
+    <span class="md-ellipsis">
+      1d. Activer GHCR pour le dépôt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1e-verifier-que-le-namespace-et-les-secrets-k3s-existent" class="md-nav__link">
+    <span class="md-ellipsis">
+      1e. Vérifier que le namespace et les secrets K3s existent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-workflow-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 2 — Workflow GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 2 — Workflow GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsdeployyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/deploy.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-pipeline-ci-tests-build-tests-sur-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 3 — Pipeline CI tests (build + tests sur PR)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 3 — Pipeline CI tests (build + tests sur PR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/ci.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordre-global-quand-faire-quoi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ordre global — quand faire quoi
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1487,7 +2033,7 @@ Il complète <code>infrastructure-keycloak-admin.md</code> (Admin API RGPD) et <
 <h2 id="section-1-environnement-de-developpement-local-docker-compose">Section 1 — Environnement de développement local (Docker Compose)<a class="headerlink" href="#section-1-environnement-de-developpement-local-docker-compose" title="Permanent link">&para;</a></h2>
 <h3 id="architecture-locale">Architecture locale<a class="headerlink" href="#architecture-locale" title="Permanent link">&para;</a></h3>
 <p>L'API ASP.NET Core tourne en dehors de Docker (<code>dotnet run</code>). Docker Compose fournit uniquement les dépendances :</p>
-<p><code>┌─────────────────────────────────────────────────────────┐
+<div class="language-text highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────┐
 │  Docker Compose                                         │
 │                                                         │
 │  app-db (PostgreSQL 16)
@@ -1496,104 +2042,114 @@ Il complète <code>infrastructure-keycloak-admin.md</code> (Admin API RGPD) et <
 │  redis (Redis 7)
 └─────────────────────────────────────────────────────────┘
          ↑
-  dotnet run (ASP.NET Core) — lit .env pour se connecter</code></p>
+  dotnet run (ASP.NET Core) — lit .env pour se connecter
+</code></pre></div>
 <h3 id="fichiers-a-creer">Fichiers à créer<a class="headerlink" href="#fichiers-a-creer" title="Permanent link">&para;</a></h3>
-<p><code>nutrition-api/
+<div class="language-text highlight"><pre><span></span><code>nutrition-api/
 └── infra/
     ├── dev/
     │   ├── docker-compose.yml
     │   └── .env.example
     │   # .env
     └── keycloak/
-        └── realm-export-dev.json</code></p>
+        └── realm-export-dev.json
+</code></pre></div>
 <blockquote>
 <p><strong><code>.gitignore</code> — ajouter :</strong> <code>infra/dev/.env</code></p>
 </blockquote>
 <hr />
 <h3 id="infradevdocker-composeyml"><code>infra/dev/docker-compose.yml</code><a class="headerlink" href="#infradevdocker-composeyml" title="Permanent link">&para;</a></h3>
-<p>```yaml
-version: '3.9'</p>
-<p>services:</p>
-<p>app-db:
-    image: postgres:16-alpine
-    container_name: nutrition-app-db
-    environment:
-      POSTGRES_DB: nutrition
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - app-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d nutrition"]
-      interval: 10s
-      retries: 5</p>
-<p>keycloak-db:
-    image: postgres:16-alpine
-    container_name: nutrition-keycloak-db
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: ${KC_DB_USER}
-      POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
-    volumes:
-      - keycloak-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${KC_DB_USER} -d keycloak"]
-      interval: 10s
-      retries: 5</p>
-<p>keycloak:
-    image: quay.io/keycloak/keycloak:24.0
-    container_name: nutrition-keycloak
-    command: start-dev --import-realm
-    environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
-      KC_DB_USERNAME: ${KC_DB_USER}
-      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
-      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
-      KC_HOSTNAME_STRICT: "false"
-      KC_HTTP_ENABLED: "true"
-    volumes:
-      - ../keycloak/realm-export-dev.json:/opt/keycloak/data/import/realm-export-dev.json
-    ports:
-      - "8080:8080"
-    depends_on:
-      keycloak-db:
-        condition: service_healthy</p>
-<p>redis:
-    image: redis:7-alpine
-    container_name: nutrition-redis
-    ports:
-      - "6379:6379"</p>
-<p>volumes:
-  app-db-data:
-  keycloak-db-data:
-```</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.9&#39;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+
+<span class="w">  </span><span class="nt">app-db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-app-db</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${POSTGRES_USER}</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${POSTGRES_PASSWORD}</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5432:5432&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-db-data:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">${POSTGRES_USER}</span><span class="nv"> </span><span class="s">-d</span><span class="nv"> </span><span class="s">nutrition&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+
+<span class="w">  </span><span class="nt">keycloak-db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-keycloak-db</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+<span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KC_DB_USER}</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KC_DB_PASSWORD}</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak-db-data:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">${KC_DB_USER}</span><span class="nv"> </span><span class="s">-d</span><span class="nv"> </span><span class="s">keycloak&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+
+<span class="w">  </span><span class="nt">keycloak</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quay.io/keycloak/keycloak:24.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-keycloak</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">start-dev --import-realm</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">KC_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">      </span><span class="nt">KC_DB_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://keycloak-db:5432/keycloak</span>
+<span class="w">      </span><span class="nt">KC_DB_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KC_DB_USER}</span>
+<span class="w">      </span><span class="nt">KC_DB_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KC_DB_PASSWORD}</span>
+<span class="w">      </span><span class="nt">KEYCLOAK_ADMIN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KC_ADMIN_USER}</span>
+<span class="w">      </span><span class="nt">KEYCLOAK_ADMIN_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${KC_ADMIN_PASSWORD}</span>
+<span class="w">      </span><span class="nt">KC_HOSTNAME_STRICT</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<span class="w">      </span><span class="nt">KC_HTTP_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../keycloak/realm-export-dev.json:/opt/keycloak/data/import/realm-export-dev.json</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">keycloak-db</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+
+<span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7-alpine</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-redis</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;6379:6379&quot;</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app-db-data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">keycloak-db-data</span><span class="p">:</span>
+</code></pre></div>
 <hr />
 <h3 id="infradevenvexample"><code>infra/dev/.env.example</code><a class="headerlink" href="#infradevenvexample" title="Permanent link">&para;</a></h3>
-<p>```dotenv</p>
-<h1 id="postgresql-base-de-donnees-api">── PostgreSQL — Base de données API ──────────────────────────────────────────<a class="headerlink" href="#postgresql-base-de-donnees-api" title="Permanent link">&para;</a></h1>
-<p>POSTGRES_USER=nutrition_user
-POSTGRES_PASSWORD=</p>
-<h1 id="postgresql-base-de-donnees-keycloak">── PostgreSQL — Base de données Keycloak ────────────────────────────────────<a class="headerlink" href="#postgresql-base-de-donnees-keycloak" title="Permanent link">&para;</a></h1>
-<p>KC_DB_USER=keycloak_user
-KC_DB_PASSWORD=</p>
-<h1 id="keycloak-admin-console">── Keycloak Admin Console ────────────────────────────────────────────────────<a class="headerlink" href="#keycloak-admin-console" title="Permanent link">&para;</a></h1>
-<p>KC_ADMIN_USER=admin
-KC_ADMIN_PASSWORD=</p>
-<h1 id="aspnet-core-connection-strings">── ASP.NET Core — Connection strings ────────────────────────────────────────<a class="headerlink" href="#aspnet-core-connection-strings" title="Permanent link">&para;</a></h1>
-<p>ConnectionStrings__NutritionDb=Host=localhost;Port=5432;Database=nutrition;Username=nutrition_user;Password=
-ConnectionStrings__Redis=localhost:6379</p>
-<h1 id="aspnet-core-keycloak-auth">── ASP.NET Core — Keycloak Auth ──────────────────────────────────────────────<a class="headerlink" href="#aspnet-core-keycloak-auth" title="Permanent link">&para;</a></h1>
-<p>Keycloak__Authority=http://localhost:8080/realms/nutrition
+<div class="language-text highlight"><pre><span></span><code># ── PostgreSQL — Base de données API ──────────────────────────────────────────
+POSTGRES_USER=nutrition_user
+POSTGRES_PASSWORD=
+
+# ── PostgreSQL — Base de données Keycloak ────────────────────────────────────
+KC_DB_USER=keycloak_user
+KC_DB_PASSWORD=
+
+# ── Keycloak Admin Console ────────────────────────────────────────────────────
+KC_ADMIN_USER=admin
+KC_ADMIN_PASSWORD=
+
+# ── ASP.NET Core — Connection strings ────────────────────────────────────────
+ConnectionStrings__NutritionDb=Host=localhost;Port=5432;Database=nutrition;Username=nutrition_user;Password=
+ConnectionStrings__Redis=localhost:6379
+
+# ── ASP.NET Core — Keycloak Auth ──────────────────────────────────────────────
+Keycloak__Authority=http://localhost:8080/realms/nutrition
 Keycloak__Realm=nutrition
 Keycloak__ClientId=nutrition-api
 Keycloak__ServiceClientId=nutrition-api-service
 Keycloak__ServiceClientSecret=
 Keycloak__AdminBaseUrl=http://localhost:8080
-```</p>
+</code></pre></div>
 <blockquote>
 <p>Copier <code>.env.example</code> en <code>.env</code> et remplir les mots de passe. Ne jamais committer <code>.env</code>.</p>
 </blockquote>
@@ -1628,33 +2184,36 @@ Keycloak__AdminBaseUrl=http://localhost:8080
 </tbody>
 </table>
 <p><strong>Générer le fichier (première fois) :</strong></p>
-<p>```bash</p>
-<h1 id="1-demarrer-keycloak-sans-import-pour-la-configuration-initiale">1. Démarrer Keycloak sans import pour la configuration initiale<a class="headerlink" href="#1-demarrer-keycloak-sans-import-pour-la-configuration-initiale" title="Permanent link">&para;</a></h1>
-<p>docker compose up keycloak-db keycloak -d</p>
-<h1 id="ouvrir-httplocalhost8080-configurer-realm-clients-roles-utilisateurs-de-test">Ouvrir http://localhost:8080 — configurer realm, clients, rôles, utilisateurs de test<a class="headerlink" href="#ouvrir-httplocalhost8080-configurer-realm-clients-roles-utilisateurs-de-test" title="Permanent link">&para;</a></h1>
-<h1 id="2-exporter-le-realm-configure">2. Exporter le realm configuré<a class="headerlink" href="#2-exporter-le-realm-configure" title="Permanent link">&para;</a></h1>
-<h1 id="admin-console-realm-settings-action-partial-export">Admin Console → Realm settings → Action → Partial export<a class="headerlink" href="#admin-console-realm-settings-action-partial-export" title="Permanent link">&para;</a></h1>
-<h1 id="cocher-export-groups-and-roles-export-clients-export-users">Cocher : "Export groups and roles" + "Export clients" + "Export users"<a class="headerlink" href="#cocher-export-groups-and-roles-export-clients-export-users" title="Permanent link">&para;</a></h1>
-<h1 id="sauvegarder-sous-infrakeycloakrealm-export-devjson">Sauvegarder sous infra/keycloak/realm-export-dev.json<a class="headerlink" href="#sauvegarder-sous-infrakeycloakrealm-export-devjson" title="Permanent link">&para;</a></h1>
-<h1 id="3-verifier-limport-automatique-depuis-ce-point-docker-compose-up-charge-le-realm">3. Vérifier l'import automatique (depuis ce point, docker compose up charge le realm)<a class="headerlink" href="#3-verifier-limport-automatique-depuis-ce-point-docker-compose-up-charge-le-realm" title="Permanent link">&para;</a></h1>
-<p>docker compose down &amp;&amp; docker compose up -d
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># 1. Démarrer Keycloak sans import pour la configuration initiale</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>keycloak-db<span class="w"> </span>keycloak<span class="w"> </span>-d
+<span class="c1"># Ouvrir http://localhost:8080 — configurer realm, clients, rôles, utilisateurs de test</span>
+
+<span class="c1"># 2. Exporter le realm configuré</span>
+<span class="c1">#    Admin Console → Realm settings → Action → Partial export</span>
+<span class="c1">#    Cocher : &quot;Export groups and roles&quot; + &quot;Export clients&quot; + &quot;Export users&quot;</span>
+<span class="c1">#    Sauvegarder sous infra/keycloak/realm-export-dev.json</span>
+
+<span class="c1"># 3. Vérifier l&#39;import automatique (depuis ce point, docker compose up charge le realm)</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
 <blockquote>
 <p>Les futures modifications du realm (nouveau client, rôle) doivent être ré-exportées et le fichier mis à jour dans le repo.</p>
 </blockquote>
 <hr />
 <h3 id="demarrage-complet">Démarrage complet<a class="headerlink" href="#demarrage-complet" title="Permanent link">&para;</a></h3>
-<p>```bash
-cd infra/dev
-cp .env.example .env          # remplir les mots de passe
-docker compose up -d          # démarre app-db, keycloak-db, keycloak, redis</p>
-<h1 id="verifier-que-les-4-conteneurs-sont-healthy">Vérifier que les 4 conteneurs sont healthy<a class="headerlink" href="#verifier-que-les-4-conteneurs-sont-healthy" title="Permanent link">&para;</a></h1>
-<p>docker compose ps</p>
-<h1 id="appliquer-les-migrations-ef-core-depuis-la-racine-du-projet">Appliquer les migrations EF Core (depuis la racine du projet)<a class="headerlink" href="#appliquer-les-migrations-ef-core-depuis-la-racine-du-projet" title="Permanent link">&para;</a></h1>
-<p>dotnet ef database update --project src/NutritionApi.Infrastructure</p>
-<h1 id="lancer-lapi">Lancer l'API<a class="headerlink" href="#lancer-lapi" title="Permanent link">&para;</a></h1>
-<p>dotnet run --project src/NutritionApi.API
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/dev
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env<span class="w">          </span><span class="c1"># remplir les mots de passe</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">          </span><span class="c1"># démarre app-db, keycloak-db, keycloak, redis</span>
+
+<span class="c1"># Vérifier que les 4 conteneurs sont healthy</span>
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+
+<span class="c1"># Appliquer les migrations EF Core (depuis la racine du projet)</span>
+dotnet<span class="w"> </span>ef<span class="w"> </span>database<span class="w"> </span>update<span class="w"> </span>--project<span class="w"> </span>src/NutritionApi.Infrastructure
+
+<span class="c1"># Lancer l&#39;API</span>
+dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>src/NutritionApi.API
+</code></pre></div>
 <p>Admin Console Keycloak : <code>http://localhost:8080</code> — identifiants définis dans <code>.env</code> (<code>KC_ADMIN_USER</code> / <code>KC_ADMIN_PASSWORD</code>).</p>
 <hr />
 <h3 id="seed-de-donnees-postgresql">Seed de données PostgreSQL<a class="headerlink" href="#seed-de-donnees-postgresql" title="Permanent link">&para;</a></h3>
@@ -1667,15 +2226,16 @@ docker compose up -d          # démarre app-db, keycloak-db, keycloak, redis</p
 - Le <code>Dockerfile</code> pour builder l'image de l'API
 - La configuration de connexion de l'API vers les services K3s
 - Les manifests K8s de l'API elle-même (Deployment + Service + Ingress)</p>
-<p><code>K3s cluster (projet infra séparé)
+<div class="language-text highlight"><pre><span></span><code>K3s cluster (projet infra séparé)
 ├── PostgreSQL
 ├── Keycloak
 └── Redis
         ↑
-  nutrition-api (Deployment — ce projet)</code></p>
+  nutrition-api (Deployment — ce projet)
+</code></pre></div>
 <hr />
 <h3 id="fichiers-a-creer_1">Fichiers à créer<a class="headerlink" href="#fichiers-a-creer_1" title="Permanent link">&para;</a></h3>
-<p><code>nutrition-api/
+<div class="language-text highlight"><pre><span></span><code>nutrition-api/
 ├── Dockerfile
 └── infra/
     └── k8s/
@@ -1683,213 +2243,221 @@ docker compose up -d          # démarre app-db, keycloak-db, keycloak, redis</p
         ├── secret.yaml.example
         ├── deployment.yaml
         ├── service.yaml
-        └── ingress.yaml</code></p>
+        └── ingress.yaml
+</code></pre></div>
 <blockquote>
 <p><strong><code>.gitignore</code> — ajouter :</strong> <code>infra/k8s/secret.yaml</code> (garder uniquement <code>secret.yaml.example</code>)</p>
 </blockquote>
 <hr />
 <h3 id="dockerfile"><code>Dockerfile</code><a class="headerlink" href="#dockerfile" title="Permanent link">&para;</a></h3>
-<p>```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-WORKDIR /app
-EXPOSE 8080</p>
-<p>FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-WORKDIR /src
-COPY ["src/NutritionApi.API/NutritionApi.API.csproj", "src/NutritionApi.API/"]
-COPY ["src/NutritionApi.Application/NutritionApi.Application.csproj", "src/NutritionApi.Application/"]
-COPY ["src/NutritionApi.Infrastructure/NutritionApi.Infrastructure.csproj", "src/NutritionApi.Infrastructure/"]
-COPY ["src/NutritionApi.Domain/NutritionApi.Domain.csproj", "src/NutritionApi.Domain/"]
-RUN dotnet restore "src/NutritionApi.API/NutritionApi.API.csproj"
-COPY . .
-RUN dotnet publish "src/NutritionApi.API/NutritionApi.API.csproj" -c Release -o /app/publish</p>
-<p>FROM base AS final
-WORKDIR /app
-COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "NutritionApi.API.dll"]
-```</p>
+<div class="language-dockerfile highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/aspnet:10.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">base</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/sdk:10.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/src</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.API/NutritionApi.API.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.API/&quot;</span><span class="o">]</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Application/NutritionApi.Application.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Application/&quot;</span><span class="o">]</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Infrastructure/NutritionApi.Infrastructure.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Infrastructure/&quot;</span><span class="o">]</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Domain/NutritionApi.Domain.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Domain/&quot;</span><span class="o">]</span>
+<span class="k">RUN</span><span class="w"> </span>dotnet<span class="w"> </span>restore<span class="w"> </span><span class="s2">&quot;src/NutritionApi.API/NutritionApi.API.csproj&quot;</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>dotnet<span class="w"> </span>publish<span class="w"> </span><span class="s2">&quot;src/NutritionApi.API/NutritionApi.API.csproj&quot;</span><span class="w"> </span>-c<span class="w"> </span>Release<span class="w"> </span>-o<span class="w"> </span>/app/publish
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">final</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>build<span class="w"> </span>/app/publish<span class="w"> </span>.
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dotnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;NutritionApi.API.dll&quot;</span><span class="p">]</span>
+</code></pre></div>
 <hr />
 <h3 id="infrak8sconfigmapyaml-variables-non-sensibles"><code>infra/k8s/configmap.yaml</code> — variables non-sensibles<a class="headerlink" href="#infrak8sconfigmapyaml-variables-non-sensibles" title="Permanent link">&para;</a></h3>
-<p><code>yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nutrition-api-config
-  namespace: nutrition
-data:
-  ASPNETCORE_ENVIRONMENT: Production
-  Keycloak__Authority: "https://&lt;keycloak-k3s-domain&gt;/realms/nutrition"
-  Keycloak__Realm: nutrition
-  Keycloak__ClientId: nutrition-api
-  Keycloak__ServiceClientId: nutrition-api-service
-  Keycloak__AdminBaseUrl: "https://&lt;keycloak-k3s-domain&gt;"
-  ConnectionStrings__Redis: "&lt;redis-service-k3s&gt;:6379"</code></p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-config</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ASPNETCORE_ENVIRONMENT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Production</span>
+<span class="w">  </span><span class="nt">Keycloak__Authority</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&lt;keycloak-k3s-domain&gt;/realms/nutrition&quot;</span>
+<span class="w">  </span><span class="nt">Keycloak__Realm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="w">  </span><span class="nt">Keycloak__ClientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">Keycloak__ServiceClientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-service</span>
+<span class="w">  </span><span class="nt">Keycloak__AdminBaseUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&lt;keycloak-k3s-domain&gt;&quot;</span>
+<span class="w">  </span><span class="nt">ConnectionStrings__Redis</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;redis-service-k3s&gt;:6379&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="infrak8ssecretyamlexample-structure-valeurs-vides-committe"><code>infra/k8s/secret.yaml.example</code> — structure (valeurs vides, committé)<a class="headerlink" href="#infrak8ssecretyamlexample-structure-valeurs-vides-committe" title="Permanent link">&para;</a></h3>
-<p><code>yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: nutrition-api-secret
-  namespace: nutrition
-type: Opaque
-stringData:
-  ConnectionStrings__NutritionDb: ""    # Host=&lt;pg-k3s&gt;;Port=5432;Database=nutrition;Username=...;Password=...
-  Keycloak__ServiceClientSecret: ""     # secret du client nutrition-api-service sur Keycloak K3s</code></p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-secret</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ConnectionStrings__NutritionDb</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">    </span><span class="c1"># Host=&lt;pg-k3s&gt;;Port=5432;Database=nutrition;Username=...;Password=...</span>
+<span class="w">  </span><span class="nt">Keycloak__ServiceClientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">     </span><span class="c1"># secret du client nutrition-api-service sur Keycloak K3s</span>
+</code></pre></div>
 <p><strong>Création du secret réel (CLI uniquement — jamais committé) :</strong></p>
-<p><code>bash
-kubectl create secret generic nutrition-api-secret \
-  --namespace=nutrition \
-  --from-literal=ConnectionStrings__NutritionDb="Host=&lt;pg-k3s&gt;;Port=5432;Database=nutrition;Username=...;Password=..." \
-  --from-literal=Keycloak__ServiceClientSecret="&lt;secret&gt;"</code></p>
+<div class="language-bash highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>nutrition-api-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="o">=</span>nutrition<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">ConnectionStrings__NutritionDb</span><span class="o">=</span><span class="s2">&quot;Host=&lt;pg-k3s&gt;;Port=5432;Database=nutrition;Username=...;Password=...&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">Keycloak__ServiceClientSecret</span><span class="o">=</span><span class="s2">&quot;&lt;secret&gt;&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="infrak8sdeploymentyaml"><code>infra/k8s/deployment.yaml</code><a class="headerlink" href="#infrak8sdeploymentyaml" title="Permanent link">&para;</a></h3>
-<p><code>yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nutrition-api
-  namespace: nutrition
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nutrition-api
-  template:
-    metadata:
-      labels:
-        app: nutrition-api
-    spec:
-      containers:
-        - name: nutrition-api
-          image: &lt;registry&gt;/nutrition-api:latest
-          ports:
-            - containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: nutrition-api-config
-            - secretRef:
-                name: nutrition-api-secret
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10</code></p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;registry&gt;/nutrition-api:latest</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">envFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">configMapRef</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-config</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretRef</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-secret</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
 <hr />
 <h3 id="infrak8sserviceyaml"><code>infra/k8s/service.yaml</code><a class="headerlink" href="#infrak8sserviceyaml" title="Permanent link">&para;</a></h3>
-<p><code>yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: nutrition-api-service
-  namespace: nutrition
-spec:
-  selector:
-    app: nutrition-api
-  ports:
-    - port: 80
-      targetPort: 8080</code></p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-service</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+</code></pre></div>
 <hr />
 <h3 id="infrak8singressyaml"><code>infra/k8s/ingress.yaml</code><a class="headerlink" href="#infrak8singressyaml" title="Permanent link">&para;</a></h3>
-<p><code>yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nutrition-api-ingress
-  namespace: nutrition
-  annotations:
-    kubernetes.io/ingress.class: traefik    # K3s utilise Traefik par défaut
-spec:
-  tls:
-    - hosts:
-        - api.nutrition.example.com
-      secretName: nutrition-api-tls
-  rules:
-    - host: api.nutrition.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nutrition-api-service
-                port:
-                  number: 80</code></p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-ingress</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kubernetes.io/ingress.class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">traefik</span><span class="w">    </span><span class="c1"># K3s utilise Traefik par défaut</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.nutrition.example.com</span>
+<span class="w">      </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-tls</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.nutrition.example.com</span>
+<span class="w">      </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">            </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">            </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-service</span>
+<span class="w">                </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</code></pre></div>
 <hr />
 <h3 id="premier-deploiement-manuel-verification">Premier déploiement manuel (vérification)<a class="headerlink" href="#premier-deploiement-manuel-verification" title="Permanent link">&para;</a></h3>
-<p>```bash</p>
-<h1 id="prerequis-kubectl-configure-sur-le-cluster-k3s-secrets-crees-manuellement">Prérequis : kubectl configuré sur le cluster K3s + secrets créés manuellement<a class="headerlink" href="#prerequis-kubectl-configure-sur-le-cluster-k3s-secrets-crees-manuellement" title="Permanent link">&para;</a></h1>
-<p>kubectl apply -f infra/k8s/configmap.yaml
-kubectl apply -f infra/k8s/deployment.yaml
-kubectl apply -f infra/k8s/service.yaml
-kubectl apply -f infra/k8s/ingress.yaml</p>
-<h1 id="verifier">Vérifier<a class="headerlink" href="#verifier" title="Permanent link">&para;</a></h1>
-<p>kubectl get pods -n nutrition
-kubectl logs -n nutrition deployment/nutrition-api
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Prérequis : kubectl configuré sur le cluster K3s + secrets créés manuellement</span>
+
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/configmap.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/deployment.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/service.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/ingress.yaml
+
+<span class="c1"># Vérifier</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>nutrition
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>nutrition<span class="w"> </span>deployment/nutrition-api
+</code></pre></div>
 <p>Ce déploiement initial est manuel. À partir du suivant, GitHub Actions prend le relais (voir Section 3).</p>
 <hr />
 <h2 id="section-3-cicd-github-actions-deploiement-automatique-sur-k3s">Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)<a class="headerlink" href="#section-3-cicd-github-actions-deploiement-automatique-sur-k3s" title="Permanent link">&para;</a></h2>
 <h3 id="vue-densemble">Vue d'ensemble<a class="headerlink" href="#vue-densemble" title="Permanent link">&para;</a></h3>
 <p>Chaque push sur <code>main</code> déclenche le pipeline :</p>
-<p><code>push main
+<div class="language-text highlight"><pre><span></span><code>push main
   → build image Docker
   → push sur GitHub Container Registry (GHCR)
   → kubectl set image sur le cluster K3s
-  → rollout status (succès ou rollback)</code></p>
+  → rollout status (succès ou rollback)
+</code></pre></div>
 <h3 id="fichier-cree-dans-ce-projet">Fichier créé dans ce projet<a class="headerlink" href="#fichier-cree-dans-ce-projet" title="Permanent link">&para;</a></h3>
-<p><code>.github/
+<div class="language-text highlight"><pre><span></span><code>.github/
 └── workflows/
-    └── deploy.yml</code></p>
+    └── deploy.yml
+</code></pre></div>
 <hr />
 <h3 id="etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique">Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)<a class="headerlink" href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" title="Permanent link">&para;</a></h3>
 <h4 id="1a-creer-un-service-account-k3s-dedie-au-deploiement">1a. Créer un Service Account K3s dédié au déploiement<a class="headerlink" href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" title="Permanent link">&para;</a></h4>
 <p>Sur le serveur K3s, créer un compte de service limité au namespace <code>nutrition</code> :</p>
-<p>```bash</p>
-<h1 id="sur-le-serveur-k3s">Sur le serveur K3s<a class="headerlink" href="#sur-le-serveur-k3s" title="Permanent link">&para;</a></h1>
-<p>kubectl create serviceaccount github-actions-deployer -n nutrition</p>
-<p>kubectl create rolebinding github-actions-deployer-binding \
-  --clusterrole=edit \
-  --serviceaccount=nutrition:github-actions-deployer \
-  --namespace=nutrition
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Sur le serveur K3s</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>serviceaccount<span class="w"> </span>github-actions-deployer<span class="w"> </span>-n<span class="w"> </span>nutrition
+
+kubectl<span class="w"> </span>create<span class="w"> </span>rolebinding<span class="w"> </span>github-actions-deployer-binding<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--clusterrole<span class="o">=</span>edit<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--serviceaccount<span class="o">=</span>nutrition:github-actions-deployer<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="o">=</span>nutrition
+</code></pre></div>
 <blockquote>
 <p><code>clusterrole=edit</code> donne le droit de mettre à jour les Deployments dans <code>nutrition</code> sans accès cluster-admin.</p>
 </blockquote>
 <h4 id="1b-extraire-le-kubeconfig-du-service-account">1b. Extraire le kubeconfig du Service Account<a class="headerlink" href="#1b-extraire-le-kubeconfig-du-service-account" title="Permanent link">&para;</a></h4>
-<p>```bash</p>
-<h1 id="recuperer-le-token-du-service-account">Récupérer le token du Service Account<a class="headerlink" href="#recuperer-le-token-du-service-account" title="Permanent link">&para;</a></h1>
-<p>TOKEN=$(kubectl create token github-actions-deployer -n nutrition --duration=87600h)</p>
-<h1 id="recuperer-le-ca-et-le-serveur">Récupérer le CA et le serveur<a class="headerlink" href="#recuperer-le-ca-et-le-serveur" title="Permanent link">&para;</a></h1>
-<p>CA=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
-SERVER=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.server}')</p>
-<h1 id="construire-le-kubeconfig-minimal">Construire le kubeconfig minimal<a class="headerlink" href="#construire-le-kubeconfig-minimal" title="Permanent link">&para;</a></h1>
-<p>cat &lt;<EOF > kubeconfig-github-actions.yaml
-apiVersion: v1
-kind: Config
-clusters:
-- cluster:
-    certificate-authority-data: ${CA}
-    server: ${SERVER}
-  name: k3s
-contexts:
-- context:
-    cluster: k3s
-    user: github-actions-deployer
-    namespace: nutrition
-  name: nutrition
-current-context: nutrition
-users:
-- name: github-actions-deployer
-  user:
-    token: ${TOKEN}
-EOF</p>
-<h1 id="encoder-en-base64-pour-github-secrets">Encoder en base64 pour GitHub Secrets<a class="headerlink" href="#encoder-en-base64-pour-github-secrets" title="Permanent link">&para;</a></h1>
-<p>base64 -w 0 kubeconfig-github-actions.yaml</p>
-<h1 id="copier-la-sortie-dans-le-secret-github-kubeconfig_b64">→ copier la sortie dans le secret GitHub KUBECONFIG_B64<a class="headerlink" href="#copier-la-sortie-dans-le-secret-github-kubeconfig_b64" title="Permanent link">&para;</a></h1>
-<h1 id="supprimer-le-fichier-local-immediatement">Supprimer le fichier local immédiatement<a class="headerlink" href="#supprimer-le-fichier-local-immediatement" title="Permanent link">&para;</a></h1>
-<p>rm kubeconfig-github-actions.yaml
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Récupérer le token du Service Account</span>
+<span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>create<span class="w"> </span>token<span class="w"> </span>github-actions-deployer<span class="w"> </span>-n<span class="w"> </span>nutrition<span class="w"> </span>--duration<span class="o">=</span>87600h<span class="k">)</span>
+
+<span class="c1"># Récupérer le CA et le serveur</span>
+<span class="nv">CA</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--raw<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.clusters[0].cluster.certificate-authority-data}&#39;</span><span class="k">)</span>
+<span class="nv">SERVER</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--raw<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.clusters[0].cluster.server}&#39;</span><span class="k">)</span>
+
+<span class="c1"># Construire le kubeconfig minimal</span>
+cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; kubeconfig-github-actions.yaml</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Config</span>
+<span class="s">clusters:</span>
+<span class="s">- cluster:</span>
+<span class="s">    certificate-authority-data: ${CA}</span>
+<span class="s">    server: ${SERVER}</span>
+<span class="s">  name: k3s</span>
+<span class="s">contexts:</span>
+<span class="s">- context:</span>
+<span class="s">    cluster: k3s</span>
+<span class="s">    user: github-actions-deployer</span>
+<span class="s">    namespace: nutrition</span>
+<span class="s">  name: nutrition</span>
+<span class="s">current-context: nutrition</span>
+<span class="s">users:</span>
+<span class="s">- name: github-actions-deployer</span>
+<span class="s">  user:</span>
+<span class="s">    token: ${TOKEN}</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Encoder en base64 pour GitHub Secrets</span>
+base64<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span>kubeconfig-github-actions.yaml
+<span class="c1"># → copier la sortie dans le secret GitHub KUBECONFIG_B64</span>
+
+<span class="c1"># Supprimer le fichier local immédiatement</span>
+rm<span class="w"> </span>kubeconfig-github-actions.yaml
+</code></pre></div>
 <h4 id="1c-ajouter-les-secrets-dans-le-depot-github">1c. Ajouter les secrets dans le dépôt GitHub<a class="headerlink" href="#1c-ajouter-les-secrets-dans-le-depot-github" title="Permanent link">&para;</a></h4>
 <p>Dans <code>GitHub → Settings → Secrets and variables → Actions</code> :</p>
 <table>
@@ -1912,135 +2480,139 @@ EOF</p>
 <h4 id="1d-activer-ghcr-pour-le-depot">1d. Activer GHCR pour le dépôt<a class="headerlink" href="#1d-activer-ghcr-pour-le-depot" title="Permanent link">&para;</a></h4>
 <p>Dans <code>GitHub → Settings → Packages</code> : s'assurer que le dépôt a accès à GitHub Container Registry. Par défaut c'est activé — aucune configuration manuelle requise.</p>
 <h4 id="1e-verifier-que-le-namespace-et-les-secrets-k3s-existent">1e. Vérifier que le namespace et les secrets K3s existent<a class="headerlink" href="#1e-verifier-que-le-namespace-et-les-secrets-k3s-existent" title="Permanent link">&para;</a></h4>
-<p><code>bash
-kubectl get namespace nutrition
-kubectl get secret nutrition-api-secret -n nutrition
-kubectl get secret nutrition-api-tls -n nutrition    # certificat TLS pour l'Ingress</code></p>
+<div class="language-bash highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>nutrition
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>nutrition-api-secret<span class="w"> </span>-n<span class="w"> </span>nutrition
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>nutrition-api-tls<span class="w"> </span>-n<span class="w"> </span>nutrition<span class="w">    </span><span class="c1"># certificat TLS pour l&#39;Ingress</span>
+</code></pre></div>
 <p>Si l'un de ces éléments manque, se référer à la Section 2 pour les créer avant de lancer le pipeline.</p>
 <hr />
 <h3 id="etape-2-workflow-github-actions">Étape 2 — Workflow GitHub Actions<a class="headerlink" href="#etape-2-workflow-github-actions" title="Permanent link">&para;</a></h3>
 <h4 id="githubworkflowsdeployyml"><code>.github/workflows/deploy.yml</code><a class="headerlink" href="#githubworkflowsdeployyml" title="Permanent link">&para;</a></h4>
-<p>```yaml
-name: Build &amp; Deploy</p>
-<p>on:
-  push:
-    branches:
-      - main</p>
-<p>env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/nutrition-api</p>
-<p>jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write     # nécessaire pour pousser sur GHCR</p>
-<pre><code>steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build &amp; Deploy</span>
 
-  - name: Login to GHCR
-    uses: docker/login-action@v3
-    with:
-      registry: ${{ env.REGISTRY }}
-      username: ${{ github.actor }}
-      password: ${{ secrets.GITHUB_TOKEN }}
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
-  - name: Build and push image
-    uses: docker/build-push-action@v5
-    with:
-      context: .
-      push: true
-      tags: |
-        ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io</span>
+<span class="w">  </span><span class="nt">IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.repository }}/nutrition-api</span>
 
-  - name: Setup kubectl
-    uses: azure/setup-kubectl@v3
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build-and-deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+<span class="w">      </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">     </span><span class="c1"># nécessaire pour pousser sur GHCR</span>
 
-  - name: Configure kubeconfig
-    run: |
-      mkdir -p $HOME/.kube
-      echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d &gt; $HOME/.kube/config
-      chmod 600 $HOME/.kube/config
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 
-  - name: Deploy to K3s
-    run: |
-      kubectl set image deployment/nutrition-api \
-        nutrition-api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-        -n nutrition
-      kubectl rollout status deployment/nutrition-api -n nutrition --timeout=120s
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Login to GHCR</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/login-action@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">registry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ env.REGISTRY }}</span>
+<span class="w">          </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.actor }}</span>
+<span class="w">          </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
 
-  - name: Verify deployment
-    run: kubectl get pods -n nutrition
-</code></pre>
-<p>```</p>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and push image</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/build-push-action@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">          </span><span class="nt">push</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}</span>
+<span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup kubectl</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/setup-kubectl@v3</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure kubeconfig</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">mkdir -p $HOME/.kube</span>
+<span class="w">          </span><span class="no">echo &quot;${{ secrets.KUBECONFIG_B64 }}&quot; | base64 -d &gt; $HOME/.kube/config</span>
+<span class="w">          </span><span class="no">chmod 600 $HOME/.kube/config</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to K3s</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">kubectl set image deployment/nutrition-api \</span>
+<span class="w">            </span><span class="no">nutrition-api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \</span>
+<span class="w">            </span><span class="no">-n nutrition</span>
+<span class="w">          </span><span class="no">kubectl rollout status deployment/nutrition-api -n nutrition --timeout=120s</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify deployment</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl get pods -n nutrition</span>
+</code></pre></div>
 <hr />
 <h3 id="etape-3-pipeline-ci-tests-build-tests-sur-pr">Étape 3 — Pipeline CI tests (build + tests sur PR)<a class="headerlink" href="#etape-3-pipeline-ci-tests-build-tests-sur-pr" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p>Distinct du pipeline de déploiement — se déclenche sur chaque Pull Request avant merge.
 Fichier créé dans le repo <code>nutrition-api</code>.</p>
 </blockquote>
-<p><code>.github/
+<div class="language-text highlight"><pre><span></span><code>.github/
 └── workflows/
     ├── ci.yml
-    └── deploy.yml</code></p>
+    └── deploy.yml
+</code></pre></div>
 <h4 id="githubworkflowsciyml"><code>.github/workflows/ci.yml</code><a class="headerlink" href="#githubworkflowsciyml" title="Permanent link">&para;</a></h4>
-<p>```yaml
-name: CI</p>
-<p>on:
-  pull_request:
-    branches:
-      - main</p>
-<p>jobs:
-  build-and-test:
-    runs-on: ubuntu-latest</p>
-<pre><code>services:
-  postgres:
-    image: postgres:16-alpine
-    env:
-      POSTGRES_DB: nutrition_test
-      POSTGRES_USER: nutrition_user
-      POSTGRES_PASSWORD: test_password
-    ports:
-      - 5432:5432
-    options: &gt;-
-      --health-cmd pg_isready
-      --health-interval 10s
-      --health-retries 5
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
 
-steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
-  - name: Setup .NET 10
-    uses: actions/setup-dotnet@v4
-    with:
-      dotnet-version: '10.x'
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build-and-test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
-  - name: Restore
-    run: dotnet restore
+<span class="w">    </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">postgres</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition_test</span>
+<span class="w">          </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition_user</span>
+<span class="w">          </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_password</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432:5432</span>
+<span class="w">        </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">          </span><span class="no">--health-cmd pg_isready</span>
+<span class="w">          </span><span class="no">--health-interval 10s</span>
+<span class="w">          </span><span class="no">--health-retries 5</span>
 
-  - name: Build
-    run: dotnet build --no-restore --configuration Release
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 
-  - name: Tests unitaires
-    run: dotnet test --no-build --configuration Release --filter "Category=Unit" --logger "trx;LogFileName=unit-tests.trx"
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup .NET 10</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-dotnet@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">dotnet-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;10.x&#39;</span>
 
-  - name: Tests intégration
-    env:
-      ConnectionStrings__NutritionDb: "Host=localhost;Port=5432;Database=nutrition_test;Username=nutrition_user;Password=test_password"
-    run: dotnet test --no-build --configuration Release --filter "Category=Integration" --logger "trx;LogFileName=integration-tests.trx"
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restore</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet restore</span>
 
-  - name: Publier les résultats de tests
-    uses: dorny/test-reporter@v1
-    if: always()
-    with:
-      name: Résultats tests
-      path: '**/*.trx'
-      reporter: dotnet-trx
-</code></pre>
-<p>```</p>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet build --no-restore --configuration Release</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests unitaires</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet test --no-build --configuration Release --filter &quot;Category=Unit&quot; --logger &quot;trx;LogFileName=unit-tests.trx&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests intégration</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ConnectionStrings__NutritionDb</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Host=localhost;Port=5432;Database=nutrition_test;Username=nutrition_user;Password=test_password&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet test --no-build --configuration Release --filter &quot;Category=Integration&quot; --logger &quot;trx;LogFileName=integration-tests.trx&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Publier les résultats de tests</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorny/test-reporter@v1</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Résultats tests</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;**/*.trx&#39;</span>
+<span class="w">          </span><span class="nt">reporter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet-trx</span>
+</code></pre></div>
 <blockquote>
 <p><strong>Testcontainers vs service PostgreSQL GitHub Actions</strong> — les tests d'intégration avec <code>Testcontainers</code> démarrent leur propre conteneur PostgreSQL. Si tu utilises Testcontainers, supprimer le bloc <code>services:</code> du workflow et retirer la variable <code>ConnectionStrings__NutritionDb</code> — Testcontainers gère la connexion lui-même.</p>
 </blockquote>

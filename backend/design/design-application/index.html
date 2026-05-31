@@ -2100,16 +2100,17 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 <h2 id="1-pattern-architectural-retenu">1. Pattern architectural retenu<a class="headerlink" href="#1-pattern-architectural-retenu" title="Permanent link">&para;</a></h2>
 <p><strong>Services applicatifs</strong> — un service par domaine fonctionnel.</p>
 <p>Chaque service orchestre un ensemble de cas d'usage cohérents. Il charge les agrégats via les repositories, appelle les méthodes métier du Domain, persiste les changements, puis retourne un DTO.</p>
-<p><code>Controller → XxxService → IXxxRepository (interface)
+<div class="language-text highlight"><pre><span></span><code>Controller → XxxService → IXxxRepository (interface)
                         → Domain (entités, invariants)
-                        → DTO (réponse)</code></p>
+                        → DTO (réponse)
+</code></pre></div>
 <p><strong>Ce que le service NE fait PAS :</strong>
 - Contenir des règles métier — elles restent dans le Domain
 - Accéder directement à la base de données — il passe par les interfaces de repositories
 - Retourner des entités Domain — il retourne uniquement des DTOs</p>
 <hr />
 <h2 id="2-structure-des-dossiers">2. Structure des dossiers<a class="headerlink" href="#2-structure-des-dossiers" title="Permanent link">&para;</a></h2>
-<p><code>src/NutritionApi.Application/
+<div class="language-text highlight"><pre><span></span><code>src/NutritionApi.Application/
 ├── Services/
 │   ├── UserService.cs
 │   ├── DietPlanService.cs
@@ -2168,7 +2169,8 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 │   ├── ConflictException.cs
 │   ├── ForbiddenException.cs
 │   └── UnprocessableException.cs
-└── DependencyInjection.cs</code></p>
+└── DependencyInjection.cs
+</code></pre></div>
 <hr />
 <h2 id="3-conventions-de-nommage">3. Conventions de nommage<a class="headerlink" href="#3-conventions-de-nommage" title="Permanent link">&para;</a></h2>
 <table>
@@ -2231,85 +2233,85 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 <h2 id="4-interfaces-de-repositories">4. Interfaces de repositories<a class="headerlink" href="#4-interfaces-de-repositories" title="Permanent link">&para;</a></h2>
 <p>Les interfaces sont définies dans la couche Application. L'Infrastructure les implémente.</p>
 <h3 id="iuserrepository">IUserRepository<a class="headerlink" href="#iuserrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IUserRepository
-{
-    Task&lt;User?&gt; GetByIdAsync(Guid id);
-    Task&lt;User?&gt; GetByKeycloakIdAsync(string keycloakId);
-    Task AddAsync(User user);
-    Task UpdateAsync(User user);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IUserRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">User</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">User</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByKeycloakIdAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="idietplanrepository">IDietPlanRepository<a class="headerlink" href="#idietplanrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IDietPlanRepository
-{
-    Task&lt;DietPlan?&gt; GetByIdAsync(Guid id);
-    Task&lt;List&lt;DietPlan&gt;&gt; GetByUserIdAsync(Guid userId);
-    Task&lt;List&lt;DietPlan&gt;&gt; GetTemplatesAsync();
-    Task AddAsync(DietPlan dietPlan);
-    Task UpdateAsync(DietPlan dietPlan);
-    Task DeleteAsync(Guid id);
-    Task&lt;int&gt; CountByUserIdAsync(Guid userId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IDietPlanRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlan</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietPlan</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietPlan</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetTemplatesAsync</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">DietPlan</span><span class="w"> </span><span class="n">dietPlan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">DietPlan</span><span class="w"> </span><span class="n">dietPlan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CountByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="idietrepository">IDietRepository<a class="headerlink" href="#idietrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IDietRepository
-{
-    Task&lt;Diet?&gt; GetByIdAsync(Guid id);
-    Task&lt;Diet?&gt; GetActiveByUserIdAsync(Guid userId);
-    Task&lt;List&lt;Diet&gt;&gt; GetByUserIdAsync(Guid userId);
-    Task AddAsync(Diet diet);
-    Task UpdateAsync(Diet diet);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IDietRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">Diet</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">Diet</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetActiveByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Diet</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">Diet</span><span class="w"> </span><span class="n">diet</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">Diet</span><span class="w"> </span><span class="n">diet</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="imealrepository">IMealRepository<a class="headerlink" href="#imealrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IMealRepository
-{
-    Task&lt;Meal?&gt; GetByIdAsync(Guid id);
-    Task&lt;List&lt;Meal&gt;&gt; GetByUserIdAsync(Guid userId, DateOnly? date = null, bool? saved = null);
-    Task AddAsync(Meal meal);
-    Task UpdateAsync(Meal meal);
-    Task DeleteAsync(Guid id);
-    Task&lt;int&gt; CountSavedByUserIdAsync(Guid userId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IMealRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">Meal</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Meal</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="kt">bool?</span><span class="w"> </span><span class="n">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">Meal</span><span class="w"> </span><span class="n">meal</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">Meal</span><span class="w"> </span><span class="n">meal</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CountSavedByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="ifooditemrepository">IFoodItemRepository<a class="headerlink" href="#ifooditemrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IFoodItemRepository
-{
-    Task&lt;FoodItem?&gt; GetByIdAsync(Guid id);
-    Task&lt;FoodItem?&gt; GetByOffIdAsync(string offId);
-    Task&lt;List&lt;FoodItem&gt;&gt; SearchByKeywordAsync(string keyword, int limit = 20);
-    Task AddAsync(FoodItem foodItem);
-    Task UpdateAsync(FoodItem foodItem);
-    Task&lt;int&gt; CountAsync();
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IFoodItemRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByOffIdAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">offId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">SearchByKeywordAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">FoodItem</span><span class="w"> </span><span class="n">foodItem</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">FoodItem</span><span class="w"> </span><span class="n">foodItem</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CountAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="iweightentryrepository">IWeightEntryRepository<a class="headerlink" href="#iweightentryrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IWeightEntryRepository
-{
-    Task&lt;WeightEntry?&gt; GetByIdAsync(Guid id);
-    Task&lt;WeightEntry?&gt; GetByUserIdAndDateAsync(Guid userId, DateOnly date);
-    Task&lt;List&lt;WeightEntry&gt;&gt; GetByUserIdAsync(Guid userId);
-    Task AddAsync(WeightEntry entry);
-    Task UpdateAsync(WeightEntry entry);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IWeightEntryRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">WeightEntry</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">WeightEntry</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByUserIdAndDateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="w"> </span><span class="n">date</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">WeightEntry</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">WeightEntry</span><span class="w"> </span><span class="n">entry</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">WeightEntry</span><span class="w"> </span><span class="n">entry</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="isavedfooditemrepository">ISavedFoodItemRepository<a class="headerlink" href="#isavedfooditemrepository" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface ISavedFoodItemRepository
-{
-    Task&lt;SavedFoodItem?&gt; GetByIdAsync(Guid id);
-    Task&lt;SavedFoodItem?&gt; GetByUserIdAndFoodItemIdAsync(Guid userId, Guid foodItemId);
-    Task&lt;List&lt;SavedFoodItem&gt;&gt; GetByUserIdAsync(Guid userId);
-    Task AddAsync(SavedFoodItem savedFoodItem);
-    Task DeleteAsync(Guid id);
-    Task&lt;int&gt; CountByUserIdAsync(Guid userId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">ISavedFoodItemRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">SavedFoodItem</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">SavedFoodItem</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByUserIdAndFoodItemIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">foodItemId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedFoodItem</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">SavedFoodItem</span><span class="w"> </span><span class="n">savedFoodItem</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CountByUserIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="iunitofwork">IUnitOfWork<a class="headerlink" href="#iunitofwork" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IUnitOfWork
-{
-    Task SaveChangesAsync();
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IUnitOfWork</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
 <blockquote>
 <p><code>AppDbContext</code> (Infrastructure) implémente cette interface. Elle est injectée dans tous les services qui effectuent des opérations d'écriture atomiques.</p>
 </blockquote>
@@ -2317,105 +2319,106 @@ public interface IUnitOfWork
 <h2 id="4bis-interfaces-de-services-applicatifs">4bis. Interfaces de services applicatifs<a class="headerlink" href="#4bis-interfaces-de-services-applicatifs" title="Permanent link">&para;</a></h2>
 <p>Ces interfaces définissent le <strong>contrat entre la couche API et la couche Application</strong>. Elles permettent à l'API de dépendre d'abstractions plutôt que de classes concrètes — prérequis pour une implémentation API-first.</p>
 <p><strong>Règle :</strong> chaque controller injecte <code>IXxxService</code>, jamais <code>XxxService</code> directement.</p>
-<p><code>API layer         → dépend de IXxxService      (défini ici)
-Application layer → implémente IXxxService     (XxxService.cs)</code></p>
+<div class="language-text highlight"><pre><span></span><code>API layer         → dépend de IXxxService      (défini ici)
+Application layer → implémente IXxxService     (XxxService.cs)
+</code></pre></div>
 <h3 id="iuserservice">IUserService<a class="headerlink" href="#iuserservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IUserService
-{
-    Task&lt;UserProfileResponse&gt; CreateUserProfileAsync(string keycloakId, CreateUserProfileRequest request);
-    Task&lt;UserProfileResponse&gt; GetUserProfileAsync(string keycloakId);
-    Task&lt;UserProfileResponse&gt; UpdateUserProfileAsync(string keycloakId, UpdateUserProfileRequest request);
-    Task DeleteUserAsync(string keycloakId);
-    Task&lt;UserProfileResponse&gt; ReactivateUserAsync(string keycloakId);
-    Task&lt;object&gt; ExportUserDataAsync(string keycloakId);
-    Task&lt;WeightEntryResponse&gt; AddWeightEntryAsync(Guid userId, AddWeightEntryRequest request);
-    Task&lt;List&lt;WeightEntryResponse&gt;&gt; GetWeightHistoryAsync(Guid userId);
-    Task&lt;WeightEntryResponse&gt; UpdateWeightEntryAsync(Guid userId, Guid entryId, UpdateWeightEntryRequest request);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IUserService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateUserProfileAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CreateUserProfileRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetUserProfileAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateUserProfileAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateUserProfileRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ReactivateUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ExportUserDataAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">AddWeightEntryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">AddWeightEntryRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetWeightHistoryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateWeightEntryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">entryId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateWeightEntryRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="idietplanservice">IDietPlanService<a class="headerlink" href="#idietplanservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IDietPlanService
-{
-    Task&lt;List&lt;DietPlanResponse&gt;&gt; GetUserPlansAsync(Guid userId);
-    Task&lt;DietPlanResponse&gt; CreateAsync(Guid userId, CreateDietPlanRequest request);
-    Task&lt;DietPlanResponse&gt; UpdateAsync(Guid userId, Guid planId, UpdateDietPlanRequest request);
-    Task DeleteAsync(Guid userId, Guid planId);
-    Task&lt;DietResponse&gt; LaunchAsync(Guid userId, Guid planId);
-    Task&lt;List&lt;DietPlanResponse&gt;&gt; GetTemplatesAsync(Guid userId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IDietPlanService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetUserPlansAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">CreateDietPlanRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">planId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateDietPlanRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">planId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">LaunchAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">planId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetTemplatesAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="idietservice">IDietService<a class="headerlink" href="#idietservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IDietService
-{
-    Task&lt;DietResponse&gt; GetActiveAsync(Guid userId);
-    Task&lt;List&lt;DietResponse&gt;&gt; GetHistoryAsync(Guid userId);
-    Task&lt;DietResponse&gt; GetByIdAsync(Guid userId, Guid dietId);
-    Task&lt;DietResponse&gt; ArchiveAsync(Guid userId, Guid dietId);
-    Task&lt;NutritionBilanResponse&gt; GetBilanAsync(Guid userId, Guid dietId, string period, DateOnly? date, DateOnly? startDate, DateOnly? endDate);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IDietService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetActiveAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetHistoryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">dietId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ArchiveAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">dietId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">NutritionBilanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetBilanAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">dietId</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">date</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">startDate</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">endDate</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="imealservice">IMealService<a class="headerlink" href="#imealservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IMealService
-{
-    Task&lt;MealResponse&gt; CreateAsync(Guid userId, CreateMealRequest request);
-    Task&lt;List&lt;MealResponse&gt;&gt; GetAllAsync(Guid userId, bool? saved, DateOnly? date);
-    Task&lt;MealResponse&gt; GetByIdAsync(Guid userId, Guid mealId);
-    Task&lt;MealResponse&gt; UpdateAsync(Guid userId, Guid mealId, UpdateMealRequest request);
-    Task DeleteAsync(Guid userId, Guid mealId);
-    Task&lt;MealResponse&gt; AddItemAsync(Guid userId, Guid mealId, AddMealItemRequest request);
-    Task&lt;MealResponse&gt; RemoveItemAsync(Guid userId, Guid mealId, Guid itemId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IMealService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">CreateMealRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetAllAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="kt">bool?</span><span class="w"> </span><span class="n">saved</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">date</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">mealId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">mealId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateMealRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">mealId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">AddItemAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">mealId</span><span class="p">,</span><span class="w"> </span><span class="n">AddMealItemRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">RemoveItemAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">mealId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">itemId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="ifooditemservice">IFoodItemService<a class="headerlink" href="#ifooditemservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IFoodItemService
-{
-    Task&lt;List&lt;FoodItemSearchResponse&gt;&gt; SearchAsync(string keyword, int limit = 20);
-    Task&lt;List&lt;SavedFoodItemResponse&gt;&gt; GetSavedAsync(Guid userId);
-    Task&lt;SavedFoodItemResponse&gt; SaveAsync(Guid userId, SaveFoodItemRequest request);
-    Task RemoveSavedAsync(Guid userId, Guid savedId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IFoodItemService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItemSearchResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">SearchAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedFoodItemResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetSavedAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">SavedFoodItemResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SaveAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">SaveFoodItemRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">RemoveSavedAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">savedId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="inutritionservice">INutritionService<a class="headerlink" href="#inutritionservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface INutritionService
-{
-    Task&lt;NutritionBilanResponse&gt; GetBilanAsync(Guid userId, Guid dietId, string period, DateOnly? date, DateOnly? startDate, DateOnly? endDate);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">INutritionService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">NutritionBilanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetBilanAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">dietId</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">date</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">startDate</span><span class="p">,</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="n">endDate</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="iadminservice">IAdminService<a class="headerlink" href="#iadminservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IAdminService
-{
-    Task&lt;AdminDashboardResponse&gt; GetDashboardAsync();
-    Task&lt;SystemHealthResponse&gt; GetSystemHealthAsync();
-    Task&lt;DietPlanResponse&gt; CreateTemplateAsync(CreateDietPlanRequest request);
-    Task&lt;DietPlanResponse&gt; UpdateTemplateAsync(Guid templateId, UpdateDietPlanRequest request);
-    Task DeleteTemplateAsync(Guid templateId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IAdminService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">AdminDashboardResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetDashboardAsync</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">SystemHealthResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetSystemHealthAsync</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateTemplateAsync</span><span class="p">(</span><span class="n">CreateDietPlanRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateTemplateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">templateId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateDietPlanRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteTemplateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">templateId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="4ter-interfaces-de-services-externes">4ter. Interfaces de services externes<a class="headerlink" href="#4ter-interfaces-de-services-externes" title="Permanent link">&para;</a></h2>
 <p>Ces interfaces définissent le <strong>contrat entre la couche Application et les services externes</strong> (Infrastructure les implémente). L'Application ne connaît jamais les détails d'implémentation (Redis, Keycloak, SMTP...).</p>
 <h3 id="ifoodcacheservice">IFoodCacheService<a class="headerlink" href="#ifoodcacheservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IFoodCacheService
-{
-    Task&lt;List&lt;FoodItemSearchResponse&gt;?&gt; GetAsync(string keyword);
-    Task SetAsync(string keyword, List&lt;FoodItemSearchResponse&gt; results);
-    Task InvalidateAsync(string keyword);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IFoodCacheService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItemSearchResponse</span><span class="o">&gt;?&gt;</span><span class="w"> </span><span class="n">GetAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">SetAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItemSearchResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">results</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">InvalidateAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="ikeycloakadminservice">IKeycloakAdminService<a class="headerlink" href="#ikeycloakadminservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IKeycloakAdminService
-{
-    Task DisableUserAsync(string keycloakId);
-    Task EnableUserAsync(string keycloakId);
-    Task DeleteUserAsync(string keycloakId);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IKeycloakAdminService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DisableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">EnableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="iemailservice">IEmailService<a class="headerlink" href="#iemailservice" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-public interface IEmailService
-{
-    Task SendReactivationEmailAsync(string toEmail, string reactivationLink, TimeSpan validity);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IEmailService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">SendReactivationEmailAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">toEmail</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">reactivationLink</span><span class="p">,</span><span class="w"> </span><span class="n">TimeSpan</span><span class="w"> </span><span class="n">validity</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <blockquote>
 <p>Utilisé par <code>UserService.DeleteUserAsync()</code> — envoie le lien signé de réactivation valable 30 jours (workflow RGPD).
 Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'infrastructure.</p>
@@ -2429,9 +2432,9 @@ Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'
 - Ajouter une <code>WeightEntry</code>
 - Retourner le profil avec calcul <code>NutritionNeeds</code> (BMR/TDEE) — uniquement sur <code>GetProfileAsync</code>, pas à la création</p>
 <p><strong>Signatures :</strong>
-<code>csharp
-Task&lt;UserProfileResponse&gt; CreateUserProfileAsync(string keycloakId, CreateUserProfileRequest request);
-Task&lt;UserProfileResponse&gt; UpdateUserProfileAsync(string keycloakId, UpdateUserProfileRequest request);</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateUserProfileAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CreateUserProfileRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+<span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateUserProfileAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateUserProfileRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
+</code></pre></div></p>
 <blockquote>
 <p><code>keycloakId</code> vient du token JWT (claim <code>sub</code>) — jamais dans le body de la requête. Le controller l'extrait depuis <code>HttpContext.User</code> et le passe en paramètre séparé.</p>
 </blockquote>
@@ -2802,35 +2805,35 @@ Task&lt;UserProfileResponse&gt; UpdateUserProfileAsync(string keycloakId, Update
 <h2 id="8-injection-de-dependances">8. Injection de dépendances<a class="headerlink" href="#8-injection-de-dependances" title="Permanent link">&para;</a></h2>
 <p>Chaque couche expose une extension <code>AddXxx()</code> appelée dans <code>Program.cs</code>.</p>
 <p><strong>Prérequis — package NuGet à ajouter dans <code>NutritionApi.Application</code> :</strong></p>
-<p><code>bash
-dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions</code></p>
+<div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>Microsoft.Extensions.DependencyInjection.Abstractions
+</code></pre></div>
 <blockquote>
 <p>Ce package fournit <code>IServiceCollection</code>. Il est nécessaire dans les projets class library — il n'est pas inclus automatiquement contrairement aux projets ASP.NET Core.
 <code>NutritionApi.Infrastructure</code> aura besoin du même package pour son propre <code>DependencyInjection.cs</code>.</p>
 </blockquote>
-<p><code>csharp
-// Application/DependencyInjection.cs
-public static class ApplicationExtensions
-{
-    public static IServiceCollection AddApplication(this IServiceCollection services)
-    {
-        services.AddScoped&lt;UserService&gt;();
-        services.AddScoped&lt;DietPlanService&gt;();
-        services.AddScoped&lt;DietService&gt;();
-        services.AddScoped&lt;MealService&gt;();
-        services.AddScoped&lt;FoodItemService&gt;();
-        services.AddScoped&lt;NutritionService&gt;();
-        services.AddScoped&lt;AdminService&gt;();
-        services.AddScoped&lt;SubscriptionGuard&gt;();
-        return services;
-    }
-}</code></p>
-<p>```csharp
-// Api/Program.cs
-using NutritionApi.Application; // ← using obligatoire pour résoudre AddApplication()</p>
-<p>builder.Services.AddApplication();
-// Les repositories (IXxxRepository → XxxRepository) sont enregistrés dans AddInfrastructure()
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Application/DependencyInjection.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApplicationExtensions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="nf">AddApplication</span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="n">services</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">UserService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">DietPlanService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">DietService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">MealService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">FoodItemService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">NutritionService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">AdminService</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">SubscriptionGuard</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">services</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Api/Program.cs</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">NutritionApi.Application</span><span class="p">;</span><span class="w"> </span><span class="c1">// ← using obligatoire pour résoudre AddApplication()</span>
+
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddApplication</span><span class="p">();</span>
+<span class="c1">// Les repositories (IXxxRepository → XxxRepository) sont enregistrés dans AddInfrastructure()</span>
+</code></pre></div>
 <p><strong>Durée de vie :</strong> tous les services Application sont <code>Scoped</code> — une instance par requête HTTP.</p>
 <hr />
 <h2 id="9-regles-transverses">9. Règles transverses<a class="headerlink" href="#9-regles-transverses" title="Permanent link">&para;</a></h2>

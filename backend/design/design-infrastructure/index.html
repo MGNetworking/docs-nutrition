@@ -1160,8 +1160,35 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#regles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Règles
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-injection-de-dependances" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Injection de dépendances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-regles-transverses" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Règles transverses
+    </span>
+  </a>
   
 </li>
       
@@ -2076,8 +2103,35 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#regles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Règles
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-injection-de-dependances" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Injection de dépendances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-regles-transverses" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Règles transverses
+    </span>
+  </a>
   
 </li>
       
@@ -2104,7 +2158,7 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 </blockquote>
 <hr />
 <h2 id="1-structure-des-dossiers">1. Structure des dossiers<a class="headerlink" href="#1-structure-des-dossiers" title="Permanent link">&para;</a></h2>
-<p><code>src/NutritionApi.Infrastructure/
+<div class="language-text highlight"><pre><span></span><code>src/NutritionApi.Infrastructure/
 ├── Persistence/
 │   ├── AppDbContext.cs
 │   ├── Configurations/
@@ -2134,41 +2188,41 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 │   └── RgpdPurgeJob.cs
 ├── ExternalServices/
 │   └── KeycloakAdminService.cs
-└── DependencyInjection.cs</code></p>
+└── DependencyInjection.cs
+</code></pre></div>
 <hr />
 <h2 id="2-configuration-ef-core">2. Configuration EF Core<a class="headerlink" href="#2-configuration-ef-core" title="Permanent link">&para;</a></h2>
 <h3 id="dbcontext">DbContext<a class="headerlink" href="#dbcontext" title="Permanent link">&para;</a></h3>
-<p>```csharp
-// Infrastructure/Persistence/AppDbContext.cs
-public class AppDbContext : DbContext, IUnitOfWork
-{
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }</p>
-<pre><code>public DbSet&lt;User&gt; Users =&gt; Set&lt;User&gt;();
-public DbSet&lt;DietPlan&gt; DietPlans =&gt; Set&lt;DietPlan&gt;();
-public DbSet&lt;Diet&gt; Diets =&gt; Set&lt;Diet&gt;();
-public DbSet&lt;Meal&gt; Meals =&gt; Set&lt;Meal&gt;();
-public DbSet&lt;MealItem&gt; MealItems =&gt; Set&lt;MealItem&gt;();
-public DbSet&lt;WeightEntry&gt; WeightEntries =&gt; Set&lt;WeightEntry&gt;();
-public DbSet&lt;FoodItem&gt; FoodItems =&gt; Set&lt;FoodItem&gt;();
-public DbSet&lt;SavedFoodItem&gt; SavedFoodItems =&gt; Set&lt;SavedFoodItem&gt;();
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Infrastructure/Persistence/AppDbContext.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AppDbContext</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">DbContext</span><span class="p">,</span><span class="w"> </span><span class="n">IUnitOfWork</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">AppDbContext</span><span class="p">(</span><span class="n">DbContextOptions</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="w"> </span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
 
-protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-}
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Users</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">DietPlan</span><span class="o">&gt;</span><span class="w"> </span><span class="n">DietPlans</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">DietPlan</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">Diet</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Diets</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Diet</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">Meal</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Meals</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Meal</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">MealItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">MealItems</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">MealItem</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">WeightEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">WeightEntries</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">WeightEntry</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">FoodItems</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">DbSet</span><span class="o">&lt;</span><span class="n">SavedFoodItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SavedFoodItems</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">SavedFoodItem</span><span class="o">&gt;</span><span class="p">();</span>
 
-public async Task&lt;int&gt; SaveChangesAsync(CancellationToken ct = default)
-    =&gt; await base.SaveChangesAsync(ct);
-</code></pre>
-<p>}
-```</p>
+<span class="w">    </span><span class="k">protected</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span><span class="w"> </span><span class="n">modelBuilder</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">modelBuilder</span><span class="p">.</span><span class="n">ApplyConfigurationsFromAssembly</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">AppDbContext</span><span class="p">).</span><span class="n">Assembly</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SaveChangesAsync</span><span class="p">(</span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">)</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">base</span><span class="p">.</span><span class="n">SaveChangesAsync</span><span class="p">(</span><span class="n">ct</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="convention-de-nommage-snake_case-automatique">Convention de nommage — snake_case automatique<a class="headerlink" href="#convention-de-nommage-snake_case-automatique" title="Permanent link">&para;</a></h3>
 <p>Le package Npgsql applique automatiquement la conversion PascalCase → snake_case.</p>
-<p><code>csharp
-// Program.cs / DependencyInjection.cs
-services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
-    options.UseNpgsql(connectionString)
-           .UseSnakeCaseNamingConvention());</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs / DependencyInjection.cs</span>
+<span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">UseNpgsql</span><span class="p">(</span><span class="n">connectionString</span><span class="p">)</span>
+<span class="w">           </span><span class="p">.</span><span class="n">UseSnakeCaseNamingConvention</span><span class="p">());</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -2199,43 +2253,43 @@ services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
 <p><strong>Règle :</strong> Fluent API uniquement — aucune Data Annotation sur les entités Domain.</p>
 <p>Les entités Domain ne doivent pas connaître la persistance. Toute configuration EF Core est dans <code>Configurations/</code>.</p>
 <h3 id="enums-stockage-en-string">Enums — stockage en string<a class="headerlink" href="#enums-stockage-en-string" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-// Exemple dans UserConfiguration.cs
-builder.Property(u =&gt; u.Gender)
-       .HasConversion&lt;string&gt;()
-       .HasMaxLength(20);</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Exemple dans UserConfiguration.cs</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">Gender</span><span class="p">)</span>
+<span class="w">       </span><span class="p">.</span><span class="n">HasConversion</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">       </span><span class="p">.</span><span class="n">HasMaxLength</span><span class="p">(</span><span class="m">20</span><span class="p">);</span>
+</code></pre></div>
 <p>Toutes les propriétés enum sont stockées en <code>VARCHAR</code> pour la lisibilité en base.</p>
 <h3 id="value-objects-owned-entities">Value Objects — Owned Entities<a class="headerlink" href="#value-objects-owned-entities" title="Permanent link">&para;</a></h3>
 <p><code>MacroDistribution</code> et <code>NutritionInfo</code> sont des Value Objects mappés via <code>OwnsOne</code> — leurs colonnes sont stockées dans la table de l'entité propriétaire.</p>
-<p>```csharp
-// Dans DietConfiguration.cs (et DietPlanConfiguration.cs)
-builder.OwnsOne(d =&gt; d.MacroDistribution, macro =&gt;
-{
-    macro.Property(m =&gt; m.ProteinPercentage).HasColumnName("macro_protein_pct");
-    macro.Property(m =&gt; m.CarbPercentage).HasColumnName("macro_carb_pct");
-    macro.Property(m =&gt; m.FatPercentage).HasColumnName("macro_fat_pct");
-});</p>
-<p>// Dans MealItemConfiguration.cs
-builder.OwnsOne(mi =&gt; mi.Nutrition, n =&gt;
-{
-    n.Property(x =&gt; x.Calories).HasColumnName("nutrition_calories");
-    n.Property(x =&gt; x.Proteins).HasColumnName("nutrition_proteins");
-    n.Property(x =&gt; x.Carbs).HasColumnName("nutrition_carbs");
-    n.Property(x =&gt; x.Fats).HasColumnName("nutrition_fats");
-});
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Dans DietConfiguration.cs (et DietPlanConfiguration.cs)</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">OwnsOne</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">MacroDistribution</span><span class="p">,</span><span class="w"> </span><span class="n">macro</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">macro</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">ProteinPercentage</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;macro_protein_pct&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">macro</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">CarbPercentage</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;macro_carb_pct&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">macro</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">FatPercentage</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;macro_fat_pct&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// Dans MealItemConfiguration.cs</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">OwnsOne</span><span class="p">(</span><span class="n">mi</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">mi</span><span class="p">.</span><span class="n">Nutrition</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">n</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Calories</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;nutrition_calories&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">n</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Proteins</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;nutrition_proteins&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">n</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Carbs</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;nutrition_carbs&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">n</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Fats</span><span class="p">).</span><span class="n">HasColumnName</span><span class="p">(</span><span class="s">&quot;nutrition_fats&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
 <h3 id="listes-primitives-colonnes-postgresql-array">Listes primitives — colonnes PostgreSQL array<a class="headerlink" href="#listes-primitives-colonnes-postgresql-array" title="Permanent link">&para;</a></h3>
 <p><code>User.Allergies</code> (<code>List&lt;Allergen&gt;</code>) et <code>User.DietaryPreferences</code> (<code>List&lt;string&gt;</code>) ainsi que <code>FoodItem.AllergensTags</code> sont mappées sur des colonnes PostgreSQL array via Npgsql.</p>
-<p>```csharp
-// Dans UserConfiguration.cs
-builder.Property(u =&gt; u.Allergies)
-       .HasColumnType("text[]")
-       .HasConversion(
-           v =&gt; v.Select(a =&gt; a.ToString()).ToArray(),
-           v =&gt; v.Select(s =&gt; Enum.Parse<Allergen>(s)).ToList());</p>
-<p>builder.Property(u =&gt; u.DietaryPreferences)
-       .HasColumnType("text[]");
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Dans UserConfiguration.cs</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">Allergies</span><span class="p">)</span>
+<span class="w">       </span><span class="p">.</span><span class="n">HasColumnType</span><span class="p">(</span><span class="s">&quot;text[]&quot;</span><span class="p">)</span>
+<span class="w">       </span><span class="p">.</span><span class="n">HasConversion</span><span class="p">(</span>
+<span class="w">           </span><span class="n">v</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">ToString</span><span class="p">()).</span><span class="n">ToArray</span><span class="p">(),</span>
+<span class="w">           </span><span class="n">v</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Enum</span><span class="p">.</span><span class="n">Parse</span><span class="o">&lt;</span><span class="n">Allergen</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">)).</span><span class="n">ToList</span><span class="p">());</span>
+
+<span class="n">builder</span><span class="p">.</span><span class="n">Property</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">DietaryPreferences</span><span class="p">)</span>
+<span class="w">       </span><span class="p">.</span><span class="n">HasColumnType</span><span class="p">(</span><span class="s">&quot;text[]&quot;</span><span class="p">);</span>
+</code></pre></div>
 <hr />
 <h2 id="3-schema-de-la-base-de-donnees">3. Schéma de la base de données<a class="headerlink" href="#3-schema-de-la-base-de-donnees" title="Permanent link">&para;</a></h2>
 <h3 id="table-users">Table <code>users</code><a class="headerlink" href="#table-users" title="Permanent link">&para;</a></h3>
@@ -2669,53 +2723,52 @@ builder.Property(u =&gt; u.Allergies)
 <h2 id="4-pattern-des-repositories">4. Pattern des repositories<a class="headerlink" href="#4-pattern-des-repositories" title="Permanent link">&para;</a></h2>
 <h3 id="iunitofwork">IUnitOfWork<a class="headerlink" href="#iunitofwork" title="Permanent link">&para;</a></h3>
 <p>Défini dans la couche <strong>Application</strong> (<code>Application/Interfaces/IUnitOfWork.cs</code>). <code>AppDbContext</code> l'implémente dans Infrastructure.</p>
-<p><code>csharp
-// Application/Interfaces/IUnitOfWork.cs
-public interface IUnitOfWork
-{
-    Task&lt;int&gt; SaveChangesAsync(CancellationToken ct = default);
-}</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Application/Interfaces/IUnitOfWork.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IUnitOfWork</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SaveChangesAsync</span><span class="p">(</span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong>Règle :</strong> Les méthodes <code>AddAsync</code>, <code>UpdateAsync</code>, <code>DeleteAsync</code> des repositories <strong>ne sauvegardent pas</strong> — elles trackent seulement les changements dans le contexte EF Core. Le service applicatif appelle <code>IUnitOfWork.SaveChangesAsync()</code> en fin d'opération pour persister tout en une seule transaction.</p>
-<p><code>csharp
-// Exemple dans UserService.CreateProfileAsync
-await _userRepository.AddAsync(user);
-await _weightEntryRepository.AddAsync(entry);
-await _unitOfWork.SaveChangesAsync();   // ← persistance atomique</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Exemple dans UserService.CreateProfileAsync</span>
+<span class="k">await</span><span class="w"> </span><span class="n">_userRepository</span><span class="p">.</span><span class="n">AddAsync</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">_weightEntryRepository</span><span class="p">.</span><span class="n">AddAsync</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
+<span class="k">await</span><span class="w"> </span><span class="n">_unitOfWork</span><span class="p">.</span><span class="n">SaveChangesAsync</span><span class="p">();</span><span class="w">   </span><span class="c1">// ← persistance atomique</span>
+</code></pre></div>
 <h3 id="repositories-specialises">Repositories spécialisés<a class="headerlink" href="#repositories-specialises" title="Permanent link">&para;</a></h3>
 <p>Pas de repository générique — chaque repository implémente l'interface définie dans la couche Application.</p>
 <p><strong>Structure type d'un repository :</strong></p>
-<p>```csharp
-// Infrastructure/Persistence/Repositories/UserRepository.cs
-public sealed class UserRepository : IUserRepository
-{
-    private readonly AppDbContext _context;</p>
-<pre><code>public UserRepository(AppDbContext context) =&gt; _context = context;
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Infrastructure/Persistence/Repositories/UserRepository.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">UserRepository</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IUserRepository</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">AppDbContext</span><span class="w"> </span><span class="n">_context</span><span class="p">;</span>
 
-public async Task&lt;User?&gt; GetByIdAsync(Guid id)
-    =&gt; await _context.Users.FirstOrDefaultAsync(u =&gt; u.Id == id);
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">UserRepository</span><span class="p">(</span><span class="n">AppDbContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">;</span>
 
-public async Task&lt;User?&gt; GetByKeycloakIdAsync(string keycloakId)
-    =&gt; await _context.Users.FirstOrDefaultAsync(u =&gt; u.KeycloakId == keycloakId);
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">User</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">)</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_context</span><span class="p">.</span><span class="n">Users</span><span class="p">.</span><span class="n">FirstOrDefaultAsync</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">Id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
 
-public async Task AddAsync(User user)
-    =&gt; await _context.Users.AddAsync(user);
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">User</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByKeycloakIdAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">)</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_context</span><span class="p">.</span><span class="n">Users</span><span class="p">.</span><span class="n">FirstOrDefaultAsync</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">KeycloakId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
 
-public Task UpdateAsync(User user)
-{
-    _context.Users.Update(user);
-    return Task.CompletedTask;
-}
-</code></pre>
-<p>}
-```</p>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_context</span><span class="p">.</span><span class="n">Users</span><span class="p">.</span><span class="n">AddAsync</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">UpdateAsync</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_context</span><span class="p">.</span><span class="n">Users</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">CompletedTask</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="gestion-du-soft-delete">Gestion du soft delete<a class="headerlink" href="#gestion-du-soft-delete" title="Permanent link">&para;</a></h3>
 <p><code>User.DeletedAt</code> n'est <strong>pas</strong> un filtre global EF Core (Query Filter) — les services filtrent explicitement selon le besoin (certains endpoints admin doivent voir les comptes supprimés).</p>
 <hr />
 <h2 id="5-configuration-redis">5. Configuration Redis<a class="headerlink" href="#5-configuration-redis" title="Permanent link">&para;</a></h2>
 <h3 id="package-nuget">Package NuGet<a class="headerlink" href="#package-nuget" title="Permanent link">&para;</a></h3>
-<p><code>xml
-&lt;PackageReference Include="StackExchange.Redis" Version="2.8.*" /&gt;
-&lt;PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.*" /&gt;</code></p>
+<div class="language-xml highlight"><pre><span></span><code><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;StackExchange.Redis&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;2.8.*&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.Extensions.Caching.StackExchangeRedis&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;10.*&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</code></pre></div>
 <h3 id="structure-des-cles">Structure des clés<a class="headerlink" href="#structure-des-cles" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2734,8 +2787,8 @@ public Task UpdateAsync(User user)
 </tbody>
 </table>
 <p>Le mot-clé est normalisé : minuscules + trim avant d'être utilisé comme clé.</p>
-<p><code>csharp
-var cacheKey = $"food:search:{keyword.ToLowerInvariant().Trim()}";</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">cacheKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;food:search:{keyword.ToLowerInvariant().Trim()}&quot;</span><span class="p">;</span>
+</code></pre></div>
 <h3 id="ttl">TTL<a class="headerlink" href="#ttl" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2753,29 +2806,28 @@ var cacheKey = $"food:search:{keyword.ToLowerInvariant().Trim()}";</code></p>
 </table>
 <h3 id="strategie-dinvalidation">Stratégie d'invalidation<a class="headerlink" href="#strategie-dinvalidation" title="Permanent link">&para;</a></h3>
 <p>Le job <code>OffImportJob</code> invalide le cache après chaque import réussi en supprimant toutes les clés <code>food:search:*</code>.</p>
-<p><code>csharp
-// Dans OffImportJob, après l'import
-await _cache.KeyDeleteByPatternAsync("food:search:*");</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Dans OffImportJob, après l&#39;import</span>
+<span class="k">await</span><span class="w"> </span><span class="n">_cache</span><span class="p">.</span><span class="n">KeyDeleteByPatternAsync</span><span class="p">(</span><span class="s">&quot;food:search:*&quot;</span><span class="p">);</span>
+</code></pre></div>
 <h3 id="implementation-redisfoodcacheservice">Implémentation — <code>RedisFoodCacheService</code><a class="headerlink" href="#implementation-redisfoodcacheservice" title="Permanent link">&para;</a></h3>
 <p><code>RedisFoodCacheService</code> implémente <code>IFoodCacheService</code> (interface définie dans Application).</p>
-<p>```csharp
-public sealed class RedisFoodCacheService : IFoodCacheService
-{
-    private readonly IDistributedCache _cache;
-    private static readonly TimeSpan Ttl = TimeSpan.FromHours(24);</p>
-<pre><code>public async Task&lt;List&lt;FoodItemSearchResponse&gt;?&gt; GetSearchResultsAsync(string keyword) { ... }
-public async Task SetSearchResultsAsync(string keyword, List&lt;FoodItemSearchResponse&gt; results) { ... }
-public async Task InvalidateSearchCacheAsync() { ... }
-</code></pre>
-<p>}
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">RedisFoodCacheService</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IFoodCacheService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IDistributedCache</span><span class="w"> </span><span class="n">_cache</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">TimeSpan</span><span class="w"> </span><span class="n">Ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromHours</span><span class="p">(</span><span class="m">24</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItemSearchResponse</span><span class="o">&gt;?&gt;</span><span class="w"> </span><span class="n">GetSearchResultsAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">SetSearchResultsAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItemSearchResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">results</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">InvalidateSearchCacheAsync</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="configuration-dans-programcs">Configuration dans <code>Program.cs</code><a class="headerlink" href="#configuration-dans-programcs" title="Permanent link">&para;</a></h3>
-<p><code>csharp
-builder.Services.AddStackExchangeRedisCache(options =&gt;
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "nutrition:";
-});</code></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddStackExchangeRedisCache</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">Configuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;Redis&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">InstanceName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;nutrition:&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+</code></pre></div>
 <hr />
 <h2 id="6-configuration-hangfire">6. Configuration Hangfire<a class="headerlink" href="#6-configuration-hangfire" title="Permanent link">&para;</a></h2>
 <p>Voir <code>docs/pages/backend/annexes/infrastructure-hangfire.md</code> pour le détail complet.</p>
@@ -2805,18 +2857,18 @@ builder.Services.AddStackExchangeRedisCache(options =&gt;
 </tbody>
 </table>
 <h3 id="interfaces-des-jobs">Interfaces des jobs<a class="headerlink" href="#interfaces-des-jobs" title="Permanent link">&para;</a></h3>
-<p>```csharp
-// Infrastructure/Jobs/IOffImportJob.cs
-public interface IOffImportJob
-{
-    Task RunAsync();
-}</p>
-<p>// Infrastructure/Jobs/IRgpdPurgeJob.cs
-public interface IRgpdPurgeJob
-{
-    Task RunAsync();
-}
-```</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Infrastructure/Jobs/IOffImportJob.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IOffImportJob</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">RunAsync</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Infrastructure/Jobs/IRgpdPurgeJob.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IRgpdPurgeJob</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">RunAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="stockage">Stockage<a class="headerlink" href="#stockage" title="Permanent link">&para;</a></h3>
 <p>Schéma PostgreSQL dédié <code>HangFire</code> — créé automatiquement au démarrage (<code>PrepareSchemaIfNecessary = true</code>).</p>
 <p><strong>Aucune migration EF Core</strong> pour les tables Hangfire — elles sont gérées par le package lui-même.</p>
@@ -2825,28 +2877,30 @@ public interface IRgpdPurgeJob
 <hr />
 <h2 id="7-structure-des-migrations">7. Structure des migrations<a class="headerlink" href="#7-structure-des-migrations" title="Permanent link">&para;</a></h2>
 <h3 id="convention-de-nommage">Convention de nommage<a class="headerlink" href="#convention-de-nommage" title="Permanent link">&para;</a></h3>
-<p><code>{Description}</code></p>
+<div class="language-text highlight"><pre><span></span><code>{Description}
+</code></pre></div>
 <p>Exemples :
 - <code>InitialSchema</code>
 - <code>AddIndexOnFoodItemOffId</code>
 - <code>AddDeletedAtToUser</code></p>
 <p>Le timestamp est géré automatiquement par EF Core dans le nom de fichier généré.</p>
 <h3 id="commandes-ef-core-cli">Commandes EF Core CLI<a class="headerlink" href="#commandes-ef-core-cli" title="Permanent link">&para;</a></h3>
-<p>```bash</p>
-<h1 id="creer-une-migration">Créer une migration<a class="headerlink" href="#creer-une-migration" title="Permanent link">&para;</a></h1>
-<p>dotnet ef migrations add InitialSchema \
-  --project src/NutritionApi.Infrastructure \
-  --startup-project src/NutritionApi.Api \
-  --output-dir Persistence/Migrations</p>
-<h1 id="appliquer-les-migrations">Appliquer les migrations<a class="headerlink" href="#appliquer-les-migrations" title="Permanent link">&para;</a></h1>
-<p>dotnet ef database update \
-  --project src/NutritionApi.Infrastructure \
-  --startup-project src/NutritionApi.Api</p>
-<h1 id="rollback-vers-une-migration-precedente">Rollback vers une migration précédente<a class="headerlink" href="#rollback-vers-une-migration-precedente" title="Permanent link">&para;</a></h1>
-<p>dotnet ef database update NomDeLaMigrationCible \
-  --project src/NutritionApi.Infrastructure \
-  --startup-project src/NutritionApi.Api
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Créer une migration</span>
+dotnet<span class="w"> </span>ef<span class="w"> </span>migrations<span class="w"> </span>add<span class="w"> </span>InitialSchema<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project<span class="w"> </span>src/NutritionApi.Infrastructure<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--startup-project<span class="w"> </span>src/NutritionApi.Api<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output-dir<span class="w"> </span>Persistence/Migrations
+
+<span class="c1"># Appliquer les migrations</span>
+dotnet<span class="w"> </span>ef<span class="w"> </span>database<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project<span class="w"> </span>src/NutritionApi.Infrastructure<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--startup-project<span class="w"> </span>src/NutritionApi.Api
+
+<span class="c1"># Rollback vers une migration précédente</span>
+dotnet<span class="w"> </span>ef<span class="w"> </span>database<span class="w"> </span>update<span class="w"> </span>NomDeLaMigrationCible<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project<span class="w"> </span>src/NutritionApi.Infrastructure<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--startup-project<span class="w"> </span>src/NutritionApi.Api
+</code></pre></div>
 <h3 id="regles">Règles<a class="headerlink" href="#regles" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Une migration = un changement logique.</strong> Ne pas regrouper des modifications sans rapport dans une seule migration.</li>
@@ -2855,57 +2909,56 @@ public interface IRgpdPurgeJob
 </ul>
 <hr />
 <h2 id="8-injection-de-dependances">8. Injection de dépendances<a class="headerlink" href="#8-injection-de-dependances" title="Permanent link">&para;</a></h2>
-<p>```csharp
-// Infrastructure/DependencyInjection.cs
-public static class InfrastructureExtensions
-{
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        // EF Core + PostgreSQL
-        services.AddDbContext<AppDbContext>(options =&gt;
-            options.UseNpgsql(configuration.GetConnectionString("Default"))
-                   .UseSnakeCaseNamingConvention());</p>
-<pre><code>    services.AddScoped&lt;IUnitOfWork&gt;(sp =&gt; sp.GetRequiredService&lt;AppDbContext&gt;());
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Infrastructure/DependencyInjection.cs</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">InfrastructureExtensions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="nf">AddInfrastructure</span><span class="p">(</span>
+<span class="w">        </span><span class="k">this</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="n">services</span><span class="p">,</span>
+<span class="w">        </span><span class="n">IConfiguration</span><span class="w"> </span><span class="n">configuration</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// EF Core + PostgreSQL</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">            </span><span class="n">options</span><span class="p">.</span><span class="n">UseNpgsql</span><span class="p">(</span><span class="n">configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">))</span>
+<span class="w">                   </span><span class="p">.</span><span class="n">UseSnakeCaseNamingConvention</span><span class="p">());</span>
 
-    // Repositories
-    services.AddScoped&lt;IUserRepository, UserRepository&gt;();
-    services.AddScoped&lt;IDietPlanRepository, DietPlanRepository&gt;();
-    services.AddScoped&lt;IDietRepository, DietRepository&gt;();
-    services.AddScoped&lt;IMealRepository, MealRepository&gt;();
-    services.AddScoped&lt;IFoodItemRepository, FoodItemRepository&gt;();
-    services.AddScoped&lt;IWeightEntryRepository, WeightEntryRepository&gt;();
-    services.AddScoped&lt;ISavedFoodItemRepository, SavedFoodItemRepository&gt;();
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IUnitOfWork</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sp</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">sp</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="p">());</span>
 
-    // Cache Redis
-    services.AddScoped&lt;IFoodCacheService, RedisFoodCacheService&gt;();
+<span class="w">        </span><span class="c1">// Repositories</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IUserRepository</span><span class="p">,</span><span class="w"> </span><span class="n">UserRepository</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IDietPlanRepository</span><span class="p">,</span><span class="w"> </span><span class="n">DietPlanRepository</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IDietRepository</span><span class="p">,</span><span class="w"> </span><span class="n">DietRepository</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IMealRepository</span><span class="p">,</span><span class="w"> </span><span class="n">MealRepository</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IFoodItemRepository</span><span class="p">,</span><span class="w"> </span><span class="n">FoodItemRepository</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IWeightEntryRepository</span><span class="p">,</span><span class="w"> </span><span class="n">WeightEntryRepository</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">ISavedFoodItemRepository</span><span class="p">,</span><span class="w"> </span><span class="n">SavedFoodItemRepository</span><span class="o">&gt;</span><span class="p">();</span>
 
-    // Services externes
-    services.AddScoped&lt;IKeycloakAdminService, KeycloakAdminService&gt;();
+<span class="w">        </span><span class="c1">// Cache Redis</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IFoodCacheService</span><span class="p">,</span><span class="w"> </span><span class="n">RedisFoodCacheService</span><span class="o">&gt;</span><span class="p">();</span>
 
-    // Hangfire
-    services.AddHangfire(config =&gt; config
-        .UsePostgreSqlStorage(configuration.GetConnectionString("Default"),
-            new PostgreSqlStorageOptions
-            {
-                SchemaName = "HangFire",
-                PrepareSchemaIfNecessary = true
-            }));
-    services.AddHangfireServer();
+<span class="w">        </span><span class="c1">// Services externes</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IKeycloakAdminService</span><span class="p">,</span><span class="w"> </span><span class="n">KeycloakAdminService</span><span class="o">&gt;</span><span class="p">();</span>
 
-    // Jobs Hangfire
-    services.AddScoped&lt;IOffImportJob, OffImportJob&gt;();
-    services.AddScoped&lt;IRgpdPurgeJob, RgpdPurgeJob&gt;();
+<span class="w">        </span><span class="c1">// Hangfire</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddHangfire</span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">config</span>
+<span class="w">            </span><span class="p">.</span><span class="n">UsePostgreSqlStorage</span><span class="p">(</span><span class="n">configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">),</span>
+<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">PostgreSqlStorageOptions</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">SchemaName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;HangFire&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">PrepareSchemaIfNecessary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span>
+<span class="w">                </span><span class="p">}));</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddHangfireServer</span><span class="p">();</span>
 
-    return services;
-}
-</code></pre>
-<p>}
-```</p>
-<p><code>csharp
-// Api/Program.cs
-builder.Services.AddInfrastructure(builder.Configuration);</code></p>
+<span class="w">        </span><span class="c1">// Jobs Hangfire</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IOffImportJob</span><span class="p">,</span><span class="w"> </span><span class="n">OffImportJob</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IRgpdPurgeJob</span><span class="p">,</span><span class="w"> </span><span class="n">RgpdPurgeJob</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">services</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Api/Program.cs</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddInfrastructure</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">);</span>
+</code></pre></div>
 <hr />
 <h2 id="9-regles-transverses">9. Règles transverses<a class="headerlink" href="#9-regles-transverses" title="Permanent link">&para;</a></h2>
 <ul>

@@ -2332,7 +2332,7 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 <p><strong>Règle fondamentale :</strong> le Domain ne dépend de rien — ni EF Core, ni HTTP, ni Redis. Zéro import d'infrastructure.</p>
 <hr />
 <h2 id="2-structure-des-dossiers">2. Structure des dossiers<a class="headerlink" href="#2-structure-des-dossiers" title="Permanent link">&para;</a></h2>
-<p><code>src/NutritionApi.Domain/
+<div class="language-text highlight"><pre><span></span><code>src/NutritionApi.Domain/
 ├── Entity/
 │   ├── User.cs
 │   ├── DietPlan.cs
@@ -2354,7 +2354,8 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
     ├── Gender.cs
     ├── Goal.cs
     ├── MealType.cs
-    └── SubscriptionTier.cs</code></p>
+    └── SubscriptionTier.cs
+</code></pre></div>
 <hr />
 <h2 id="3-conventions-de-nommage">3. Conventions de nommage<a class="headerlink" href="#3-conventions-de-nommage" title="Permanent link">&para;</a></h2>
 <table>
@@ -3158,8 +3159,7 @@ Exemple : 150g de poulet → 247 kcal, 46g de protéines, 5g de lipides, 0g de g
 </table>
 <hr />
 <h2 id="relations-entre-les-concepts">Relations entre les concepts<a class="headerlink" href="#relations-entre-les-concepts" title="Permanent link">&para;</a></h2>
-<p>```
-User
+<div class="language-text highlight"><pre><span></span><code>User
 ├── possède plusieurs DietPlan personnels (IsTemplate = false — toujours modifiables)
 │   └── sert de base pour lancer une Diet (snapshot au lancement — lien coupé ensuite)
 ├── accède en lecture aux DietPlan templates (IsTemplate = true, UserId = null) — Pro/Business uniquement
@@ -3172,16 +3172,18 @@ User
 │   └── contient plusieurs MealItem
 │       └── référence un FoodItem
 ├── possède plusieurs WeightEntry (historique du poids)
-└── possède plusieurs SavedFoodItem (liste personnelle d'aliments)
-    └── référence un FoodItem</p>
-<p>Service : déduit la Diet active à la date d'un Meal via Diet.StartDate / EndDate (uniquement pour le bilan nutritionnel)
-```</p>
+└── possède plusieurs SavedFoodItem (liste personnelle d&#39;aliments)
+    └── référence un FoodItem
+
+Service : déduit la Diet active à la date d&#39;un Meal via Diet.StartDate / EndDate (uniquement pour le bilan nutritionnel)
+</code></pre></div>
 <hr />
 <h2 id="authentification-autorisation">Authentification &amp; Autorisation<a class="headerlink" href="#authentification-autorisation" title="Permanent link">&para;</a></h2>
 <h3 id="flux-dauthentification">Flux d'authentification<a class="headerlink" href="#flux-dauthentification" title="Permanent link">&para;</a></h3>
 <p>Keycloak est le fournisseur d'identité (OAuth2/OIDC). L'API ne gère pas les mots de passe.</p>
-<p><code>Client → Keycloak (login) → JWT Bearer token
-Client → API (Bearer token) → Middleware valide le JWT → extrait sub → résout User.Id</code></p>
+<div class="language-text highlight"><pre><span></span><code>Client → Keycloak (login) → JWT Bearer token
+Client → API (Bearer token) → Middleware valide le JWT → extrait sub → résout User.Id
+</code></pre></div>
 <ul>
 <li><code>sub</code> du JWT = <code>User.KeycloakId</code> — clé de résolution de l'identité interne</li>
 <li>Toutes les requêtes sur des données personnelles sont filtrées par <code>User.Id</code> résolu depuis le token</li>

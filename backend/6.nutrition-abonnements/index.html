@@ -1703,10 +1703,11 @@ Dernière mise à jour : 2026-05-02</p>
 </ul>
 <h3 id="application-dans-le-code">Application dans le code<a class="headerlink" href="#application-dans-le-code" title="Permanent link">&para;</a></h3>
 <p>Les vérifications de tier se font dans la <strong>couche Application</strong> (services), jamais dans le domaine ni dans l'API :
-<code>UserService / DietPlanService / etc.
+<div class="language-text highlight"><pre><span></span><code>UserService / DietPlanService / etc.
   → lire User.SubscriptionTier
   → comparer avec les limites du tier
-  → lever une exception métier si dépassement (→ 403 Forbidden)</code></p>
+  → lever une exception métier si dépassement (→ 403 Forbidden)
+</code></pre></div></p>
 <hr />
 <h2 id="historique-des-evolutions">Historique des évolutions<a class="headerlink" href="#historique-des-evolutions" title="Permanent link">&para;</a></h2>
 <table>

@@ -332,24 +332,6 @@
 </ul>
 </nav>
 </li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#installer-reportgenerator-une-seule-fois-outil-global">
-<span class="md-ellipsis">
-      Installer ReportGenerator (une seule fois, outil global)
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#generer-le-rapport">
-<span class="md-ellipsis">
-      Générer le rapport
-    </span>
-</a>
-<nav aria-label="Générer le rapport" class="md-nav">
-<ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#35-technologies-utilisees">
 <span class="md-ellipsis">
@@ -1028,24 +1010,6 @@
 </ul>
 </nav>
 </li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#installer-reportgenerator-une-seule-fois-outil-global">
-<span class="md-ellipsis">
-      Installer ReportGenerator (une seule fois, outil global)
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#generer-le-rapport">
-<span class="md-ellipsis">
-      Générer le rapport
-    </span>
-</a>
-<nav aria-label="Générer le rapport" class="md-nav">
-<ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#35-technologies-utilisees">
 <span class="md-ellipsis">
@@ -1336,6 +1300,7 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
+<h1>Specs techniques</h1>
 <h2 id="3-specifications-techniques">3. Spécifications techniques<a class="headerlink" href="#3-specifications-techniques" title="Permanent link">¶</a></h2>
 <h3 id="31-architecture-globale">3.1 Architecture globale<a class="headerlink" href="#31-architecture-globale" title="Permanent link">¶</a></h3>
 <p>Le système sera implémenté comme une application monolithique déployée sur Kubernetes, qui interagira avec Keycloak pour l'authentification et une API externe pour les données alimentaires.</p>
@@ -1506,18 +1471,19 @@
 </tbody>
 </table>
 <p><strong>Convention de nommage des tests :</strong></p>
-<p>```
-[Méthode_ou_Comportement]<em>[Contexte]</em>[Résultat_attendu]</p>
-<p>Exemples :
+<div class="language-text highlight"><pre><span></span><code>[Méthode_ou_Comportement]_[Contexte]_[Résultat_attendu]
+
+Exemples :
 CreateDiet_WhenNoWeightEntry_Throws422
 MacroDistribution_WhenSumIsNot100_ThrowsDomainException
 LaunchDiet_WhenDietAlreadyActive_Returns409
-```</p>
+</code></pre></div>
 <p><strong>Règle structurelle :</strong> chaque projet de test correspond à une couche.</p>
-<p><code>NutritionApi.Domain.Tests/          ← tests unitaires Domain
+<div class="language-text highlight"><pre><span></span><code>NutritionApi.Domain.Tests/          ← tests unitaires Domain
 NutritionApi.Application.Tests/     ← tests unitaires Application (Moq)
 NutritionApi.Infrastructure.Tests/  ← tests d'intégration (Testcontainers)
-NutritionApi.Api.Tests/             ← tests API end-to-end (WebApplicationFactory)</code></p>
+NutritionApi.Api.Tests/             ← tests API end-to-end (WebApplicationFactory)
+</code></pre></div>
 <h4 id="strategie-de-couverture-de-code">Stratégie de couverture de code<a class="headerlink" href="#strategie-de-couverture-de-code" title="Permanent link">¶</a></h4>
 <p>La couverture est mesurée avec <code>coverlet.collector</code> (déjà installé dans les 3 projets de test) et visualisée avec <code>ReportGenerator</code>.</p>
 <p><strong>Seuils minimum par couche :</strong></p>
@@ -1553,15 +1519,15 @@ NutritionApi.Api.Tests/             ← tests API end-to-end (WebApplicationFact
 </tbody>
 </table>
 <p><strong>Lancer les tests avec couverture :</strong></p>
-<p><code>bash
-dotnet test --settings tests/coverage.runsettings --collect:"XPlat Code Coverage" --results-directory ./coverage</code></p>
+<div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--settings<span class="w"> </span>tests/coverage.runsettings<span class="w"> </span>--collect:<span class="s2">"XPlat Code Coverage"</span><span class="w"> </span>--results-directory<span class="w"> </span>./coverage
+</code></pre></div>
 <p><strong>Générer le rapport HTML :</strong></p>
-<p>```bash</p>
-<h1 id="installer-reportgenerator-une-seule-fois-outil-global">Installer ReportGenerator (une seule fois, outil global)<a class="headerlink" href="#installer-reportgenerator-une-seule-fois-outil-global" title="Permanent link">¶</a></h1>
-<p>dotnet tool install -g dotnet-reportgenerator-globaltool</p>
-<h1 id="generer-le-rapport">Générer le rapport<a class="headerlink" href="#generer-le-rapport" title="Permanent link">¶</a></h1>
-<p>reportgenerator -reports:"coverage/**/coverage.cobertura.xml" -targetdir:"coverage/report" -reporttypes:Html
-```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Installer ReportGenerator (une seule fois, outil global)</span>
+dotnet<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>dotnet-reportgenerator-globaltool
+
+<span class="c1"># Générer le rapport</span>
+reportgenerator<span class="w"> </span>-reports:<span class="s2">"coverage/**/coverage.cobertura.xml"</span><span class="w"> </span>-targetdir:<span class="s2">"coverage/report"</span><span class="w"> </span>-reporttypes:Html
+</code></pre></div>
 <p>Le fichier <code>tests/coverage.runsettings</code> est à la racine du dossier <code>tests/</code> — il configure le format Cobertura et exclut les projets de tests eux-mêmes de la mesure.</p>
 <hr/>
 <h3 id="35-technologies-utilisees">3.5 Technologies utilisées<a class="headerlink" href="#35-technologies-utilisees" title="Permanent link">¶</a></h3>
@@ -1767,12 +1733,13 @@ dotnet test --settings tests/coverage.runsettings --collect:"XPlat Code Coverage
 <h4 id="structure-du-projet-architecture-ddd-4-couches">Structure du projet — Architecture DDD 4 couches<a class="headerlink" href="#structure-du-projet-architecture-ddd-4-couches" title="Permanent link">¶</a></h4>
 <p>Le projet est découpé en <strong>4 projets distincts</strong> dans une solution .NET, conformément à l'architecture DDD.
 Règle fondamentale : <code>Domain</code> ne dépend de rien. Les dépendances pointent toujours vers le centre.</p>
-<p><code>API
+<div class="language-text highlight"><pre><span></span><code>         API
         /   \
   Application  Infrastructure
         \   /
-        Domain</code></p>
-<p><code>NutritionApi.sln
+        Domain
+</code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>NutritionApi.sln
 │
 ├── NutritionApi.Domain/
 │   ├── Entities/
@@ -1802,7 +1769,8 @@ Règle fondamentale : <code>Domain</code> ne dépend de rien. Les dépendances p
 └── NutritionApi.API/
     ├── Controllers/
     ├── Middleware/
-    └── Configuration/</code></p>
+    └── Configuration/
+</code></pre></div>
 <h4 id="outils-et-infrastructure">Outils et infrastructure<a class="headerlink" href="#outils-et-infrastructure" title="Permanent link">¶</a></h4>
 <table>
 <thead>
@@ -2194,52 +2162,58 @@ Règle fondamentale : <code>Domain</code> ne dépend de rien. Les dépendances p
 <h3 id="36-api-endpoints">3.6 API Endpoints<a class="headerlink" href="#36-api-endpoints" title="Permanent link">¶</a></h3>
 <p>L'API est organisée selon les principes REST :</p>
 <h4 id="authentification-via-keycloak">Authentification (via Keycloak)<a class="headerlink" href="#authentification-via-keycloak" title="Permanent link">¶</a></h4>
-<p><code>POST   /api/v1/auth/register       // Inscription d'un utilisateur
+<div class="language-text highlight"><pre><span></span><code>POST   /api/v1/auth/register       // Inscription d'un utilisateur
 POST   /api/v1/auth/login          // Connexion et génération de token JWT
 POST   /api/v1/auth/refresh        // Rafraîchissement du token
-POST   /api/v1/auth/logout         // Déconnexion</code></p>
+POST   /api/v1/auth/logout         // Déconnexion
+</code></pre></div>
 <h4 id="utilisateurs">Utilisateurs<a class="headerlink" href="#utilisateurs" title="Permanent link">¶</a></h4>
-<p><code>GET    /api/v1/users/me                  // Récupération du profil utilisateur
+<div class="language-text highlight"><pre><span></span><code>GET    /api/v1/users/me                  // Récupération du profil utilisateur
 PUT    /api/v1/users/me                  // Mise à jour du profil utilisateur
 POST   /api/v1/users/me/preferences      // Définition des préférences alimentaires
-GET    /api/v1/users/me/stats            // Statistiques de l'utilisateur</code></p>
+GET    /api/v1/users/me/stats            // Statistiques de l'utilisateur
+</code></pre></div>
 <h4 id="aliments-via-open-food-facts-cache-local">Aliments (via Open Food Facts + cache local)<a class="headerlink" href="#aliments-via-open-food-facts-cache-local" title="Permanent link">¶</a></h4>
-<p><code>GET    /api/v1/foods/search              // Recherche d'aliments
-GET    /api/v1/foods/{externalId}        // Détails d'un aliment</code></p>
+<div class="language-text highlight"><pre><span></span><code>GET    /api/v1/foods/search              // Recherche d'aliments
+GET    /api/v1/foods/{externalId}        // Détails d'un aliment
+</code></pre></div>
 <h4 id="regimes-alimentaires">Régimes alimentaires<a class="headerlink" href="#regimes-alimentaires" title="Permanent link">¶</a></h4>
-<p><code>GET    /api/v1/diets                     // Liste des régimes de l'utilisateur
+<div class="language-text highlight"><pre><span></span><code>GET    /api/v1/diets                     // Liste des régimes de l'utilisateur
 POST   /api/v1/diets                     // Création d'un régime
 GET    /api/v1/diets/{id}                // Détails d'un régime
 PUT    /api/v1/diets/{id}                // Mise à jour d'un régime
 DELETE /api/v1/diets/{id}                // Suppression d'un régime
-PUT    /api/v1/diets/{id}/activate       // Activation d'un régime (désactive les autres)</code></p>
+PUT    /api/v1/diets/{id}/activate       // Activation d'un régime (désactive les autres)
+</code></pre></div>
 <h4 id="nutrition">Nutrition<a class="headerlink" href="#nutrition" title="Permanent link">¶</a></h4>
-<p><code>GET    /api/v1/nutrition/calculate       // Calcul des besoins nutritionnels (BMR, TDEE)
+<div class="language-text highlight"><pre><span></span><code>GET    /api/v1/nutrition/calculate       // Calcul des besoins nutritionnels (BMR, TDEE)
 GET    /api/v1/nutrition/daily           // Bilan nutritionnel journalier
 GET    /api/v1/nutrition/weekly          // Bilan nutritionnel hebdomadaire
-GET    /api/v1/nutrition/recommendations // Recommandations alimentaires</code></p>
+GET    /api/v1/nutrition/recommendations // Recommandations alimentaires
+</code></pre></div>
 <h4 id="repas">Repas<a class="headerlink" href="#repas" title="Permanent link">¶</a></h4>
-<p><code>GET    /api/v1/meals                     // Liste des repas (filtrable par date)
+<div class="language-text highlight"><pre><span></span><code>GET    /api/v1/meals                     // Liste des repas (filtrable par date)
 POST   /api/v1/meals                     // Enregistrement d'un repas
 GET    /api/v1/meals/{id}                // Détails d'un repas
 PUT    /api/v1/meals/{id}                // Mise à jour d'un repas
-DELETE /api/v1/meals/{id}                // Suppression d'un repas</code></p>
+DELETE /api/v1/meals/{id}                // Suppression d'un repas
+</code></pre></div>
 <h4 id="format-de-donnees">Format de données<a class="headerlink" href="#format-de-donnees" title="Permanent link">¶</a></h4>
 <p>Toutes les requêtes et réponses utilisent le format JSON.
 Exemple de réponse pour le calcul des besoins nutritionnels :</p>
-<p><code>json
-{
-  "bmr": 1762.5,
-  "tdee": 2467.5,
-  "targetCalories": 1967.5,
-  "macroDistribution": {
-    "proteins": { "percentage": 25, "grams": 123, "calories": 492 },
-    "carbs": { "percentage": 45, "grams": 221, "calories": 884 },
-    "fats": { "percentage": 30, "grams": 65, "calories": 585 }
-  },
-  "goal": "WeightLoss",
-  "activityLevel": "ModeratelyActive"
-}</code></p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"bmr"</span><span class="p">:</span><span class="w"> </span><span class="mf">1762.5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tdee"</span><span class="p">:</span><span class="w"> </span><span class="mf">2467.5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"targetCalories"</span><span class="p">:</span><span class="w"> </span><span class="mf">1967.5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"macroDistribution"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"proteins"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="nt">"grams"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w"> </span><span class="nt">"calories"</span><span class="p">:</span><span class="w"> </span><span class="mi">492</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"carbs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span><span class="w"> </span><span class="nt">"grams"</span><span class="p">:</span><span class="w"> </span><span class="mi">221</span><span class="p">,</span><span class="w"> </span><span class="nt">"calories"</span><span class="p">:</span><span class="w"> </span><span class="mi">884</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"fats"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="nt">"grams"</span><span class="p">:</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="nt">"calories"</span><span class="p">:</span><span class="w"> </span><span class="mi">585</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"goal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WeightLoss"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"activityLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ModeratelyActive"</span>
+<span class="p">}</span>
+</code></pre></div>
 <hr/>
 <h3 id="37-performances-et-scalabilite">3.7 Performances et scalabilité<a class="headerlink" href="#37-performances-et-scalabilite" title="Permanent link">¶</a></h3>
 <h4 id="objectifs-de-performance">Objectifs de performance<a class="headerlink" href="#objectifs-de-performance" title="Permanent link">¶</a></h4>
@@ -2349,7 +2323,7 @@ Exemple de réponse pour le calcul des besoins nutritionnels :</p>
 </tbody>
 </table>
 <h4 id="structure-des-manifests-kubernetes">Structure des manifests Kubernetes<a class="headerlink" href="#structure-des-manifests-kubernetes" title="Permanent link">¶</a></h4>
-<p><code>kubernetes/
+<div class="language-text highlight"><pre><span></span><code>kubernetes/
 ├── base/
 │   ├── namespace.yaml
 │   ├── postgresql.yaml
@@ -2362,7 +2336,8 @@ Exemple de réponse pour le calcul des besoins nutritionnels :</p>
 └── overlays/
     ├── dev/
     ├── staging/
-    └── prod/</code></p>
+    └── prod/
+</code></pre></div>
 <h4 id="pipeline-cicd-github-actions">Pipeline CI/CD (GitHub Actions)<a class="headerlink" href="#pipeline-cicd-github-actions" title="Permanent link">¶</a></h4>
 <p>Le pipeline automatise les étapes suivantes à chaque push :</p>
 <ol>

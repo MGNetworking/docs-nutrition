@@ -1638,14 +1638,14 @@ Le produit sera disponible après le prochain import quotidien.</p>
 <hr />
 <h2 id="impact-sur-larchitecture-de-recherche">Impact sur l'architecture de recherche<a class="headerlink" href="#impact-sur-larchitecture-de-recherche" title="Permanent link">&para;</a></h2>
 <p>La recherche utilisateur n'appelle <strong>jamais</strong> l'API OFF directement. Elle opère sur 2 niveaux :</p>
-<p>```
-Recherche utilisateur
+<div class="language-text highlight"><pre><span></span><code>Recherche utilisateur
 ├── Niveau 1 — Cache Redis   → réponse immédiate si mot-clé récent
 └── Niveau 2 — PostgreSQL    → lecture FoodItem + alimentation cache
-    └── Introuvable           → liste vide (pas d'appel OFF)</p>
-<p>Job Infrastructure (indépendant)
+    └── Introuvable           → liste vide (pas d&#39;appel OFF)
+
+Job Infrastructure (indépendant)
 └── Import dump OFF quotidien → alimente PostgreSQL FoodItem
-```</p>
+</code></pre></div>
 <hr />
 <h2 id="considerations-techniques-a-preciser-lors-de-limplementation">Considérations techniques (à préciser lors de l'implémentation)<a class="headerlink" href="#considerations-techniques-a-preciser-lors-de-limplementation" title="Permanent link">&para;</a></h2>
 <ul>

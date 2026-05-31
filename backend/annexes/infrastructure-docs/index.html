@@ -545,6 +545,70 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-2-github-actions-deploiement-automatique">
+<span class="md-ellipsis">
+      Section 2 — GitHub Actions (déploiement automatique)
+    </span>
+</a>
+<nav aria-label="Section 2 — GitHub Actions (déploiement automatique)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fichier-a-creer-dans-le-repo-docs">
+<span class="md-ellipsis">
+      Fichier à créer dans le repo docs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#githubworkflowsdocsyml">
+<span class="md-ellipsis">
+      .github/workflows/docs.yml
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-3-activation-github-pages">
+<span class="md-ellipsis">
+      Section 3 — Activation GitHub Pages
+    </span>
+</a>
+<nav aria-label="Section 3 — Activation GitHub Pages" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-initiale-une-seule-fois">
+<span class="md-ellipsis">
+      Configuration initiale (une seule fois)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#url-du-site-publie">
+<span class="md-ellipsis">
+      URL du site publié
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-4-test-local">
+<span class="md-ellipsis">
+      Section 4 — Test local
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ordre-de-mise-en-place">
+<span class="md-ellipsis">
+      Ordre de mise en place
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -625,6 +689,70 @@
 </ul>
 </nav>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-2-github-actions-deploiement-automatique">
+<span class="md-ellipsis">
+      Section 2 — GitHub Actions (déploiement automatique)
+    </span>
+</a>
+<nav aria-label="Section 2 — GitHub Actions (déploiement automatique)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fichier-a-creer-dans-le-repo-docs">
+<span class="md-ellipsis">
+      Fichier à créer dans le repo docs
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#githubworkflowsdocsyml">
+<span class="md-ellipsis">
+      .github/workflows/docs.yml
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-3-activation-github-pages">
+<span class="md-ellipsis">
+      Section 3 — Activation GitHub Pages
+    </span>
+</a>
+<nav aria-label="Section 3 — Activation GitHub Pages" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-initiale-une-seule-fois">
+<span class="md-ellipsis">
+      Configuration initiale (une seule fois)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#url-du-site-publie">
+<span class="md-ellipsis">
+      URL du site publié
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-4-test-local">
+<span class="md-ellipsis">
+      Section 4 — Test local
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ordre-de-mise-en-place">
+<span class="md-ellipsis">
+      Ordre de mise en place
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </div>
@@ -639,7 +767,7 @@ Approche : <strong>Docs-as-code</strong> — les modifications markdown déclenc
 </blockquote>
 <hr/>
 <h2 id="vue-densemble">Vue d'ensemble<a class="headerlink" href="#vue-densemble" title="Permanent link">¶</a></h2>
-<p><code>Modification markdown
+<div class="language-text highlight"><pre><span></span><code>Modification markdown
         ↓
     git push (main)
         ↓
@@ -647,7 +775,8 @@ GitHub Actions — build MkDocs
         ↓
     GitHub Pages
         ↓
-  Site docs public</code></p>
+  Site docs public
+</code></pre></div>
 <hr/>
 <h2 id="prerequis">Prérequis<a class="headerlink" href="#prerequis" title="Permanent link">¶</a></h2>
 <ul>
@@ -658,169 +787,161 @@ GitHub Actions — build MkDocs
 <hr/>
 <h2 id="section-1-configuration-mkdocs">Section 1 — Configuration MkDocs<a class="headerlink" href="#section-1-configuration-mkdocs" title="Permanent link">¶</a></h2>
 <h3 id="fichiers-a-creer-a-la-racine-du-repo-docs">Fichiers à créer à la racine du repo docs<a class="headerlink" href="#fichiers-a-creer-a-la-racine-du-repo-docs" title="Permanent link">¶</a></h3>
-<p><code>nutrition-docs/
+<div class="language-text highlight"><pre><span></span><code>nutrition-docs/
 ├── mkdocs.yml
 ├── requirements.txt
 └── docs/
     ├── index.md
     └── backend/
-        ├── ...</code></p>
+        ├── ...
+</code></pre></div>
 <hr/>
 <h3 id="requirementstxt"><code>requirements.txt</code><a class="headerlink" href="#requirementstxt" title="Permanent link">¶</a></h3>
-<p><code>txt
-mkdocs==1.6.1
+<div class="language-text highlight"><pre><span></span><code>mkdocs==1.6.1
 mkdocs-material==9.5.49
-mkdocs-mermaid2-plugin==1.2.1</code></p>
+mkdocs-mermaid2-plugin==1.2.1
+</code></pre></div>
 <blockquote>
 <p><code>mkdocs-mermaid2-plugin</code> — nécessaire pour rendre les fichiers <code>.mermaid</code> des workflows.</p>
 </blockquote>
 <hr/>
 <h3 id="mkdocsyml"><code>mkdocs.yml</code><a class="headerlink" href="#mkdocsyml" title="Permanent link">¶</a></h3>
-<p>```yaml
-site_name: Nutrition API — Documentation
-site_description: Documentation technique du projet Nutrition API
-site_author: Maxime Ghalem
-docs_dir: docs</p>
-<p>theme:
-  name: material
-  language: fr
-  palette:
-    - scheme: default
-      primary: teal
-      accent: teal
-      toggle:
-        icon: material/brightness-7
-        name: Mode sombre
-    - scheme: slate
-      primary: teal
-      accent: teal
-      toggle:
-        icon: material/brightness-4
-        name: Mode clair
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - navigation.top
-    - search.highlight
-    - content.code.copy</p>
-<p>plugins:
-  - search:
-      lang: fr
-  - mermaid2</p>
-<p>markdown_extensions:
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
-  - tables
-  - toc:
-      permalink: true</p>
-<p>nav:
-  - Accueil: index.md
-  - Backend:
-    - Introduction: backend/1.nutrition-introduction.md
-    - Cas d'usage: backend/2.nutrition-cas-usage.md
-    - Specs fonctionnelles: backend/3.nutrition-specifications-fonctionnelles.md
-    - Specs techniques: backend/4.nutrition-specifications-techniques.md
-    - Contraintes: backend/5.nutrition-contraintes.md
-    - Domaine:
-      - Modèle domaine: backend/design/design-domain.md
-      - Diagramme de classes: backend/annexes/Diagramme-classes.md
-      - Règles métier: backend/design/Regles-metier.md
-    - Livrables:
-      - Specs frontend: backend/livrable/specs-frontend.md
-      - Checklist implémentation: backend/livrable/checklist-implementation.md
-    - Infrastructure:
-      - Setup local &amp; production: backend/annexes/infrastructure-setup.md
-      - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
-      - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
-      - Hangfire: backend/annexes/infrastructure-hangfire.md
-      - Publication docs: backend/annexes/infrastructure-docs.md
-```</p>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nutrition API — Documentation</span>
+<span class="nt">site_description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Documentation technique du projet Nutrition API</span>
+<span class="nt">site_author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Maxime Ghalem</span>
+<span class="nt">docs_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs</span>
+
+<span class="nt">theme</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material</span>
+<span class="w">  </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fr</span>
+<span class="w">  </span><span class="nt">palette</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">teal</span>
+<span class="w">      </span><span class="nt">accent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">teal</span>
+<span class="w">      </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/brightness-7</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mode sombre</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slate</span>
+<span class="w">      </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">teal</span>
+<span class="w">      </span><span class="nt">accent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">teal</span>
+<span class="w">      </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/brightness-4</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mode clair</span>
+<span class="w">  </span><span class="nt">features</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.tabs</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.sections</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.top</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search.highlight</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">content.code.copy</span>
+
+<span class="nt">plugins</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">search</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">lang</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fr</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mermaid2</span>
+
+<span class="nt">markdown_extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admonition</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pymdownx.details</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pymdownx.superfences</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">custom_fences</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mermaid</span>
+<span class="w">          </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mermaid</span>
+<span class="w">          </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="kt">!!python/name:pymdownx.superfences.fence_code_format</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pymdownx.tabbed</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">alternate_style</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tables</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">toc</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">permalink</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">nav</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Accueil</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Backend</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Introduction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/1.nutrition-introduction.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cas d'usage</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/2.nutrition-cas-usage.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Specs fonctionnelles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/3.nutrition-specifications-fonctionnelles.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Specs techniques</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/4.nutrition-specifications-techniques.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Contraintes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/5.nutrition-contraintes.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Domaine</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Modèle domaine</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/design/design-domain.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Diagramme de classes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/annexes/Diagramme-classes.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Règles métier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/design/Regles-metier.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Livrables</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Specs frontend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/livrable/specs-frontend.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Checklist implémentation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/livrable/checklist-implementation.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Infrastructure</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Setup local &amp; production</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/annexes/infrastructure-setup.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Keycloak Admin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/annexes/infrastructure-keycloak-admin.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Import Open Food Facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/annexes/infrastructure-import-off.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Hangfire</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/annexes/infrastructure-hangfire.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Publication docs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/annexes/infrastructure-docs.md</span>
+</code></pre></div>
 <hr/>
 <h3 id="docsindexmd-page-daccueil"><code>docs/index.md</code> (page d'accueil)<a class="headerlink" href="#docsindexmd-page-daccueil" title="Permanent link">¶</a></h3>
-<p>```markdown</p>
-<h1 id="nutrition-api-documentation">Nutrition API — Documentation<a class="headerlink" href="#nutrition-api-documentation" title="Permanent link">¶</a></h1>
-<p>API SaaS de gestion nutritionnelle — backend ASP.NET Core 10, architecture DDD 4 couches, déploiement Kubernetes.</p>
-<h2 id="navigation">Navigation<a class="headerlink" href="#navigation" title="Permanent link">¶</a></h2>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>Contenu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Backend</strong></td>
-<td>Specs fonctionnelles, modèle domaine, infrastructure</td>
-</tr>
-<tr>
-<td><strong>Domaine</strong></td>
-<td>Agrégats, Value Objects, règles métier</td>
-</tr>
-<tr>
-<td><strong>Infrastructure</strong></td>
-<td>Setup local, CI/CD, déploiement K3s</td>
-</tr>
-</tbody>
-</table>
-<h2 id="liens">Liens<a class="headerlink" href="#liens" title="Permanent link">¶</a></h2>
-<ul>
-<li><a href="https://github.com/&lt;user&gt;/nutrition-api">Repo API</a></li>
-<li><a href="https://votre-instance.atlassian.net/jira/software/projects/NUT/boards">Jira — Board NUT</a>
-```</li>
-</ul>
+<div class="language-markdown highlight"><pre><span></span><code><span class="gh"># Nutrition API — Documentation</span>
+
+API SaaS de gestion nutritionnelle — backend ASP.NET Core 10, architecture DDD 4 couches, déploiement Kubernetes.
+
+<span class="gu">## Navigation</span>
+
+| Section | Contenu |
+|---|---|
+| <span class="gs">**Backend**</span> | Specs fonctionnelles, modèle domaine, infrastructure |
+| <span class="gs">**Domaine**</span> | Agrégats, Value Objects, règles métier |
+| <span class="gs">**Infrastructure**</span> | Setup local, CI/CD, déploiement K3s |
+
+<span class="gu">## Liens</span>
+
+<span class="k">-</span><span class="w"> </span>[<span class="nt">Repo API</span>](<span class="na">https://github.com/&lt;user&gt;/nutrition-api</span>)
+<span class="k">-</span><span class="w"> </span>[<span class="nt">Jira — Board NUT</span>](<span class="na">https://votre-instance.atlassian.net/jira/software/projects/NUT/boards</span>)
+</code></pre></div>
 <hr/>
 <h2 id="section-2-github-actions-deploiement-automatique">Section 2 — GitHub Actions (déploiement automatique)<a class="headerlink" href="#section-2-github-actions-deploiement-automatique" title="Permanent link">¶</a></h2>
 <h3 id="fichier-a-creer-dans-le-repo-docs">Fichier à créer dans le repo docs<a class="headerlink" href="#fichier-a-creer-dans-le-repo-docs" title="Permanent link">¶</a></h3>
-<p><code>nutrition-docs/
+<div class="language-text highlight"><pre><span></span><code>nutrition-docs/
 └── .github/
     └── workflows/
-        └── docs.yml</code></p>
+        └── docs.yml
+</code></pre></div>
 <h3 id="githubworkflowsdocsyml"><code>.github/workflows/docs.yml</code><a class="headerlink" href="#githubworkflowsdocsyml" title="Permanent link">¶</a></h3>
-<p>```yaml
-name: Docs</p>
-<p>on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main</p>
-<p>permissions:
-  contents: write</p>
-<p>jobs:
-  deploy:
-    runs-on: ubuntu-latest</p>
-<pre><code>steps:
-  - name: Checkout
-    uses: actions/checkout@v4
-    with:
-      fetch-depth: 0
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Docs</span>
 
-  - name: Setup Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.x'
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 
-  - name: Installer les dépendances
-    run: pip install -r requirements.txt
+<span class="nt">permissions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
 
-  - name: Build (PR uniquement — vérification sans déploiement)
-    if: github.event_name == 'pull_request'
-    run: mkdocs build --strict
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
-  - name: Build &amp; Deploy (push main uniquement)
-    if: github.event_name == 'push'
-    run: mkdocs gh-deploy --force
-</code></pre>
-<p>```</p>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.x'</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Installer les dépendances</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements.txt</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build (PR uniquement — vérification sans déploiement)</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event_name == 'pull_request'</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs build --strict</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build &amp; Deploy (push main uniquement)</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event_name == 'push'</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs gh-deploy --force</span>
+</code></pre></div>
 <blockquote>
 <p><strong>Comportement :</strong>
 - Sur <strong>PR</strong> : build uniquement (<code>--strict</code> bloque si des liens sont cassés) — pas de déploiement
@@ -830,24 +951,27 @@ name: Docs</p>
 <h2 id="section-3-activation-github-pages">Section 3 — Activation GitHub Pages<a class="headerlink" href="#section-3-activation-github-pages" title="Permanent link">¶</a></h2>
 <h3 id="configuration-initiale-une-seule-fois">Configuration initiale (une seule fois)<a class="headerlink" href="#configuration-initiale-une-seule-fois" title="Permanent link">¶</a></h3>
 <p>Dans le repo docs sur GitHub :</p>
-<p><code>Settings → Pages
+<div class="language-text highlight"><pre><span></span><code>Settings → Pages
   → Source : Deploy from a branch
   → Branch : gh-pages / root
-  → Save</code></p>
+  → Save
+</code></pre></div>
 <blockquote>
 <p>La branche <code>gh-pages</code> est créée automatiquement par <code>mkdocs gh-deploy</code> au premier run.</p>
 </blockquote>
 <h3 id="url-du-site-publie">URL du site publié<a class="headerlink" href="#url-du-site-publie" title="Permanent link">¶</a></h3>
-<p><code>https://&lt;username&gt;.github.io/&lt;repo-docs&gt;/</code></p>
+<div class="language-text highlight"><pre><span></span><code>https://&lt;username&gt;.github.io/&lt;repo-docs&gt;/
+</code></pre></div>
 <hr/>
 <h2 id="section-4-test-local">Section 4 — Test local<a class="headerlink" href="#section-4-test-local" title="Permanent link">¶</a></h2>
-<p>```bash</p>
-<h1 id="installer-les-dependances">Installer les dépendances<a class="headerlink" href="#installer-les-dependances" title="Permanent link">¶</a></h1>
-<p>pip install -r requirements.txt</p>
-<h1 id="serveur-local-avec-rechargement-automatique">Serveur local avec rechargement automatique<a class="headerlink" href="#serveur-local-avec-rechargement-automatique" title="Permanent link">¶</a></h1>
-<p>mkdocs serve</p>
-<h1 id="ouvrir-http1270018000">Ouvrir http://127.0.0.1:8000<a class="headerlink" href="#ouvrir-http1270018000" title="Permanent link">¶</a></h1>
-<p>```</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Installer les dépendances</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Serveur local avec rechargement automatique</span>
+mkdocs<span class="w"> </span>serve
+
+<span class="c1"># Ouvrir http://127.0.0.1:8000</span>
+</code></pre></div>
 <hr/>
 <h2 id="ordre-de-mise-en-place">Ordre de mise en place<a class="headerlink" href="#ordre-de-mise-en-place" title="Permanent link">¶</a></h2>
 <table>
