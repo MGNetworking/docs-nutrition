@@ -35,9 +35,6 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.highlight:
-      anchor_linenums: false
-      pygments_lang_class: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
