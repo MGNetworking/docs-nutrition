@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../../7.nutrition-admin/">
+        <link rel="prev" href="../../annexes/Diagramme-classes/">
       
       
-        <link rel="next" href="../Diagramme-classes/">
+        <link rel="next" href="../design-application/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -220,16 +220,88 @@
         
   
   
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Spécifications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="./" class="md-tabs__link">
+          
+  
+  Domaine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
     
   
   
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+        <a href="./" class="md-tabs__link">
           
   
-  Backend
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../features/" class="md-tabs__link">
+          
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../annexes/infrastructure-setup/" class="md-tabs__link">
+          
+  
+  Infrastructure
 
         </a>
       </li>
@@ -294,44 +366,39 @@
       
   
   
-    
   
   
-  
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
-    Backend
+    Spécifications
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Backend
+            Spécifications
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -482,11 +549,16 @@
 
               
             
-              
-                
+          </ul>
+        </nav>
+      
+    </li>
   
-  
+
     
+      
+      
+  
   
   
   
@@ -495,21 +567,18 @@
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -520,8 +589,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Domaine
           </label>
@@ -578,6 +647,42 @@
       Table des matières
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pattern-ddd-retenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Pattern DDD retenu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-structure-des-dossiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Structure des dossiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-conventions-de-nommage" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Conventions de nommage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-regles-dimplementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Règles d'implémentation
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#agregats-racines" class="md-nav__link">
@@ -850,11 +955,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../Diagramme-classes/" class="md-nav__link">
+      <a href="../Regles-metier/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Diagramme de classes
+    Règles métier
   </span>
   
 
@@ -871,11 +976,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../Regles-metier/" class="md-nav__link">
+      <a href="../../annexes/Diagramme-classes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Règles métier
+    Diagramme de classes
   </span>
   
 
@@ -891,6 +996,402 @@
     </li>
   
 
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Design
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pattern-ddd-retenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Pattern DDD retenu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-structure-des-dossiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Structure des dossiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-conventions-de-nommage" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Conventions de nommage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-regles-dimplementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Règles d'implémentation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agregats-racines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agrégats racines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agrégats racines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user" class="md-nav__link">
+    <span class="md-ellipsis">
+      User
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dietplan" class="md-nav__link">
+    <span class="md-ellipsis">
+      DietPlan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diet-concept-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diet ← concept central
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Meal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entites-enfants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entités enfants
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entités enfants">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mealitem" class="md-nav__link">
+    <span class="md-ellipsis">
+      MealItem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#savedfooditem" class="md-nav__link">
+    <span class="md-ellipsis">
+      SavedFoodItem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weightentry" class="md-nav__link">
+    <span class="md-ellipsis">
+      WeightEntry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fooditem" class="md-nav__link">
+    <span class="md-ellipsis">
+      FoodItem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Value Objects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Value Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#macrodistribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      MacroDistribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritioninfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionInfo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritionneeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionNeeds
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relations-entre-les-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relations entre les concepts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentification-autorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentification &amp; Autorisation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentification & Autorisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flux-dauthentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flux d'authentification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôles Keycloak
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation des données
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorisation-par-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Autorisation par tier
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enums
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decisions-transverses-a-traiter-avant-la-mise-en-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Décisions transverses — à traiter avant la mise en production
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Décisions transverses — à traiter avant la mise en production">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#politique-de-retention-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Politique de rétention des données
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformite-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conformité RGPD
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-qui-appartient-au-service-pas-au-domaine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui appartient au Service (pas au domaine)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
               
             
               
@@ -899,26 +1400,93 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../design-application/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Application Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Infrastructure Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -929,8 +1497,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_9">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Features
           </label>
@@ -1215,10 +1783,9 @@
     </li>
   
 
-              
-            
-              
-                
+    
+      
+      
   
   
   
@@ -1228,21 +1795,18 @@
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_10" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1253,8 +1817,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Infrastructure
           </label>
@@ -1271,7 +1835,7 @@
         
   
   <span class="md-ellipsis">
-    Setup local & production
+    Setup
   </span>
   
 
@@ -1392,14 +1956,6 @@
     </li>
   
 
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
     
   </ul>
 </nav>
@@ -1426,6 +1982,42 @@
       Table des matières
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pattern-ddd-retenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Pattern DDD retenu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-structure-des-dossiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Structure des dossiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-conventions-de-nommage" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Conventions de nommage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-regles-dimplementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Règles d'implémentation
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#agregats-racines" class="md-nav__link">
@@ -1699,9 +2291,123 @@
 
 <h1 id="modele-domaine-api-de-gestion-de-regime-alimentaire">Modèle domaine — API de Gestion de Régime Alimentaire<a class="headerlink" href="#modele-domaine-api-de-gestion-de-regime-alimentaire" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>Concepts métier et leurs interactions.
+<p>Document de référence obligatoire avant tout ticket de la couche Domain.
+Concepts métier et leurs interactions.
 Source : cas d'usage (UC01-UC10) + règles métier.</p>
 </blockquote>
+<hr />
+<h2 id="1-pattern-ddd-retenu">1. Pattern DDD retenu<a class="headerlink" href="#1-pattern-ddd-retenu" title="Permanent link">&para;</a></h2>
+<p><strong>Domain-Driven Design</strong> — le modèle s'organise autour du métier, pas de la base de données.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Rôle</th>
+<th>Exemples dans ce projet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Aggregate Root</strong></td>
+<td>Entité centrale qui protège ses propres invariants — seul point d'entrée pour modifier l'agrégat</td>
+<td><code>User</code>, <code>Diet</code>, <code>DietPlan</code>, <code>Meal</code>, <code>FoodItem</code></td>
+</tr>
+<tr>
+<td><strong>Entity enfant</strong></td>
+<td>Entité avec identité propre, qui ne peut exister sans son agrégat racine</td>
+<td><code>MealItem</code>, <code>WeightEntry</code>, <code>SavedFoodItem</code></td>
+</tr>
+<tr>
+<td><strong>Value Object</strong></td>
+<td>Valeur immuable sans identité propre — l'égalité est par valeur, pas par référence</td>
+<td><code>MacroDistribution</code>, <code>NutritionInfo</code>, <code>NutritionNeeds</code></td>
+</tr>
+<tr>
+<td><strong>Enum</strong></td>
+<td>Ensemble fini de valeurs métier nommées</td>
+<td><code>ActivityLevel</code>, <code>Goal</code>, <code>DietType</code>, <code>DietStatus</code>…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Règle fondamentale :</strong> le Domain ne dépend de rien — ni EF Core, ni HTTP, ni Redis. Zéro import d'infrastructure.</p>
+<hr />
+<h2 id="2-structure-des-dossiers">2. Structure des dossiers<a class="headerlink" href="#2-structure-des-dossiers" title="Permanent link">&para;</a></h2>
+<p><code>src/NutritionApi.Domain/
+├── Entity/
+│   ├── User.cs
+│   ├── DietPlan.cs
+│   ├── Diet.cs
+│   ├── Meal.cs
+│   ├── MealItem.cs
+│   ├── FoodItem.cs
+│   ├── WeightEntry.cs
+│   └── SavedFoodItem.cs
+├── ValueObjects/
+│   ├── MacroDistribution.cs
+│   ├── NutritionInfo.cs
+│   └── NutritionNeeds.cs
+└── Enums/
+    ├── ActivityLevel.cs
+    ├── Allergen.cs
+    ├── DietStatus.cs
+    ├── DietType.cs
+    ├── Gender.cs
+    ├── Goal.cs
+    ├── MealType.cs
+    └── SubscriptionTier.cs</code></p>
+<hr />
+<h2 id="3-conventions-de-nommage">3. Conventions de nommage<a class="headerlink" href="#3-conventions-de-nommage" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Convention</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aggregate Root / Entity</td>
+<td><code>PascalCase</code> — nom métier direct</td>
+<td><code>User</code>, <code>DietPlan</code>, <code>MealItem</code></td>
+</tr>
+<tr>
+<td>Value Object</td>
+<td><code>PascalCase</code> — décrit la valeur portée</td>
+<td><code>MacroDistribution</code>, <code>NutritionInfo</code></td>
+</tr>
+<tr>
+<td>Enum</td>
+<td><code>PascalCase</code> — nom du concept</td>
+<td><code>ActivityLevel</code>, <code>DietStatus</code></td>
+</tr>
+<tr>
+<td>Valeur d'enum</td>
+<td><code>PascalCase</code></td>
+<td><code>ActivityLevel.Sedentary</code>, <code>Goal.WeightLoss</code></td>
+</tr>
+<tr>
+<td>Méthode de mutation</td>
+<td><code>Change***</code> / <code>Add***</code> / <code>Remove***</code> / <code>Mark***</code></td>
+<td><code>ChangeGender()</code>, <code>AddAllergen()</code>, <code>MarkAsDeleted()</code></td>
+</tr>
+<tr>
+<td>Méthode interne Update</td>
+<td><code>Update***</code></td>
+<td><code>UpdateProfile()</code> — appelé par le constructeur et les méthodes publiques</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-regles-dimplementation">4. Règles d'implémentation<a class="headerlink" href="#4-regles-dimplementation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Constructeur public + méthodes <code>Update***</code> internes.</strong> Les propriétés mutables passent par une méthode <code>Update***</code> appelée à la fois par le constructeur et par les méthodes de mutation publiques — évite la duplication de validation.</li>
+<li><strong><code>Id</code> et <code>UserId</code> sont initialisés directement dans le constructeur</strong>, jamais via <code>Update***</code> — ce sont des identités immuables.</li>
+<li><strong>Les Value Objects sont immuables.</strong> Pas de setter public. Toute modification crée une nouvelle instance.</li>
+<li><strong>Les invariants sont validés dans le constructeur et dans chaque méthode de mutation.</strong> Une entité invalide ne peut pas exister.</li>
+<li><strong><code>ThrowIfNegative</code> pour les numériques</strong> (<code>Height</code>, <code>Weight</code>, <code>Quantity</code>…). <code>ArgumentException</code> custom uniquement pour enum inconnu, Guid vide, ou invariant combiné.</li>
+<li><strong><code>NutritionNeeds</code> n'est pas persisté</strong> — calculé à la demande dans la couche Application, jamais stocké en base.</li>
+</ul>
 <hr />
 <h2 id="agregats-racines">Agrégats racines<a class="headerlink" href="#agregats-racines" title="Permanent link">&para;</a></h2>
 <p>Un agrégat racine est un concept métier autonome qui protège ses propres règles.</p>
