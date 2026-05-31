@@ -18,11 +18,11 @@ src/NutritionApi.Api/
 │   ├── FoodItemsController.cs
 │   └── AdminController.cs
 ├── Middleware/
-│   ├── ExceptionMiddleware.cs         ← traduit les exceptions Application en ProblemDetails
-│   └── UserResolutionMiddleware.cs    ← résout KeycloakId → User.Id à chaque requête
+│   ├── ExceptionMiddleware.cs
+│   └── UserResolutionMiddleware.cs
 ├── Extensions/
-│   ├── ClaimsPrincipalExtensions.cs   ← HttpContext.GetUserId(), HttpContext.GetKeycloakId()
-│   └── ServiceCollectionExtensions.cs ← helpers d'enregistrement
+│   ├── ClaimsPrincipalExtensions.cs
+│   └── ServiceCollectionExtensions.cs
 ├── Filters/
 │   └── HangfireAdminAuthorizationFilter.cs
 ├── Properties/

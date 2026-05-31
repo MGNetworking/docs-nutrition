@@ -35,10 +35,10 @@ GitHub Actions — build MkDocs
 
 ```
 nutrition-docs/
-├── mkdocs.yml           ← configuration MkDocs
-├── requirements.txt     ← dépendances Python
-└── docs/                ← contenu markdown (existant)
-    ├── index.md         ← page d'accueil (à créer)
+├── mkdocs.yml
+├── requirements.txt
+└── docs/
+    ├── index.md
     └── backend/
         ├── ...
 ```

@@ -90,8 +90,8 @@ RecurringJob.AddOrUpdate<IRgpdPurgeJob>(
 
 ```
 Jobs/
-├── IOffImportJob.cs          ← interface (enregistrée dans DI)
-├── OffImportJob.cs           ← implémentation
+├── IOffImportJob.cs
+├── OffImportJob.cs
 ├── IRgpdPurgeJob.cs
 └── RgpdPurgeJob.cs
 ```

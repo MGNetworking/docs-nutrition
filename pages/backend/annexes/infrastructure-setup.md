@@ -15,10 +15,10 @@ L'API ASP.NET Core tourne en dehors de Docker (`dotnet run`). Docker Compose fou
 ┌─────────────────────────────────────────────────────────┐
 │  Docker Compose                                         │
 │                                                         │
-│  app-db (PostgreSQL 16)   ← base de données de l'API   │
-│  keycloak-db (PostgreSQL 16) ← base de données KC      │
-│  keycloak (Keycloak 24)   ← authentification            │
-│  redis (Redis 7)          ← cache FoodItem              │
+│  app-db (PostgreSQL 16)
+│  keycloak-db (PostgreSQL 16)
+│  keycloak (Keycloak 24)
+│  redis (Redis 7)
 └─────────────────────────────────────────────────────────┘
          ↑
   dotnet run (ASP.NET Core) — lit .env pour se connecter
@@ -30,11 +30,11 @@ L'API ASP.NET Core tourne en dehors de Docker (`dotnet run`). Docker Compose fou
 nutrition-api/
 └── infra/
     ├── dev/
-    │   ├── docker-compose.yml      ← orchestration locale
-    │   └── .env.example            ← modèle variables (committé)
-    │   # .env                      ← vraies valeurs (non committé — dans .gitignore)
+    │   ├── docker-compose.yml
+    │   └── .env.example
+    │   # .env
     └── keycloak/
-        └── realm-export-dev.json   ← config realm + utilisateurs de test (committé)
+        └── realm-export-dev.json
 ```
 
 > **`.gitignore` — ajouter :** `infra/dev/.env`
@@ -220,9 +220,9 @@ PostgreSQL, Keycloak et Redis sont déployés et gérés par un **projet d'infra
 
 ```
 K3s cluster (projet infra séparé)
-├── PostgreSQL  ←─┐
-├── Keycloak    ←─┤  nutrition-api se connecte via variables d'environnement
-└── Redis       ←─┘
+├── PostgreSQL
+├── Keycloak
+└── Redis
         ↑
   nutrition-api (Deployment — ce projet)
 ```
@@ -233,14 +233,14 @@ K3s cluster (projet infra séparé)
 
 ```
 nutrition-api/
-├── Dockerfile                              ← build de l'image API
+├── Dockerfile
 └── infra/
     └── k8s/
-        ├── configmap.yaml                  ← variables non-sensibles (committé)
-        ├── secret.yaml.example             ← structure uniquement, valeurs vides (committé)
-        ├── deployment.yaml                 ← Deployment nutrition-api
-        ├── service.yaml                    ← Service ClusterIP
-        └── ingress.yaml                    ← Ingress TLS
+        ├── configmap.yaml
+        ├── secret.yaml.example
+        ├── deployment.yaml
+        ├── service.yaml
+        └── ingress.yaml
 ```
 
 > **`.gitignore` — ajouter :** `infra/k8s/secret.yaml` (garder uniquement `secret.yaml.example`)
@@ -441,7 +441,7 @@ push main
 ```
 .github/
 └── workflows/
-    └── deploy.yml     ← committé dans le repo
+    └── deploy.yml
 ```
 
 ---
@@ -603,8 +603,8 @@ jobs:
 ```
 .github/
 └── workflows/
-    ├── ci.yml        ← build + tests (PR)
-    └── deploy.yml    ← déploiement (push main)
+    ├── ci.yml
+    └── deploy.yml
 ```
 
 #### `.github/workflows/ci.yml`

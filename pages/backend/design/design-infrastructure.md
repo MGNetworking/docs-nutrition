@@ -11,8 +11,8 @@
 ```
 src/NutritionApi.Infrastructure/
 ├── Persistence/
-│   ├── AppDbContext.cs                    ← DbContext principal + IUnitOfWork
-│   ├── Configurations/                    ← Fluent API, un fichier par entité
+│   ├── AppDbContext.cs
+│   ├── Configurations/
 │   │   ├── UserConfiguration.cs
 │   │   ├── DietPlanConfiguration.cs
 │   │   ├── DietConfiguration.cs
@@ -29,17 +29,17 @@ src/NutritionApi.Infrastructure/
 │   │   ├── FoodItemRepository.cs
 │   │   ├── WeightEntryRepository.cs
 │   │   └── SavedFoodItemRepository.cs
-│   └── Migrations/                        ← générées par EF Core CLI
+│   └── Migrations/
 ├── Cache/
-│   └── RedisFoodCacheService.cs           ← implémente IFoodCacheService
+│   └── RedisFoodCacheService.cs
 ├── Jobs/
 │   ├── IOffImportJob.cs
 │   ├── OffImportJob.cs
 │   ├── IRgpdPurgeJob.cs
 │   └── RgpdPurgeJob.cs
 ├── ExternalServices/
-│   └── KeycloakAdminService.cs            ← implémente IKeycloakAdminService
-└── DependencyInjection.cs                 ← enregistrement des services Infrastructure
+│   └── KeycloakAdminService.cs
+└── DependencyInjection.cs
 ```
 
 ---

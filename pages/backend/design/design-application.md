@@ -48,17 +48,17 @@ src/NutritionApi.Application/
 │   │   ├── IWeightEntryRepository.cs
 │   │   └── ISavedFoodItemRepository.cs
 │   ├── Services/
-│   │   ├── IUserService.cs               ← contrat pour UsersController
-│   │   ├── IDietPlanService.cs           ← contrat pour DietPlansController
-│   │   ├── IDietService.cs               ← contrat pour DietsController
-│   │   ├── IMealService.cs               ← contrat pour MealsController
-│   │   ├── IFoodItemService.cs           ← contrat pour FoodItemsController
-│   │   ├── INutritionService.cs          ← contrat pour DietsController (bilan)
-│   │   └── IAdminService.cs              ← contrat pour AdminController
+│   │   ├── IUserService.cs
+│   │   ├── IDietPlanService.cs
+│   │   ├── IDietService.cs
+│   │   ├── IMealService.cs
+│   │   ├── IFoodItemService.cs
+│   │   ├── INutritionService.cs
+│   │   └── IAdminService.cs
 │   └── ExternalServices/
-│       ├── IFoodCacheService.cs          ← contrat cache Redis (implémenté en Infrastructure)
-│       ├── IKeycloakAdminService.cs      ← contrat Keycloak Admin (implémenté en Infrastructure)
-│       └── IEmailService.cs             ← contrat envoi email (implémenté en Infrastructure)
+│       ├── IFoodCacheService.cs
+│       ├── IKeycloakAdminService.cs
+│       └── IEmailService.cs
 ├── DTOs/
 │   ├── Users/
 │   │   ├── CreateUserProfileRequest.cs
@@ -87,7 +87,7 @@ src/NutritionApi.Application/
 │   ├── ConflictException.cs
 │   ├── ForbiddenException.cs
 │   └── UnprocessableException.cs
-└── DependencyInjection.cs               ← enregistrement des services Application
+└── DependencyInjection.cs
 ```
 
 ---
