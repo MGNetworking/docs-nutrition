@@ -1,0 +1,2054 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+        <link rel="prev" href="../design-api/">
+      
+      
+        <link rel="next" href="../../features/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>API Layer — Infrastructure - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-technique-infrastructure-couche-api" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Layer — Infrastructure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Spécifications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../design-domain/" class="md-tabs__link">
+          
+  
+  Domaine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../design-domain/" class="md-tabs__link">
+          
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../features/" class="md-tabs__link">
+          
+  
+  Features
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../annexes/infrastructure-setup/" class="md-tabs__link">
+          
+  
+  Infrastructure
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spécifications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Spécifications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Domaine
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Domaine
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-domain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/Diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Design
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-domain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-application/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Application Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Infrastructure Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Contrats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-packages-nuget-requis" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Packages NuGet requis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-pipeline-middleware-ordre-critique" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Pipeline middleware — ordre critique
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Pipeline middleware — ordre critique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enregistrement-di-dans-builderservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enregistrement DI dans builder.Services
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role-de-chaque-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôle de chaque middleware
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-exceptionmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. ExceptionMiddleware
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-userresolutionmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. UserResolutionMiddleware
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. UserResolutionMiddleware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parcours-du-token-dans-la-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parcours du token dans la pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-authentification-jwt-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Authentification JWT Keycloak
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Authentification JWT Keycloak">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-addauthentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration AddAuthentication
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-keycloak-keycloakclaimstransformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôles Keycloak — KeycloakClaimsTransformation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#policies-dautorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Policies d'autorisation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-swagger-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Swagger / OpenAPI
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cors-a-configurer" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. CORS (à configurer)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/aliments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/admin-dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Admin dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Infrastructure
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-import-off/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/infrastructure-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication docs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../annexes/workflows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflows
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-packages-nuget-requis" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Packages NuGet requis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-pipeline-middleware-ordre-critique" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Pipeline middleware — ordre critique
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Pipeline middleware — ordre critique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enregistrement-di-dans-builderservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enregistrement DI dans builder.Services
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role-de-chaque-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôle de chaque middleware
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-exceptionmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. ExceptionMiddleware
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-userresolutionmiddleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. UserResolutionMiddleware
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. UserResolutionMiddleware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parcours-du-token-dans-la-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parcours du token dans la pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-authentification-jwt-keycloak" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Authentification JWT Keycloak
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Authentification JWT Keycloak">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-addauthentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration AddAuthentication
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-keycloak-keycloakclaimstransformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôles Keycloak — KeycloakClaimsTransformation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#policies-dautorisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Policies d'autorisation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-swagger-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Swagger / OpenAPI
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cors-a-configurer" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. CORS (à configurer)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="design-technique-infrastructure-couche-api">Design technique — Infrastructure couche API<a class="headerlink" href="#design-technique-infrastructure-couche-api" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Configuration technique de la couche API : pipeline middleware, JWT, Swagger, CORS, DI.
+Pour les contrats d'endpoints : voir <code>design-api.md</code></p>
+</blockquote>
+<hr />
+<h2 id="1-packages-nuget-requis">1. Packages NuGet requis<a class="headerlink" href="#1-packages-nuget-requis" title="Permanent link">&para;</a></h2>
+<div class="language-xml highlight"><pre><span></span><code><span class="cm">&lt;!-- Supprimer --&gt;</span>
+<span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.AspNetCore.OpenApi&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;10.0.8&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="cm">&lt;!-- Ajouter --&gt;</span>
+<span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.AspNetCore.Authentication.JwtBearer&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;10.0.8&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Swashbuckle.AspNetCore&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;7.2.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</code></pre></div>
+<hr />
+<h2 id="2-pipeline-middleware-ordre-critique">2. Pipeline middleware — ordre critique<a class="headerlink" href="#2-pipeline-middleware-ordre-critique" title="Permanent link">&para;</a></h2>
+<p>L'ordre est critique — chaque middleware est listé dans l'ordre d'appel dans <code>Program.cs</code>.</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">app</span><span class="p">.</span><span class="n">UseMiddleware</span><span class="o">&lt;</span><span class="n">ExceptionMiddleware</span><span class="o">&gt;</span><span class="p">();</span><span class="w">      </span><span class="c1">// 1. Capture toutes les exceptions non gérées</span>
+<span class="n">app</span><span class="p">.</span><span class="n">UseHttpsRedirection</span><span class="p">();</span><span class="w">                    </span><span class="c1">// 2. Force HTTPS</span>
+<span class="c1">// TODO : configurer AddCors() dans builder.Services</span>
+<span class="n">app</span><span class="p">.</span><span class="n">UseCors</span><span class="p">();</span><span class="w">                                </span><span class="c1">// 3. Autorise les requêtes cross-origin</span>
+<span class="n">app</span><span class="p">.</span><span class="n">UseAuthentication</span><span class="p">();</span><span class="w">                      </span><span class="c1">// 4. Valide le JWT Bearer</span>
+<span class="n">app</span><span class="p">.</span><span class="n">UseAuthorization</span><span class="p">();</span><span class="w">                       </span><span class="c1">// 5. Vérifie les rôles / policies</span>
+<span class="n">app</span><span class="p">.</span><span class="n">UseMiddleware</span><span class="o">&lt;</span><span class="n">UserResolutionMiddleware</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="c1">// 6. Résout keycloakId → User.Id interne</span>
+<span class="n">app</span><span class="p">.</span><span class="n">MapControllers</span><span class="p">();</span><span class="w">                         </span><span class="c1">// 7. Route vers les controllers</span>
+</code></pre></div>
+<h3 id="enregistrement-di-dans-builderservices">Enregistrement DI dans <code>builder.Services</code><a class="headerlink" href="#enregistrement-di-dans-builderservices" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddControllers</span><span class="p">();</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddApplication</span><span class="p">();</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">ExceptionMiddleware</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">UserResolutionMiddleware</span><span class="o">&gt;</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="role-de-chaque-middleware">Rôle de chaque middleware<a class="headerlink" href="#role-de-chaque-middleware" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Middleware</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ExceptionMiddleware</code></td>
+<td>Capture les exceptions, retourne un <code>ProblemDetails</code></td>
+</tr>
+<tr>
+<td><code>HttpsRedirection</code></td>
+<td>Force HTTPS — inclus dans le Web SDK</td>
+</tr>
+<tr>
+<td><code>Cors</code></td>
+<td>Autorise les requêtes cross-origin — configuré par environnement</td>
+</tr>
+<tr>
+<td><code>Authentication</code></td>
+<td>Valide le token JWT Bearer (signature, audience, expiration)</td>
+</tr>
+<tr>
+<td><code>Authorization</code></td>
+<td>Vérifie <code>[Authorize]</code> et policies sur les endpoints</td>
+</tr>
+<tr>
+<td><code>UserResolutionMiddleware</code></td>
+<td>Extrait le <code>sub</code> Keycloak, résout <code>User.Id</code> en base</td>
+</tr>
+<tr>
+<td><code>MapControllers</code></td>
+<td>Route les requêtes vers les controllers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-exceptionmiddleware">3. ExceptionMiddleware<a class="headerlink" href="#3-exceptionmiddleware" title="Permanent link">&para;</a></h2>
+<p>Intercepte toutes les exceptions levées par les services Application et les traduit en réponses HTTP <code>ProblemDetails</code>.</p>
+<p><strong>Fichier : <code>Middleware/ExceptionMiddleware.cs</code></strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">NutritionApi.Api.Middleware</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Http</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">NutritionApi.Application.Exceptions</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ExceptionMiddleware</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMiddleware</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">InvokeAsync</span><span class="p">(</span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">RequestDelegate</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">next</span><span class="p">(</span><span class="n">context</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">NotFoundException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">404</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ConflictException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">409</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ForbiddenException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">403</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">UnprocessableException</span><span class="w"> </span><span class="n">ex</span><span class="p">){</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">422</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="p">)</span><span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Une erreur interne est survenue.&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">WriteProblem</span><span class="p">(</span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">statusCode</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">detail</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">statusCode</span><span class="p">;</span>
+<span class="w">        </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">ContentType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;application/problem+json&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">WriteAsJsonAsync</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ProblemDetails</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">statusCode</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">detail</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="4-userresolutionmiddleware">4. UserResolutionMiddleware<a class="headerlink" href="#4-userresolutionmiddleware" title="Permanent link">&para;</a></h2>
+<p>Résout le <code>sub</code> Keycloak en <code>User.Id</code> interne à chaque requête authentifiée et l'ajoute à <code>HttpContext.Items</code>.</p>
+<h3 id="parcours-du-token-dans-la-pipeline">Parcours du token dans la pipeline<a class="headerlink" href="#parcours-du-token-dans-la-pipeline" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code>Requête HTTP
+Header: Authorization: Bearer eyJhbGc...
+        ↓
+UseAuthentication
+  → lit le header Authorization
+  → extrait le token après &quot;Bearer &quot;
+  → vérifie la signature avec la clé publique Keycloak
+  → si valide → remplit context.User avec les claims du token
+  → context.User.Identity.IsAuthenticated = true
+        ↓
+UserResolutionMiddleware
+  → vérifie context.User.Identity.IsAuthenticated
+    (= &quot;est-ce que UseAuthentication a validé le token ?&quot;)
+  → extrait le claim &quot;sub&quot; = &quot;keycloak-abc-123&quot;
+  → cherche en BDD → User.Id = Guid(&quot;...&quot;)
+  → stocke dans context.Items[&quot;UserId&quot;]
+        ↓
+Controller
+  → HttpContext.User.FindFirstValue(&quot;sub&quot;) → &quot;keycloak-abc-123&quot;
+  → HttpContext.GetUserId()                → Guid(&quot;...&quot;)
+</code></pre></div>
+<blockquote>
+<p><code>IsAuthenticated == true</code> signifie simplement que <code>UseAuthentication</code> a validé le token JWT. Sans ce check, le middleware essaierait de chercher un <code>sub</code> dans un token inexistant.</p>
+</blockquote>
+<p><strong>Fichier : <code>Middleware/UserResolutionMiddleware.cs</code></strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">NutritionApi.Api.Middleware</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Security.Claims</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Http</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">NutritionApi.Application.Interfaces.Repositories</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">UserResolutionMiddleware</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMiddleware</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IUserRepository</span><span class="w"> </span><span class="n">_userRepository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">UserResolutionMiddleware</span><span class="p">(</span><span class="n">IUserRepository</span><span class="w"> </span><span class="n">userRepository</span><span class="p">)</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_userRepository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userRepository</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">InvokeAsync</span><span class="p">(</span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">RequestDelegate</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">Identity</span><span class="o">?.</span><span class="n">IsAuthenticated</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">keycloakId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">FindFirstValue</span><span class="p">(</span><span class="s">&quot;sub&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_userRepository</span><span class="p">.</span><span class="n">GetByKeycloakIdAsync</span><span class="p">(</span><span class="n">keycloakId</span><span class="o">!</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">401</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="n">context</span><span class="p">.</span><span class="n">Items</span><span class="p">[</span><span class="s">&quot;UserId&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="n">Id</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Accès dans les controllers via <code>Extensions/ClaimsPrincipalExtensions.cs</code> :</strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ClaimsPrincipalExtensions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="nf">GetUserId</span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">Guid</span><span class="p">)</span><span class="n">context</span><span class="p">.</span><span class="n">Items</span><span class="p">[</span><span class="s">&quot;UserId&quot;</span><span class="p">]</span><span class="o">!</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Dans un controller :</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HttpContext</span><span class="p">.</span><span class="n">GetUserId</span><span class="p">();</span>
+</code></pre></div>
+<hr />
+<h2 id="5-authentification-jwt-keycloak">5. Authentification JWT Keycloak<a class="headerlink" href="#5-authentification-jwt-keycloak" title="Permanent link">&para;</a></h2>
+<h3 id="configuration-addauthentication">Configuration <code>AddAuthentication</code><a class="headerlink" href="#configuration-addauthentication" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthentication</span><span class="p">(</span><span class="n">JwtBearerDefaults</span><span class="p">.</span><span class="n">AuthenticationScheme</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">AddJwtBearer</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">Authority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">[</span><span class="s">&quot;Keycloak:Authority&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">Audience</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">[</span><span class="s">&quot;Keycloak:Audience&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">RequireHttpsMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">GetValue</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;Keycloak:RequireHttpsMetadata&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">TokenValidationParameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TokenValidationParameters</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ValidateIssuer</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// Active la vérification de l&#39;émetteur</span>
+<span class="w">            </span><span class="n">ValidateAudience</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// Active la vérification du destinataire</span>
+<span class="w">            </span><span class="n">ValidateLifetime</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// Active la vérification de l&#39;expiration</span>
+<span class="w">            </span><span class="n">ValidateIssuerSigningKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="w">   </span><span class="c1">// Active la vérification de la signature</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">});</span>
+</code></pre></div>
+<p><strong><code>appsettings.json</code></strong> (valeurs vides — surchargées par environnement) :</p>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;Keycloak&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Authority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Audience&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nutrition-api&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;RequireHttpsMetadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>appsettings.Development.json</code></strong> :</p>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;Keycloak&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Authority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:8080/realms/nutrition&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;RequireHttpsMetadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Keycloak expose ses clés publiques sur <code>{Authority}/.well-known/openid-configuration</code> — le middleware JWT les récupère automatiquement au démarrage.</p>
+<h3 id="roles-keycloak-keycloakclaimstransformation">Rôles Keycloak — KeycloakClaimsTransformation<a class="headerlink" href="#roles-keycloak-keycloakclaimstransformation" title="Permanent link">&para;</a></h3>
+<p>Keycloak stocke les rôles dans <code>realm_access.roles</code> (format non standard). <code>IClaimsTransformation</code> les convertit en <code>ClaimTypes.Role</code> standards à chaque requête authentifiée.</p>
+<p><strong>Fichier : <code>Extensions/KeycloakClaimsTransformation.cs</code></strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">NutritionApi.Api.Extensions</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Security.Claims</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Text.Json</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Authentication</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">KeycloakClaimsTransformation</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IClaimsTransformation</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">ClaimsPrincipal</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TransformAsync</span><span class="p">(</span><span class="n">ClaimsPrincipal</span><span class="w"> </span><span class="n">principal</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">realmAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">principal</span><span class="p">.</span><span class="n">FindFirstValue</span><span class="p">(</span><span class="s">&quot;realm_access&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">realmAccess</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="n">principal</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonDocument</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">realmAccess</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">json</span><span class="p">.</span><span class="n">RootElement</span><span class="p">.</span><span class="n">TryGetProperty</span><span class="p">(</span><span class="s">&quot;roles&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">roles</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="n">principal</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">identity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ClaimsIdentity</span><span class="p">();</span>
+<span class="w">        </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">role</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">roles</span><span class="p">.</span><span class="n">EnumerateArray</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">roleName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">role</span><span class="p">.</span><span class="n">GetString</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">roleName</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<span class="w">                </span><span class="n">identity</span><span class="p">.</span><span class="n">AddClaim</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Claim</span><span class="p">(</span><span class="n">ClaimTypes</span><span class="p">.</span><span class="n">Role</span><span class="p">,</span><span class="w"> </span><span class="n">roleName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">principal</span><span class="p">.</span><span class="n">AddIdentity</span><span class="p">(</span><span class="n">identity</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="n">principal</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Enregistrement :</strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddSingleton</span><span class="o">&lt;</span><span class="n">IClaimsTransformation</span><span class="p">,</span><span class="w"> </span><span class="n">KeycloakClaimsTransformation</span><span class="o">&gt;</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="policies-dautorisation">Policies d'autorisation<a class="headerlink" href="#policies-dautorisation" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthorization</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddPolicy</span><span class="p">(</span><span class="s">&quot;AdminOnly&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">policy</span><span class="p">.</span><span class="n">RequireRole</span><span class="p">(</span><span class="s">&quot;admin&quot;</span><span class="p">));</span>
+<span class="p">});</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Routes</th>
+<th>Protection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/**</code></td>
+<td><code>[Authorize]</code> — JWT valide requis</td>
+</tr>
+<tr>
+<td><code>/api/v1/admin/**</code></td>
+<td><code>[Authorize(Policy = "AdminOnly")]</code> — rôle <code>admin</code> requis</td>
+</tr>
+<tr>
+<td><code>/hangfire</code></td>
+<td><code>HangfireAdminAuthorizationFilter</code> — rôle <code>admin</code> requis</td>
+</tr>
+<tr>
+<td><code>/swagger</code></td>
+<td>Accessible uniquement hors production</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-swagger-openapi">6. Swagger / OpenAPI<a class="headerlink" href="#6-swagger-openapi" title="Permanent link">&para;</a></h2>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddSwaggerGen</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">SwaggerDoc</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiInfo</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Nutrition API&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;v1&quot;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddSecurityDefinition</span><span class="p">(</span><span class="s">&quot;Bearer&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityScheme</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">SecuritySchemeType</span><span class="p">.</span><span class="n">Http</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Scheme</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bearer&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">BearerFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;JWT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Token JWT Keycloak — format : Bearer {token}&quot;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddSecurityRequirement</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityRequirement</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityScheme</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Reference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiReference</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReferenceType</span><span class="p">.</span><span class="n">SecurityScheme</span><span class="p">,</span><span class="w"> </span><span class="n">Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Bearer&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="n">Array</span><span class="p">.</span><span class="n">Empty</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">xmlFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;{Assembly.GetExecutingAssembly().GetName().Name}.xml&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">IncludeXmlComments</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">AppContext</span><span class="p">.</span><span class="n">BaseDirectory</span><span class="p">,</span><span class="w"> </span><span class="n">xmlFile</span><span class="p">));</span>
+<span class="p">});</span>
+
+<span class="c1">// Uniquement hors production</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">app</span><span class="p">.</span><span class="n">Environment</span><span class="p">.</span><span class="n">IsProduction</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">app</span><span class="p">.</span><span class="n">UseSwagger</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app</span><span class="p">.</span><span class="n">UseSwaggerUI</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">SwaggerEndpoint</span><span class="p">(</span><span class="s">&quot;/swagger/v1/swagger.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Nutrition API v1&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Activer les commentaires XML dans le <code>.csproj</code> :</strong></p>
+<div class="language-xml highlight"><pre><span></span><code><span class="nt">&lt;PropertyGroup&gt;</span>
+<span class="w">  </span><span class="nt">&lt;GenerateDocumentationFile&gt;</span>true<span class="nt">&lt;/GenerateDocumentationFile&gt;</span>
+<span class="w">  </span><span class="nt">&lt;NoWarn&gt;</span>$(NoWarn);1591<span class="nt">&lt;/NoWarn&gt;</span>
+<span class="nt">&lt;/PropertyGroup&gt;</span>
+</code></pre></div>
+<hr />
+<h2 id="7-cors-a-configurer">7. CORS (à configurer)<a class="headerlink" href="#7-cors-a-configurer" title="Permanent link">&para;</a></h2>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// builder.Services — avant app.Build()</span>
+<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddCors</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddDefaultPolicy</span><span class="p">(</span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">policy</span><span class="p">.</span><span class="n">WithOrigins</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">GetSection</span><span class="p">(</span><span class="s">&quot;Cors:Origins&quot;</span><span class="p">).</span><span class="n">Get</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">()</span><span class="o">!</span><span class="p">)</span>
+<span class="w">              </span><span class="p">.</span><span class="n">AllowAnyHeader</span><span class="p">()</span>
+<span class="w">              </span><span class="p">.</span><span class="n">AllowAnyMethod</span><span class="p">()));</span>
+
+<span class="c1">// pipeline — après UseHttpsRedirection</span>
+<span class="n">app</span><span class="p">.</span><span class="n">UseCors</span><span class="p">();</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

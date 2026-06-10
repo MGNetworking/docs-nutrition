@@ -785,6 +785,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#0-role-de-chaque-couche" class="md-nav__link">
+    <span class="md-ellipsis">
+      0. Rôle de chaque couche
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-pattern-architectural-retenu" class="md-nav__link">
     <span class="md-ellipsis">
       1. Pattern architectural retenu
@@ -966,6 +975,15 @@
   <a href="#iadminservice" class="md-nav__link">
     <span class="md-ellipsis">
       IAdminService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#irgpdservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      IRgpdService
     </span>
   </a>
   
@@ -1182,7 +1200,28 @@
         
   
   <span class="md-ellipsis">
-    API Layer
+    API Layer — Contrats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-api-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
   </span>
   
 
@@ -1719,6 +1758,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#0-role-de-chaque-couche" class="md-nav__link">
+    <span class="md-ellipsis">
+      0. Rôle de chaque couche
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-pattern-architectural-retenu" class="md-nav__link">
     <span class="md-ellipsis">
       1. Pattern architectural retenu
@@ -1900,6 +1948,15 @@
   <a href="#iadminservice" class="md-nav__link">
     <span class="md-ellipsis">
       IAdminService
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#irgpdservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      IRgpdService
     </span>
   </a>
   
@@ -2097,6 +2154,71 @@ Source de vérité : <code>docs/pages/backend/livrable/checklist-implementation.
 Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 </blockquote>
 <hr />
+<h2 id="0-role-de-chaque-couche">0. Rôle de chaque couche<a class="headerlink" href="#0-role-de-chaque-couche" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Domain</strong></td>
+<td>Règles métier pures — entités, invariants, value objects</td>
+</tr>
+<tr>
+<td><strong>Application</strong></td>
+<td>Orchestration des cas d'usage — pilote le scénario complet</td>
+</tr>
+<tr>
+<td><strong>Infrastructure</strong></td>
+<td>Détails techniques — BDD, Redis, emails, jobs planifiés</td>
+</tr>
+<tr>
+<td><strong>API</strong></td>
+<td>Exposition HTTP — reçoit les requêtes, délègue à Application</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Application est le point de passage obligatoire entre API et Infrastructure.</strong>
+Elle centralise toutes les interfaces de communication inter-couches :</p>
+<div class="language-text highlight"><pre><span></span><code>API  ──[IXxxService]──▶  Application  ──[IXxxRepository / IXxxService externe]──▶  Infrastructure
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Déclarée dans</th>
+<th>Implémentée dans</th>
+<th>Utilisée par</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IXxxService</code></td>
+<td>Application</td>
+<td>Application</td>
+<td>API</td>
+</tr>
+<tr>
+<td><code>IXxxRepository</code></td>
+<td>Application</td>
+<td>Infrastructure</td>
+<td>Application</td>
+</tr>
+<tr>
+<td><code>IEmailService</code>, <code>IFoodCacheService</code>...</td>
+<td>Application</td>
+<td>Infrastructure</td>
+<td>Application</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Aucune communication directe API → Infrastructure n'est autorisée.</p>
+</blockquote>
+<hr />
 <h2 id="1-pattern-architectural-retenu">1. Pattern architectural retenu<a class="headerlink" href="#1-pattern-architectural-retenu" title="Permanent link">&para;</a></h2>
 <p><strong>Services applicatifs</strong> — un service par domaine fonctionnel.</p>
 <p>Chaque service orchestre un ensemble de cas d'usage cohérents. Il charge les agrégats via les repositories, appelle les méthodes métier du Domain, persiste les changements, puis retourne un DTO.</p>
@@ -2233,6 +2355,12 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 <h2 id="4-interfaces-de-repositories">4. Interfaces de repositories<a class="headerlink" href="#4-interfaces-de-repositories" title="Permanent link">&para;</a></h2>
 <p>Les interfaces sont définies dans la couche Application. L'Infrastructure les implémente.</p>
 <h3 id="iuserrepository">IUserRepository<a class="headerlink" href="#iuserrepository" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>⚠️ Pas de <code>DeleteAsync</code> — décision intentionnelle. La suppression d'un utilisateur
+est un <strong>soft delete</strong> : <code>User.MarkAsDeleted()</code> pose <code>DeletedAt = UtcNow</code>, puis
+<code>UpdateAsync</code> persiste le changement. Aucun DELETE SQL n'est jamais exécuté.
+Voir <code>design-domain.md</code> pour les détails de <code>DeletedAt</code> et la grace period RGPD.</p>
+</blockquote>
 <div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IUserRepository</span>
 <span class="p">{</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">User</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
@@ -2278,6 +2406,7 @@ Modèle domaine : <code>docs/pages/backend/design/design-domain.md</code></p>
 <div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IFoodItemRepository</span>
 <span class="p">{</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByIdAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetByIdsAsync</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Guid</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ids</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetByOffIdAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">offId</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FoodItem</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">SearchByKeywordAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">AddAsync</span><span class="p">(</span><span class="n">FoodItem</span><span class="w"> </span><span class="n">foodItem</span><span class="p">);</span>
@@ -2330,7 +2459,6 @@ Application layer → implémente IXxxService     (XxxService.cs)
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateUserProfileAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateUserProfileRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ReactivateUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ExportUserDataAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">AddWeightEntryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">AddWeightEntryRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetWeightHistoryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateWeightEntryAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">entryId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateWeightEntryRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
@@ -2392,6 +2520,13 @@ Application layer → implémente IXxxService     (XxxService.cs)
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateTemplateAsync</span><span class="p">(</span><span class="n">CreateDietPlanRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">UpdateTemplateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">templateId</span><span class="p">,</span><span class="w"> </span><span class="n">UpdateDietPlanRequest</span><span class="w"> </span><span class="n">request</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteTemplateAsync</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">templateId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="irgpdservice">IRgpdService<a class="headerlink" href="#irgpdservice" title="Permanent link">&para;</a></h3>
+<p>Responsable de toutes les opérations RGPD. Séparé de <code>IUserService</code> car <code>ExportUserDataAsync</code> doit lire 7 agrégats (User, WeightEntry, DietPlan, Diet, Meal, SavedFoodItem, FoodItem) — ce qui imposerait 6 repositories supplémentaires dans <code>UserService</code> et violerait le principe de responsabilité unique.</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IRgpdService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">UserExportResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ExportUserDataAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -2648,7 +2783,11 @@ Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'
 </tr>
 <tr>
 <td><code>SavedFoodItemResponse</code></td>
-<td><code>Id</code>, <code>FoodItemId</code>, <code>Name</code>, <code>CaloriesPer100g</code>, <code>SavedAt</code></td>
+<td><code>Id</code>, <code>FoodItemId</code>, <code>Name</code>, <code>CaloriesPer100g</code>, <code>SavedAt</code> — <em>pas de <code>From()</code> statique, champs alimentaires fournis par le service</em></td>
+</tr>
+<tr>
+<td><code>UserExportResponse</code></td>
+<td><code>Profile</code>, <code>WeightHistory[]</code>, <code>DietPlans[]</code>, <code>Diets[]</code>, <code>Meals[]</code>, <code>SavedFoodItems</code> (<code>List&lt;FoodItemSearchResponse&gt;</code>)</td>
 </tr>
 </tbody>
 </table>

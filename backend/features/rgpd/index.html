@@ -316,7 +316,14 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../design/design-api/">
 <span class="md-ellipsis">
-    API Layer
+    API Layer — Contrats
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../design/design-api-infrastructure/">
+<span class="md-ellipsis">
+    API Layer — Infrastructure
   </span>
 </a>
 </li>
@@ -460,6 +467,59 @@
       Endpoints
     </span>
 </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#export-rgpd-implementation-technique">
+<span class="md-ellipsis">
+      Export RGPD — implémentation technique
+    </span>
+</a>
+<nav aria-label="Export RGPD — implémentation technique" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#principe-en-memoire">
+<span class="md-ellipsis">
+      Principe en mémoire
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dto-userexportresponse">
+<span class="md-ellipsis">
+      DTO — UserExportResponse
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-controller">
+<span class="md-ellipsis">
+      Implémentation controller
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#points-cles">
+<span class="md-ellipsis">
+      Points clés
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pourquoi-un-rgpdservice-dedie">
+<span class="md-ellipsis">
+      Pourquoi un RgpdService dédié ?
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#responsabilites-par-couche">
+<span class="md-ellipsis">
+      Responsabilités par couche
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#dependances">
@@ -611,6 +671,59 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#export-rgpd-implementation-technique">
+<span class="md-ellipsis">
+      Export RGPD — implémentation technique
+    </span>
+</a>
+<nav aria-label="Export RGPD — implémentation technique" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#principe-en-memoire">
+<span class="md-ellipsis">
+      Principe en mémoire
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dto-userexportresponse">
+<span class="md-ellipsis">
+      DTO — UserExportResponse
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#implementation-controller">
+<span class="md-ellipsis">
+      Implémentation controller
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#points-cles">
+<span class="md-ellipsis">
+      Points clés
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pourquoi-un-rgpdservice-dedie">
+<span class="md-ellipsis">
+      Pourquoi un RgpdService dédié ?
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#responsabilites-par-couche">
+<span class="md-ellipsis">
+      Responsabilités par couche
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#dependances">
 <span class="md-ellipsis">
       Dépendances
@@ -679,6 +792,121 @@
 </tr>
 </tbody>
 </table>
+<h2 id="export-rgpd-implementation-technique">Export RGPD — implémentation technique<a class="headerlink" href="#export-rgpd-implementation-technique" title="Permanent link">¶</a></h2>
+<h3 id="principe-en-memoire">Principe en mémoire<a class="headerlink" href="#principe-en-memoire" title="Permanent link">¶</a></h3>
+<p>L'export ne touche jamais le disque — tout se passe en RAM.</p>
+<div class="language-text highlight"><pre><span></span><code>RgpdService                    UsersController
+    │                               │
+    │   ExportUserDataAsync()       │
+    │ ◄─────────────────────────── │
+    │                               │
+    │   UserExportResponse (DTO)    │
+    │ ──────────────────────────── ►│
+    │                               │
+    │                    Sérialise en JSON (WriteIndented)
+    │                               │
+    │                    Crée un ZipArchive en MemoryStream
+    │                    Ajoute "User-Data.json" dans le ZIP
+    │                               │
+    │                    File(bytes, "application/zip", "export-yyyy-MM-dd.zip")
+</code></pre></div>
+<h3 id="dto-userexportresponse">DTO — <code>UserExportResponse</code><a class="headerlink" href="#dto-userexportresponse" title="Permanent link">¶</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="nf">UserExportResponse</span><span class="p">(</span>
+<span class="w">    </span><span class="n">UserProfileResponse</span><span class="w">         </span><span class="n">Profile</span><span class="p">,</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">WeightEntryResponse</span><span class="o">&gt;</span><span class="w">   </span><span class="n">WeightHistory</span><span class="p">,</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietPlanResponse</span><span class="o">&gt;</span><span class="w">      </span><span class="n">DietPlans</span><span class="p">,</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">DietResponse</span><span class="o">&gt;</span><span class="w">          </span><span class="n">Diets</span><span class="p">,</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">MealResponse</span><span class="o">&gt;</span><span class="w">          </span><span class="n">Meals</span><span class="p">,</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedFoodItemResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SavedFoodItems</span>
+<span class="p">);</span>
+</code></pre></div>
+<p>Toutes les données que l'utilisateur a fournies ou générées par son activité — conformément à l'Art. 20 RGPD (droit à la portabilité).</p>
+<h3 id="implementation-controller">Implémentation controller<a class="headerlink" href="#implementation-controller" title="Permanent link">¶</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="na">[HttpGet("me/export")]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ExportUserData</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">keycloakId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="p">.</span><span class="n">FindFirstValue</span><span class="p">(</span><span class="n">ClaimTypes</span><span class="p">.</span><span class="n">NameIdentifier</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">export</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_rgpdService</span><span class="p">.</span><span class="n">ExportUserDataAsync</span><span class="p">(</span><span class="n">keycloakId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">export</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonSerializerOptions</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">WriteIndented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">jsonBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">memoryStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MemoryStream</span><span class="p">();</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">archive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ZipArchive</span><span class="p">(</span><span class="n">memoryStream</span><span class="p">,</span><span class="w"> </span><span class="n">ZipArchiveMode</span><span class="p">.</span><span class="n">Create</span><span class="p">,</span><span class="w"> </span><span class="n">leaveOpen</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">archive</span><span class="p">.</span><span class="n">CreateEntry</span><span class="p">(</span><span class="s">"mon-export.json"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">entryStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="n">Open</span><span class="p">();</span>
+<span class="w">        </span><span class="n">entryStream</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">jsonBytes</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nf">File</span><span class="p">(</span>
+<span class="w">        </span><span class="n">memoryStream</span><span class="p">.</span><span class="n">ToArray</span><span class="p">(),</span>
+<span class="w">        </span><span class="s">"application/zip"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">$"export-{DateTime.UtcNow:yyyy-MM-dd}.zip"</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="points-cles">Points clés<a class="headerlink" href="#points-cles" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MemoryStream</code></td>
+<td>Stocke le ZIP en RAM — pas d'écriture sur disque</td>
+</tr>
+<tr>
+<td><code>ZipArchive</code></td>
+<td>Gestionnaire du fichier ZIP</td>
+</tr>
+<tr>
+<td><code>CreateEntry("mon-export.json")</code></td>
+<td>Crée le fichier JSON à l'intérieur du ZIP</td>
+</tr>
+<tr>
+<td><code>leaveOpen: true</code></td>
+<td>Garde le stream ouvert après la fermeture du ZipArchive</td>
+</tr>
+<tr>
+<td><code>memoryStream.ToArray()</code></td>
+<td>Convertit en <code>byte[]</code> pour la réponse HTTP</td>
+</tr>
+<tr>
+<td><code>Content-Disposition</code></td>
+<td>Géré automatiquement par <code>File()</code> — force le téléchargement</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pourquoi-un-rgpdservice-dedie">Pourquoi un <code>RgpdService</code> dédié ?<a class="headerlink" href="#pourquoi-un-rgpdservice-dedie" title="Permanent link">¶</a></h3>
+<p><code>ExportUserDataAsync</code> doit agréger les données de <strong>6 agrégats</strong> (User, WeightEntry, DietPlan, Diet, Meal, SavedFoodItem). Placer cette méthode dans <code>UserService</code> imposerait 5 repositories supplémentaires à une classe qui ne gère que l'agrégat <code>User</code>. La création de <code>RgpdService</code> respecte le principe de responsabilité unique et la frontière des agrégats DDD.</p>
+<h3 id="responsabilites-par-couche">Responsabilités par couche<a class="headerlink" href="#responsabilites-par-couche" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Responsabilité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RgpdService</code></td>
+<td>Agréger les données de tous les agrégats → retourner <code>UserExportResponse</code></td>
+</tr>
+<tr>
+<td><code>UsersController</code></td>
+<td>Sérialiser en JSON → emballer dans un ZIP → retourner le fichier</td>
+</tr>
+</tbody>
+</table>
+<p>Le service ne sait pas comment les données sont livrées — c'est la responsabilité exclusive de la couche API.</p>
+<hr/>
 <h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">¶</a></h2>
 <ul>
 <li>Keycloak Admin API — désactivation / réactivation / suppression du compte Keycloak</li>

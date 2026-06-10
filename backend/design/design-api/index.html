@@ -16,7 +16,7 @@
         <link rel="prev" href="../design-infrastructure/">
       
       
-        <link rel="next" href="../../features/">
+        <link rel="next" href="../design-api-infrastructure/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>API Layer - Nutrition API — Documentation</title>
+        <title>API Layer — Contrats - Nutrition API — Documentation</title>
       
     
     
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Layer
+              API Layer — Contrats
             
           </span>
         </div>
@@ -794,7 +794,7 @@
           
   
   <span class="md-ellipsis">
-    API Layer
+    API Layer — Contrats
   </span>
   
 
@@ -805,7 +805,7 @@
         
   
   <span class="md-ellipsis">
-    API Layer
+    API Layer — Contrats
   </span>
   
 
@@ -868,6 +868,15 @@
   <a href="#userscontroller-apiv1users" class="md-nav__link">
     <span class="md-ellipsis">
       UsersController — /api/v1/users
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rgpdcontroller-apiv1rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      RgpdController — /api/v1/rgpd
     </span>
   </a>
   
@@ -971,157 +980,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-middleware-ordre-de-la-pipeline" class="md-nav__link">
+  <a href="#4-structure-type-dun-controller" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Middleware — ordre de la pipeline
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Middleware — ordre de la pipeline">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#role-de-chaque-middleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rôle de chaque middleware
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exceptionmiddleware-mapping-exceptions-problemdetails" class="md-nav__link">
-    <span class="md-ellipsis">
-      ExceptionMiddleware — mapping exceptions → ProblemDetails
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#userresolutionmiddleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      UserResolutionMiddleware
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-authentification-autorisation" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. Authentification / Autorisation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Authentification / Autorisation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-jwt-keycloak" class="md-nav__link">
-    <span class="md-ellipsis">
-      Validation JWT Keycloak
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#roles-keycloak" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rôles Keycloak
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#declaration-des-policies-dautorisation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Déclaration des policies d'autorisation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#routes-protegees-vs-publiques" class="md-nav__link">
-    <span class="md-ellipsis">
-      Routes protégées vs publiques
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-documentation-openapi-swagger" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. Documentation OpenAPI (Swagger)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="6. Documentation OpenAPI (Swagger)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#convention-dannotation-sur-les-controllers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Convention d'annotation sur les controllers
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-injection-de-dependances" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Injection de dépendances
+      4. Structure type d'un controller
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-structure-type-dun-controller" class="md-nav__link">
+  <a href="#5-contrats-par-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
-      8. Structure type d'un controller
+      5. Contrats par endpoint
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#9-contrats-par-endpoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      9. Contrats par endpoint
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="9. Contrats par endpoint">
+    <nav class="md-nav" aria-label="5. Contrats par endpoint">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1156,33 +1030,6 @@
   <a href="#put-usersme-mettre-a-jour-le-profil" class="md-nav__link">
     <span class="md-ellipsis">
       PUT /users/me — Mettre à jour le profil
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete-usersme-demande-suppression-rgpd" class="md-nav__link">
-    <span class="md-ellipsis">
-      DELETE /users/me — Demande suppression RGPD
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-usersmereactivate-reactivation-pendant-grace-period" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST /users/me/reactivate — Réactivation pendant grace period
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-usersmeexport-export-donnees-rgpd" class="md-nav__link">
-    <span class="md-ellipsis">
-      GET /users/me/export — Export données RGPD
     </span>
   </a>
   
@@ -1237,6 +1084,48 @@
   <a href="#delete-usersmesaved-food-itemsid-retirer-un-favori" class="md-nav__link">
     <span class="md-ellipsis">
       DELETE /users/me/saved-food-items/{id} — Retirer un favori
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rgpdcontroller-apiv1rgpd_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      RgpdController — /api/v1/rgpd
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RgpdController — /api/v1/rgpd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete-rgpd-demande-suppression-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      DELETE /rgpd — Demande suppression RGPD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-rgpdreactivate-reactivation-pendant-grace-period" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST /rgpd/reactivate — Réactivation pendant grace period
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-rgpdexport-export-donnees-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /rgpd/export — Export données RGPD
     </span>
   </a>
   
@@ -1544,9 +1433,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#10-regles-transverses" class="md-nav__link">
+  <a href="#6-regles-transverses" class="md-nav__link">
     <span class="md-ellipsis">
-      10. Règles transverses
+      6. Règles transverses
     </span>
   </a>
   
@@ -1556,6 +1445,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-api-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2135,6 +2045,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#rgpdcontroller-apiv1rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      RgpdController — /api/v1/rgpd
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dietplanscontroller-apiv1diet-plans" class="md-nav__link">
     <span class="md-ellipsis">
       DietPlansController — /api/v1/diet-plans
@@ -2232,157 +2151,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-middleware-ordre-de-la-pipeline" class="md-nav__link">
+  <a href="#4-structure-type-dun-controller" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Middleware — ordre de la pipeline
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Middleware — ordre de la pipeline">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#role-de-chaque-middleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rôle de chaque middleware
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exceptionmiddleware-mapping-exceptions-problemdetails" class="md-nav__link">
-    <span class="md-ellipsis">
-      ExceptionMiddleware — mapping exceptions → ProblemDetails
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#userresolutionmiddleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      UserResolutionMiddleware
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-authentification-autorisation" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. Authentification / Autorisation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Authentification / Autorisation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-jwt-keycloak" class="md-nav__link">
-    <span class="md-ellipsis">
-      Validation JWT Keycloak
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#roles-keycloak" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rôles Keycloak
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#declaration-des-policies-dautorisation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Déclaration des policies d'autorisation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#routes-protegees-vs-publiques" class="md-nav__link">
-    <span class="md-ellipsis">
-      Routes protégées vs publiques
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-documentation-openapi-swagger" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. Documentation OpenAPI (Swagger)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="6. Documentation OpenAPI (Swagger)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#convention-dannotation-sur-les-controllers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Convention d'annotation sur les controllers
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-injection-de-dependances" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Injection de dépendances
+      4. Structure type d'un controller
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#8-structure-type-dun-controller" class="md-nav__link">
+  <a href="#5-contrats-par-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
-      8. Structure type d'un controller
+      5. Contrats par endpoint
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#9-contrats-par-endpoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      9. Contrats par endpoint
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="9. Contrats par endpoint">
+    <nav class="md-nav" aria-label="5. Contrats par endpoint">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2417,33 +2201,6 @@
   <a href="#put-usersme-mettre-a-jour-le-profil" class="md-nav__link">
     <span class="md-ellipsis">
       PUT /users/me — Mettre à jour le profil
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete-usersme-demande-suppression-rgpd" class="md-nav__link">
-    <span class="md-ellipsis">
-      DELETE /users/me — Demande suppression RGPD
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-usersmereactivate-reactivation-pendant-grace-period" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST /users/me/reactivate — Réactivation pendant grace period
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-usersmeexport-export-donnees-rgpd" class="md-nav__link">
-    <span class="md-ellipsis">
-      GET /users/me/export — Export données RGPD
     </span>
   </a>
   
@@ -2498,6 +2255,48 @@
   <a href="#delete-usersmesaved-food-itemsid-retirer-un-favori" class="md-nav__link">
     <span class="md-ellipsis">
       DELETE /users/me/saved-food-items/{id} — Retirer un favori
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rgpdcontroller-apiv1rgpd_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      RgpdController — /api/v1/rgpd
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RgpdController — /api/v1/rgpd">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delete-rgpd-demande-suppression-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      DELETE /rgpd — Demande suppression RGPD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-rgpdreactivate-reactivation-pendant-grace-period" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST /rgpd/reactivate — Réactivation pendant grace period
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-rgpdexport-export-donnees-rgpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /rgpd/export — Export données RGPD
     </span>
   </a>
   
@@ -2805,9 +2604,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#10-regles-transverses" class="md-nav__link">
+  <a href="#6-regles-transverses" class="md-nav__link">
     <span class="md-ellipsis">
-      10. Règles transverses
+      6. Règles transverses
     </span>
   </a>
   
@@ -2832,13 +2631,15 @@
 <blockquote>
 <p>Document de référence obligatoire avant tout ticket de la couche API.
 Source de vérité : <code>docs/pages/backend/livrable/checklist-implementation.md</code>
-Contrats API par écran : <code>docs/pages/backend/livrable/specs-frontend.md</code></p>
+Contrats API par écran : <code>docs/pages/backend/livrable/specs-frontend.md</code>
+Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastructure.md</code></p>
 </blockquote>
 <hr />
 <h2 id="1-structure-des-dossiers">1. Structure des dossiers<a class="headerlink" href="#1-structure-des-dossiers" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code>src/NutritionApi.Api/
 ├── Controllers/
 │   ├── UsersController.cs
+│   ├── RgpdController.cs
 │   ├── DietPlansController.cs
 │   ├── DietsController.cs
 │   ├── MealsController.cs
@@ -2880,6 +2681,11 @@ Contrats API par écran : <code>docs/pages/backend/livrable/specs-frontend.md</c
 <tr>
 <td><code>UsersController</code></td>
 <td><code>/api/v1/users</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>RgpdController</code></td>
+<td><code>/api/v1/rgpd</code></td>
 <td><code>user</code></td>
 </tr>
 <tr>
@@ -2940,24 +2746,6 @@ Contrats API par écran : <code>docs/pages/backend/livrable/specs-frontend.md</c
 <td>200</td>
 </tr>
 <tr>
-<td><code>DELETE</code></td>
-<td><code>/users/me</code></td>
-<td>Demande suppression RGPD</td>
-<td>204</td>
-</tr>
-<tr>
-<td><code>POST</code></td>
-<td><code>/users/me/reactivate</code></td>
-<td>Réactivation pendant grace period</td>
-<td>200</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/users/me/export</code></td>
-<td>Export données RGPD</td>
-<td>200</td>
-</tr>
-<tr>
 <td><code>POST</code></td>
 <td><code>/users/me/weight-entries</code></td>
 <td>Ajouter une pesée</td>
@@ -2992,6 +2780,37 @@ Contrats API par écran : <code>docs/pages/backend/livrable/specs-frontend.md</c
 <td><code>/users/me/saved-food-items/{id}</code></td>
 <td>Retirer un aliment des favoris</td>
 <td>204</td>
+</tr>
+</tbody>
+</table>
+<h4 id="rgpdcontroller-apiv1rgpd">RgpdController — <code>/api/v1/rgpd</code><a class="headerlink" href="#rgpdcontroller-apiv1rgpd" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/rgpd</code></td>
+<td>Demande suppression RGPD</td>
+<td>204</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/rgpd/reactivate</code></td>
+<td>Réactivation pendant grace period</td>
+<td>200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/rgpd/export</code></td>
+<td>Export données RGPD</td>
+<td>200</td>
 </tr>
 </tbody>
 </table>
@@ -3295,292 +3114,7 @@ DELETE /meals/{id}     → (aucun corps)                 (204)
 </tbody>
 </table>
 <hr />
-<h2 id="4-middleware-ordre-de-la-pipeline">4. Middleware — ordre de la pipeline<a class="headerlink" href="#4-middleware-ordre-de-la-pipeline" title="Permanent link">&para;</a></h2>
-<p>L'ordre est critique — chaque middleware est listé dans l'ordre d'appel dans <code>Program.cs</code>.</p>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs</span>
-<span class="n">app</span><span class="p">.</span><span class="n">UseExceptionHandler</span><span class="p">(</span><span class="s">&quot;/error&quot;</span><span class="p">);</span><span class="w">       </span><span class="c1">// 1. Capture toutes les exceptions non gérées</span>
-<span class="n">app</span><span class="p">.</span><span class="n">UseHttpsRedirection</span><span class="p">();</span><span class="w">               </span><span class="c1">// 2.</span>
-<span class="n">app</span><span class="p">.</span><span class="n">UseCors</span><span class="p">();</span><span class="w">                           </span><span class="c1">// 3.</span>
-<span class="n">app</span><span class="p">.</span><span class="n">UseAuthentication</span><span class="p">();</span><span class="w">                 </span><span class="c1">// 4. Valide le JWT Bearer</span>
-<span class="n">app</span><span class="p">.</span><span class="n">UseAuthorization</span><span class="p">();</span><span class="w">                  </span><span class="c1">// 5. Vérifie les rôles / policies</span>
-<span class="n">app</span><span class="p">.</span><span class="n">UseMiddleware</span><span class="o">&lt;</span><span class="n">UserResolutionMiddleware</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="c1">// 6. Résout KeycloakId → User.Id</span>
-<span class="n">app</span><span class="p">.</span><span class="n">MapControllers</span><span class="p">();</span><span class="w">                    </span><span class="c1">// 7.</span>
-<span class="n">app</span><span class="p">.</span><span class="n">MapHangfireDashboard</span><span class="p">(</span><span class="s">&quot;/hangfire&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DashboardOptions</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">Authorization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="k">new</span><span class="w"> </span><span class="n">HangfireAdminAuthorizationFilter</span><span class="p">()]</span>
-<span class="p">});</span>
-</code></pre></div>
-<h3 id="role-de-chaque-middleware">Rôle de chaque middleware<a class="headerlink" href="#role-de-chaque-middleware" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Middleware</th>
-<th>Rôle</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ExceptionHandler</code></td>
-<td>Capture les exceptions non gérées, retourne un <code>ProblemDetails</code></td>
-</tr>
-<tr>
-<td><code>HttpsRedirection</code></td>
-<td>Force HTTPS</td>
-</tr>
-<tr>
-<td><code>Cors</code></td>
-<td>Autorise les requêtes cross-origin (configuré par environnement)</td>
-</tr>
-<tr>
-<td><code>Authentication</code></td>
-<td>Valide le token JWT Bearer (signature, audience, expiration)</td>
-</tr>
-<tr>
-<td><code>Authorization</code></td>
-<td>Vérifie <code>[Authorize]</code> et <code>[Authorize(Roles = "admin")]</code></td>
-</tr>
-<tr>
-<td><code>UserResolutionMiddleware</code></td>
-<td>Extrait le <code>sub</code> Keycloak du token, résout <code>User.Id</code> en base</td>
-</tr>
-<tr>
-<td><code>MapControllers</code></td>
-<td>Route vers les controllers</td>
-</tr>
-</tbody>
-</table>
-<h3 id="exceptionmiddleware-mapping-exceptions-problemdetails">ExceptionMiddleware — mapping exceptions → ProblemDetails<a class="headerlink" href="#exceptionmiddleware-mapping-exceptions-problemdetails" title="Permanent link">&para;</a></h3>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Middleware/ExceptionMiddleware.cs</span>
-<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ExceptionMiddleware</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMiddleware</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">InvokeAsync</span><span class="p">(</span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">RequestDelegate</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">next</span><span class="p">(</span><span class="n">context</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">NotFoundException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">404</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ConflictException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">409</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ForbiddenException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">403</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">UnprocessableException</span><span class="w"> </span><span class="n">ex</span><span class="p">){</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">422</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w">            </span><span class="p">{</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">WriteProblem</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="m">500</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Une erreur interne est survenue.&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="userresolutionmiddleware">UserResolutionMiddleware<a class="headerlink" href="#userresolutionmiddleware" title="Permanent link">&para;</a></h3>
-<p>Résout le <code>sub</code> Keycloak en <code>User.Id</code> interne à chaque requête authentifiée, et l'ajoute au <code>HttpContext.Items</code>.</p>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Middleware/UserResolutionMiddleware.cs</span>
-<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">UserResolutionMiddleware</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMiddleware</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">InvokeAsync</span><span class="p">(</span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">RequestDelegate</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">Identity</span><span class="o">?.</span><span class="n">IsAuthenticated</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">keycloakId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">User</span><span class="p">.</span><span class="n">FindFirstValue</span><span class="p">(</span><span class="s">&quot;sub&quot;</span><span class="p">);</span>
-<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_userRepository</span><span class="p">.</span><span class="n">GetByKeycloakIdAsync</span><span class="p">(</span><span class="n">keycloakId</span><span class="o">!</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">401</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="n">context</span><span class="p">.</span><span class="n">Items</span><span class="p">[</span><span class="s">&quot;UserId&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="n">Id</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Accès dans les controllers :</strong></p>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Extensions/ClaimsPrincipalExtensions.cs</span>
-<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="nf">GetUserId</span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
-<span class="w">    </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">Guid</span><span class="p">)</span><span class="n">context</span><span class="p">.</span><span class="n">Items</span><span class="p">[</span><span class="s">&quot;UserId&quot;</span><span class="p">]</span><span class="o">!</span><span class="p">;</span>
-
-<span class="c1">// Dans un controller</span>
-<span class="kt">var</span><span class="w"> </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HttpContext</span><span class="p">.</span><span class="n">GetUserId</span><span class="p">();</span>
-</code></pre></div>
-<hr />
-<h2 id="5-authentification-autorisation">5. Authentification / Autorisation<a class="headerlink" href="#5-authentification-autorisation" title="Permanent link">&para;</a></h2>
-<h3 id="validation-jwt-keycloak">Validation JWT Keycloak<a class="headerlink" href="#validation-jwt-keycloak" title="Permanent link">&para;</a></h3>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthentication</span><span class="p">(</span><span class="n">JwtBearerDefaults</span><span class="p">.</span><span class="n">AuthenticationScheme</span><span class="p">)</span>
-<span class="w">    </span><span class="p">.</span><span class="n">AddJwtBearer</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">Authority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">[</span><span class="s">&quot;Keycloak:Authority&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">Audience</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">[</span><span class="s">&quot;Keycloak:Audience&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">TokenValidationParameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TokenValidationParameters</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="n">ValidateIssuer</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
-<span class="w">            </span><span class="n">ValidateAudience</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
-<span class="w">            </span><span class="n">ValidateLifetime</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
-<span class="w">            </span><span class="n">ValidateIssuerSigningKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span>
-<span class="w">        </span><span class="p">};</span>
-<span class="w">    </span><span class="p">});</span>
-</code></pre></div>
-<p><strong>Variables de configuration (<code>appsettings.json</code>) :</strong></p>
-<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;Keycloak&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;Authority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://{keycloak-host}/realms/{realm}&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;Audience&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;nutrition-api&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Keycloak expose ses clés publiques sur <code>{Authority}/.well-known/openid-configuration</code> — le middleware JWT les récupère automatiquement.</p>
-<h3 id="roles-keycloak">Rôles Keycloak<a class="headerlink" href="#roles-keycloak" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Rôle</th>
-<th>Claim dans le JWT</th>
-<th>Accès</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>user</code></td>
-<td><code>realm_access.roles[]</code></td>
-<td>Toutes les routes <code>/api/v1/**</code> (hors <code>/admin</code>)</td>
-</tr>
-<tr>
-<td><code>admin</code></td>
-<td><code>realm_access.roles[]</code></td>
-<td>Routes <code>/api/v1/admin/**</code> + dashboard Hangfire</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Extraction du rôle Keycloak</strong> (le claim <code>realm_access.roles</code> n'est pas le claim standard <code>role</code>) :</p>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs — mapper le claim Keycloak vers le claim standard</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthentication</span><span class="p">(...)</span>
-<span class="w">    </span><span class="p">.</span><span class="n">AddJwtBearer</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">Events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JwtBearerEvents</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="n">OnTokenValidated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">Principal</span><span class="o">!</span>
-<span class="w">                    </span><span class="p">.</span><span class="n">FindFirst</span><span class="p">(</span><span class="s">&quot;realm_access&quot;</span><span class="p">)</span><span class="o">?.</span><span class="n">Value</span><span class="p">;</span>
-<span class="w">                </span><span class="c1">// Parser le JSON et ajouter des ClaimsIdentity avec Role</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">CompletedTask</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">};</span>
-<span class="w">    </span><span class="p">});</span>
-</code></pre></div>
-<blockquote>
-<p>Alternative plus simple : utiliser <code>options.MapInboundClaims = false</code> + un <code>IClaimsTransformation</code> personnalisé qui lit <code>realm_access.roles</code> et crée des claims <code>ClaimTypes.Role</code> standards.</p>
-</blockquote>
-<h3 id="declaration-des-policies-dautorisation">Déclaration des policies d'autorisation<a class="headerlink" href="#declaration-des-policies-dautorisation" title="Permanent link">&para;</a></h3>
-<div class="language-csharp highlight"><pre><span></span><code><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthorization</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddPolicy</span><span class="p">(</span><span class="s">&quot;AdminOnly&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">        </span><span class="n">policy</span><span class="p">.</span><span class="n">RequireRole</span><span class="p">(</span><span class="s">&quot;admin&quot;</span><span class="p">));</span>
-<span class="p">});</span>
-</code></pre></div>
-<p><strong>Usage dans les controllers :</strong></p>
-<div class="language-csharp highlight"><pre><span></span><code><span class="na">[Authorize]</span><span class="w">                          </span><span class="c1">// toutes les routes du controller → rôle user</span>
-<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DietPlansController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span>
-
-<span class="na">[Authorize(Policy = &quot;AdminOnly&quot;)]</span><span class="w">    </span><span class="c1">// rôle admin requis</span>
-<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AdminController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span>
-
-<span class="na">[AllowAnonymous]</span><span class="w">                     </span><span class="c1">// aucune route anonyme prévue en v1</span>
-</code></pre></div>
-<h3 id="routes-protegees-vs-publiques">Routes protégées vs publiques<a class="headerlink" href="#routes-protegees-vs-publiques" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Routes</th>
-<th>Protection</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>/api/v1/**</code></td>
-<td><code>[Authorize]</code> — JWT valide requis</td>
-</tr>
-<tr>
-<td><code>/api/v1/admin/**</code></td>
-<td><code>[Authorize(Policy = "AdminOnly")]</code> — rôle <code>admin</code> requis</td>
-</tr>
-<tr>
-<td><code>/hangfire</code></td>
-<td><code>HangfireAdminAuthorizationFilter</code> — rôle <code>admin</code> requis</td>
-</tr>
-<tr>
-<td><code>/swagger</code></td>
-<td>Accessible uniquement hors production</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="6-documentation-openapi-swagger">6. Documentation OpenAPI (Swagger)<a class="headerlink" href="#6-documentation-openapi-swagger" title="Permanent link">&para;</a></h2>
-<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddSwaggerGen</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">SwaggerDoc</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiInfo</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Title</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Nutrition API&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;v1&quot;</span>
-<span class="w">    </span><span class="p">});</span>
-
-<span class="w">    </span><span class="c1">// Authentification JWT dans l&#39;UI Swagger</span>
-<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddSecurityDefinition</span><span class="p">(</span><span class="s">&quot;Bearer&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityScheme</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">SecuritySchemeType</span><span class="p">.</span><span class="n">Http</span><span class="p">,</span>
-<span class="w">        </span><span class="n">Scheme</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bearer&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">BearerFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;JWT&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="n">Description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Token JWT Keycloak — format : Bearer {token}&quot;</span>
-<span class="w">    </span><span class="p">});</span>
-
-<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddSecurityRequirement</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityRequirement</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiSecurityScheme</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="n">Reference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenApiReference</span>
-<span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReferenceType</span><span class="p">.</span><span class="n">SecurityScheme</span><span class="p">,</span><span class="w"> </span><span class="n">Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Bearer&quot;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="n">Array</span><span class="p">.</span><span class="n">Empty</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">()</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">});</span>
-
-<span class="w">    </span><span class="c1">// Commentaires XML pour la documentation des endpoints</span>
-<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">xmlFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;{Assembly.GetExecutingAssembly().GetName().Name}.xml&quot;</span><span class="p">;</span>
-<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">IncludeXmlComments</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">AppContext</span><span class="p">.</span><span class="n">BaseDirectory</span><span class="p">,</span><span class="w"> </span><span class="n">xmlFile</span><span class="p">));</span>
-<span class="p">});</span>
-
-<span class="c1">// Uniquement hors production</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">app</span><span class="p">.</span><span class="n">Environment</span><span class="p">.</span><span class="n">IsProduction</span><span class="p">())</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">app</span><span class="p">.</span><span class="n">UseSwagger</span><span class="p">();</span>
-<span class="w">    </span><span class="n">app</span><span class="p">.</span><span class="n">UseSwaggerUI</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">SwaggerEndpoint</span><span class="p">(</span><span class="s">&quot;/swagger/v1/swagger.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Nutrition API v1&quot;</span><span class="p">));</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Activer les commentaires XML dans le <code>.csproj</code> :</strong></p>
-<div class="language-xml highlight"><pre><span></span><code><span class="nt">&lt;PropertyGroup&gt;</span>
-<span class="w">  </span><span class="nt">&lt;GenerateDocumentationFile&gt;</span>true<span class="nt">&lt;/GenerateDocumentationFile&gt;</span>
-<span class="w">  </span><span class="nt">&lt;NoWarn&gt;</span>$(NoWarn);1591<span class="nt">&lt;/NoWarn&gt;</span>
-<span class="nt">&lt;/PropertyGroup&gt;</span>
-</code></pre></div>
-<h3 id="convention-dannotation-sur-les-controllers">Convention d'annotation sur les controllers<a class="headerlink" href="#convention-dannotation-sur-les-controllers" title="Permanent link">&para;</a></h3>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">/// &lt;summary&gt;Créer le profil utilisateur à la première connexion.&lt;/summary&gt;</span>
-<span class="na">[HttpPost(&quot;me&quot;)]</span>
-<span class="na">[ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status201Created)]</span>
-<span class="na">[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]</span>
-<span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CreateProfile</span><span class="p">([</span><span class="n">FromBody</span><span class="p">]</span><span class="w"> </span><span class="n">CreateUserProfileRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Règle :</strong> Déclarer <code>[ProducesResponseType]</code> pour tous les codes HTTP possibles (succès + erreurs métier). Le code 401 et 403 sont implicites sur toutes les routes <code>[Authorize]</code> — pas besoin de les répéter.</p>
-<hr />
-<h2 id="7-injection-de-dependances">7. Injection de dépendances<a class="headerlink" href="#7-injection-de-dependances" title="Permanent link">&para;</a></h2>
-<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Program.cs</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddControllers</span><span class="p">();</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddEndpointsApiExplorer</span><span class="p">();</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddApplication</span><span class="p">();</span><span class="w">        </span><span class="c1">// ← couche Application</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddInfrastructure</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">);</span><span class="w">  </span><span class="c1">// ← couche Infrastructure</span>
-
-<span class="c1">// Middleware custom</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddTransient</span><span class="o">&lt;</span><span class="n">ExceptionMiddleware</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddTransient</span><span class="o">&lt;</span><span class="n">UserResolutionMiddleware</span><span class="o">&gt;</span><span class="p">();</span>
-
-<span class="c1">// CORS</span>
-<span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddCors</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddDefaultPolicy</span><span class="p">(</span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">        </span><span class="n">policy</span><span class="p">.</span><span class="n">WithOrigins</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">GetSection</span><span class="p">(</span><span class="s">&quot;Cors:Origins&quot;</span><span class="p">).</span><span class="n">Get</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">()</span><span class="o">!</span><span class="p">)</span>
-<span class="w">              </span><span class="p">.</span><span class="n">AllowAnyHeader</span><span class="p">()</span>
-<span class="w">              </span><span class="p">.</span><span class="n">AllowAnyMethod</span><span class="p">()));</span>
-</code></pre></div>
-<hr />
-<h2 id="8-structure-type-dun-controller">8. Structure type d'un controller<a class="headerlink" href="#8-structure-type-dun-controller" title="Permanent link">&para;</a></h2>
+<h2 id="4-structure-type-dun-controller">4. Structure type d'un controller<a class="headerlink" href="#4-structure-type-dun-controller" title="Permanent link">&para;</a></h2>
 <div class="language-csharp highlight"><pre><span></span><code><span class="na">[ApiController]</span>
 <span class="na">[Route(&quot;api/v1/[controller]</span><span class="s">&quot;)]</span>
 <span class="na">[Authorize]</span>
@@ -3620,7 +3154,7 @@ DELETE /meals/{id}     → (aucun corps)                 (204)
 <li><code>[FromBody]</code> pour les requêtes POST/PUT/PATCH, <code>[FromRoute]</code> pour les ids, <code>[FromQuery]</code> pour les filtres.</li>
 </ul>
 <hr />
-<h2 id="9-contrats-par-endpoint">9. Contrats par endpoint<a class="headerlink" href="#9-contrats-par-endpoint" title="Permanent link">&para;</a></h2>
+<h2 id="5-contrats-par-endpoint">5. Contrats par endpoint<a class="headerlink" href="#5-contrats-par-endpoint" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>Pour chaque endpoint : Request body (champs + types), Response body, codes d'erreur métier.
 Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) sont implicites sur toutes les routes — non répétés.</p>
@@ -3804,15 +3338,6 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 <p><strong>Response 200</strong> <code>UserProfileResponse</code></p>
 <p><strong>Erreurs :</strong> 404 profil inexistant</p>
 <hr />
-<h4 id="delete-usersme-demande-suppression-rgpd"><code>DELETE /users/me</code> — Demande suppression RGPD<a class="headerlink" href="#delete-usersme-demande-suppression-rgpd" title="Permanent link">&para;</a></h4>
-<p>Aucun body. <strong>Response 204.</strong> Déclenche soft delete + désactivation Keycloak.</p>
-<hr />
-<h4 id="post-usersmereactivate-reactivation-pendant-grace-period"><code>POST /users/me/reactivate</code> — Réactivation pendant grace period<a class="headerlink" href="#post-usersmereactivate-reactivation-pendant-grace-period" title="Permanent link">&para;</a></h4>
-<p>Aucun body. <strong>Response 200</strong> <code>UserProfileResponse</code>. <strong>Erreurs :</strong> 404, 409 (compte non en grace period)</p>
-<hr />
-<h4 id="get-usersmeexport-export-donnees-rgpd"><code>GET /users/me/export</code> — Export données RGPD<a class="headerlink" href="#get-usersmeexport-export-donnees-rgpd" title="Permanent link">&para;</a></h4>
-<p>Aucun body. <strong>Response 200</strong> JSON complet avec toutes les données de l'utilisateur (profil, diets, repas, pesées).</p>
-<hr />
 <h4 id="post-usersmeweight-entries-ajouter-une-pesee"><code>POST /users/me/weight-entries</code> — Ajouter une pesée<a class="headerlink" href="#post-usersmeweight-entries-ajouter-une-pesee" title="Permanent link">&para;</a></h4>
 <p><strong>Request</strong> <code>AddWeightEntryRequest</code></p>
 <table>
@@ -3947,6 +3472,36 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 <hr />
 <h4 id="delete-usersmesaved-food-itemsid-retirer-un-favori"><code>DELETE /users/me/saved-food-items/{id}</code> — Retirer un favori<a class="headerlink" href="#delete-usersmesaved-food-itemsid-retirer-un-favori" title="Permanent link">&para;</a></h4>
 <p>Aucun body. <strong>Response 204.</strong> <strong>Erreurs :</strong> 404</p>
+<hr />
+<h3 id="rgpdcontroller-apiv1rgpd_1">RgpdController — <code>/api/v1/rgpd</code><a class="headerlink" href="#rgpdcontroller-apiv1rgpd_1" title="Permanent link">&para;</a></h3>
+<h4 id="delete-rgpd-demande-suppression-rgpd"><code>DELETE /rgpd</code> — Demande suppression RGPD<a class="headerlink" href="#delete-rgpd-demande-suppression-rgpd" title="Permanent link">&para;</a></h4>
+<p>Aucun body. <strong>Response 204.</strong> Déclenche soft delete + désactivation Keycloak.</p>
+<hr />
+<h4 id="post-rgpdreactivate-reactivation-pendant-grace-period"><code>POST /rgpd/reactivate</code> — Réactivation pendant grace period<a class="headerlink" href="#post-rgpdreactivate-reactivation-pendant-grace-period" title="Permanent link">&para;</a></h4>
+<p>Aucun body. <strong>Response 200</strong> <code>UserProfileResponse</code>. <strong>Erreurs :</strong> 404, 409 (compte non en grace period)</p>
+<hr />
+<h4 id="get-rgpdexport-export-donnees-rgpd"><code>GET /rgpd/export</code> — Export données RGPD<a class="headerlink" href="#get-rgpdexport-export-donnees-rgpd" title="Permanent link">&para;</a></h4>
+<p>Aucun body.</p>
+<p><strong>Response 200</strong> — fichier ZIP téléchargeable contenant <code>mon-export.json</code> (toutes les données de l'utilisateur : profil, pesées, diet plans, diets, repas, aliments favoris).</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Content-Type</code></td>
+<td><code>application/zip</code></td>
+</tr>
+<tr>
+<td><code>Content-Disposition</code></td>
+<td><code>attachment; filename="export-yyyy-MM-dd.zip"</code></td>
+</tr>
+</tbody>
+</table>
+<p>DTO retourné par le service : <code>UserExportResponse</code> — voir <code>docs/pages/backend/features/rgpd.md</code> pour l'implémentation complète (principe en mémoire, ZipArchive, responsabilités par couche).</p>
 <hr />
 <h3 id="dietplanscontroller-apiv1diet-plans_1">DietPlansController — <code>/api/v1/diet-plans</code><a class="headerlink" href="#dietplanscontroller-apiv1diet-plans_1" title="Permanent link">&para;</a></h3>
 <p><code>DietPlanResponse</code></p>
@@ -4519,7 +4074,7 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 <h4 id="delete-admindiet-planstemplatesid-supprimer-un-template"><code>DELETE /admin/diet-plans/templates/{id}</code> — Supprimer un template<a class="headerlink" href="#delete-admindiet-planstemplatesid-supprimer-un-template" title="Permanent link">&para;</a></h4>
 <p>Aucun body. <strong>Response 204.</strong> <strong>Erreurs :</strong> 404</p>
 <hr />
-<h2 id="10-regles-transverses">10. Règles transverses<a class="headerlink" href="#10-regles-transverses" title="Permanent link">&para;</a></h2>
+<h2 id="6-regles-transverses">6. Règles transverses<a class="headerlink" href="#6-regles-transverses" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Un controller = un agrégat ou une ressource.</strong> Ne pas créer de controller <code>BaseController</code> avec de la logique partagée.</li>
 <li><strong><code>[ApiController]</code></strong> est obligatoire sur chaque controller — active la validation automatique du <code>ModelState</code> (400 sur corps invalide).</li>

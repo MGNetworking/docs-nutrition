@@ -780,7 +780,28 @@
         
   
   <span class="md-ellipsis">
-    API Layer
+    API Layer — Contrats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-api-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
   </span>
   
 
@@ -1171,6 +1192,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#integration-stripe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration Stripe
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limites-par-tier" class="md-nav__link">
     <span class="md-ellipsis">
       Limites par tier
@@ -1470,6 +1500,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#integration-stripe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration Stripe
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#limites-par-tier" class="md-nav__link">
     <span class="md-ellipsis">
       Limites par tier
@@ -1504,7 +1543,7 @@
 
 <h1 id="abonnements-tiers">Abonnements &amp; tiers<a class="headerlink" href="#abonnements-tiers" title="Permanent link">&para;</a></h1>
 <p><strong>Ajouté le :</strong> 2026-05-02
-<strong>Référence spec :</strong> <code>docs/pages/backend/7.nutrition-abonnements.md</code></p>
+<strong>Référence spec :</strong> <code>docs/pages/backend/6.nutrition-abonnements.md</code></p>
 <hr />
 <h2 id="objectif">Objectif<a class="headerlink" href="#objectif" title="Permanent link">&para;</a></h2>
 <p>Contrôler l'accès aux fonctionnalités et les limites d'usage selon le tier d'abonnement de l'utilisateur (Free, Pro, Business), afin de monétiser le service SaaS.</p>
@@ -1524,9 +1563,34 @@
 </ul>
 <h2 id="ce-quelle-ne-fait-pas">Ce qu'elle ne fait pas<a class="headerlink" href="#ce-quelle-ne-fait-pas" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Ne gère pas le paiement — hors scope API (Stripe ou autre en externe)</li>
-<li>Ne change pas le tier automatiquement — opération manuelle ou via webhook paiement (v2)</li>
+<li>Ne gère pas le paiement — délégué à Stripe (voir <code>annexes/infrastructure-stripe.md</code>)</li>
+<li>Ne stocke jamais le tier dans le JWT — <code>User.SubscriptionTier</code> en DB est la seule source de vérité</li>
 </ul>
+<h2 id="integration-stripe">Intégration Stripe<a class="headerlink" href="#integration-stripe" title="Permanent link">&para;</a></h2>
+<p>La synchronisation entre Stripe et la DB se fait via webhook. Stripe envoie les événements de facturation à l'API qui met à jour <code>User.SubscriptionTier</code> en temps réel.</p>
+<p>Deux champs de liaison sur <code>User</code> :</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StripeCustomerId</code></td>
+<td><code>string?</code></td>
+<td>Retrouver le User depuis un événement Stripe</td>
+</tr>
+<tr>
+<td><code>StripeSubscriptionId</code></td>
+<td><code>string?</code></td>
+<td>Identifier l'abonnement actif</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Détail complet :</strong> <code>docs/pages/backend/annexes/infrastructure-stripe.md</code></p>
 <h2 id="limites-par-tier">Limites par tier<a class="headerlink" href="#limites-par-tier" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1585,7 +1649,9 @@
 <h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>SubscriptionGuard</code> (couche Application) — helper centralisé pour toutes les vérifications</li>
+<li><code>IStripeWebhookService</code> (couche Application) — mise à jour du tier sur événement Stripe</li>
 <li>Toutes les fonctionnalités avec limites (DietPlan, Repas, Aliments, Bilan)</li>
+<li><code>annexes/infrastructure-stripe.md</code> — workflow webhook, configuration, événements</li>
 </ul>
 
 
