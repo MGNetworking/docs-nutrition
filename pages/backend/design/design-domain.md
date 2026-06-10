@@ -287,6 +287,7 @@ Un aliment dans un repas. Ne peut pas exister sans son Meal.
 | FoodItemId | Guid               | Référence vers FoodItem                            |
 | Quantity   | float              | Quantité consommée en grammes                      |
 | Nutrition  | NutritionInfo (VO) | Snapshot calculé à la création depuis FoodItem     |
+| FoodItem   | FoodItem?          | Navigation EF Core — chargée via `ThenInclude`     |
 
 **Responsabilités :**
 

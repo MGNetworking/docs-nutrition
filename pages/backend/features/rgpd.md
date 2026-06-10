@@ -41,6 +41,101 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 | `DELETE` | `/users/me` | Demander la suppression du compte (Art. 17) |
 | `POST` | `/users/me/reactivate` | Annuler la suppression (< 30 jours) |
 
+## Export RGPD — implémentation technique
+
+### Principe en mémoire
+
+L'export ne touche jamais le disque — tout se passe en RAM.
+
+```
+RgpdService                    UsersController
+    │                               │
+    │   ExportUserDataAsync()       │
+    │ ◄─────────────────────────── │
+    │                               │
+    │   UserExportResponse (DTO)    │
+    │ ──────────────────────────── ►│
+    │                               │
+    │                    Sérialise en JSON (WriteIndented)
+    │                               │
+    │                    Crée un ZipArchive en MemoryStream
+    │                    Ajoute "User-Data.json" dans le ZIP
+    │                               │
+    │                    File(bytes, "application/zip", "export-yyyy-MM-dd.zip")
+```
+
+### DTO — `UserExportResponse`
+
+```csharp
+public record UserExportResponse(
+    UserProfileResponse         Profile,
+    List<WeightEntryResponse>   WeightHistory,
+    List<DietPlanResponse>      DietPlans,
+    List<DietResponse>          Diets,
+    List<MealResponse>          Meals,
+    List<SavedFoodItemResponse> SavedFoodItems
+);
+```
+
+Toutes les données que l'utilisateur a fournies ou générées par son activité — conformément à l'Art. 20 RGPD (droit à la portabilité).
+
+### Implémentation controller
+
+```csharp
+[HttpGet("me/export")]
+public async Task<IActionResult> ExportUserData()
+{
+    var keycloakId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var export = await _rgpdService.ExportUserDataAsync(keycloakId);
+
+    var json = JsonSerializer.Serialize(export, new JsonSerializerOptions
+    {
+        WriteIndented = true
+    });
+    var jsonBytes = Encoding.UTF8.GetBytes(json);
+
+    using var memoryStream = new MemoryStream();
+    using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true))
+    {
+        var entry = archive.CreateEntry("mon-export.json");
+        using var entryStream = entry.Open();
+        entryStream.Write(jsonBytes);
+    }
+
+    return File(
+        memoryStream.ToArray(),
+        "application/zip",
+        $"export-{DateTime.UtcNow:yyyy-MM-dd}.zip"
+    );
+}
+```
+
+### Points clés
+
+| Élément | Rôle |
+|---|---|
+| `MemoryStream` | Stocke le ZIP en RAM — pas d'écriture sur disque |
+| `ZipArchive` | Gestionnaire du fichier ZIP |
+| `CreateEntry("mon-export.json")` | Crée le fichier JSON à l'intérieur du ZIP |
+| `leaveOpen: true` | Garde le stream ouvert après la fermeture du ZipArchive |
+| `memoryStream.ToArray()` | Convertit en `byte[]` pour la réponse HTTP |
+| `Content-Disposition` | Géré automatiquement par `File()` — force le téléchargement |
+
+### Pourquoi un `RgpdService` dédié ?
+
+`ExportUserDataAsync` doit agréger les données de **6 agrégats** (User, WeightEntry, DietPlan, Diet, Meal, SavedFoodItem). Placer cette méthode dans `UserService` imposerait 5 repositories supplémentaires à une classe qui ne gère que l'agrégat `User`. La création de `RgpdService` respecte le principe de responsabilité unique et la frontière des agrégats DDD.
+
+### Responsabilités par couche
+
+| Couche | Responsabilité |
+|---|---|
+| `RgpdService` | Agréger les données de tous les agrégats → retourner `UserExportResponse` |
+| `UsersController` | Sérialiser en JSON → emballer dans un ZIP → retourner le fichier |
+
+Le service ne sait pas comment les données sont livrées — c'est la responsabilité exclusive de la couche API.
+
+---
+
 ## Dépendances
 
 - Keycloak Admin API — désactivation / réactivation / suppression du compte Keycloak

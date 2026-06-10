@@ -3,6 +3,7 @@
 > Document de référence obligatoire avant tout ticket de la couche API.
 > Source de vérité : `docs/pages/backend/livrable/checklist-implementation.md`
 > Contrats API par écran : `docs/pages/backend/livrable/specs-frontend.md`
+> Configuration technique (middleware, JWT, Swagger) : `design-api-infrastructure.md`
 
 ---
 
@@ -12,6 +13,7 @@
 src/NutritionApi.Api/
 ├── Controllers/
 │   ├── UsersController.cs
+│   ├── RgpdController.cs
 │   ├── DietPlansController.cs
 │   ├── DietsController.cs
 │   ├── MealsController.cs
@@ -52,6 +54,7 @@ public class UsersController : ControllerBase { ... }
 | Controller | Route de base | Rôle requis |
 |---|---|---|
 | `UsersController` | `/api/v1/users` | `user` |
+| `RgpdController` | `/api/v1/rgpd` | `user` |
 | `DietPlansController` | `/api/v1/diet-plans` | `user` |
 | `DietsController` | `/api/v1/diets` | `user` |
 | `MealsController` | `/api/v1/meals` | `user` |
@@ -67,15 +70,20 @@ public class UsersController : ControllerBase { ... }
 | `POST` | `/users/me` | Créer le profil (1ère connexion) | 201 |
 | `GET` | `/users/me` | Lire le profil + BMR/TDEE | 200 |
 | `PUT` | `/users/me` | Mettre à jour le profil | 200 |
-| `DELETE` | `/users/me` | Demande suppression RGPD | 204 |
-| `POST` | `/users/me/reactivate` | Réactivation pendant grace period | 200 |
-| `GET` | `/users/me/export` | Export données RGPD | 200 |
 | `POST` | `/users/me/weight-entries` | Ajouter une pesée | 201 |
 | `GET` | `/users/me/weight-entries` | Historique des pesées | 200 |
 | `PUT` | `/users/me/weight-entries/{id}` | Modifier une pesée | 200 |
 | `GET` | `/users/me/saved-food-items` | Liste des favoris | 200 |
 | `POST` | `/users/me/saved-food-items` | Sauvegarder un aliment | 201 |
 | `DELETE` | `/users/me/saved-food-items/{id}` | Retirer un aliment des favoris | 204 |
+
+#### RgpdController — `/api/v1/rgpd`
+
+| Méthode | Route | Description | Code succès |
+|---|---|---|---|
+| `DELETE` | `/rgpd` | Demande suppression RGPD | 204 |
+| `POST` | `/rgpd/reactivate` | Réactivation pendant grace period | 200 |
+| `GET` | `/rgpd/export` | Export données RGPD | 200 |
 
 #### DietPlansController — `/api/v1/diet-plans`
 
@@ -180,280 +188,7 @@ Toutes les erreurs utilisent le format `ProblemDetails` standard ASP.NET Core.
 
 ---
 
-## 4. Middleware — ordre de la pipeline
-
-L'ordre est critique — chaque middleware est listé dans l'ordre d'appel dans `Program.cs`.
-
-```csharp
-// Program.cs
-app.UseExceptionHandler("/error");       // 1. Capture toutes les exceptions non gérées
-app.UseHttpsRedirection();               // 2.
-app.UseCors();                           // 3.
-app.UseAuthentication();                 // 4. Valide le JWT Bearer
-app.UseAuthorization();                  // 5. Vérifie les rôles / policies
-app.UseMiddleware<UserResolutionMiddleware>(); // 6. Résout KeycloakId → User.Id
-app.MapControllers();                    // 7.
-app.MapHangfireDashboard("/hangfire", new DashboardOptions
-{
-    Authorization = [new HangfireAdminAuthorizationFilter()]
-});
-```
-
-### Rôle de chaque middleware
-
-| Middleware | Rôle |
-|---|---|
-| `ExceptionHandler` | Capture les exceptions non gérées, retourne un `ProblemDetails` |
-| `HttpsRedirection` | Force HTTPS |
-| `Cors` | Autorise les requêtes cross-origin (configuré par environnement) |
-| `Authentication` | Valide le token JWT Bearer (signature, audience, expiration) |
-| `Authorization` | Vérifie `[Authorize]` et `[Authorize(Roles = "admin")]` |
-| `UserResolutionMiddleware` | Extrait le `sub` Keycloak du token, résout `User.Id` en base |
-| `MapControllers` | Route vers les controllers |
-
-### ExceptionMiddleware — mapping exceptions → ProblemDetails
-
-```csharp
-// Middleware/ExceptionMiddleware.cs
-public class ExceptionMiddleware : IMiddleware
-{
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-    {
-        try { await next(context); }
-        catch (NotFoundException ex)    { await WriteProblem(context, 404, ex.Message); }
-        catch (ConflictException ex)    { await WriteProblem(context, 409, ex.Message); }
-        catch (ForbiddenException ex)   { await WriteProblem(context, 403, ex.Message); }
-        catch (UnprocessableException ex){ await WriteProblem(context, 422, ex.Message); }
-        catch (Exception ex)            { await WriteProblem(context, 500, "Une erreur interne est survenue."); }
-    }
-}
-```
-
-### UserResolutionMiddleware
-
-Résout le `sub` Keycloak en `User.Id` interne à chaque requête authentifiée, et l'ajoute au `HttpContext.Items`.
-
-```csharp
-// Middleware/UserResolutionMiddleware.cs
-public class UserResolutionMiddleware : IMiddleware
-{
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-    {
-        if (context.User.Identity?.IsAuthenticated == true)
-        {
-            var keycloakId = context.User.FindFirstValue("sub");
-            var user = await _userRepository.GetByKeycloakIdAsync(keycloakId!);
-            if (user is null) { context.Response.StatusCode = 401; return; }
-            context.Items["UserId"] = user.Id;
-        }
-        await next(context);
-    }
-}
-```
-
-**Accès dans les controllers :**
-
-```csharp
-// Extensions/ClaimsPrincipalExtensions.cs
-public static Guid GetUserId(this HttpContext context)
-    => (Guid)context.Items["UserId"]!;
-
-// Dans un controller
-var userId = HttpContext.GetUserId();
-```
-
----
-
-## 5. Authentification / Autorisation
-
-### Validation JWT Keycloak
-
-```csharp
-// Program.cs
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = builder.Configuration["Keycloak:Authority"];
-        options.Audience  = builder.Configuration["Keycloak:Audience"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer           = true,
-            ValidateAudience         = true,
-            ValidateLifetime         = true,
-            ValidateIssuerSigningKey = true
-        };
-    });
-```
-
-**Variables de configuration (`appsettings.json`) :**
-
-```json
-"Keycloak": {
-  "Authority": "https://{keycloak-host}/realms/{realm}",
-  "Audience":  "nutrition-api"
-}
-```
-
-Keycloak expose ses clés publiques sur `{Authority}/.well-known/openid-configuration` — le middleware JWT les récupère automatiquement.
-
-### Rôles Keycloak
-
-| Rôle | Claim dans le JWT | Accès |
-|---|---|---|
-| `user` | `realm_access.roles[]` | Toutes les routes `/api/v1/**` (hors `/admin`) |
-| `admin` | `realm_access.roles[]` | Routes `/api/v1/admin/**` + dashboard Hangfire |
-
-**Extraction du rôle Keycloak** (le claim `realm_access.roles` n'est pas le claim standard `role`) :
-
-```csharp
-// Program.cs — mapper le claim Keycloak vers le claim standard
-builder.Services.AddAuthentication(...)
-    .AddJwtBearer(options =>
-    {
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = ctx =>
-            {
-                var roles = ctx.Principal!
-                    .FindFirst("realm_access")?.Value;
-                // Parser le JSON et ajouter des ClaimsIdentity avec Role
-                return Task.CompletedTask;
-            }
-        };
-    });
-```
-
-> Alternative plus simple : utiliser `options.MapInboundClaims = false` + un `IClaimsTransformation` personnalisé qui lit `realm_access.roles` et crée des claims `ClaimTypes.Role` standards.
-
-### Déclaration des policies d'autorisation
-
-```csharp
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole("admin"));
-});
-```
-
-**Usage dans les controllers :**
-
-```csharp
-[Authorize]                          // toutes les routes du controller → rôle user
-public class DietPlansController : ControllerBase
-
-[Authorize(Policy = "AdminOnly")]    // rôle admin requis
-public class AdminController : ControllerBase
-
-[AllowAnonymous]                     // aucune route anonyme prévue en v1
-```
-
-### Routes protégées vs publiques
-
-| Routes | Protection |
-|---|---|
-| `/api/v1/**` | `[Authorize]` — JWT valide requis |
-| `/api/v1/admin/**` | `[Authorize(Policy = "AdminOnly")]` — rôle `admin` requis |
-| `/hangfire` | `HangfireAdminAuthorizationFilter` — rôle `admin` requis |
-| `/swagger` | Accessible uniquement hors production |
-
----
-
-## 6. Documentation OpenAPI (Swagger)
-
-### Configuration
-
-```csharp
-// Program.cs
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title   = "Nutrition API",
-        Version = "v1"
-    });
-
-    // Authentification JWT dans l'UI Swagger
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Type        = SecuritySchemeType.Http,
-        Scheme      = "bearer",
-        BearerFormat = "JWT",
-        Description = "Token JWT Keycloak — format : Bearer {token}"
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                    { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            },
-            Array.Empty<string>()
-        }
-    });
-
-    // Commentaires XML pour la documentation des endpoints
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
-});
-
-// Uniquement hors production
-if (!app.Environment.IsProduction())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutrition API v1"));
-}
-```
-
-**Activer les commentaires XML dans le `.csproj` :**
-
-```xml
-<PropertyGroup>
-  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  <NoWarn>$(NoWarn);1591</NoWarn>
-</PropertyGroup>
-```
-
-### Convention d'annotation sur les controllers
-
-```csharp
-/// <summary>Créer le profil utilisateur à la première connexion.</summary>
-[HttpPost("me")]
-[ProducesResponseType(typeof(UserProfileResponse), StatusCodes.Status201Created)]
-[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-public async Task<IActionResult> CreateProfile([FromBody] CreateUserProfileRequest request)
-```
-
-**Règle :** Déclarer `[ProducesResponseType]` pour tous les codes HTTP possibles (succès + erreurs métier). Le code 401 et 403 sont implicites sur toutes les routes `[Authorize]` — pas besoin de les répéter.
-
----
-
-## 7. Injection de dépendances
-
-```csharp
-// Program.cs
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddApplication();        // ← couche Application
-builder.Services.AddInfrastructure(builder.Configuration);  // ← couche Infrastructure
-
-// Middleware custom
-builder.Services.AddTransient<ExceptionMiddleware>();
-builder.Services.AddTransient<UserResolutionMiddleware>();
-
-// CORS
-builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(builder.Configuration.GetSection("Cors:Origins").Get<string[]>()!)
-              .AllowAnyHeader()
-              .AllowAnyMethod()));
-```
-
----
-
-## 8. Structure type d'un controller
+## 4. Structure type d'un controller
 
 ```csharp
 [ApiController]
@@ -497,7 +232,7 @@ public class DietPlansController : ControllerBase
 
 ---
 
-## 9. Contrats par endpoint
+## 5. Contrats par endpoint
 
 > Pour chaque endpoint : Request body (champs + types), Response body, codes d'erreur métier.
 > Le 400 (validation automatique `[ApiController]`) et le 401 (JWT) sont implicites sur toutes les routes — non répétés.
@@ -570,24 +305,6 @@ public class DietPlansController : ControllerBase
 **Response 200** `UserProfileResponse`
 
 **Erreurs :** 404 profil inexistant
-
----
-
-#### `DELETE /users/me` — Demande suppression RGPD
-
-Aucun body. **Response 204.** Déclenche soft delete + désactivation Keycloak.
-
----
-
-#### `POST /users/me/reactivate` — Réactivation pendant grace period
-
-Aucun body. **Response 200** `UserProfileResponse`. **Erreurs :** 404, 409 (compte non en grace period)
-
----
-
-#### `GET /users/me/export` — Export données RGPD
-
-Aucun body. **Response 200** JSON complet avec toutes les données de l'utilisateur (profil, diets, repas, pesées).
 
 ---
 
@@ -666,6 +383,35 @@ Aucun body. **Response 200** `List<SavedFoodItemResponse>`
 #### `DELETE /users/me/saved-food-items/{id}` — Retirer un favori
 
 Aucun body. **Response 204.** **Erreurs :** 404
+
+---
+
+### RgpdController — `/api/v1/rgpd`
+
+#### `DELETE /rgpd` — Demande suppression RGPD
+
+Aucun body. **Response 204.** Déclenche soft delete + désactivation Keycloak.
+
+---
+
+#### `POST /rgpd/reactivate` — Réactivation pendant grace period
+
+Aucun body. **Response 200** `UserProfileResponse`. **Erreurs :** 404, 409 (compte non en grace period)
+
+---
+
+#### `GET /rgpd/export` — Export données RGPD
+
+Aucun body.
+
+**Response 200** — fichier ZIP téléchargeable contenant `mon-export.json` (toutes les données de l'utilisateur : profil, pesées, diet plans, diets, repas, aliments favoris).
+
+| Header | Valeur |
+|---|---|
+| `Content-Type` | `application/zip` |
+| `Content-Disposition` | `attachment; filename="export-yyyy-MM-dd.zip"` |
+
+DTO retourné par le service : `UserExportResponse` — voir `docs/pages/backend/features/rgpd.md` pour l'implémentation complète (principe en mémoire, ZipArchive, responsabilités par couche).
 
 ---
 
@@ -995,7 +741,7 @@ Aucun body. **Response 204.** **Erreurs :** 404
 
 ---
 
-## 10. Règles transverses
+## 6. Règles transverses
 
 - **Un controller = un agrégat ou une ressource.** Ne pas créer de controller `BaseController` avec de la logique partagée.
 - **`[ApiController]`** est obligatoire sur chaque controller — active la validation automatique du `ModelState` (400 sur corps invalide).

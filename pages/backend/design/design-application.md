@@ -6,6 +6,32 @@
 
 ---
 
+## 0. Rôle de chaque couche
+
+| Couche | Rôle |
+|---|---|
+| **Domain** | Règles métier pures — entités, invariants, value objects |
+| **Application** | Orchestration des cas d'usage — pilote le scénario complet |
+| **Infrastructure** | Détails techniques — BDD, Redis, emails, jobs planifiés |
+| **API** | Exposition HTTP — reçoit les requêtes, délègue à Application |
+
+**Application est le point de passage obligatoire entre API et Infrastructure.**
+Elle centralise toutes les interfaces de communication inter-couches :
+
+```
+API  ──[IXxxService]──▶  Application  ──[IXxxRepository / IXxxService externe]──▶  Infrastructure
+```
+
+| Interface | Déclarée dans | Implémentée dans | Utilisée par |
+|---|---|---|---|
+| `IXxxService` | Application | Application | API |
+| `IXxxRepository` | Application | Infrastructure | Application |
+| `IEmailService`, `IFoodCacheService`... | Application | Infrastructure | Application |
+
+> Aucune communication directe API → Infrastructure n'est autorisée.
+
+---
+
 ## 1. Pattern architectural retenu
 
 **Services applicatifs** — un service par domaine fonctionnel.
@@ -114,6 +140,11 @@ Les interfaces sont définies dans la couche Application. L'Infrastructure les i
 
 ### IUserRepository
 
+> ⚠️ Pas de `DeleteAsync` — décision intentionnelle. La suppression d'un utilisateur
+> est un **soft delete** : `User.MarkAsDeleted()` pose `DeletedAt = UtcNow`, puis
+> `UpdateAsync` persiste le changement. Aucun DELETE SQL n'est jamais exécuté.
+> Voir `design-domain.md` pour les détails de `DeletedAt` et la grace period RGPD.
+
 ```csharp
 public interface IUserRepository
 {
@@ -172,6 +203,7 @@ public interface IMealRepository
 public interface IFoodItemRepository
 {
     Task<FoodItem?> GetByIdAsync(Guid id);
+    Task<List<FoodItem>> GetByIdsAsync(List<Guid> ids);
     Task<FoodItem?> GetByOffIdAsync(string offId);
     Task<List<FoodItem>> SearchByKeywordAsync(string keyword, int limit = 20);
     Task AddAsync(FoodItem foodItem);
@@ -241,7 +273,6 @@ public interface IUserService
     Task<UserProfileResponse> UpdateUserProfileAsync(string keycloakId, UpdateUserProfileRequest request);
     Task DeleteUserAsync(string keycloakId);
     Task<UserProfileResponse> ReactivateUserAsync(string keycloakId);
-    Task<object> ExportUserDataAsync(string keycloakId);
     Task<WeightEntryResponse> AddWeightEntryAsync(Guid userId, AddWeightEntryRequest request);
     Task<List<WeightEntryResponse>> GetWeightHistoryAsync(Guid userId);
     Task<WeightEntryResponse> UpdateWeightEntryAsync(Guid userId, Guid entryId, UpdateWeightEntryRequest request);
@@ -321,6 +352,17 @@ public interface IAdminService
     Task<DietPlanResponse> CreateTemplateAsync(CreateDietPlanRequest request);
     Task<DietPlanResponse> UpdateTemplateAsync(Guid templateId, UpdateDietPlanRequest request);
     Task DeleteTemplateAsync(Guid templateId);
+}
+```
+
+### IRgpdService
+
+Responsable de toutes les opérations RGPD. Séparé de `IUserService` car `ExportUserDataAsync` doit lire 7 agrégats (User, WeightEntry, DietPlan, Diet, Meal, SavedFoodItem, FoodItem) — ce qui imposerait 6 repositories supplémentaires dans `UserService` et violerait le principe de responsabilité unique.
+
+```csharp
+public interface IRgpdService
+{
+    Task<UserExportResponse> ExportUserDataAsync(string keycloakId);
 }
 ```
 
@@ -510,7 +552,8 @@ Les DTOs sont des `record` C# — immuables, égalité par valeur.
 | `UpdateWeightEntryRequest` | `Weight`, `MeasuredAt` |
 | `WeightEntryResponse` | `Id`, `Weight`, `MeasuredAt` |
 | `SaveFoodItemRequest` | `FoodItemId` |
-| `SavedFoodItemResponse` | `Id`, `FoodItemId`, `Name`, `CaloriesPer100g`, `SavedAt` |
+| `SavedFoodItemResponse` | `Id`, `FoodItemId`, `Name`, `CaloriesPer100g`, `SavedAt` — *pas de `From()` statique, champs alimentaires fournis par le service* |
+| `UserExportResponse` | `Profile`, `WeightHistory[]`, `DietPlans[]`, `Diets[]`, `Meals[]`, `SavedFoodItems` (`List<FoodItemSearchResponse>`) |
 
 > `UserProfileResponse` — `Bmr`, `Tdee`, `TargetCalories`, `LatestWeight` sont `null` à la création (POST) et calculés uniquement sur `GetProfileAsync` (GET /users/me).
 

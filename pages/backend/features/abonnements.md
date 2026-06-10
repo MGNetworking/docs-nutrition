@@ -1,7 +1,7 @@
 # Abonnements & tiers
 
 **Ajouté le :** 2026-05-02
-**Référence spec :** `docs/pages/backend/7.nutrition-abonnements.md`
+**Référence spec :** `docs/pages/backend/6.nutrition-abonnements.md`
 
 ---
 
@@ -29,8 +29,21 @@ Les vérifications de tier s'effectuent automatiquement à chaque opération lim
 
 ## Ce qu'elle ne fait pas
 
-- Ne gère pas le paiement — hors scope API (Stripe ou autre en externe)
-- Ne change pas le tier automatiquement — opération manuelle ou via webhook paiement (v2)
+- Ne gère pas le paiement — délégué à Stripe (voir `annexes/infrastructure-stripe.md`)
+- Ne stocke jamais le tier dans le JWT — `User.SubscriptionTier` en DB est la seule source de vérité
+
+## Intégration Stripe
+
+La synchronisation entre Stripe et la DB se fait via webhook. Stripe envoie les événements de facturation à l'API qui met à jour `User.SubscriptionTier` en temps réel.
+
+Deux champs de liaison sur `User` :
+
+| Champ | Type | Rôle |
+|---|---|---|
+| `StripeCustomerId` | `string?` | Retrouver le User depuis un événement Stripe |
+| `StripeSubscriptionId` | `string?` | Identifier l'abonnement actif |
+
+**Détail complet :** `docs/pages/backend/annexes/infrastructure-stripe.md`
 
 ## Limites par tier
 
@@ -47,4 +60,6 @@ Les vérifications de tier s'effectuent automatiquement à chaque opération lim
 ## Dépendances
 
 - `SubscriptionGuard` (couche Application) — helper centralisé pour toutes les vérifications
+- `IStripeWebhookService` (couche Application) — mise à jour du tier sur événement Stripe
 - Toutes les fonctionnalités avec limites (DietPlan, Repas, Aliments, Bilan)
+- `annexes/infrastructure-stripe.md` — workflow webhook, configuration, événements

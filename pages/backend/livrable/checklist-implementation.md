@@ -91,6 +91,11 @@
 - 🔲 Supprimer un `SavedFoodItem`
 - 🔲 Lister les `SavedFoodItem` d'un utilisateur
 
+### RgpdService
+- 🔲 `ExportUserDataAsync` — agréger les données de l'utilisateur (User, WeightEntry, DietPlan, Diet, Meal, SavedFoodItem, FoodItem)
+- 🔲 `DeleteUserAsync` — soft delete + désactivation Keycloak
+- 🔲 `ReactivateUserAsync` — réactivation pendant la grace period
+
 ### NutritionService
 - 🔲 Calculer le bilan nutritionnel d'une `Diet` (agrégation `MealItem` + `WeightEntry` par période)
 
@@ -179,9 +184,11 @@
 - 🔲 `GET /users/me/saved-food-items` — liste personnelle d'aliments
 - 🔲 `POST /users/me/saved-food-items` — sauvegarder un aliment dans la liste personnelle
 - 🔲 `DELETE /users/me/saved-food-items/{id}` — retirer un aliment de la liste
-- 🔲 `DELETE /users/me` — suppression du compte (RGPD Art. 17)
-- 🔲 `POST /users/me/reactivate` — réactivation du compte pendant la grace period (RGPD)
-- 🔲 `GET /users/me/export` — export des données (RGPD Art. 20)
+
+### RgpdController
+- 🔲 `DELETE /rgpd` — suppression du compte (RGPD Art. 17)
+- 🔲 `POST /rgpd/reactivate` — réactivation du compte pendant la grace period (RGPD)
+- 🔲 `GET /rgpd/export` — export des données (RGPD Art. 20)
 
 ### DietPlansController
 - 🔲 `POST /diet-plans` — créer un plan

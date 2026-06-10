@@ -69,7 +69,8 @@ nav:
     - Domain Layer: backend/design/design-domain.md
     - Application Layer: backend/design/design-application.md
     - Infrastructure Layer: backend/design/design-infrastructure.md
-    - API Layer: backend/design/design-api.md
+    - API Layer — Contrats: backend/design/design-api.md
+    - API Layer — Infrastructure: backend/design/design-api-infrastructure.md
 
   - Features:
     - Vue d'ensemble: backend/features/README.md
