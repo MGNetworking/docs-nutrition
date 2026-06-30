@@ -901,6 +901,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nutritioncontroller-apiv1nutrition" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionController — /api/v1/nutrition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mealscontroller-apiv1meals" class="md-nav__link">
     <span class="md-ellipsis">
       MealsController — /api/v1/meals
@@ -1246,6 +1255,30 @@
   <a href="#post-dietsidarchive-terminer-le-regime" class="md-nav__link">
     <span class="md-ellipsis">
       POST /diets/{id}/archive — Terminer le régime
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nutritioncontroller-apiv1nutrition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionController — /api/v1/nutrition
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NutritionController — /api/v1/nutrition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-nutritionidbilan-bilan-nutritionnel-dun-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /nutrition/{id}/bilan — Bilan nutritionnel d'un régime
     </span>
   </a>
   
@@ -2063,6 +2096,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nutritioncontroller-apiv1nutrition" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionController — /api/v1/nutrition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mealscontroller-apiv1meals" class="md-nav__link">
     <span class="md-ellipsis">
       MealsController — /api/v1/meals
@@ -2419,6 +2461,30 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nutritioncontroller-apiv1nutrition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      NutritionController — /api/v1/nutrition
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NutritionController — /api/v1/nutrition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-nutritionidbilan-bilan-nutritionnel-dun-regime" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /nutrition/{id}/bilan — Bilan nutritionnel d'un régime
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mealscontroller-apiv1meals_1" class="md-nav__link">
     <span class="md-ellipsis">
       MealsController — /api/v1/meals
@@ -2624,6 +2690,7 @@ Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastruc
 │   ├── RgpdController.cs
 │   ├── DietPlansController.cs
 │   ├── DietsController.cs
+│   ├── NutritionController.cs
 │   ├── MealsController.cs
 │   ├── FoodItemsController.cs
 │   └── AdminController.cs
@@ -2678,6 +2745,11 @@ Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastruc
 <tr>
 <td><code>DietsController</code></td>
 <td><code>/api/v1/diets</code></td>
+<td><code>user</code></td>
+</tr>
+<tr>
+<td><code>NutritionController</code></td>
+<td><code>/api/v1/nutrition</code></td>
 <td><code>user</code></td>
 </tr>
 <tr>
@@ -2878,6 +2950,25 @@ Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastruc
 <td><code>POST</code></td>
 <td><code>/diets/{id}/archive</code></td>
 <td>Terminer le régime actif</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h4 id="nutritioncontroller-apiv1nutrition">NutritionController — <code>/api/v1/nutrition</code><a class="headerlink" href="#nutritioncontroller-apiv1nutrition" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Route</th>
+<th>Description</th>
+<th>Code succès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/nutrition/{id}/bilan</code></td>
+<td>Bilan nutritionnel d'un régime</td>
 <td>200</td>
 </tr>
 </tbody>
@@ -3646,6 +3737,59 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 <h4 id="post-dietsidarchive-terminer-le-regime"><code>POST /diets/{id}/archive</code> — Terminer le régime<a class="headerlink" href="#post-dietsidarchive-terminer-le-regime" title="Permanent link">&para;</a></h4>
 <p>Aucun body — <code>EndDate</code> imposée par le système (aujourd'hui).</p>
 <p><strong>Response 200</strong> <code>DietResponse</code>. <strong>Erreurs :</strong> 404, 422 régime non actif</p>
+<hr />
+<h3 id="nutritioncontroller-apiv1nutrition_1">NutritionController — <code>/api/v1/nutrition</code><a class="headerlink" href="#nutritioncontroller-apiv1nutrition_1" title="Permanent link">&para;</a></h3>
+<p><code>NutritionBilanResponse</code></p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dietId</code></td>
+<td><code>Guid</code></td>
+</tr>
+<tr>
+<td><code>startDate</code></td>
+<td><code>DateOnly</code></td>
+</tr>
+<tr>
+<td><code>endDate</code></td>
+<td><code>DateOnly</code></td>
+</tr>
+<tr>
+<td><code>totalCalories</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>totalProteins</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>totalCarbs</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>totalFats</code></td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>dailyBreakdown</code></td>
+<td><code>List&lt;DailyNutritionDto&gt;</code></td>
+</tr>
+<tr>
+<td><code>weightProgression</code></td>
+<td><code>List&lt;WeightEntryResponse&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="get-nutritionidbilan-bilan-nutritionnel-dun-regime"><code>GET /nutrition/{id}/bilan</code> — Bilan nutritionnel d'un régime<a class="headerlink" href="#get-nutritionidbilan-bilan-nutritionnel-dun-regime" title="Permanent link">&para;</a></h4>
+<p><strong>Query params :</strong> <code>period</code> (ex: <code>week</code>, <code>month</code>, <code>custom</code>), <code>date?</code>, <code>startDate?</code>, <code>endDate?</code></p>
+<p><strong>Response 200</strong> <code>NutritionBilanResponse</code>. <strong>Erreurs :</strong> 404, 403</p>
 <hr />
 <h3 id="mealscontroller-apiv1meals_1">MealsController — <code>/api/v1/meals</code><a class="headerlink" href="#mealscontroller-apiv1meals_1" title="Permanent link">&para;</a></h3>
 <p><code>MealResponse</code></p>
