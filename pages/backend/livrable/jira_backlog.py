@@ -558,4 +558,26 @@ Critères d'acceptation :
 - [ ] L'implémentation respecte les règles métier décrites
 - [ ] Les cas d'erreur sont couverts""",
      "High", "tests", "STORY-024"),
+    # NTR-116 (Jira) — NutritionCalculator — sous-tache de NTR-9, creee directement dans Jira le 2026-06-15
+    ("SUB-046", "Implémenter NutritionCalculator.Calculate",
+     """Objectif : Implémenter la méthode Calculate du NutritionCalculator
+Règles métier : Calculer l'âge exact depuis BirthDate (correction si anniversaire non encore passé). Calculer le BMR avec la formule Mifflin-St Jeor (prioritaire) : homme = (10×P)+(6.25×T)-(5×A)+5, femme = (10×P)+(6.25×T)-(5×A)-161. Calculer le TDEE = BMR × NAP (Sedentary 1.2, LightlyActive 1.375, ModeratelyActive 1.55, VeryActive 1.725, ExtremelyActive 1.9). Calculer le CalorieTarget selon le Goal : WeightLoss = TDEE - min(TDEE×15%, 500), Maintenance = TDEE, WeightGain = TDEE + min(TDEE×15%, 500). Retourner un value object NutritionNeeds (Bmr, Tdee, TargetCalories, MacroDistribution).
+Critères d'acceptation :
+- [ ] L'implémentation respecte les règles métier décrites
+- [ ] Les cas d'erreur sont couverts""",
+     "High", "application", "STORY-025"),
+    ("SUB-047", "Implémenter NutritionCalculator.ToGrams",
+     """Objectif : Implémenter la méthode ToGrams du NutritionCalculator
+Règles métier : Convertir une répartition macros en pourcentages vers des grammes journaliers selon le CalorieTarget. Formules : Protéines (g) = CalorieTarget × %P ÷ 4, Glucides (g) = CalorieTarget × %C ÷ 4, Lipides (g) = CalorieTarget × %L ÷ 9. Retourner un value object MacroGrams (ProteinG, CarbG, FatG).
+Critères d'acceptation :
+- [ ] L'implémentation respecte les règles métier décrites
+- [ ] Les cas d'erreur sont couverts""",
+     "Medium", "application", "STORY-025"),
+    ("SUB-048", "Implémenter NutritionCalculator.GetDefaultMacros",
+     """Objectif : Implémenter la méthode GetDefaultMacros du NutritionCalculator
+Règles métier : Retourner la répartition macros par défaut selon le DietType. Valeurs définies : Balanced (Glucides 50%, Lipides 30%, Protéines 20%), HighProtein (Glucides 40%, Lipides 30%, Protéines 30%), Keto (Glucides 5%, Lipides 70%, Protéines 25%). Les autres types (Mediterranean, LowCarb, Vegetarian, Vegan, Custom) n'ont pas de valeurs par défaut — lancer une exception NotSupportedException ou retourner null selon la convention adoptée dans le projet.
+Critères d'acceptation :
+- [ ] L'implémentation respecte les règles métier décrites
+- [ ] Les cas d'erreur sont couverts""",
+     "Low", "application", "STORY-025"),
 ]

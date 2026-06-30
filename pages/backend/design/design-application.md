@@ -288,7 +288,6 @@ public interface IDietPlanService
     Task<DietPlanResponse> CreateAsync(Guid userId, CreateDietPlanRequest request);
     Task<DietPlanResponse> UpdateAsync(Guid userId, Guid planId, UpdateDietPlanRequest request);
     Task DeleteAsync(Guid userId, Guid planId);
-    Task<DietResponse> LaunchAsync(Guid userId, Guid planId);
     Task<List<DietPlanResponse>> GetTemplatesAsync(Guid userId);
 }
 ```
@@ -298,6 +297,7 @@ public interface IDietPlanService
 ```csharp
 public interface IDietService
 {
+    Task<DietResponse> LaunchAsync(Guid userId, Guid planId);
     Task<DietResponse> GetActiveAsync(Guid userId);
     Task<List<DietResponse>> GetHistoryAsync(Guid userId);
     Task<DietResponse> GetByIdAsync(Guid userId, Guid dietId);

@@ -93,13 +93,13 @@ public class UsersController : ControllerBase { ... }
 | `POST` | `/diet-plans` | Créer un plan | 201 |
 | `PUT` | `/diet-plans/{id}` | Modifier un plan | 200 |
 | `DELETE` | `/diet-plans/{id}` | Supprimer un plan | 204 |
-| `POST` | `/diet-plans/{id}/launch` | Lancer un plan → Diet active | 201 |
 | `GET` | `/diet-plans/templates` | Lister les templates (Pro/Business) | 200 |
 
 #### DietsController — `/api/v1/diets`
 
 | Méthode | Route | Description | Code succès |
 |---|---|---|---|
+| `POST` | `/diets/{id}/launch` | Lancer un plan → Diet active | 201 |
 | `GET` | `/diets/active` | Récupérer le régime actif | 200 |
 | `GET` | `/diets` | Historique des régimes | 200 |
 | `GET` | `/diets/{id}` | Détail d'un régime | 200 |
@@ -471,16 +471,6 @@ Aucun body. **Response 204.** **Erreurs :** 404
 
 ---
 
-#### `POST /diet-plans/{id}/launch` — Lancer un plan → crée une Diet
-
-Aucun body — `StartDate` imposée par le système (aujourd'hui).
-
-**Response 201** `DietResponse`
-
-**Erreurs :** 404, 409 diet déjà active, 422 aucune `WeightEntry` disponible (CalorieTarget incalculable)
-
----
-
 #### `GET /diet-plans/templates` — Lister les templates
 
 Aucun body. **Response 200** `List<DietPlanResponse>` — `IsTemplate = true` uniquement.
@@ -505,6 +495,16 @@ Aucun body. **Response 200** `List<DietPlanResponse>` — `IsTemplate = true` un
 | `status` | `DietStatus` |
 | `startDate` | `DateOnly` |
 | `endDate` | `DateOnly?` |
+
+---
+
+#### `POST /diets/{id}/launch` — Lancer un plan → crée une Diet
+
+Aucun body — `StartDate` imposée par le système (aujourd'hui).
+
+**Response 201** `DietResponse`
+
+**Erreurs :** 404, 409 diet déjà active, 422 aucune `WeightEntry` disponible (CalorieTarget incalculable)
 
 ---
 
