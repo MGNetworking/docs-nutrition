@@ -104,7 +104,6 @@ public class UsersController : ControllerBase { ... }
 | `GET` | `/diets` | Historique des régimes | 200 |
 | `GET` | `/diets/{id}` | Détail d'un régime | 200 |
 | `POST` | `/diets/{id}/archive` | Terminer le régime actif | 200 |
-| `GET` | `/diets/{id}/bilan` | Bilan nutritionnel (params : `period`, `date`, `startDate`) | 200 |
 
 #### MealsController — `/api/v1/meals`
 
@@ -531,35 +530,6 @@ Aucun body. **Response 200** `DietResponse`. **Erreurs :** 404
 Aucun body — `EndDate` imposée par le système (aujourd'hui).
 
 **Response 200** `DietResponse`. **Erreurs :** 404, 422 régime non actif
-
----
-
-#### `GET /diets/{id}/bilan` — Bilan nutritionnel
-
-**Query params**
-
-| Param | Type | Description |
-|---|---|---|
-| `period` | `string` — `day` / `week` / `month` / `custom` | Période du bilan |
-| `date` | `DateOnly?` | Pour `period=day` |
-| `startDate` | `DateOnly?` | Pour `period=custom` |
-| `endDate` | `DateOnly?` | Pour `period=custom` |
-
-**Response 200** `NutritionBilanResponse`
-
-| Champ | Type |
-|---|---|
-| `dietId` | `Guid` |
-| `startDate` | `DateOnly` |
-| `endDate` | `DateOnly` |
-| `totalCalories` | `float` |
-| `totalProteins` | `float` |
-| `totalCarbs` | `float` |
-| `totalFats` | `float` |
-| `dailyBreakdown` | `List<DailyNutritionDto>` — date, calories, proteins, carbs, fats |
-| `weightProgression` | `List<WeightEntryResponse>` — pesées sur la période |
-
-**Erreurs :** 404, 403 période dépassant la limite tier (Free : 7j, Pro : 1 an)
 
 ---
 
