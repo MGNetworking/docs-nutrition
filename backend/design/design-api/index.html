@@ -1183,15 +1183,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-diet-plansidlaunch-lancer-un-plan-cree-une-diet" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST /diet-plans/{id}/launch — Lancer un plan → crée une Diet
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#get-diet-planstemplates-lister-les-templates" class="md-nav__link">
     <span class="md-ellipsis">
       GET /diet-plans/templates — Lister les templates
@@ -1214,6 +1205,15 @@
   
     <nav class="md-nav" aria-label="DietsController — /api/v1/diets">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-dietsidlaunch-lancer-un-plan-cree-une-diet" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST /diets/{id}/launch — Lancer un plan → crée une Diet
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#get-dietsactive-regime-actif" class="md-nav__link">
@@ -2354,15 +2354,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-diet-plansidlaunch-lancer-un-plan-cree-une-diet" class="md-nav__link">
-    <span class="md-ellipsis">
-      POST /diet-plans/{id}/launch — Lancer un plan → crée une Diet
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#get-diet-planstemplates-lister-les-templates" class="md-nav__link">
     <span class="md-ellipsis">
       GET /diet-plans/templates — Lister les templates
@@ -2385,6 +2376,15 @@
   
     <nav class="md-nav" aria-label="DietsController — /api/v1/diets">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-dietsidlaunch-lancer-un-plan-cree-une-diet" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST /diets/{id}/launch — Lancer un plan → crée une Diet
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#get-dietsactive-regime-actif" class="md-nav__link">
@@ -2850,12 +2850,6 @@ Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastruc
 <td>204</td>
 </tr>
 <tr>
-<td><code>POST</code></td>
-<td><code>/diet-plans/{id}/launch</code></td>
-<td>Lancer un plan → Diet active</td>
-<td>201</td>
-</tr>
-<tr>
 <td><code>GET</code></td>
 <td><code>/diet-plans/templates</code></td>
 <td>Lister les templates (Pro/Business)</td>
@@ -2874,6 +2868,12 @@ Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastruc
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/diets/{id}/launch</code></td>
+<td>Lancer un plan → Diet active</td>
+<td>201</td>
+</tr>
 <tr>
 <td><code>GET</code></td>
 <td><code>/diets/active</code></td>
@@ -3596,11 +3596,6 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 <h4 id="delete-diet-plansid-supprimer-un-plan"><code>DELETE /diet-plans/{id}</code> — Supprimer un plan<a class="headerlink" href="#delete-diet-plansid-supprimer-un-plan" title="Permanent link">&para;</a></h4>
 <p>Aucun body. <strong>Response 204.</strong> <strong>Erreurs :</strong> 404</p>
 <hr />
-<h4 id="post-diet-plansidlaunch-lancer-un-plan-cree-une-diet"><code>POST /diet-plans/{id}/launch</code> — Lancer un plan → crée une Diet<a class="headerlink" href="#post-diet-plansidlaunch-lancer-un-plan-cree-une-diet" title="Permanent link">&para;</a></h4>
-<p>Aucun body — <code>StartDate</code> imposée par le système (aujourd'hui).</p>
-<p><strong>Response 201</strong> <code>DietResponse</code></p>
-<p><strong>Erreurs :</strong> 404, 409 diet déjà active, 422 aucune <code>WeightEntry</code> disponible (CalorieTarget incalculable)</p>
-<hr />
 <h4 id="get-diet-planstemplates-lister-les-templates"><code>GET /diet-plans/templates</code> — Lister les templates<a class="headerlink" href="#get-diet-planstemplates-lister-les-templates" title="Permanent link">&para;</a></h4>
 <p>Aucun body. <strong>Response 200</strong> <code>List&lt;DietPlanResponse&gt;</code> — <code>IsTemplate = true</code> uniquement.</p>
 <p><strong>Erreurs :</strong> 403 tier Free</p>
@@ -3657,6 +3652,11 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 </tr>
 </tbody>
 </table>
+<hr />
+<h4 id="post-dietsidlaunch-lancer-un-plan-cree-une-diet"><code>POST /diets/{id}/launch</code> — Lancer un plan → crée une Diet<a class="headerlink" href="#post-dietsidlaunch-lancer-un-plan-cree-une-diet" title="Permanent link">&para;</a></h4>
+<p>Aucun body — <code>StartDate</code> imposée par le système (aujourd'hui).</p>
+<p><strong>Response 201</strong> <code>DietResponse</code></p>
+<p><strong>Erreurs :</strong> 404, 409 diet déjà active, 422 aucune <code>WeightEntry</code> disponible (CalorieTarget incalculable)</p>
 <hr />
 <h4 id="get-dietsactive-regime-actif"><code>GET /diets/active</code> — Régime actif<a class="headerlink" href="#get-dietsactive-regime-actif" title="Permanent link">&para;</a></h4>
 <p>Aucun body. <strong>Response 200</strong> <code>DietResponse</code>. <strong>Erreurs :</strong> 404 aucun régime actif</p>
