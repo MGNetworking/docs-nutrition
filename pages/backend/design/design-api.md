@@ -16,6 +16,7 @@ src/NutritionApi.Api/
 │   ├── RgpdController.cs
 │   ├── DietPlansController.cs
 │   ├── DietsController.cs
+│   ├── NutritionController.cs
 │   ├── MealsController.cs
 │   ├── FoodItemsController.cs
 │   └── AdminController.cs
@@ -57,6 +58,7 @@ public class UsersController : ControllerBase { ... }
 | `RgpdController` | `/api/v1/rgpd` | `user` |
 | `DietPlansController` | `/api/v1/diet-plans` | `user` |
 | `DietsController` | `/api/v1/diets` | `user` |
+| `NutritionController` | `/api/v1/nutrition` | `user` |
 | `MealsController` | `/api/v1/meals` | `user` |
 | `FoodItemsController` | `/api/v1/food-items` | `user` |
 | `AdminController` | `/api/v1/admin` | `admin` |
@@ -104,6 +106,12 @@ public class UsersController : ControllerBase { ... }
 | `GET` | `/diets` | Historique des régimes | 200 |
 | `GET` | `/diets/{id}` | Détail d'un régime | 200 |
 | `POST` | `/diets/{id}/archive` | Terminer le régime actif | 200 |
+
+#### NutritionController — `/api/v1/nutrition`
+
+| Méthode | Route | Description | Code succès |
+|---|---|---|---|
+| `GET` | `/nutrition/{id}/bilan` | Bilan nutritionnel d'un régime | 200 |
 
 #### MealsController — `/api/v1/meals`
 
@@ -530,6 +538,32 @@ Aucun body. **Response 200** `DietResponse`. **Erreurs :** 404
 Aucun body — `EndDate` imposée par le système (aujourd'hui).
 
 **Response 200** `DietResponse`. **Erreurs :** 404, 422 régime non actif
+
+---
+
+### NutritionController — `/api/v1/nutrition`
+
+`NutritionBilanResponse`
+
+| Champ | Type |
+|---|---|
+| `dietId` | `Guid` |
+| `startDate` | `DateOnly` |
+| `endDate` | `DateOnly` |
+| `totalCalories` | `float` |
+| `totalProteins` | `float` |
+| `totalCarbs` | `float` |
+| `totalFats` | `float` |
+| `dailyBreakdown` | `List<DailyNutritionDto>` |
+| `weightProgression` | `List<WeightEntryResponse>` |
+
+---
+
+#### `GET /nutrition/{id}/bilan` — Bilan nutritionnel d'un régime
+
+**Query params :** `period` (ex: `week`, `month`, `custom`), `date?`, `startDate?`, `endDate?`
+
+**Response 200** `NutritionBilanResponse`. **Erreurs :** 404, 403
 
 ---
 
