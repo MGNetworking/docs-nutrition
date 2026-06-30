@@ -302,7 +302,6 @@ public interface IDietService
     Task<List<DietResponse>> GetHistoryAsync(Guid userId);
     Task<DietResponse> GetByIdAsync(Guid userId, Guid dietId);
     Task<DietResponse> ArchiveAsync(Guid userId, Guid dietId);
-    Task<NutritionBilanResponse> GetBilanAsync(Guid userId, Guid dietId, string period, DateOnly? date, DateOnly? startDate, DateOnly? endDate);
 }
 ```
 
