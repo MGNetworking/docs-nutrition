@@ -1251,15 +1251,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#get-dietsidbilan-bilan-nutritionnel" class="md-nav__link">
-    <span class="md-ellipsis">
-      GET /diets/{id}/bilan — Bilan nutritionnel
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2422,15 +2413,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#get-dietsidbilan-bilan-nutritionnel" class="md-nav__link">
-    <span class="md-ellipsis">
-      GET /diets/{id}/bilan — Bilan nutritionnel
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2896,12 +2878,6 @@ Configuration technique (middleware, JWT, Swagger) : <code>design-api-infrastruc
 <td><code>POST</code></td>
 <td><code>/diets/{id}/archive</code></td>
 <td>Terminer le régime actif</td>
-<td>200</td>
-</tr>
-<tr>
-<td><code>GET</code></td>
-<td><code>/diets/{id}/bilan</code></td>
-<td>Bilan nutritionnel (params : <code>period</code>, <code>date</code>, <code>startDate</code>)</td>
 <td>200</td>
 </tr>
 </tbody>
@@ -3670,88 +3646,6 @@ Le 400 (validation automatique <code>[ApiController]</code>) et le 401 (JWT) son
 <h4 id="post-dietsidarchive-terminer-le-regime"><code>POST /diets/{id}/archive</code> — Terminer le régime<a class="headerlink" href="#post-dietsidarchive-terminer-le-regime" title="Permanent link">&para;</a></h4>
 <p>Aucun body — <code>EndDate</code> imposée par le système (aujourd'hui).</p>
 <p><strong>Response 200</strong> <code>DietResponse</code>. <strong>Erreurs :</strong> 404, 422 régime non actif</p>
-<hr />
-<h4 id="get-dietsidbilan-bilan-nutritionnel"><code>GET /diets/{id}/bilan</code> — Bilan nutritionnel<a class="headerlink" href="#get-dietsidbilan-bilan-nutritionnel" title="Permanent link">&para;</a></h4>
-<p><strong>Query params</strong></p>
-<table>
-<thead>
-<tr>
-<th>Param</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>period</code></td>
-<td><code>string</code> — <code>day</code> / <code>week</code> / <code>month</code> / <code>custom</code></td>
-<td>Période du bilan</td>
-</tr>
-<tr>
-<td><code>date</code></td>
-<td><code>DateOnly?</code></td>
-<td>Pour <code>period=day</code></td>
-</tr>
-<tr>
-<td><code>startDate</code></td>
-<td><code>DateOnly?</code></td>
-<td>Pour <code>period=custom</code></td>
-</tr>
-<tr>
-<td><code>endDate</code></td>
-<td><code>DateOnly?</code></td>
-<td>Pour <code>period=custom</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Response 200</strong> <code>NutritionBilanResponse</code></p>
-<table>
-<thead>
-<tr>
-<th>Champ</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>dietId</code></td>
-<td><code>Guid</code></td>
-</tr>
-<tr>
-<td><code>startDate</code></td>
-<td><code>DateOnly</code></td>
-</tr>
-<tr>
-<td><code>endDate</code></td>
-<td><code>DateOnly</code></td>
-</tr>
-<tr>
-<td><code>totalCalories</code></td>
-<td><code>float</code></td>
-</tr>
-<tr>
-<td><code>totalProteins</code></td>
-<td><code>float</code></td>
-</tr>
-<tr>
-<td><code>totalCarbs</code></td>
-<td><code>float</code></td>
-</tr>
-<tr>
-<td><code>totalFats</code></td>
-<td><code>float</code></td>
-</tr>
-<tr>
-<td><code>dailyBreakdown</code></td>
-<td><code>List&lt;DailyNutritionDto&gt;</code> — date, calories, proteins, carbs, fats</td>
-</tr>
-<tr>
-<td><code>weightProgression</code></td>
-<td><code>List&lt;WeightEntryResponse&gt;</code> — pesées sur la période</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Erreurs :</strong> 404, 403 période dépassant la limite tier (Free : 7j, Pro : 1 an)</p>
 <hr />
 <h3 id="mealscontroller-apiv1meals_1">MealsController — <code>/api/v1/meals</code><a class="headerlink" href="#mealscontroller-apiv1meals_1" title="Permanent link">&para;</a></h3>
 <p><code>MealResponse</code></p>
