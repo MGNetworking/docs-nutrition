@@ -302,8 +302,12 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
+    // Commentaires XML du projet API (controllers)
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
+
+    // Commentaires XML du projet Application (DTOs Request/Response — descriptions des schémas)
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "NutritionApi.Application.xml"));
 });
 
 // Uniquement hors production
@@ -315,7 +319,7 @@ if (!app.Environment.IsProduction())
 }
 ```
 
-**Activer les commentaires XML dans le `.csproj` :**
+**Activer les commentaires XML dans les deux `.csproj` (API et Application) :**
 
 ```xml
 <PropertyGroup>
