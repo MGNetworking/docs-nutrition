@@ -1962,8 +1962,12 @@ Controller
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">});</span>
 
+<span class="w">    </span><span class="c1">// Commentaires XML du projet API (controllers)</span>
 <span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">xmlFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;{Assembly.GetExecutingAssembly().GetName().Name}.xml&quot;</span><span class="p">;</span>
 <span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">IncludeXmlComments</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">AppContext</span><span class="p">.</span><span class="n">BaseDirectory</span><span class="p">,</span><span class="w"> </span><span class="n">xmlFile</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// Commentaires XML du projet Application (DTOs Request/Response — descriptions des schémas)</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">IncludeXmlComments</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">AppContext</span><span class="p">.</span><span class="n">BaseDirectory</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;NutritionApi.Application.xml&quot;</span><span class="p">));</span>
 <span class="p">});</span>
 
 <span class="c1">// Uniquement hors production</span>
@@ -1974,7 +1978,7 @@ Controller
 <span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">SwaggerEndpoint</span><span class="p">(</span><span class="s">&quot;/swagger/v1/swagger.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Nutrition API v1&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>Activer les commentaires XML dans le <code>.csproj</code> :</strong></p>
+<p><strong>Activer les commentaires XML dans les deux <code>.csproj</code> (API et Application) :</strong></p>
 <div class="language-xml highlight"><pre><span></span><code><span class="nt">&lt;PropertyGroup&gt;</span>
 <span class="w">  </span><span class="nt">&lt;GenerateDocumentationFile&gt;</span>true<span class="nt">&lt;/GenerateDocumentationFile&gt;</span>
 <span class="w">  </span><span class="nt">&lt;NoWarn&gt;</span>$(NoWarn);1591<span class="nt">&lt;/NoWarn&gt;</span>
