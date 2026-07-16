@@ -84,7 +84,8 @@ src/NutritionApi.Application/
 │   └── ExternalServices/
 │       ├── IFoodCacheService.cs
 │       ├── IKeycloakAdminService.cs
-│       └── IEmailService.cs
+│       ├── IEmailService.cs
+│       └── IJobMonitoringService.cs
 ├── DTOs/
 │   ├── Users/
 │   │   ├── CreateUserProfileRequest.cs
@@ -405,6 +406,22 @@ public interface IEmailService
 > Utilisé par `UserService.DeleteUserAsync()` — envoie le lien signé de réactivation valable 30 jours (workflow RGPD).
 > Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'infrastructure.
 
+### IJobMonitoringService
+
+```csharp
+public interface IJobMonitoringService
+{
+    const string ImportOffJobName = "import-off";
+    const string RgpdPurgeJobName = "rgpd-purge";
+
+    Task<List<HangfireJobResponse>> GetJobsStatusAsync();
+}
+```
+
+> Utilisé par `AdminService.GetSystemHealthAsync()` — statut des jobs planifiés (dernier run, prochain run, état).
+> Implémenté dans Infrastructure — lit les tables Hangfire (`Hangfire.Job`, `Hangfire.State`).
+> Les constantes définissent les noms officiels des jobs : l'Infrastructure les utilise à l'enregistrement Hangfire, l'Application pour retrouver un job dans les statuts — une seule source de vérité, pas de magic string entre couches.
+
 ---
 
 ## 5. Services applicatifs
@@ -513,9 +530,10 @@ Task<UserProfileResponse> UpdateUserProfileAsync(string keycloakId, UpdateUserPr
 **Responsabilités :**
 - Agréger les KPIs utilisateurs (total, par tier, nouveaux 7 derniers jours)
 - Agréger les métriques d'activité (diets actives, repas 7j, comptes en grace period)
-- Agréger la santé système depuis les tables Hangfire
+- Agréger la santé système (jobs planifiés via `IJobMonitoringService`, taille du catalogue d'aliments)
+- Gérer les DietPlan templates partagés : création (`IsTemplate` forcé à `true`, `UserId` null), modification, suppression — un plan personnel n'est jamais atteignable par ces opérations (404)
 
-**Dépendances :** `IUserRepository`, `IDietRepository`, `IMealRepository`
+**Dépendances :** `IUserRepository`, `IDietRepository`, `IMealRepository`, `IFoodItemRepository`, `IDietPlanRepository`, `IJobMonitoringService`
 
 ---
 

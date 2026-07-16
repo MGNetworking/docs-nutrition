@@ -246,6 +246,7 @@ Repas enregistré par l'utilisateur à un instant donné.
 | Name        | string            | Nom du repas                    |
 | MealType    | enum MealType     | Breakfast, Lunch, Dinner, Snack |
 | ConsumedAt  | DateTime          | Date et heure du repas          |
+| CreatedAt   | DateTime          | Date de saisie dans le système (UTC) — distincte de ConsumedAt qui peut être rétroactive ; sert aux KPIs admin |
 | Notes       | string?           | Notes libres, optionnelles      |
 | Items       | List\<MealItem\>  | Relation de navigation          |
 | IsSaved     | bool              | `true` = repas sauvegardé dans la liste personnalisée de l'utilisateur (réutilisable) / `false` = repas ponctuel (enregistrement unique) |

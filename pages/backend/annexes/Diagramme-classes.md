@@ -59,6 +59,7 @@ classDiagram
         +string Name
         +MealType MealType
         +DateTime ConsumedAt
+        +DateTime CreatedAt
         +string? Notes
         +List~MealItem~ Items
         +bool IsSaved

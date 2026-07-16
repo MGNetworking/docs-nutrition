@@ -25,6 +25,16 @@ Administrateur uniquement — rôle `admin` Keycloak requis.
 - Affiche la santé des jobs planifiés : statut et date du dernier import OFF et de la dernière purge RGPD
 - Crée, modifie et supprime les DietPlan templates partagés
 
+> **KPI (Key Performance Indicator)** — indicateur clé de performance : un chiffre choisi parce qu'il répond à une question business précise, surveillé dans le temps pour piloter le produit. On ne mesure pas tout ce qui est mesurable — chaque KPI du dashboard guide une décision :
+>
+> | KPI | Question business |
+> |---|---|
+> | `TotalUsers` / `UsersByTier` | Combien de comptes, et combien paient ? (revenus) |
+> | `NewUsersLast7Days` | Est-ce que j'acquiers des utilisateurs ? (croissance) |
+> | `ActiveDiets` | La fonctionnalité cœur est-elle utilisée ? (adoption) |
+> | `MealsLast7Days` | L'appli est-elle utilisée au quotidien ? (engagement — la saisie d'un repas est l'action de base) |
+> | `UsersInGracePeriod` | Combien de comptes sont en train de partir ? (attrition) |
+
 ## Ce qu'elle ne fait pas
 
 - N'expose jamais les données personnelles d'un utilisateur individuel (RGPD)
