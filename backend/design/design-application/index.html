@@ -1031,6 +1031,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ijobmonitoringservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      IJobMonitoringService
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2004,6 +2013,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ijobmonitoringservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      IJobMonitoringService
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2262,7 +2280,8 @@ Elle centralise toutes les interfaces de communication inter-couches :</p>
 │   └── ExternalServices/
 │       ├── IFoodCacheService.cs
 │       ├── IKeycloakAdminService.cs
-│       └── IEmailService.cs
+│       ├── IEmailService.cs
+│       └── IJobMonitoringService.cs
 ├── DTOs/
 │   ├── Users/
 │   │   ├── CreateUserProfileRequest.cs
@@ -2557,6 +2576,20 @@ Application layer → implémente IXxxService     (XxxService.cs)
 <p>Utilisé par <code>UserService.DeleteUserAsync()</code> — envoie le lien signé de réactivation valable 30 jours (workflow RGPD).
 Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'infrastructure.</p>
 </blockquote>
+<h3 id="ijobmonitoringservice">IJobMonitoringService<a class="headerlink" href="#ijobmonitoringservice" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IJobMonitoringService</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ImportOffJobName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;import-off&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">RgpdPurgeJobName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rgpd-purge&quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">HangfireJobResponse</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetJobsStatusAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Utilisé par <code>AdminService.GetSystemHealthAsync()</code> — statut des jobs planifiés (dernier run, prochain run, état).
+Implémenté dans Infrastructure — lit les tables Hangfire (<code>Hangfire.Job</code>, <code>Hangfire.State</code>).
+Les constantes définissent les noms officiels des jobs : l'Infrastructure les utilise à l'enregistrement Hangfire, l'Application pour retrouver un job dans les statuts — une seule source de vérité, pas de magic string entre couches.</p>
+</blockquote>
 <hr />
 <h2 id="5-services-applicatifs">5. Services applicatifs<a class="headerlink" href="#5-services-applicatifs" title="Permanent link">&para;</a></h2>
 <h3 id="userservice">UserService<a class="headerlink" href="#userservice" title="Permanent link">&para;</a></h3>
@@ -2666,8 +2699,9 @@ Implémenté dans Infrastructure — le fournisseur SMTP/email est un détail d'
 <p><strong>Responsabilités :</strong>
 - Agréger les KPIs utilisateurs (total, par tier, nouveaux 7 derniers jours)
 - Agréger les métriques d'activité (diets actives, repas 7j, comptes en grace period)
-- Agréger la santé système depuis les tables Hangfire</p>
-<p><strong>Dépendances :</strong> <code>IUserRepository</code>, <code>IDietRepository</code>, <code>IMealRepository</code></p>
+- Agréger la santé système (jobs planifiés via <code>IJobMonitoringService</code>, taille du catalogue d'aliments)
+- Gérer les DietPlan templates partagés : création (<code>IsTemplate</code> forcé à <code>true</code>, <code>UserId</code> null), modification, suppression — un plan personnel n'est jamais atteignable par ces opérations (404)</p>
+<p><strong>Dépendances :</strong> <code>IUserRepository</code>, <code>IDietRepository</code>, <code>IMealRepository</code>, <code>IFoodItemRepository</code>, <code>IDietPlanRepository</code>, <code>IJobMonitoringService</code></p>
 <hr />
 <h2 id="6-dtos">6. DTOs<a class="headerlink" href="#6-dtos" title="Permanent link">&para;</a></h2>
 <p>Les DTOs sont des <code>record</code> C# — immuables, égalité par valeur.</p>
