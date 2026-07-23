@@ -154,7 +154,7 @@ public class HangfireAdminAuthorizationFilter : IDashboardAuthorizationFilter
 
 ```csharp
 RecurringJob.AddOrUpdate<IOffImportJob>(
-    "off-import",
+    "import-off",          // = IJobMonitoringService.ImportOffJobName (le contrat fait foi)
     job => job.RunAsync(),
     "0 3 * * *",            // chaque nuit à 03h00 UTC
     new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc });
@@ -172,52 +172,62 @@ RecurringJob.AddOrUpdate<IRgpdPurgeJob>(
 
 ```
 Jobs/
-├── IOffImportJob.cs
-├── OffImportJob.cs
-├── IRgpdPurgeJob.cs
-└── RgpdPurgeJob.cs
+├── HangfireAdminAuthorizationFilter.cs   — accès au dashboard réservé au rôle admin
+├── JobMonitoringService.cs               — supervision (lecture de hangfire.hash)
+├── IOffImportJob.cs, OffImportJob.cs      — job d'import Open Food Facts
+├── OffDumpReader.cs                        — téléchargement + lecture du dump (streaming)
+├── OffProduct.cs, OffProductMapper.cs      — produit normalisé + traduction OFF → FoodItem
+└── (à venir, NTR-56) RgpdPurgeJob.cs       — purge RGPD
 ```
 
 Les interfaces permettent à Hangfire de résoudre les jobs via le conteneur DI.
 
 ---
 
-## Lecture de l'historique pour `GET /admin/system/health`
+## Lecture de l'état des jobs pour `GET /admin/system/health`
 
-Hangfire stocke chaque exécution dans la table `HangFire.Job` (état final dans `HangFire.State`).  
-L'`AdminService` interroge directement ces tables via EF Core (ou Dapper) :
+> ⚠️ **Corrigé après implémentation (NTR-55).** Le schéma réel créé par `Hangfire.PostgreSql`
+> est **entièrement en minuscules** (`hangfire.hash`, `hangfire.job`…), et non en PascalCase
+> comme le laissait croire la version initiale de cette doc (convention SQL Server).
+
+La supervision liste les **jobs récurrents** : pour chacun, sa dernière exécution, sa prochaine
+exécution et l'état de son dernier run. Ces informations vivent dans la table **`hangfire.hash`**,
+sous la clé `recurring-job:<id>` — **et non** dans l'historique brut (`hangfire.job` / `hangfire.state`),
+qui ne donne ni la prochaine exécution ni la liste des jobs planifiés.
+
+`JobMonitoringService` interroge donc `hangfire.hash` directement (via Npgsql) :
 
 ```sql
--- Dernière exécution du job "off-import"
-SELECT j.CreatedAt, s.Name AS StateName, s.Data
-FROM "HangFire"."Job" j
-JOIN "HangFire"."State" s ON s.Id = j.StateId
-WHERE j.InvocationData::text LIKE '%OffImportJob%'
-ORDER BY j.CreatedAt DESC
-LIMIT 1;
+select
+    substring(key from 'recurring-job:(.*)')          as job_name,
+    max(value) filter (where field = 'LastExecution') as last_run,
+    max(value) filter (where field = 'NextExecution') as next_run,
+    max(value) filter (where field = 'LastJobState')  as status
+from hangfire.hash
+where key like 'recurring-job:%'
+group by key;
 ```
 
-**Mapping des états Hangfire → statuts API :**
+**Format des dates** : `LastExecution` et `NextExecution` sont stockées en **millisecondes Unix**
+(ex : `1784862000000`), pas en ISO 8601 — à convertir via `DateTimeOffset.FromUnixTimeMilliseconds`.
 
-| État Hangfire | Statut retourné par l'API |
-|---|---|
-| `Succeeded` | `success` |
-| `Failed` | `failed` |
-| aucun enregistrement | `never_run` |
+**Statut retourné** (`status`) : l'état brut Hangfire du dernier run (`Succeeded`, `Failed`…),
+ou `Scheduled` si le job est enregistré mais n'a encore jamais tourné (`LastJobState` absent).
 
 ---
 
 ## Tables Hangfire (créées automatiquement)
 
 `PrepareSchemaIfNecessary = true` crée les tables au démarrage si elles n'existent pas.  
-Aucune migration EF Core manuelle requise pour le schéma Hangfire.
+Aucune migration EF Core manuelle requise pour le schéma Hangfire. Les tables sont créées dans
+le schéma **`hangfire`** (minuscules), avec des noms de tables et de colonnes également en minuscules.
 
 | Table | Contenu |
 |---|---|
-| `HangFire.Job` | Un enregistrement par exécution (scheduled, enqueued, processing, succeeded, failed) |
-| `HangFire.State` | Historique des transitions d'état de chaque job |
-| `HangFire.Counter` | Agrégats internes (succès, échecs) |
-| `HangFire.Hash` | Données de configuration des jobs récurrents |
+| `hangfire.job` | Un enregistrement par exécution ; la colonne `statename` porte l'état final |
+| `hangfire.state` | Historique des transitions d'état de chaque job |
+| `hangfire.counter` | Agrégats internes (succès, échecs) |
+| `hangfire.hash` | Définition **et** état des jobs récurrents (`recurring-job:<id>`) — **source de la supervision** |
 
 ---
 
