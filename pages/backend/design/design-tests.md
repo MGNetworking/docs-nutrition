@@ -296,6 +296,19 @@ PostgreSQL
 Connexion valide
 ```
 
+## Identité utilisée par les smoke tests
+
+Les smoke tests s'authentifient avec un **compte d'exploitation** dédié, provisionné à l'installation de l'environnement.
+
+Ce compte comprend deux éléments indissociables :
+
+1. Un client confidentiel Keycloak avec service account activé — le `client_secret` est stocké dans un Secret Kubernetes, **jamais versionné**
+2. Une ligne `User` correspondante en base de production
+
+> **Pourquoi la ligne en base est obligatoire :** `UserResolutionMiddleware` résout le `sub` du JWT vers un `User` et renvoie **401** si aucun profil ne correspond. Sans cette ligne, aucun endpoint authentifié n'est atteignable — et le 401 obtenu serait indiscernable d'un rejet de JWT, privant le smoke test de tout pouvoir de diagnostic.
+
+Ce compte est une **identité d'exploitation**, au même titre qu'un compte de supervision — ce ne sont pas des données de test. Il n'effectue que des lectures.
+
 ## Ce que l'on cherche à vérifier
 
 * Déploiement correct
