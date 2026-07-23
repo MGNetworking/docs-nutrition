@@ -1,6 +1,8 @@
 # Tests — Recensement par niveau
 
-Fichier vivant aligné sur la stratégie définie dans [`design-tests.md`](../design/design-tests.md).  
+**Type :** Interne
+
+Fichier vivant aligné sur la stratégie définie dans [`design-tests.md`](../../design/design-tests.md).  
 Chaque niveau répond à une question différente — ne pas dupliquer un test d'un niveau à l'autre.
 
 > **Convention de statut**  
@@ -205,10 +207,21 @@ Tickets Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111.
 
 > *Mon application communique-t-elle correctement avec ses dépendances réelles ?*
 
-Outil : `WebApplicationFactory<Program>` + **Testcontainers** (PostgreSQL + Redis réels).  
+Outil : `WebApplicationFactory<Program>` + **docker-compose** (PostgreSQL, Redis et Keycloak réels).  
 Répartition cible : **5 à 10 tests**.
 
 Ticket Jira : NTR-28.
+
+> Les trois services sont ceux du `docker-compose.yml` de développement (NTR-85), réutilisé en CI (NTR-92, NTR-93).
+> Ce choix permet de valider ce que des conteneurs isolés ne peuvent pas : la configuration Docker, le réseau entre
+> composants et la chaîne JWT réelle (issuer, audience, signature) — voir `design/design-tests.md`, niveau 3.
+
+### Chaîne d'authentification — Keycloak réel
+
+| ID | Scénario | Ce que l'on vérifie | Statut |
+|----|----------|---------------------|--------|
+| IT-EXT-09 | Token émis par Keycloak → `GET /api/v1/users/me` | Chaîne complète : issuer, audience et signature validés par l'API | `[ ]` |
+| IT-EXT-10 | Token sans le rôle `admin` → `GET /api/v1/admin/dashboard` | 403 — mapping `realm_access.roles` → policy AdminOnly | `[ ]` |
 
 ### Repositories — PostgreSQL réel
 
@@ -244,10 +257,15 @@ Répartition cible : **2 à 5 tests**.
 
 Ticket Jira : NTR-112.
 
+> **Compte d'exploitation** — les scénarios authentifiés utilisent un client Keycloak à service account dédié,
+> accompagné de sa ligne `User` en base (`UserResolutionMiddleware` renvoie 401 sans profil correspondant).
+> Le `client_secret` vit dans un Secret Kubernetes, jamais dans git. Provisionnement : NTR-125.
+> Voir `design/design-tests.md`, section « Identité utilisée par les smoke tests ».
+
 | ID | Scénario | Ce que l'on vérifie | Statut |
 |----|----------|---------------------|--------|
 | IT-SMOKE-01 | `GET /health` | Pod API démarré, connexions DB/Redis actives | `[ ]` |
-| IT-SMOKE-02 | `GET /api/v1/users/me` avec JWT valide | Keycloak joignable, JWT validé, DB répondante | `[ ]` |
+| IT-SMOKE-02 | `GET /api/v1/users/me` avec le JWT du compte d'exploitation | Keycloak joignable, JWT validé (issuer, audience, signature), DB répondante | `[ ]` |
 | IT-SMOKE-03 | `GET /api/v1/food-items?search=poulet` | Redis joignable, PostgreSQL joignable | `[ ]` |
 
 ---
@@ -258,5 +276,5 @@ Ticket Jira : NTR-112.
 |--------|-----------------|---------------|---------|
 | Niveau 1 — Unitaires | xUnit + Moq | Non | Très rapide |
 | Niveau 2 — Intégration Interne | WebApplicationFactory | Non | Rapide |
-| Niveau 3 — Intégration Externe | WebApplicationFactory + Testcontainers | Oui | Lent |
+| Niveau 3 — Intégration Externe | WebApplicationFactory + docker-compose | Oui | Lent |
 | Niveau 4 — Smoke Tests K8s | Client HTTP | Oui (cluster) | Variable |

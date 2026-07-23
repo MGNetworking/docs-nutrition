@@ -1,7 +1,7 @@
 # Stripe — Intégration webhooks & abonnements
 
 > Ce document décrit comment Stripe communique avec l'API ASP.NET Core pour synchroniser les changements d'abonnement.
-> Référence feature : `docs/pages/backend/features/abonnements.md`
+> Référence feature : `docs/pages/backend/features/utilisateur/abonnements.md`
 
 ---
 

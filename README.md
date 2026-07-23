@@ -35,19 +35,14 @@ docs-nutrition/                         ← racine du repo (ce dépôt)
         │   ├── design-api.md           ← controllers, routing, middleware, auth
         │   └── Regles-metier.md        ← formules BMR/TDEE + invariants domaine
         ├── features/                   ← une page par fonctionnalité
-        ├── annexes/
-        │   ├── Diagramme-classes.md    ← diagramme Mermaid classDiagram
-        │   ├── infrastructure-*.md     ← guides setup (Keycloak, Hangfire, OFF, MkDocs, CI)
-        │   ├── workflows.md            ← 10 flux séquentiels Mermaid
-        │   └── workflow_*.mermaid      ← sources brutes des diagrammes (non publiées)
-        └── livrable/                   ← documents de travail internes (non publiés dans la nav)
-            ├── checklist-implementation.md
-            ├── jira-backlog-decomposition.md
-            ├── jira_backlog.py
-            └── specs-frontend.md
+        └── annexes/
+            ├── Diagramme-classes.md    ← diagramme Mermaid classDiagram
+            ├── infrastructure-*.md     ← guides setup (Keycloak, Hangfire, OFF, MkDocs, CI)
+            ├── workflows.md            ← 10 flux séquentiels Mermaid
+            └── workflow_*.mermaid      ← sources brutes des diagrammes (non publiées)
 ```
 
-> **Règle :** `livrable/` et les fichiers `.mermaid` standalone ne figurent jamais dans la `nav:` de `mkdocs.yml` — ce sont des documents de travail, pas de la documentation publiée.
+> **Règle :** les fichiers `.mermaid` standalone ne figurent jamais dans la `nav:` de `mkdocs.yml` — ce sont des sources brutes, pas de la documentation publiée.
 
 ---
 
@@ -102,7 +97,7 @@ deactivate
 ## Ajouter ou modifier du contenu
 
 1. Éditer ou créer un fichier `.md` dans `pages/`
-2. Si nouveau fichier → l'ajouter dans `mkdocs.yml` sous `nav:` (sauf livrables)
+2. Si nouveau fichier → l'ajouter dans `mkdocs.yml` sous `nav:` (sauf sources `.mermaid`)
 3. Tester en local avec `mkdocs serve`
 4. Commiter et pousser sur `master`
 
@@ -149,12 +144,6 @@ Mettre à jour `requirements.txt` en cas de montée de version, puis relancer `p
 - `docs_dir: pages` — le contenu publié est dans `pages/` (contrainte MkDocs : `docs_dir` ne peut pas être le parent du fichier de config)
 - `site_dir: site` — dossier de build local, exclu du git (`.gitignore`)
 - Plugin `mermaid2` + `custom_fences` sur `pymdownx.superfences` — les blocs ` ```mermaid ``` ` sont rendus comme schémas interactifs
-
-### `jira-registry.json`
-
-Registre des imports Jira géré par `playbook/tools/import_jira.py` dans le repo parent. Ne pas modifier manuellement.
-
----
 
 ## Liens utiles
 

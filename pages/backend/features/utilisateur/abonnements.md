@@ -1,6 +1,7 @@
 # Abonnements & tiers
 
 **Ajouté le :** 2026-05-02
+**Type :** Utilisateur
 **Référence spec :** `docs/pages/backend/6.nutrition-abonnements.md`
 
 ---

@@ -144,4 +144,4 @@ Aucune migration EF Core manuelle requise pour le schéma Hangfire.
 - `infrastructure-import-off.md` — logique métier du job d'import OFF
 - `infrastructure-keycloak-admin.md` — appel Keycloak Admin pour la purge RGPD
 - `docs/pages/backend/8.nutrition-admin.md` — endpoint `GET /admin/system/health`
-- `docs/pages/backend/features/rgpd.md` — feature RGPD (purge, grace period)
+- `docs/pages/backend/features/interne/rgpd-purge-comptes.md` — feature RGPD (purge, grace period)

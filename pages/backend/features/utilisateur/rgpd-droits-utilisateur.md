@@ -1,13 +1,16 @@
-# RGPD
+# RGPD — Droits de l'utilisateur
 
 **Ajouté le :** 2026-05-02
+**Type :** Utilisateur
 **Référence spec :** `docs/pages/backend/annexes/workflow_rgpd.mermaid` · `docs/pages/backend/annexes/infrastructure-keycloak-admin.md`
+
+> La suppression effective des comptes après la grace period est une fonctionnalité interne distincte — voir `features/interne/rgpd-purge-comptes.md`.
 
 ---
 
 ## Objectif
 
-Garantir la conformité RGPD de l'application en permettant à l'utilisateur d'exercer ses droits sur ses données personnelles (export, suppression, réactivation).
+Permettre à l'utilisateur d'exercer ses droits RGPD sur ses données personnelles : export, demande de suppression, réactivation.
 
 ## Qui l'utilise
 
@@ -18,7 +21,6 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 - Export : à tout moment, sur demande de l'utilisateur
 - Suppression : à tout moment, avec grace period de 30 jours
 - Réactivation : dans les 30 jours suivant la demande de suppression
-- Purge : automatique après 30 jours (job Infrastructure nocturne)
 
 ## Ce qu'elle fait
 
@@ -26,12 +28,11 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 - Soft delete du compte : `User.DeletedAt = maintenant` + désactivation Keycloak
 - Envoie un email avec un lien signé valable 30 jours pour annuler
 - Réactive le compte si le lien est cliqué dans les 30 jours
-- Purge automatique après 30 jours : suppression cascade PostgreSQL + suppression définitive Keycloak
 
 ## Ce qu'elle ne fait pas
 
 - Ne supprime pas immédiatement — grace period obligatoire de 30 jours
-- Après purge : données irrécupérables (pas de backup individuel)
+- Ne réalise pas la suppression définitive elle-même — c'est le rôle du job de purge (`features/interne/rgpd-purge-comptes.md`)
 
 ## Endpoints
 
@@ -138,7 +139,7 @@ Le service ne sait pas comment les données sont livrées — c'est la responsab
 
 ## Dépendances
 
-- Keycloak Admin API — désactivation / réactivation / suppression du compte Keycloak
+- Keycloak Admin API — désactivation / réactivation du compte Keycloak
 - `infrastructure-keycloak-admin.md` — mécanisme de connexion service account
 - Service email — envoi du lien de réactivation signé
-- Job purge RGPD (Hangfire — quotidien)
+- `features/interne/rgpd-purge-comptes.md` — suppression définitive après la grace period

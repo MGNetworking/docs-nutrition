@@ -1,6 +1,7 @@
 # Moteur de calcul nutritionnel (NutritionCalculator)
 
 **Ajouté le :** 2026-06-12
+**Type :** Interne
 **Référence spec :** `docs/pages/backend/design/Regles-metier.md` · `docs/pages/backend/design/regles-metier-consolidees.md`
 
 ---

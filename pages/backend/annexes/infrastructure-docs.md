@@ -119,9 +119,6 @@ nav:
       - Modèle domaine: backend/design/design-domain.md
       - Diagramme de classes: backend/annexes/Diagramme-classes.md
       - Règles métier: backend/design/Regles-metier.md
-    - Livrables:
-      - Specs frontend: backend/livrable/specs-frontend.md
-      - Checklist implémentation: backend/livrable/checklist-implementation.md
     - Infrastructure:
       - Setup local & production: backend/annexes/infrastructure-setup.md
       - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
@@ -265,4 +262,4 @@ mkdocs serve
 
 ---
 
-*Références : `infrastructure-setup.md` (CI/CD API) · `playbook/devops-playbook/README.md`*
+*Références : `infrastructure-setup.md` (CI/CD API)*

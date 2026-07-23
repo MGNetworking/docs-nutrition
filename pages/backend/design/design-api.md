@@ -1,8 +1,6 @@
 # Design technique — Couche API
 
 > Document de référence obligatoire avant tout ticket de la couche API.
-> Source de vérité : `docs/pages/backend/livrable/checklist-implementation.md`
-> Contrats API par écran : `docs/pages/backend/livrable/specs-frontend.md`
 > Configuration technique (middleware, JWT, Swagger) : `design-api-infrastructure.md`
 
 ---
@@ -418,7 +416,7 @@ Aucun body.
 | `Content-Type` | `application/zip` |
 | `Content-Disposition` | `attachment; filename="export-yyyy-MM-dd.zip"` |
 
-DTO retourné par le service : `UserExportResponse` — voir `docs/pages/backend/features/rgpd.md` pour l'implémentation complète (principe en mémoire, ZipArchive, responsabilités par couche).
+DTO retourné par le service : `UserExportResponse` — voir `docs/pages/backend/features/utilisateur/rgpd-droits-utilisateur.md` pour l'implémentation complète (principe en mémoire, ZipArchive, responsabilités par couche).
 
 ---
 

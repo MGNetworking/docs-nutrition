@@ -1,6 +1,7 @@
 # Exception Filter (Middleware)
 
 **Ajouté le :** 2026-05-25
+**Type :** Interne
 
 ---
 

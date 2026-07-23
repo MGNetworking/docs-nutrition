@@ -74,18 +74,25 @@ nav:
 
   - Features:
     - Vue d'ensemble: backend/features/README.md
-    - Authentification: backend/features/authentification.md
-    - Profil utilisateur: backend/features/profil-utilisateur.md
-    - Diet Plan: backend/features/diet-plan.md
-    - Diet: backend/features/diet.md
-    - Repas: backend/features/repas.md
-    - Aliments: backend/features/aliments.md
-    - Bilan nutritionnel: backend/features/bilan-nutritionnel.md
-    - Suivi du poids: backend/features/suivi-poids.md
-    - RGPD: backend/features/rgpd.md
-    - OpenAPI: backend/features/openapi.md
-    - Abonnements: backend/features/abonnements.md
-    - Admin dashboard: backend/features/admin-dashboard.md
+    - Utilisateur:
+      - Authentification: backend/features/utilisateur/authentification.md
+      - Profil utilisateur: backend/features/utilisateur/profil-utilisateur.md
+      - Diet Plan: backend/features/utilisateur/diet-plan.md
+      - Diet: backend/features/utilisateur/diet.md
+      - Repas: backend/features/utilisateur/repas.md
+      - Aliments: backend/features/utilisateur/aliments.md
+      - Bilan nutritionnel: backend/features/utilisateur/bilan-nutritionnel.md
+      - Suivi du poids: backend/features/utilisateur/suivi-poids.md
+      - Abonnements: backend/features/utilisateur/abonnements.md
+      - RGPD — Droits de l'utilisateur: backend/features/utilisateur/rgpd-droits-utilisateur.md
+    - Interne:
+      - Admin dashboard: backend/features/interne/admin-dashboard.md
+      - RGPD — Purge des comptes: backend/features/interne/rgpd-purge-comptes.md
+      - OpenAPI: backend/features/interne/openapi.md
+      - Exception Filter: backend/features/interne/exception-filter.md
+      - Moteur de calcul nutritionnel: backend/features/interne/nutrition-calculator.md
+      - Tests par niveau: backend/features/interne/tests-integration.md
+      - Mise à disposition des aliments: backend/features/interne/mise-a-disposition-aliments.md
 
   - Infrastructure:
     - Setup: backend/annexes/infrastructure-setup.md

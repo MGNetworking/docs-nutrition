@@ -1,7 +1,6 @@
 # Design technique — Couche Application
 
 > Document de référence obligatoire avant tout ticket de la couche Application.
-> Source de vérité : `docs/pages/backend/livrable/checklist-implementation.md`
 > Modèle domaine : `docs/pages/backend/design/design-domain.md`
 
 ---

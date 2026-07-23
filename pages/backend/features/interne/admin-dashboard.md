@@ -1,6 +1,7 @@
 # Back-office Admin
 
 **Ajouté le :** 2026-05-02
+**Type :** Interne
 **Référence spec :** `docs/pages/backend/8.nutrition-admin.md`
 
 ---

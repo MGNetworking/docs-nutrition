@@ -1,6 +1,7 @@
 # Bilan nutritionnel
 
 **Ajouté le :** 2026-05-02
+**Type :** Utilisateur
 **Référence spec :** `docs/pages/backend/annexes/workflow_bilan-nutritionnel.mermaid` · `docs/pages/backend/3.nutrition-specifications-fonctionnelles.md`
 
 ---
