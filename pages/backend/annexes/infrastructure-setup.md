@@ -5,211 +5,140 @@
 
 ---
 
-## Section 1 — Environnement de développement local (Docker Compose)
+## Section 1 — Environnement de développement local (docker-compose)
+
+> **Réécrit le 2026-07-23** d'après le code réel — la version précédente décrivait une
+> arborescence `infra/dev/` et une base Keycloak séparée qui n'ont jamais existé.
 
 ### Architecture locale
 
-L'API ASP.NET Core tourne en dehors de Docker (`dotnet run`). Docker Compose fournit uniquement les dépendances :
+Trois services conteneurisés, l'API tournant **sur le poste** (`dotnet run`) et s'y connectant
+via `localhost` :
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Docker Compose                                         │
-│                                                         │
-│  app-db (PostgreSQL 16)
-│  keycloak-db (PostgreSQL 16)
-│  keycloak (Keycloak 24)
-│  redis (Redis 7)
-└─────────────────────────────────────────────────────────┘
-         ↑
-  dotnet run (ASP.NET Core) — lit .env pour se connecter
+        dotnet run (host, port 5099)
+                   │
+     ┌─────────────┼─────────────┐
+     ▼             ▼             ▼
+ PostgreSQL      Redis        Keycloak
+localhost:5445  :6336      :8778 (admin)
 ```
 
-### Fichiers à créer
+**Les ports externes sont volontairement décalés** (5445, 6336, 8778) pour ne pas entrer en
+conflit avec des instances déjà présentes sur le poste. Les ports internes aux conteneurs restent
+standards (5432, 6379, 8080).
+
+Keycloak tourne en `start-dev` avec une base H2 embarquée et **sans volume** : le realm est
+réimporté à chaque recréation du conteneur, ce qui garantit un environnement reproductible.
+
+### Fichiers réels
 
 ```
 nutrition-api/
-└── infra/
-    ├── dev/
-    │   ├── docker-compose.yml
-    │   └── .env.example
-    │   # .env
-    └── keycloak/
-        └── realm-export-dev.json
+├── docker-compose.yml            ← 3 services + profil « full »
+├── Dockerfile.migrations         ← conteneur one-shot des migrations EF Core
+├── seed-dev.sql                  ← données métier de développement
+├── keycloak/
+│   └── realm-export.json         ← realm, client, rôles, comptes de test
+├── scripts/
+│   ├── lib.sh                    ← fonctions partagées (attente healthcheck…)
+│   ├── dev-up.sh                 ← démarre les services, migre, seede
+│   ├── dev-down.sh               ← arrête (conserve les données)
+│   ├── dev-reset.sh              ← remet à zéro (supprime les volumes)
+│   └── docker-up.sh              ← stack complète, API conteneurisée
+└── src/NutritionApi.Api/
+    └── Dockerfile                ← image de l'API
 ```
 
-> **`.gitignore` — ajouter :** `infra/dev/.env`
+> Il n'y a **ni fichier `.env`, ni dossier `infra/`** : les valeurs de développement sont écrites
+> directement dans `docker-compose.yml` (elles ne sont pas des secrets) et la configuration de
+> l'API vit dans `appsettings.Development.json` / `appsettings.Docker.json`.
 
----
+### Démarrage — la voie normale
 
-### `infra/dev/docker-compose.yml`
-
-```yaml
-version: '3.9'
-
-services:
-
-  app-db:
-    image: postgres:16-alpine
-    container_name: nutrition-app-db
-    environment:
-      POSTGRES_DB: nutrition
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - app-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d nutrition"]
-      interval: 10s
-      retries: 5
-
-  keycloak-db:
-    image: postgres:16-alpine
-    container_name: nutrition-keycloak-db
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: ${KC_DB_USER}
-      POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
-    volumes:
-      - keycloak-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${KC_DB_USER} -d keycloak"]
-      interval: 10s
-      retries: 5
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0
-    container_name: nutrition-keycloak
-    command: start-dev --import-realm
-    environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
-      KC_DB_USERNAME: ${KC_DB_USER}
-      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
-      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
-      KC_HOSTNAME_STRICT: "false"
-      KC_HTTP_ENABLED: "true"
-    volumes:
-      - ../keycloak/realm-export-dev.json:/opt/keycloak/data/import/realm-export-dev.json
-    ports:
-      - "8080:8080"
-    depends_on:
-      keycloak-db:
-        condition: service_healthy
-
-  redis:
-    image: redis:7-alpine
-    container_name: nutrition-redis
-    ports:
-      - "6379:6379"
-
-volumes:
-  app-db-data:
-  keycloak-db-data:
+```bash
+./scripts/dev-up.sh
 ```
 
----
+Le script enchaîne tout : démarrage des trois services, **attente effective des healthchecks**,
+application des migrations EF Core, puis chargement de `seed-dev.sql`. Il affiche en fin
+d'exécution les accès et les comptes de test.
 
-### `infra/dev/.env.example`
-
-```dotenv
-# ── PostgreSQL — Base de données API ──────────────────────────────────────────
-POSTGRES_USER=nutrition_user
-POSTGRES_PASSWORD=
-
-# ── PostgreSQL — Base de données Keycloak ────────────────────────────────────
-KC_DB_USER=keycloak_user
-KC_DB_PASSWORD=
-
-# ── Keycloak Admin Console ────────────────────────────────────────────────────
-KC_ADMIN_USER=admin
-KC_ADMIN_PASSWORD=
-
-# ── ASP.NET Core — Connection strings ────────────────────────────────────────
-ConnectionStrings__NutritionDb=Host=localhost;Port=5432;Database=nutrition;Username=nutrition_user;Password=
-ConnectionStrings__Redis=localhost:6379
-
-# ── ASP.NET Core — Keycloak Auth ──────────────────────────────────────────────
-Keycloak__Authority=http://localhost:8080/realms/nutrition
-Keycloak__Realm=nutrition
-Keycloak__ClientId=nutrition-api
-Keycloak__ServiceClientId=nutrition-api-service
-Keycloak__ServiceClientSecret=
-Keycloak__AdminBaseUrl=http://localhost:8080
+```bash
+dotnet run --project src/NutritionApi.Api      # API sur http://localhost:5099
 ```
 
-> Copier `.env.example` en `.env` et remplir les mots de passe. Ne jamais committer `.env`.
+| Script | Effet |
+|---|---|
+| `./scripts/dev-up.sh` | Démarre, migre, seede — **conserve** les données existantes |
+| `./scripts/dev-down.sh` | Arrête les services, **conserve** les volumes |
+| `./scripts/dev-reset.sh` | Arrête et **supprime les volumes** — repart d'une base vierge |
+| `./scripts/docker-up.sh` | Stack complète avec l'API conteneurisée (`--rebuild` pour forcer le build) |
 
----
+### Les deux modes d'exécution
 
-### `infra/keycloak/realm-export-dev.json`
+| Mode | Commande | Port API | Configuration |
+|---|---|---|---|
+| **Dev** (API sur le poste) | `dev-up.sh` + `dotnet run` | **5099** | `appsettings.Development.json` |
+| **Docker** (API conteneurisée) | `docker-up.sh` | **5100** | `appsettings.Docker.json` (`ASPNETCORE_ENVIRONMENT=Docker`) |
 
-Ce fichier est **généré par Keycloak** puis commité. Il contient :
-- Configuration du realm `nutrition`
-- Client `nutrition-api` (public, Authorization Code + PKCE)
-- Client `nutrition-api-service` (confidential, service account, rôle `manage-users`)
-- Rôles realm : `user`, `admin`
-- Utilisateurs de test préconfigurés (hashes inclus à l'export)
+Le mode Docker s'appuie sur le **profil `full`** de docker-compose, qui ajoute deux services :
+`migrations` (conteneur one-shot) puis `api`, laquelle ne démarre qu'une fois **les migrations
+terminées avec succès** et Redis et Keycloak déclarés sains.
 
-**Utilisateurs de test inclus dans le realm export :**
+> Choisir l'environnement Postman correspondant au mode utilisé — un port erroné donne des
+> requêtes qui n'aboutissent pas.
 
-| Email | Mot de passe | Rôle |
+### Accès et comptes de test
+
+| Service | Accès |
+|---|---|
+| PostgreSQL | `localhost:5445` — base `nutrition_dev`, `postgres` / `postgres` |
+| Redis | `localhost:6336` |
+| Keycloak | `http://localhost:8778` — console admin `admin` / `admin` |
+
+| Compte | Rôle Keycloak | Abonnement |
 |---|---|---|
-| `testuser@example.com` | `Test1234!` | `user` |
-| `admin@example.com` | `Admin1234!` | `user` + `admin` |
+| `test-user` | `user` | Free |
+| `test-pro` | `user` | Pro |
+| `test-admin` | `admin` | Free |
 
-**Générer le fichier (première fois) :**
+Mot de passe commun : `test`. Ces comptes sont définis dans `keycloak/realm-export.json` et
+leurs profils correspondants sont créés par `seed-dev.sql`.
 
-```bash
-# 1. Démarrer Keycloak sans import pour la configuration initiale
-docker compose up keycloak-db keycloak -d
-# Ouvrir http://localhost:8080 — configurer realm, clients, rôles, utilisateurs de test
+### Points d'attention
 
-# 2. Exporter le realm configuré
-#    Admin Console → Realm settings → Action → Partial export
-#    Cocher : "Export groups and roles" + "Export clients" + "Export users"
-#    Sauvegarder sous infra/keycloak/realm-export-dev.json
+**Les migrations ne sont jamais appliquées au démarrage de l'application.** Elles passent par
+`dotnet ef database update` (via `dev-up.sh`) ou par le conteneur `migrations`. Raison : en
+production, plusieurs pods les appliqueraient simultanément, un échec deviendrait une panne de
+démarrage, et l'application conserverait des privilèges DDL en permanence.
 
-# 3. Vérifier l'import automatique (depuis ce point, docker compose up charge le realm)
-docker compose down && docker compose up -d
-```
+**`KC_HOSTNAME` est figé sur `http://localhost:8778`.** Sans cela, Keycloak déduit l'issuer des
+jetons de l'en-tête `Host` : un jeton obtenu depuis le poste porterait `localhost:8778` alors que
+l'API conteneurisée attendrait `keycloak:8080`, et la validation échouerait.
+`KC_HOSTNAME_BACKCHANNEL_DYNAMIC` laisse les appels internes (récupération des clés de signature)
+utiliser le nom de service Docker.
 
-> Les futures modifications du realm (nouveau client, rôle) doivent être ré-exportées et le fichier mis à jour dans le repo.
+**Le healthcheck Keycloak interroge le port 9000**, pas le 8080 : c'est là qu'est exposé
+`/health/ready`. L'image ne contenant ni `curl` ni `wget`, le test passe par `/dev/tcp` de bash.
 
----
+**Versions d'images figées** (`postgres:16`, `redis:7`, `keycloak:26.0`) — à maintenir alignées
+avec les manifests K3s de production. C'est le **seul** alignement exigé entre les environnements.
 
-### Démarrage complet
+### Données de développement
 
-```bash
-cd infra/dev
-cp .env.example .env          # remplir les mots de passe
-docker compose up -d          # démarre app-db, keycloak-db, keycloak, redis
+`seed-dev.sql` charge des données métier (utilisateurs correspondant aux comptes Keycloak,
+aliments, plans). Il est rejoué à chaque `dev-up.sh`.
 
-# Vérifier que les 4 conteneurs sont healthy
-docker compose ps
+Le catalogue `FoodItem` réel est alimenté par le job d'import Open Food Facts — voir
+`workflow-import-aliments.md`.
 
-# Appliquer les migrations EF Core (depuis la racine du projet)
-dotnet ef database update --project src/NutritionApi.Infrastructure
-
-# Lancer l'API
-dotnet run --project src/NutritionApi.API
-```
-
-Admin Console Keycloak : `http://localhost:8080` — identifiants définis dans `.env` (`KC_ADMIN_USER` / `KC_ADMIN_PASSWORD`).
-
----
-
-### Seed de données PostgreSQL
-
-Le schéma est créé par les migrations EF Core. Aucune donnée utilisateur n'est seedée (elle est créée via l'API avec les utilisateurs de test Keycloak).
-
-Pour des FoodItems de démonstration (optionnel) : ajouter un script `infra/dev/seed-fooditems.sql` exécuté manuellement après `database update`. Le job Hangfire d'import OFF alimente la table `FoodItem` en production.
-
----
 
 ## Section 2 — Production (K3s)
+
+> 🔲 **Cible, non réalisée.** Aucun déploiement n'a encore eu lieu : les manifests K8s n'existent
+> pas dans le dépôt. Cette section décrit la conception visée. Les seuls éléments déjà présents
+> sont les deux Dockerfile (API et migrations).
 
 ### Périmètre de ce projet
 
@@ -229,12 +158,15 @@ K3s cluster (projet infra séparé)
 
 ---
 
-### Fichiers à créer
+### Fichiers
+
+> **État au 2026-07-23** — le `Dockerfile` **existe déjà** ; les manifests K8s restent à créer.
 
 ```
 nutrition-api/
-├── Dockerfile
-└── infra/
+├── src/NutritionApi.Api/Dockerfile   ✅ existe (image de l'API)
+├── Dockerfile.migrations             ✅ existe (migrations one-shot)
+└── infra/                            🔲 à créer
     └── k8s/
         ├── configmap.yaml
         ├── secret.yaml.example
@@ -247,28 +179,47 @@ nutrition-api/
 
 ---
 
-### `Dockerfile`
+### `src/NutritionApi.Api/Dockerfile` — existant
+
+Le Dockerfile réel diffère de l'ébauche initiale : il **existe déjà**, se trouve **dans le
+dossier du projet API** (et non à la racine), et le nom du projet est `NutritionApi.Api` — pas
+`NutritionApi.API`.
 
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
+EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/NutritionApi.API/NutritionApi.API.csproj", "src/NutritionApi.API/"]
+COPY ["src/NutritionApi.Api/NutritionApi.Api.csproj", "src/NutritionApi.Api/"]
 COPY ["src/NutritionApi.Application/NutritionApi.Application.csproj", "src/NutritionApi.Application/"]
-COPY ["src/NutritionApi.Infrastructure/NutritionApi.Infrastructure.csproj", "src/NutritionApi.Infrastructure/"]
 COPY ["src/NutritionApi.Domain/NutritionApi.Domain.csproj", "src/NutritionApi.Domain/"]
-RUN dotnet restore "src/NutritionApi.API/NutritionApi.API.csproj"
+COPY ["src/NutritionApi.Infrastructure/NutritionApi.Infrastructure.csproj", "src/NutritionApi.Infrastructure/"]
+RUN dotnet restore "src/NutritionApi.Api/NutritionApi.Api.csproj"
 COPY . .
-RUN dotnet publish "src/NutritionApi.API/NutritionApi.API.csproj" -c Release -o /app/publish
+RUN dotnet build "src/NutritionApi.Api/NutritionApi.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "src/NutritionApi.Api/NutritionApi.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "NutritionApi.API.dll"]
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "NutritionApi.Api.dll"]
 ```
+
+> Le **contexte de build est la racine du dépôt**, pas le dossier du Dockerfile — les chemins
+> `COPY` partent de `src/`. C'est ainsi que `docker-compose.yml` l'invoque
+> (`context: .` + `dockerfile: src/NutritionApi.Api/Dockerfile`).
+
+> **Les migrations ont leur propre image** (`Dockerfile.migrations`), exécutée en conteneur
+> one-shot avant le démarrage de l'API — l'application n'applique jamais les migrations
+> elle-même.
 
 ---
 
@@ -431,25 +382,37 @@ Ce déploiement initial est manuel. À partir du suivant, GitHub Actions prend l
 
 ## Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)
 
-### Vue d'ensemble
+> 🔲 **Cible, non réalisée** pour la partie déploiement. Les workflows de test existent et
+> tournent ; les étapes de build d'image, de publication et de `kubectl` restent **commentées**
+> dans `ci-deploy.yml`, faute de cluster et de registre.
 
-Chaque push sur `main` déclenche le pipeline :
+### Workflows réellement présents
 
 ```
-push main
+.github/workflows/
+├── ci-unit.yml         ✅ PR vers dev   — build + tests
+├── ci-release.yml      ✅ PR vers main  — build + tests + couverture + rapport PR
+├── ci-deploy.yml       ⚠️ PR vers prod  — build Release ; déploiement encore commenté
+└── release-please.yml  ✅ push main     — tag vX.Y.Z + CHANGELOG
+```
+
+> Il n'existe **pas** de `deploy.yml` : le déploiement est prévu dans `ci-deploy.yml`, déclenché
+> par la transition `dev → prod` (et non par un push sur `main`).
+
+### Vue d'ensemble de la cible
+
+Le déploiement, une fois activé, suivra :
+
+```
+PR dev → prod
   → build image Docker
-  → push sur GitHub Container Registry (GHCR)
+  → push sur le registre de conteneurs
   → kubectl set image sur le cluster K3s
   → rollout status (succès ou rollback)
 ```
 
-### Fichier créé dans ce projet
-
-```
-.github/
-└── workflows/
-    └── deploy.yml
-```
+> Le détail des transitions de branches et des workflows associés vit dans le `CONTRIBUTING.md`
+> du dépôt `nutrition-api` — source de vérité sur ce point.
 
 ---
 
@@ -605,16 +568,21 @@ jobs:
 ### Étape 3 — Pipeline CI tests (build + tests sur PR)
 
 > Distinct du pipeline de déploiement — se déclenche sur chaque Pull Request avant merge.
-> Fichier créé dans le repo `nutrition-api`.
+> Fichiers présents dans le repo `nutrition-api`.
 
 ```
-.github/
-└── workflows/
-    ├── ci.yml
-    └── deploy.yml
+.github/workflows/
+├── ci-unit.yml         PR vers dev
+├── ci-release.yml      PR vers main
+├── ci-deploy.yml       PR vers prod
+└── release-please.yml  push sur main
 ```
 
-#### `.github/workflows/ci.yml`
+> ⚠️ Le fichier `ci.yml` ci-dessous est l'**ébauche initiale**, conservée à titre de référence.
+> Les workflows réellement en place sont ceux listés au-dessus, différenciés par transition de
+> branche — voir `CONTRIBUTING.md`.
+
+#### `.github/workflows/ci.yml` (ébauche initiale)
 
 ```yaml
 name: CI
@@ -680,13 +648,18 @@ jobs:
 
 ### Ordre global — quand faire quoi
 
-| Étape | Quand |
-|---|---|
-| `ci.yml` — pipeline tests | Dès le premier commit sur une branche feature |
-| STORY-040 : Dockerfile + manifests K8s | Après que l'API tourne localement |
-| Section 2 — premier déploiement manuel | Après STORY-040, pour vérifier que les manifests sont corrects |
-| STORY-041 : `deploy.yml` | Après le premier déploiement manuel validé |
-| Tout push sur `main` | Déploiement automatique via le pipeline |
+| Étape | Quand | État |
+|---|---|---|
+| Workflows de tests (`ci-unit`, `ci-release`) | Dès le premier commit sur une branche feature | ✅ en place |
+| `Dockerfile` de l'API et des migrations | Après que l'API tourne localement | ✅ en place |
+| Manifests K8s (`infra/k8s/`) | Avant le premier déploiement | 🔲 à créer |
+| Section 2 — premier déploiement manuel | Après les manifests, pour vérifier qu'ils sont corrects | 🔲 |
+| Activation du déploiement dans `ci-deploy.yml` | Après le premier déploiement manuel validé | 🔲 étapes commentées |
+| PR `dev → prod` | Déploiement automatique via le pipeline | 🔲 |
+
+> Les références `STORY-040` / `STORY-041` de la version initiale de ce document ne correspondent
+> à aucun ticket : le projet est suivi dans Jira sous le préfixe `NTR` (epic **NTR-80 — DevOps &
+> Environnement**).
 
 ---
 
