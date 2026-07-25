@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-07-23
 **Type :** Interne
-**Référence spec :** `docs/pages/backend/annexes/infrastructure-import-off.md` · `docs/pages/backend/annexes/infrastructure-hangfire.md`
+**Référence spec :** `docs/pages/backend/annexes/workflow-import-aliments.md` (fonctionnement de bout en bout)
 
 > Fonctionnalité de fonctionnement applicatif : elle alimente le catalogue interrogé par la recherche d'aliments (`features/utilisateur/aliments.md`) et expose son état de santé au back-office admin (`features/interne/admin-dashboard.md`).
 
@@ -26,6 +26,7 @@ Aucun acteur humain pour le remplissage — job de fond déclenché par le plani
 - Télécharge le dump officiel Open Food Facts (traitement par batch)
 - Insère les nouveaux produits, met à jour les produits existants (`FoodItem.UpdateFromImport`)
 - Ignore les produits invalides sans interrompre le traitement du reste
+- Vide le cache des recherches en fin d'import, dès qu'au moins un produit a été importé
 - Expose l'état des jobs planifiés (dernier run, prochain run, statut) au back-office admin
 
 ## Ce qu'elle ne fait pas
@@ -47,10 +48,21 @@ Aucun acteur humain pour le remplissage — job de fond déclenché par le plani
 |---|---|---|
 | `GET` | `/admin/system/health` | Santé des jobs planifiés (dont le dernier import OFF) — voir `features/interne/admin-dashboard.md` |
 
+## Comprendre le fonctionnement
+
+➜ **`annexes/workflow-import-aliments.md`** — le document à lire en premier : schéma d'ensemble,
+rôle de chaque classe, parcours d'un produit, parcours de la supervision, décisions et raisons.
+
+Les deux annexes ci-dessous n'éclairent chacune **qu'une brique isolée** ; elles ne décrivent pas
+le fonctionnement d'ensemble :
+
+| Brique | Document | Ce qu'il couvre |
+|---|---|---|
+| Le moteur de jobs | `annexes/infrastructure-hangfire.md` | Planification, stockage, dashboard — **partagé** avec la purge RGPD |
+| La source de données | `annexes/infrastructure-import-off.md` | Pourquoi un dump, quels champs sont repris, à quelle fréquence |
+
 ## Dépendances
 
-- Hangfire — planification et historique d'exécution (`annexes/infrastructure-hangfire.md`)
-- Dump Open Food Facts — source de données (`annexes/infrastructure-import-off.md`)
-- PostgreSQL — table `FoodItem` alimentée par l'import
+- PostgreSQL — table `FoodItem` alimentée par l'import, et stockage de l'état des jobs
 - `features/utilisateur/aliments.md` — la fonctionnalité utilisateur consommatrice du catalogue
 - `features/interne/admin-dashboard.md` — expose la supervision de l'import

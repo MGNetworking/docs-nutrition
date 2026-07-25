@@ -2,6 +2,14 @@
 
 **Ajouté le :** 2026-05-02
 
+> **Portée de ce document : le moteur de jobs, et lui seul.**
+> Hangfire est un outil *partagé* — il fait tourner l'import Open Food Facts (NTR-55) et fera
+> tourner la purge RGPD (NTR-56). Ce document décrit donc la mécanique commune : configuration,
+> stockage, dashboard, supervision.
+>
+> ➜ Pour comprendre **comment fonctionne l'import des aliments de bout en bout**, lire d'abord
+> `workflow-import-aliments.md`. Ce document-ci ne sert qu'à approfondir la brique Hangfire.
+
 ---
 
 ## Pourquoi Hangfire
@@ -168,17 +176,25 @@ RecurringJob.AddOrUpdate<IRgpdPurgeJob>(
 
 ---
 
-## Structure des classes — `NutritionApi.Infrastructure/Jobs/`
+## Structure des classes — `NutritionApi.Infrastructure/`
+
+Le **moteur** (transverse) est séparé des **jobs métier** (un dossier chacun) :
 
 ```
+Scheduling/                              ← la mécanique Hangfire, partagée
+├── HangfireAdminAuthorizationFilter.cs  — accès au dashboard réservé au rôle admin
+└── JobMonitoringService.cs              — supervision (lecture de hangfire.hash)
+
 Jobs/
-├── HangfireAdminAuthorizationFilter.cs   — accès au dashboard réservé au rôle admin
-├── JobMonitoringService.cs               — supervision (lecture de hangfire.hash)
-├── IOffImportJob.cs, OffImportJob.cs      — job d'import Open Food Facts
-├── OffDumpReader.cs                        — téléchargement + lecture du dump (streaming)
-├── OffProduct.cs, OffProductMapper.cs      — produit normalisé + traduction OFF → FoodItem
-└── (à venir, NTR-56) RgpdPurgeJob.cs       — purge RGPD
+├── OffImport/                           — job d'import Open Food Facts (NTR-55)
+│   ├── IOffImportJob.cs, OffImportJob.cs
+│   ├── OffDumpReader.cs                 — téléchargement + lecture du dump (streaming)
+│   └── OffProduct.cs, OffProductMapper.cs
+└── RgpdPurge/                           — purge RGPD (à venir, NTR-56)
 ```
+
+> `JobMonitoringService` et le filtre d'autorisation **ne sont pas des jobs** : ils supervisent et
+> protègent l'exécution. D'où leur place dans `Scheduling/` et non dans `Jobs/`.
 
 Les interfaces permettent à Hangfire de résoudre les jobs via le conteneur DI.
 

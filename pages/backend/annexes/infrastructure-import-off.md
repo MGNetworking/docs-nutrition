@@ -1,7 +1,11 @@
 # Infrastructure — Import Open Food Facts
 
-> Ce document décrit le mécanisme d'alimentation de la table `FoodItem` depuis Open Food Facts.
-> C'est une responsabilité de la **couche Infrastructure** — indépendante des actions utilisateur.
+> **Portée de ce document : la source de données — le *quoi* et le *pourquoi*.**
+> Pourquoi importer un dump plutôt qu'appeler l'API OFF, quelles données sont reprises,
+> à quelle fréquence. Il ne décrit **pas** l'implémentation.
+>
+> ➜ Pour comprendre **comment l'import fonctionne** (classes, traitement par lots, supervision),
+> lire `workflow-import-aliments.md`.
 
 ---
 
@@ -75,9 +79,14 @@ Job Infrastructure (indépendant)
 
 ---
 
-## Considérations techniques (à préciser lors de l'implémentation)
+## Considérations techniques — tranchées à l'implémentation (NTR-55)
 
-- **Taille du dump** : plusieurs centaines de Mo — prévoir un traitement par batch
-- **Première installation** : import initial complet avant la mise en production
-- **Outil** : Hangfire ou un IHostedService ASP.NET Core pour le job planifié
-- **Licence** : données sous ODbL — mention obligatoire dans les CGU de l'application
+| Sujet | Décision retenue |
+|---|---|
+| **Taille du dump** | Lecture en streaming + persistance par lots de 1 000 produits |
+| **Outil de planification** | Hangfire (voir `infrastructure-hangfire.md`) — quotidien à 03h00 UTC |
+| **Format** | JSONL compressé (`.jsonl.gz`), une ligne = un produit |
+| **Première installation** | Import initial complet à prévoir avant la mise en production — **non réalisé à ce jour** |
+| **Licence** | Données sous ODbL — mention obligatoire dans les CGU de l'application |
+
+> Le détail de ces choix et leurs raisons figurent dans `workflow-import-aliments.md` §5.

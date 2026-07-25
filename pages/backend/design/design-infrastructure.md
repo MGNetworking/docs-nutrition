@@ -398,13 +398,13 @@ Voir `docs/pages/backend/annexes/infrastructure-hangfire.md` pour le détail com
 ### Interfaces des jobs
 
 ```csharp
-// Infrastructure/Jobs/IOffImportJob.cs
+// Infrastructure/Jobs/OffImport/IOffImportJob.cs
 public interface IOffImportJob
 {
     Task RunAsync();
 }
 
-// Infrastructure/Jobs/IRgpdPurgeJob.cs
+// Infrastructure/Jobs/RgpdPurge/IRgpdPurgeJob.cs
 public interface IRgpdPurgeJob
 {
     Task RunAsync();
