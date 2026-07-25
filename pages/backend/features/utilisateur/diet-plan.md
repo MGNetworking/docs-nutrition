@@ -44,7 +44,7 @@ Permettre à l'utilisateur de créer des plans alimentaires réutilisables (type
 | `GET` | `/diet-plans` | Tous |
 | `PUT` | `/diet-plans/{id}` | Tous (plan personnel uniquement) |
 | `DELETE` | `/diet-plans/{id}` | Tous (plan personnel uniquement) |
-| `POST` | `/diet-plans/{id}/launch` | Tous |
+| `POST` | `/diets/{id}/launch` | Tous — portée par `DietsController` |
 | `GET` | `/diet-plans/templates` | Pro + Business |
 | `POST` | `/admin/diet-plans/templates` | Admin |
 | `PUT` | `/admin/diet-plans/templates/{id}` | Admin |

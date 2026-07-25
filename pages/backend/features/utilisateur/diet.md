@@ -39,7 +39,7 @@ Tous les utilisateurs (Free, Pro, Business).
 
 | Méthode | Endpoint | Description |
 |---|---|---|
-| `POST` | `/diet-plans/{id}/launch` | Lancer un plan → créer une Diet active |
+| `POST` | `/diets/{id}/launch` | Lancer un plan → créer une Diet active |
 | `GET` | `/diets/active` | Récupérer le régime en cours |
 | `GET` | `/diets` | Historique des régimes |
 | `GET` | `/diets/{id}` | Détail d'un régime |

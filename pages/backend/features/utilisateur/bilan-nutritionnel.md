@@ -38,7 +38,10 @@ Tous les utilisateurs — période accessible limitée selon le tier :
 
 | Méthode | Endpoint | Description |
 |---|---|---|
-| `GET` | `/diets/{id}/bilan` | Bilan nutritionnel d'un régime |
+| `GET` | `/api/v1/nutrition/{id}/bilan` | Bilan nutritionnel d'un régime |
+
+> Route portée par `NutritionController`, **et non par `DietsController`** — corrigé le
+> 2026-07-23 d'après `design-api.md` et le code.
 
 ## Réponse
 

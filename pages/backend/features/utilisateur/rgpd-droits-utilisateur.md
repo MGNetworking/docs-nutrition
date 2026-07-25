@@ -24,10 +24,14 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 
 ## Ce qu'elle fait
 
-- Exporte toutes les données personnelles en JSON (Art. 20 — portabilité)
-- Soft delete du compte : `User.DeletedAt = maintenant` + désactivation Keycloak
-- Envoie un email avec un lien signé valable 30 jours pour annuler
-- Réactive le compte si le lien est cliqué dans les 30 jours
+- ✅ Exporte toutes les données personnelles en JSON (Art. 20 — portabilité)
+- ✅ Soft delete du compte : `User.DeletedAt = maintenant`
+- 🔲 Désactivation du compte Keycloak — `IKeycloakAdminService` **sans implémentation**
+- 🔲 Envoi d'un email avec lien signé valable 30 jours — `IEmailService` **sans implémentation**
+- ✅ Réactive le compte (l'endpoint existe ; le lien par email, lui, n'est pas encore envoyé)
+
+> **État vérifié le 2026-07-23** : `RgpdService` n'utilise aujourd'hui ni `IEmailService` ni
+> `IKeycloakAdminService` — les deux contrats existent mais aucune classe ne les implémente.
 
 ## Ce qu'elle ne fait pas
 
@@ -38,9 +42,12 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 
 | Méthode | Endpoint | Description |
 |---|---|---|
-| `GET` | `/users/me/export` | Exporter toutes ses données (Art. 20) |
-| `DELETE` | `/users/me` | Demander la suppression du compte (Art. 17) |
-| `POST` | `/users/me/reactivate` | Annuler la suppression (< 30 jours) |
+| `GET` | `/api/v1/rgpd/export` | Exporter toutes ses données (Art. 20) |
+| `DELETE` | `/api/v1/rgpd` | Demander la suppression du compte (Art. 17) |
+| `POST` | `/api/v1/rgpd/reactivate` | Annuler la suppression (< 30 jours) |
+
+> Ces routes sont portées par `RgpdController` (`api/v1/rgpd`), **et non par `UsersController`** —
+> corrigé le 2026-07-23 après confrontation à `design-api.md` et au code.
 
 ## Export RGPD — implémentation technique
 
