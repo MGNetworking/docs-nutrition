@@ -105,7 +105,7 @@ Tout ticket doit avoir **les trois critères** :
 
 Pour les tickets Infrastructure (repositories), ajouter :
 ```markdown
-- [ ] Tests d'intégration couverts (Testcontainers — NTR-28)
+- [ ] Tests d'intégration couverts (docker-compose — NTR-28)
 ```
 
 ---

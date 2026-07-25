@@ -1,280 +1,164 @@
-# Tests — Recensement par niveau
+# Niveaux de tests — définitions et périmètres
 
 **Type :** Interne
+**Référence spec :** [`design/design-tests.md`](../../design/design-tests.md)
 
-Fichier vivant aligné sur la stratégie définie dans [`design-tests.md`](../../design/design-tests.md).  
-Chaque niveau répond à une question différente — ne pas dupliquer un test d'un niveau à l'autre.
-
-> **Convention de statut**  
-> `[ ]` À écrire — `[x]` Implémenté — `[-]` Hors scope (décision explicite)
+> **Portée de ce document : ce qu'est chaque niveau de test, et où s'arrête son périmètre.**
+> Il ne recense aucun test précis — pour la liste des tests à écrire et leur avancement, voir
+> [`recensement-des-tests.md`](recensement-des-tests.md).
 
 ---
 
-## Niveau 1 — Tests Unitaires
+## Le principe fondateur
+
+Le projet distingue **quatre niveaux de tests**. Chacun répond à **une question différente** et
+couvre **un risque différent**.
+
+> **Règle de non-duplication** — un test appartient au niveau qui couvre *son* risque propre. Si
+> un test échoue et que la cause serait déjà révélée par un niveau inférieur, il est en double.
+
+Le test pratique pour classer un test : **« si ce test échoue, qu'est-ce que ça m'apprend ? »**
+
+| Niveau | Question à laquelle il répond | Risque couvert |
+|---|---|---|
+| **1 — Unitaires** | Mon code fonctionne-t-il de manière isolée ? | Ma logique est fausse |
+| **2 — Intégration interne** | Ma pipeline ASP.NET fonctionne-t-elle ? | Ma tuyauterie HTTP est mal câblée |
+| **3 — Intégration externe** | Mon application communique-t-elle avec ses dépendances réelles ? | Ma requête SQL, ma connexion Redis ou ma chaîne JWT ne fonctionnent pas |
+| **4 — Smoke tests** | Mon système déployé fonctionne-t-il réellement ? | Mon déploiement, mes secrets ou mon réseau sont mal configurés |
+
+**Exemple de lecture** — la recherche d'aliments traverse les quatre niveaux sans redondance :
+le niveau 1 vérifie que le service interroge le cache *puis* la base ; le niveau 2 que la route
+répond 200 avec le bon JSON ; le niveau 3 que la requête SQL et Redis fonctionnent réellement ;
+le niveau 4 que l'endpoint répond en production avec un vrai jeton.
+
+---
+
+## Niveau 1 — Tests unitaires
 
 > *Mon code fonctionne-t-il correctement de manière isolée ?*
 
-Outil : xUnit + Moq — aucune dépendance externe, pas de Docker.
+**Ce qui est couvert** — une unité de code unique, avec **toutes ses dépendances simulées** :
+classe métier du domaine, service applicatif, value object, validateur, extension, middleware
+isolé, et controller (service simulé, contexte HTTP reconstruit à la main).
 
-Les tests unitaires sont écrits au fil des tickets feature (par controller, service, middleware).  
-Répartition cible : **~400 tests**.
+**Ce qui n'est jamais couvert ici** — Keycloak, JWT réel, PostgreSQL, Redis, Docker, Kubernetes,
+réseau, configuration système. Aucune dépendance externe, aucun conteneur.
 
-| Périmètre | Fichiers de tests |
-|-----------|-------------------|
-| Controllers (service mocké, HttpContext manuel) | `*ControllerTest.cs` |
-| Middlewares (pipeline mocké) | `UserResolutionMiddlewareTest.cs`, `ExceptionMiddlewareTest.cs` |
-| Domain / Value Objects / Entités | à créer lors des tickets NTR-Domain |
-| Services applicatifs | à créer lors des tickets NTR-Application |
+**Frontière avec le niveau 2** — le niveau 1 teste la *logique* d'une classe, jamais le trajet
+d'une requête HTTP à travers l'application.
+
+**Cas particulier des controllers** — testés sans pipeline ASP.NET : ni middleware, ni
+authentification réelle. Le contexte HTTP est reconstruit manuellement (`DefaultHttpContext`,
+claims posés à la main) afin de contourner volontairement les middlewares.
+
+**Dans la couche Infrastructure** — ce niveau se limite au **code pur**, c'est-à-dire aux classes
+qui ne parlent ni à une base, ni au réseau (par exemple la traduction des données Open Food
+Facts). Repositories, cache, jobs et lecteurs de flux relèvent du **niveau 3**.
+
+**Outil** : xUnit + Moq · **Cible** : ~400 tests · **Écrits au fil des tickets feature**
 
 ---
 
-## Niveau 2 — Tests d'Intégration Interne
+## Niveau 2 — Tests d'intégration interne
 
 > *La pipeline ASP.NET Core fonctionne-t-elle correctement ?*
 
-Outil : `WebApplicationFactory<Program>` + helper JWT + `SeedAsync()`.  
-Pas de Keycloak réel, pas de PostgreSQL réel — dépendances remplacées par mocks/fakes/InMemory.  
-Répartition cible : **10 à 20 tests** (scénarios représentatifs, pas exhaustifs).
+**Ce qui est couvert** — le trajet complet d'une requête *à l'intérieur* de l'application :
+routing, authentification ASP.NET, middlewares personnalisés, controllers, sérialisation JSON,
+gestion des erreurs (`ProblemDetails`).
 
-Tickets Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111.
+**Ce qui n'est pas couvert ici** — pas de Keycloak réel, pas de PostgreSQL réel, pas de Docker.
+Les dépendances externes sont remplacées par des simulations (mocks, fakes, providers InMemory).
 
-### Middlewares transverses (NTR-105)
+**Frontière avec le niveau 3** — le niveau 2 valide que *ma* tuyauterie est correctement câblée ;
+il ne dit rien de ma capacité à dialoguer avec un composant externe réel.
 
-#### UserResolutionMiddleware
+> ⚠️ Ce niveau ne concerne **pas** la couche Infrastructure : il teste la pipeline HTTP, il vit
+> donc dans le projet de tests de la couche API.
 
-| ID | Scénario | Résultat attendu | Statut |
-|----|----------|------------------|--------|
-| IT-MW-01 | Token JWT valide + user présent en DB | `UserId` injecté dans `Items` → controller reçoit le bon Guid | `[ ]` |
-| IT-MW-02 | Token JWT valide + user absent en DB (sub inconnu) | 401 — middleware coupe la chaîne | `[ ]` |
-| IT-MW-03 | Requête sans token sur endpoint `[Authorize]` | 401 — bloqué par JWT middleware avant `UserResolutionMiddleware` | `[ ]` |
-
-#### ExceptionMiddleware
-
-| ID | Scénario | Résultat attendu | Statut |
-|----|----------|------------------|--------|
-| IT-EX-01 | Service lève `NotFoundException` | 404 ProblemDetails avec `detail` du message | `[ ]` |
-| IT-EX-02 | Service lève `ConflictException` | 409 ProblemDetails | `[ ]` |
-| IT-EX-03 | Service lève `ForbiddenException` | 403 ProblemDetails | `[ ]` |
-| IT-EX-04 | Service lève `UnprocessableException` | 422 ProblemDetails | `[ ]` |
-| IT-EX-05 | Exception non gérée | 500 ProblemDetails — message générique | `[ ]` |
-
-#### Auth JWT
-
-| ID | Scénario | Résultat attendu | Statut |
-|----|----------|------------------|--------|
-| IT-AUTH-01 | Token absent sur n'importe quel endpoint `[Authorize]` | 401 | `[ ]` |
-| IT-AUTH-02 | Token expiré | 401 | `[ ]` |
-| IT-AUTH-03 | Token valide, rôle insuffisant (`[Authorize(Roles = "admin")]`) | 403 | `[ ]` |
-| IT-AUTH-04 | Token valide avec rôle `admin` → endpoint admin | 200/201/204 selon l'endpoint | `[ ]` |
-
-#### Pipeline global
-
-| ID | Scénario | Résultat attendu | Statut |
-|----|----------|------------------|--------|
-| IT-PIPE-01 | Body JSON invalide (model binding failure) | 400 ProblemDetails standard ASP.NET | `[ ]` |
-| IT-PIPE-02 | Route inexistante | 404 | `[ ]` |
-| IT-PIPE-03 | Paramètre `{id:guid}` avec GUID malformé | 400 | `[ ]` |
+**Outil** : `WebApplicationFactory<Program>` + helper JWT + `SeedAsync()`
+**Cible** : 10 à 20 tests (scénarios représentatifs, pas exhaustifs) · **Jira** : NTR-29 → NTR-105 à NTR-111
 
 ---
 
-### AdminController — `GET|POST|PUT|DELETE /api/v1/admin` (NTR-106)
-> Restriction : `[Authorize(Roles = "admin")]`
-
-| ID | Endpoint | Scénario | Résultat attendu | Statut |
-|----|----------|----------|------------------|--------|
-| IT-ADM-01 | `GET /admin/dashboard` | User sans rôle admin | 403 | `[ ]` |
-| IT-ADM-02 | `GET /admin/dashboard` | User avec rôle admin | 200 `AdminDashboardResponse` | `[ ]` |
-| IT-ADM-03 | `GET /admin/system/health` | User admin | 200 `SystemHealthResponse` | `[ ]` |
-| IT-ADM-04 | `POST /admin/diet-plans/templates` | Body valide | 201 `DietPlanResponse` | `[ ]` |
-| IT-ADM-05 | `POST /admin/diet-plans/templates` | Body invalide | 422 | `[ ]` |
-| IT-ADM-06 | `PUT /admin/diet-plans/templates/{id}` | Template existant | 200 | `[ ]` |
-| IT-ADM-07 | `PUT /admin/diet-plans/templates/{id}` | Template inexistant | 404 | `[ ]` |
-| IT-ADM-08 | `DELETE /admin/diet-plans/templates/{id}` | Template existant | 204 | `[ ]` |
-| IT-ADM-09 | `DELETE /admin/diet-plans/templates/{id}` | Template inexistant | 404 | `[ ]` |
-
----
-
-### UsersController — `* /api/v1/users/me` (NTR-107)
-> Restriction : `[Authorize]` — lit `sub` claim (pas de `UserResolutionMiddleware` sur ces endpoints)
-
-| ID | Endpoint | Scénario | Résultat attendu | Statut |
-|----|----------|----------|------------------|--------|
-| IT-USR-01 | `POST /users/me` | Nouveau user (sub inconnu) | 201 `UserProfileResponse` | `[ ]` |
-| IT-USR-02 | `POST /users/me` | User déjà existant (sub connu) | 409 | `[ ]` |
-| IT-USR-03 | `GET /users/me` | User existant | 200 `UserProfileResponse` | `[ ]` |
-| IT-USR-04 | `GET /users/me` | sub valide mais absent en DB | 404 | `[ ]` |
-| IT-USR-05 | `PUT /users/me` | User existant, body valide | 200 | `[ ]` |
-| IT-USR-06 | `PUT /users/me` | User inexistant | 404 | `[ ]` |
-| IT-USR-07 | `DELETE /users/me` | User existant | 204 | `[ ]` |
-| IT-USR-08 | `DELETE /users/me` | User inexistant | 404 | `[ ]` |
-| IT-USR-09 | `POST /users/me/reactivate` | User inactif | 200 | `[ ]` |
-| IT-USR-10 | `POST /users/me/reactivate` | User déjà actif | 409 | `[ ]` |
-| IT-USR-11 | `POST /users/me/reactivate` | User inexistant | 404 | `[ ]` |
-| IT-USR-12 | `GET /users/me/export` | User existant | 200 avec données RGPD | `[ ]` |
-| IT-USR-13 | `POST /users/me/weight-entries` | Entrée valide | 201 `WeightEntryResponse` | `[ ]` |
-| IT-USR-14 | `POST /users/me/weight-entries` | Date déjà enregistrée | 409 | `[ ]` |
-| IT-USR-15 | `GET /users/me/weight-entries` | User avec historique | 200 liste | `[ ]` |
-| IT-USR-16 | `PUT /users/me/weight-entries/{id}` | Entrée existante | 200 | `[ ]` |
-| IT-USR-17 | `PUT /users/me/weight-entries/{id}` | Entrée inexistante | 404 | `[ ]` |
-| IT-USR-18 | `GET /users/me/saved-food-items` | User avec favoris | 200 liste | `[ ]` |
-| IT-USR-19 | `POST /users/me/saved-food-items` | Aliment non déjà sauvegardé | 201 | `[ ]` |
-| IT-USR-20 | `POST /users/me/saved-food-items` | Aliment déjà sauvegardé | 409 | `[ ]` |
-| IT-USR-21 | `DELETE /users/me/saved-food-items/{id}` | Favori existant | 204 | `[ ]` |
-| IT-USR-22 | `DELETE /users/me/saved-food-items/{id}` | Favori inexistant | 404 | `[ ]` |
-
----
-
-### DietPlansController — `* /api/v1/diet-plans` (NTR-108)
-> Restriction : `[Authorize]` — utilise `UserResolutionMiddleware` (Items["UserId"])
-
-| ID | Endpoint | Scénario | Résultat attendu | Statut |
-|----|----------|----------|------------------|--------|
-| IT-DP-01 | `GET /diet-plans` | User avec plans | 200 — vérifie que `UserResolutionMiddleware` a injecté le bon `UserId` | `[ ]` |
-| IT-DP-02 | `POST /diet-plans` | Body valide | 201 `DietPlanResponse` | `[ ]` |
-| IT-DP-03 | `POST /diet-plans` | Body invalide | 422 | `[ ]` |
-| IT-DP-04 | `PUT /diet-plans/{id}` | Plan existant et appartient à l'user | 200 | `[ ]` |
-| IT-DP-05 | `PUT /diet-plans/{id}` | Plan appartenant à un autre user | 403 | `[ ]` |
-| IT-DP-06 | `PUT /diet-plans/{id}` | Plan inexistant | 404 | `[ ]` |
-| IT-DP-07 | `DELETE /diet-plans/{id}` | Plan existant et ownership | 204 | `[ ]` |
-| IT-DP-08 | `DELETE /diet-plans/{id}` | Plan inexistant | 404 | `[ ]` |
-| IT-DP-09 | `POST /diet-plans/{id}/launch` | Plan valide, pas de Diet active | 201 `DietResponse` | `[ ]` |
-| IT-DP-10 | `POST /diet-plans/{id}/launch` | Diet déjà active (409 métier) | 409 | `[ ]` |
-| IT-DP-11 | `POST /diet-plans/{id}/launch` | Plan inexistant | 404 | `[ ]` |
-| IT-DP-12 | `POST /diet-plans/{id}/launch` | Données du plan insuffisantes | 422 | `[ ]` |
-| IT-DP-13 | `GET /diet-plans/templates` | User Free | 403 | `[ ]` |
-| IT-DP-14 | `GET /diet-plans/templates` | User Pro/Business | 200 liste templates | `[ ]` |
-
----
-
-### DietsController — `* /api/v1/diets` (NTR-109)
-> Restriction : `[Authorize]` — utilise `UserResolutionMiddleware`
-
-| ID | Endpoint | Scénario | Résultat attendu | Statut |
-|----|----------|----------|------------------|--------|
-| IT-DT-01 | `GET /diets/active` | Diet active existante | 200 `DietResponse` | `[ ]` |
-| IT-DT-02 | `GET /diets/active` | Aucune diet active | 404 | `[ ]` |
-| IT-DT-03 | `GET /diets` | Historique non vide | 200 liste | `[ ]` |
-| IT-DT-04 | `GET /diets/{id}` | Diet existante et ownership | 200 | `[ ]` |
-| IT-DT-05 | `GET /diets/{id}` | Diet inexistante | 404 | `[ ]` |
-| IT-DT-06 | `POST /diets/{id}/archive` | Diet active → archivée | 200 avec nouveau statut | `[ ]` |
-| IT-DT-07 | `POST /diets/{id}/archive` | Diet déjà archivée | 422 | `[ ]` |
-| IT-DT-08 | `POST /diets/{id}/archive` | Diet inexistante | 404 | `[ ]` |
-| IT-DT-09 | `GET /diets/{id}/bilan?period=day` | Bilan journalier | 200 `NutritionBilanResponse` | `[ ]` |
-| IT-DT-10 | `GET /diets/{id}/bilan?period=week` | Bilan hebdomadaire | 200 | `[ ]` |
-| IT-DT-11 | `GET /diets/{id}/bilan?period=custom&startDate=...&endDate=...` | Bilan sur plage personnalisée | 200 | `[ ]` |
-| IT-DT-12 | `GET /diets/{id}/bilan` | Diet appartenant à un autre user | 403 | `[ ]` |
-| IT-DT-13 | `GET /diets/{id}/bilan` | Diet inexistante | 404 | `[ ]` |
-
----
-
-### FoodItemsController — `GET /api/v1/food-items` (NTR-110)
-> Restriction : `[Authorize]` — orchestration Redis + PostgreSQL (voir `FoodItem Search — flux Redis+PG`)
-
-| ID | Endpoint | Scénario | Résultat attendu | Statut |
-|----|----------|----------|------------------|--------|
-| IT-FD-01 | `GET /food-items?search=poulet` | Cache Redis hit | 200 — résultat servi depuis Redis | `[ ]` |
-| IT-FD-02 | `GET /food-items?search=poulet` | Cache Redis miss → PostgreSQL | 200 — résultat depuis DB + stocké en Redis (TTL 24h) | `[ ]` |
-| IT-FD-03 | `GET /food-items?search=poulet&limit=5` | Limit respectée | 200 — au plus 5 résultats | `[ ]` |
-| IT-FD-04 | `GET /food-items` (sans `search`) | Paramètre obligatoire absent | 400 | `[ ]` |
-
----
-
-### MealsController — `* /api/v1/meals` (NTR-111)
-> Restriction : `[Authorize]` — utilise `UserResolutionMiddleware`
-
-| ID | Endpoint | Scénario | Résultat attendu | Statut |
-|----|----------|----------|------------------|--------|
-| IT-ML-01 | `POST /meals` | User avec diet active, body valide | 201 `MealResponse` | `[ ]` |
-| IT-ML-02 | `POST /meals` | User sans diet active | 403 | `[ ]` |
-| IT-ML-03 | `POST /meals` | FoodItem référencé inexistant | 404 | `[ ]` |
-| IT-ML-04 | `GET /meals` | Sans filtre | 200 liste | `[ ]` |
-| IT-ML-05 | `GET /meals?saved=true` | Filtre repas sauvegardés | 200 — uniquement repas `saved` | `[ ]` |
-| IT-ML-06 | `GET /meals?date=2024-01-15` | Filtre par date | 200 — uniquement repas du jour | `[ ]` |
-| IT-ML-07 | `GET /meals/{id}` | Repas existant et ownership | 200 | `[ ]` |
-| IT-ML-08 | `GET /meals/{id}` | Repas inexistant | 404 | `[ ]` |
-| IT-ML-09 | `PATCH /meals/{id}` | Repas existant | 200 | `[ ]` |
-| IT-ML-10 | `PATCH /meals/{id}` | Repas inexistant | 404 | `[ ]` |
-| IT-ML-11 | `DELETE /meals/{id}` | Repas existant | 204 | `[ ]` |
-| IT-ML-12 | `DELETE /meals/{id}` | Repas inexistant | 404 | `[ ]` |
-| IT-ML-13 | `POST /meals/{id}/items` | FoodItem valide | 201 `MealResponse` mis à jour | `[ ]` |
-| IT-ML-14 | `POST /meals/{id}/items` | Repas inexistant | 404 | `[ ]` |
-| IT-ML-15 | `DELETE /meals/{id}/items/{itemId}` | Item existant | 204 | `[ ]` |
-| IT-ML-16 | `DELETE /meals/{id}/items/{itemId}` | Item inexistant | 404 | `[ ]` |
-
----
-
-## Niveau 3 — Tests d'Intégration Externe
+## Niveau 3 — Tests d'intégration externe
 
 > *Mon application communique-t-elle correctement avec ses dépendances réelles ?*
 
-Outil : `WebApplicationFactory<Program>` + **docker-compose** (PostgreSQL, Redis et Keycloak réels).  
-Répartition cible : **5 à 10 tests**.
+**Ce qui est couvert** — les interactions avec les vrais composants : requêtes SQL réellement
+exécutées par EF Core, écritures et expirations réelles dans Redis, chaîne JWT complète émise par
+un vrai Keycloak (issuer, audience, signature), exécution réelle des jobs planifiés.
 
-Ticket Jira : NTR-28.
+**Ce qui n'est pas couvert ici** — le déploiement, l'ingress, les secrets, le réseau du cluster.
 
-> Les trois services sont ceux du `docker-compose.yml` de développement (NTR-85), réutilisé en CI (NTR-92, NTR-93).
-> Ce choix permet de valider ce que des conteneurs isolés ne peuvent pas : la configuration Docker, le réseau entre
-> composants et la chaîne JWT réelle (issuer, audience, signature) — voir `design/design-tests.md`, niveau 3.
+**Frontière avec le niveau 4** — le niveau 3 s'exécute sur un environnement **monté pour le test**
+(local ou CI) ; le niveau 4 s'exécute sur un environnement **déjà déployé**, que le test ne
+contrôle pas.
 
-### Chaîne d'authentification — Keycloak réel
+**Pourquoi docker-compose et non Testcontainers** — les trois services (PostgreSQL, Redis,
+Keycloak) sont ceux du `docker-compose.yml` de développement, réutilisés en CI. Ce choix permet de
+valider ce que des conteneurs isolés ne peuvent pas : **la configuration Docker, le réseau entre
+composants et la chaîne JWT réelle**. Décision d'architecture actée le 2026-07-21.
 
-| ID | Scénario | Ce que l'on vérifie | Statut |
-|----|----------|---------------------|--------|
-| IT-EXT-09 | Token émis par Keycloak → `GET /api/v1/users/me` | Chaîne complète : issuer, audience et signature validés par l'API | `[ ]` |
-| IT-EXT-10 | Token sans le rôle `admin` → `GET /api/v1/admin/dashboard` | 403 — mapping `realm_access.roles` → policy AdminOnly | `[ ]` |
-
-### Repositories — PostgreSQL réel
-
-| ID | Scénario | Ce que l'on vérifie | Statut |
-|----|----------|---------------------|--------|
-| IT-EXT-01 | `UserRepository.GetByKeycloakIdAsync` — user existant | Lecture EF Core → PostgreSQL correcte | `[ ]` |
-| IT-EXT-02 | `DietPlanRepository.GetUserPlansAsync` — plans d'un user | Filtre par UserId en DB | `[ ]` |
-| IT-EXT-03 | `DietRepository.GetActiveAsync` — diet active | Requête avec filtre statut | `[ ]` |
-| IT-EXT-04 | Migration EF Core appliquée sur schéma vierge | Toutes les tables créées sans erreur | `[ ]` |
-
-### Cache Redis réel
-
-| ID | Scénario | Ce que l'on vérifie | Statut |
-|----|----------|---------------------|--------|
-| IT-EXT-05 | `FoodItemService.SearchAsync` — cache miss puis hit | Ecriture + lecture Redis (TTL 24h) | `[ ]` |
-| IT-EXT-06 | Expiration TTL Redis | Après expiration, retour en PostgreSQL | `[ ]` |
-
-### Jobs Hangfire
-
-| ID | Scénario | Ce que l'on vérifie | Statut |
-|----|----------|---------------------|--------|
-| IT-EXT-07 | Import OFF déclenché manuellement | Job s'exécute, `FoodItem` insérés en DB | `[ ]` |
-| IT-EXT-08 | Purge RGPD déclenchée manuellement | Données anonymisées en DB après exécution | `[ ]` |
+**Outil** : `WebApplicationFactory<Program>` + docker-compose · **Cible** : 5 à 10 tests · **Jira** : NTR-28
 
 ---
 
-## Niveau 4 — Smoke Tests Kubernetes
+## Niveau 4 — Smoke tests (environnement déployé)
 
 > *Le système déployé fonctionne-t-il réellement ?*
 
-Exécutés après chaque déploiement sur un environnement réel (staging/prod).  
-Répartition cible : **2 à 5 tests**.
+**Ce qui est couvert** — l'application **déjà déployée**, atteinte de l'extérieur :
+`Client → Ingress → Service → Pod API → Keycloak → PostgreSQL`. On vérifie que le déploiement, la
+configuration, les secrets et le réseau sont corrects — **pas la logique métier**, déjà couverte
+par les niveaux inférieurs.
 
-Ticket Jira : NTR-112.
+**Quand** — après chaque déploiement, sur un environnement réel (staging ou production).
 
-> **Compte d'exploitation** — les scénarios authentifiés utilisent un client Keycloak à service account dédié,
-> accompagné de sa ligne `User` en base (`UserResolutionMiddleware` renvoie 401 sans profil correspondant).
-> Le `client_secret` vit dans un Secret Kubernetes, jamais dans git. Provisionnement : NTR-125.
-> Voir `design/design-tests.md`, section « Identité utilisée par les smoke tests ».
+**Identité utilisée** — les scénarios authentifiés s'appuient sur un **compte d'exploitation** :
+un client Keycloak à service account, accompagné de **sa ligne `User` en base**. Sans ce profil,
+`UserResolutionMiddleware` renvoie 401 — indiscernable d'un rejet de jeton, ce qui priverait le
+smoke test de tout pouvoir de diagnostic. Le `client_secret` vit dans un Secret Kubernetes, jamais
+dans git. Provisionnement : NTR-125.
 
-| ID | Scénario | Ce que l'on vérifie | Statut |
-|----|----------|---------------------|--------|
-| IT-SMOKE-01 | `GET /health` | Pod API démarré, connexions DB/Redis actives | `[ ]` |
-| IT-SMOKE-02 | `GET /api/v1/users/me` avec le JWT du compte d'exploitation | Keycloak joignable, JWT validé (issuer, audience, signature), DB répondante | `[ ]` |
-| IT-SMOKE-03 | `GET /api/v1/food-items?search=poulet` | Redis joignable, PostgreSQL joignable | `[ ]` |
+**Outil** : client HTTP · **Cible** : 2 à 5 tests · **Jira** : NTR-112
+
+> ⚠️ **Deux échelles de « niveaux » coexistent dans le projet.** Les sous-tâches NTR-89/90/91
+> découpent ce niveau 4 en **trois paliers de smoke tests** (l'API répond → les dépendances sont
+> joignables → scénario end-to-end). Le « palier 3 » d'un smoke test n'a donc aucun rapport avec
+> le « niveau 3 » ci-dessus.
 
 ---
 
-## Infrastructure par niveau
+## Infrastructure requise par niveau
 
 | Niveau | Outil principal | Docker requis | Vitesse |
-|--------|-----------------|---------------|---------|
-| Niveau 1 — Unitaires | xUnit + Moq | Non | Très rapide |
-| Niveau 2 — Intégration Interne | WebApplicationFactory | Non | Rapide |
-| Niveau 3 — Intégration Externe | WebApplicationFactory + docker-compose | Oui | Lent |
-| Niveau 4 — Smoke Tests K8s | Client HTTP | Oui (cluster) | Variable |
+|---|---|---|---|
+| 1 — Unitaires | xUnit + Moq | Non | Très rapide |
+| 2 — Intégration interne | `WebApplicationFactory` | Non | Rapide |
+| 3 — Intégration externe | `WebApplicationFactory` + docker-compose | Oui | Lent |
+| 4 — Smoke tests | Client HTTP | Oui (environnement déployé) | Variable |
+
+---
+
+## Où et quand ils s'exécutent
+
+| Transition | Workflow CI | Ce qui tourne |
+|---|---|---|
+| `feature/*` → `dev` | `ci-unit.yml` | Build + `dotnet test` |
+| `dev` → `main` | `ci-release.yml` | Build + tests + couverture + rapport PR |
+| `dev` → `prod` | `ci-deploy.yml` | Build Release + déploiement VPS |
+
+> **État réel** — `dotnet test` s'exécute **sans filtre**, mais les tests des niveaux 2 à 4 sont
+> encore des stubs `Skip` : seul le niveau 1 tourne effectivement. L'intégration des niveaux
+> supérieurs au CI est prévue par NTR-83 et NTR-92.
+
+---
+
+## Voir aussi
+
+| Sujet | Document |
+|---|---|
+| La liste des tests à écrire et leur avancement | [`recensement-des-tests.md`](recensement-des-tests.md) |
+| La stratégie de référence (source de vérité) | [`design/design-tests.md`](../../design/design-tests.md) |
+| Le workflow Git et les branches | `CONTRIBUTING.md` du dépôt `nutrition-api` |

@@ -35,8 +35,10 @@ Les fonctionnalités sont réparties en deux familles :
 | OpenAPI / Swagger UI | [interne/openapi.md](interne/openapi.md) | 2026-05-02 |
 | Exception Filter (Middleware) | [interne/exception-filter.md](interne/exception-filter.md) | 2026-05-25 |
 | Moteur de calcul nutritionnel | [interne/nutrition-calculator.md](interne/nutrition-calculator.md) | 2026-06-12 |
-| Tests — Recensement par niveau | [interne/tests-integration.md](interne/tests-integration.md) | 2026-05-02 |
+| Niveaux de tests — définitions et périmètres | [interne/niveaux-de-tests.md](interne/niveaux-de-tests.md) | 2026-05-02 |
+| Recensement des tests | [interne/recensement-des-tests.md](interne/recensement-des-tests.md) | 2026-07-23 |
 | Mise à disposition des aliments | [interne/mise-a-disposition-aliments.md](interne/mise-a-disposition-aliments.md) | 2026-07-23 |
+| Cache des recherches d'aliments | [interne/recherche-aliments-cache.md](interne/recherche-aliments-cache.md) | 2026-07-23 |
 
 ---
 

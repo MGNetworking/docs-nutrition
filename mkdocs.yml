@@ -91,12 +91,16 @@ nav:
       - OpenAPI: backend/features/interne/openapi.md
       - Exception Filter: backend/features/interne/exception-filter.md
       - Moteur de calcul nutritionnel: backend/features/interne/nutrition-calculator.md
-      - Tests par niveau: backend/features/interne/tests-integration.md
+      - Niveaux de tests: backend/features/interne/niveaux-de-tests.md
+      - Recensement des tests: backend/features/interne/recensement-des-tests.md
       - Mise à disposition des aliments: backend/features/interne/mise-a-disposition-aliments.md
+      - Cache des recherches d'aliments: backend/features/interne/recherche-aliments-cache.md
 
   - Infrastructure:
     - Setup: backend/annexes/infrastructure-setup.md
     - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
+    - Workflow — Mise à disposition des aliments: backend/annexes/workflow-import-aliments.md
+    - Workflow — Cache des recherches d'aliments: backend/annexes/workflow-cache-recherche-aliments.md
     - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
     - Hangfire: backend/annexes/infrastructure-hangfire.md
     - Publication docs: backend/annexes/infrastructure-docs.md

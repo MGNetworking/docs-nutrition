@@ -347,11 +347,18 @@ spec:
                 name: nutrition-api-secret
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health/ready
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 10
 ```
+
+> ⚠️ **Dépend de NTR-88** — `/health` et `/health/ready` **n'existent pas encore**. Tant qu'ils ne
+> sont pas implémentés, ce `readinessProbe` échouera : le pod ne sera jamais déclaré prêt et ne
+> recevra donc **aucun trafic**. Retirer la sonde ou livrer NTR-88 avant le premier déploiement.
+>
+> Le chemin est `/health/ready` (état des dépendances : PostgreSQL, Redis) et non `/health`
+> (l'application répond), conformément au découpage prévu par NTR-88.
 
 ---
 
@@ -667,7 +674,7 @@ jobs:
           reporter: dotnet-trx
 ```
 
-> **Testcontainers vs service PostgreSQL GitHub Actions** — les tests d'intégration avec `Testcontainers` démarrent leur propre conteneur PostgreSQL. Si tu utilises Testcontainers, supprimer le bloc `services:` du workflow et retirer la variable `ConnectionStrings__NutritionDb` — Testcontainers gère la connexion lui-même.
+> **docker-compose vs service PostgreSQL GitHub Actions** — les tests d'intégration de niveau 3 s'appuient sur le `docker-compose.yml` du projet (PostgreSQL, Redis, Keycloak), réutilisé en CI. Le bloc `services:` du workflow fait donc double emploi : monter les trois services via docker-compose et pointer la configuration dessus. Décision d'architecture du 2026-07-21 — voir `features/interne/niveaux-de-tests.md`.
 
 ---
 
