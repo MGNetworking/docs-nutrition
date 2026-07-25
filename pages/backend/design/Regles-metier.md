@@ -1,7 +1,24 @@
-# Règles métier — Domaine Nutrition
+# Règles métier — catalogue des formules
 
-> Ces règles définissent les invariants, contraintes et formules de calcul du domaine métier.
-> Elles serviront de base pour l'étape 4 — Modèle domaine.
+> ⚠️ **Ce document n'est pas la source de vérité.** Celle-ci est
+> [`regles-metier-consolidees.md`](regles-metier-consolidees.md), organisée par entité et alignée
+> sur le code.
+>
+> Ce document-ci est un **catalogue de référence des formules nutritionnelles**, y compris celles
+> qui **ne sont pas implémentées** — conservé pour le contexte scientifique et les évolutions
+> futures.
+
+**État d'implémentation des formules de BMR :**
+
+| Formule | État |
+|---|---|
+| Mifflin-St Jeor (1990) | ✅ `BmrFormula.MifflinStJeor` — par défaut |
+| Harris-Benedict révisée (1984) | ✅ `BmrFormula.HarrisBenedict` |
+| Katch-McArdle | 🔲 documentaire, non implémentée |
+| Harris-Benedict (1919) | 🔲 documentaire, non implémentée |
+
+> En cas de divergence entre ce document et `regles-metier-consolidees.md`, **c'est ce dernier
+> qui fait foi** (corrigé le 2026-07-23, audit de documentation).
 
 ---
 

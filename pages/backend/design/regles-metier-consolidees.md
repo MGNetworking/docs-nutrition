@@ -141,12 +141,27 @@
 
 ## Calculs métier (couche Application)
 
-### BMR — Mifflin-St Jeor (prioritaire)
+### BMR — deux formules implémentées
+
+Le choix se fait par l'énumération `BmrFormula`, via `NutritionCalculatorFactory.Create(...)` —
+`MifflinStJeor` est la valeur par défaut. Toute autre valeur lève une `ArgumentException`.
+
+**`BmrFormula.MifflinStJeor`** — par défaut
 
 | Sexe | Formule |
 |---|---|
 | Homme | `(10 × P) + (6,25 × T) - (5 × A) + 5` |
 | Femme | `(10 × P) + (6,25 × T) - (5 × A) - 161` |
+
+**`BmrFormula.HarrisBenedict`** — révisée (1984)
+
+| Sexe | Formule |
+|---|---|
+| Homme | `88,362 + (13,397 × P) + (4,799 × T) - (5,677 × A)` |
+| Femme | `447,593 + (9,247 × P) + (3,098 × T) - (4,330 × A)` |
+
+> Les autres formules citées dans `Regles-metier.md` (Katch-McArdle, Harris-Benedict 1919) sont
+> **documentaires : aucune n'est implémentée.**
 
 ### TDEE
 

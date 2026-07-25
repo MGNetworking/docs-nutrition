@@ -131,7 +131,20 @@ classDiagram
         +MacroDistribution MacroDistribution
     }
 
+    class MacroGrams {
+        <<Value Object>>
+        +float ProteinG
+        +float CarbG
+        +float FatG
+    }
+
     %% ─── Enums ──────────────────────────────────────────────────────
+
+    class BmrFormula {
+        <<Enum>>
+        MifflinStJeor
+        HarrisBenedict
+    }
 
     class ActivityLevel {
         <<Enum>>

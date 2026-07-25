@@ -111,21 +111,13 @@ nav:
   - Accueil: index.md
   - Backend:
     - Introduction: backend/1.nutrition-introduction.md
-    - Cas d'usage: backend/2.nutrition-cas-usage.md
-    - Specs fonctionnelles: backend/3.nutrition-specifications-fonctionnelles.md
-    - Specs techniques: backend/4.nutrition-specifications-techniques.md
-    - Contraintes: backend/5.nutrition-contraintes.md
-    - Domaine:
-      - Modèle domaine: backend/design/design-domain.md
-      - Diagramme de classes: backend/annexes/Diagramme-classes.md
-      - Règles métier: backend/design/Regles-metier.md
-    - Infrastructure:
-      - Setup local & production: backend/annexes/infrastructure-setup.md
-      - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
-      - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
-      - Hangfire: backend/annexes/infrastructure-hangfire.md
-      - Publication docs: backend/annexes/infrastructure-docs.md
+    # … structure imbriquée : Spécifications, Design, Features (Utilisateur / Interne),
+    #   Infrastructure. Voir mkdocs.yml — seul propriétaire de la navigation.
 ```
+
+> ⚠️ **Ne pas recopier la `nav:` complète ici.** Elle vit dans `mkdocs.yml`, qui en est la seule
+> source de vérité ; tout duplicata dériverait au premier ajout de page. L'extrait ci-dessus
+> n'illustre que la forme attendue.
 
 ---
 
