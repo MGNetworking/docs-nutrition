@@ -114,7 +114,10 @@ Retourne la répartition macros par défaut selon le type de régime.
 
 ---
 
-### Calculs complémentaires (à venir)
+### Calculs complémentaires — 🔲 non implémentés
+
+> Vérifié le 2026-07-23 : aucune de ces trois méthodes n'existe dans le code. Seules `Calculate`,
+> `GetDefaultMacros` et `ToGrams` sont présentes sur `NutritionCalculator`.
 
 | Méthode | Formule | Retourne |
 |---|---|---|

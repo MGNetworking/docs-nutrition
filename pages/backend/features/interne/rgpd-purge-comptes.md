@@ -28,6 +28,10 @@ Aucun acteur humain — job de fond déclenché par le planificateur (Hangfire).
 - Supprime définitivement le compte correspondant dans Keycloak
 - Enregistre l'exécution dans l'historique Hangfire (visible depuis le back-office admin)
 
+> 🔲 **Rien de tout cela n'est implémenté à ce jour** (vérifié le 2026-07-23) — le job de purge
+> est le ticket **NTR-56**, et `IKeycloakAdminService` n'a aucune implémentation. Seule
+> l'infrastructure Hangfire qui le fera tourner est en place (NTR-55).
+
 ## Ce qu'elle ne fait pas
 
 - Ne supprime jamais un compte avant l'expiration des 30 jours de grace period

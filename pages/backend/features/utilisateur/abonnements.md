@@ -35,9 +35,13 @@ Les vérifications de tier s'effectuent automatiquement à chaque opération lim
 
 ## Intégration Stripe
 
-La synchronisation entre Stripe et la DB se fait via webhook. Stripe envoie les événements de facturation à l'API qui met à jour `User.SubscriptionTier` en temps réel.
+> 🔲 **Cible, non implémentée** (vérifié le 2026-07-23) — aucun code Stripe dans le projet, et
+> l'entité `User` ne porte **ni `StripeCustomerId` ni `StripeSubscriptionId`**. Le tier est pour
+> l'instant fixé en base uniquement. `IStripeWebhookService` n'existe pas non plus.
 
-Deux champs de liaison sur `User` :
+La synchronisation entre Stripe et la DB se fera via webhook. Stripe enverra les événements de facturation à l'API qui mettra à jour `User.SubscriptionTier` en temps réel.
+
+Deux champs de liaison prévus sur `User` :
 
 | Champ | Type | Rôle |
 |---|---|---|

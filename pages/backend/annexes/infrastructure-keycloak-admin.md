@@ -1,6 +1,11 @@
 # Keycloak Admin API — Connexion et opérations
 
-> Ce document décrit comment l'API ASP.NET Core se connecte à Keycloak Admin pour gérer les comptes utilisateur dans le cadre du workflow RGPD.
+> 🔲 **Cible, non implémentée** (vérifié le 2026-07-23) — le contrat `IKeycloakAdminService`
+> existe dans la couche Application, mais **aucune classe ne l'implémente** et `RgpdService` ne
+> l'appelle pas. La désactivation et la suppression des comptes Keycloak ne sont donc pas
+> effectives.
+>
+> Ce document décrit comment l'API ASP.NET Core se connectera à Keycloak Admin pour gérer les comptes utilisateur dans le cadre du workflow RGPD.
 > Référence workflow : `workflow_rgpd.mermaid`
 
 ---
