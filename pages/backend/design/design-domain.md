@@ -385,7 +385,7 @@ Table de référence locale des données alimentaires issues d'Open Food Facts. 
 >
 > Si l'aliment est introuvable en base → réponse vide. Aucun appel direct à l'API Open Food Facts au moment de la recherche.
 >
-> **Alimentation de la table `FoodItem` :** un job planifié (couche Infrastructure) importe le dump officiel Open Food Facts quotidiennement. La base est ainsi pré-remplie avec 3M+ produits indépendamment des actions utilisateur. Voir `docs/annexes/infrastructure-import-off.md`.
+> **Alimentation de la table `FoodItem` :** un job planifié (couche Infrastructure) importe le dump officiel Open Food Facts quotidiennement. La base est ainsi pré-remplie avec 3M+ produits indépendamment des actions utilisateur. Voir `systemes/aliments/source-open-food-facts.md`.
 
 **Attributs :**
 

@@ -1,7 +1,7 @@
 # Design technique — Infrastructure couche API
 
 > Configuration technique de la couche API : pipeline middleware, JWT, Swagger, CORS, DI.
-> Pour les contrats d'endpoints : voir `design-api.md`
+> Pour les contrats d'endpoints : voir `design/design-api.md`
 
 ---
 

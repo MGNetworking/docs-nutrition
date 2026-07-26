@@ -143,7 +143,7 @@ Les interfaces sont définies dans la couche Application. L'Infrastructure les i
 > ⚠️ Pas de `DeleteAsync` — décision intentionnelle. La suppression d'un utilisateur
 > est un **soft delete** : `User.MarkAsDeleted()` pose `DeletedAt = UtcNow`, puis
 > `UpdateAsync` persiste le changement. Aucun DELETE SQL n'est jamais exécuté.
-> Voir `design-domain.md` pour les détails de `DeletedAt` et la grace period RGPD.
+> Voir `design/design-domain.md` pour les détails de `DeletedAt` et la grace period RGPD.
 
 ```csharp
 public interface IUserRepository
@@ -683,4 +683,4 @@ builder.Services.AddApplication();
 - **`SubscriptionGuard` est appelé en début de méthode**, avant toute opération de lecture ou d'écriture.
 - **Les DTOs Request ne sont jamais passés au Domain.** Le service extrait les valeurs primitives et les passe aux constructeurs/méthodes des entités.
 - **Les entités Domain ne traversent jamais la frontière Application → API.** Seuls les DTOs Response sortent du service.
-- **Workflow API-first.** Avant de coder les DTOs et services d'un ticket, définir les champs exacts des endpoints dans `design-api.md`. Les DTOs découlent des contrats d'endpoint, pas l'inverse.
+- **Workflow API-first.** Avant de coder les DTOs et services d'un ticket, définir les champs exacts des endpoints dans `design/design-api.md`. Les DTOs découlent des contrats d'endpoint, pas l'inverse.

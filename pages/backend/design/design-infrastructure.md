@@ -324,8 +324,8 @@ public sealed class UserRepository : IUserRepository
 
 > **Section alignée sur le code après implémentation (NTR-54 / NTR-55).** Elle décrivait
 > auparavant une mise en œuvre à base de `IDistributedCache`, option finalement écartée.
-> ➜ Détail de la brique : `annexes/infrastructure-redis.md` · fonctionnement d'ensemble :
-> `annexes/workflow-cache-recherche-aliments.md`.
+> ➜ Détail de la brique : `briques/redis.md` · fonctionnement d'ensemble :
+> `systemes/aliments/workflow-cache-recherche.md`.
 
 ### Package NuGet
 
@@ -420,7 +420,7 @@ La clé de configuration est `Redis:ConnectionString` — **pas** une entrée de
 
 ## 6. Configuration Hangfire
 
-Voir `docs/pages/backend/annexes/infrastructure-hangfire.md` pour le détail complet.
+Voir `briques/hangfire.md` pour le détail complet.
 
 ### Jobs planifiés
 

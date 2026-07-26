@@ -31,6 +31,43 @@ plugins:
   - search:
       lang: fr
   - mermaid2
+  # Réorganisation par système du 2026-07-26 : les anciennes URLs sont citées dans des
+  # commentaires Jira. Ne jamais supprimer une entrée — seulement en ajouter.
+  - redirects:
+      redirect_maps:
+        backend/features/README.md: backend/systemes/index.md
+        backend/features/utilisateur/authentification.md: backend/systemes/authentification/index.md
+        backend/features/utilisateur/profil-utilisateur.md: backend/systemes/profil-utilisateur/index.md
+        backend/features/utilisateur/diet-plan.md: backend/systemes/diet-plan/index.md
+        backend/features/utilisateur/diet.md: backend/systemes/diet/index.md
+        backend/features/utilisateur/repas.md: backend/systemes/repas/index.md
+        backend/features/utilisateur/suivi-poids.md: backend/systemes/suivi-poids/index.md
+        backend/features/utilisateur/bilan-nutritionnel.md: backend/systemes/bilan-nutritionnel/index.md
+        backend/features/utilisateur/aliments.md: backend/systemes/aliments/index.md
+        backend/features/utilisateur/abonnements.md: backend/systemes/abonnements/index.md
+        backend/features/utilisateur/rgpd-droits-utilisateur.md: backend/systemes/rgpd/index.md
+        backend/features/interne/nutrition-calculator.md: backend/systemes/bilan-nutritionnel/moteur-de-calcul.md
+        backend/features/interne/recherche-aliments-cache.md: backend/systemes/aliments/cache-recherche.md
+        backend/features/interne/mise-a-disposition-aliments.md: backend/systemes/aliments/mise-a-disposition.md
+        backend/features/interne/rgpd-purge-comptes.md: backend/systemes/rgpd/purge-des-comptes.md
+        backend/features/interne/admin-dashboard.md: backend/systemes/administration/index.md
+        backend/features/interne/openapi.md: backend/systemes/plateforme/openapi.md
+        backend/features/interne/exception-filter.md: backend/systemes/plateforme/exception-filter.md
+        backend/features/interne/niveaux-de-tests.md: backend/qualite/niveaux-de-tests.md
+        backend/features/interne/recensement-des-tests.md: backend/qualite/recensement-des-tests.md
+        backend/annexes/workflow-cache-recherche-aliments.md: backend/systemes/aliments/workflow-cache-recherche.md
+        backend/annexes/workflow-import-aliments.md: backend/systemes/aliments/workflow-import.md
+        backend/annexes/infrastructure-import-off.md: backend/systemes/aliments/source-open-food-facts.md
+        backend/annexes/infrastructure-redis.md: backend/briques/redis.md
+        backend/annexes/infrastructure-hangfire.md: backend/briques/hangfire.md
+        backend/annexes/infrastructure-keycloak-admin.md: backend/briques/keycloak-admin.md
+        backend/annexes/infrastructure-stripe.md: backend/briques/stripe.md
+        backend/annexes/infrastructure-setup.md: backend/briques/environnement-local.md
+        backend/annexes/infrastructure-docs.md: backend/briques/publication-docs.md
+        backend/annexes/Diagramme-classes.md: backend/reference/diagramme-classes.md
+        backend/annexes/workflows.md: backend/reference/flux-metier.md
+        backend/annexes/concept-moteur-architecture.md: backend/reference/concept-moteur.md
+        backend/ticket-rules.md: backend/reference/regles-tickets.md
 
 markdown_extensions:
   - admonition
@@ -60,49 +97,57 @@ nav:
     - Abonnements: backend/6.nutrition-abonnements.md
     - Administration: backend/7.nutrition-admin.md
 
-  - Domaine:
+  - Design:
     - Modèle domaine: backend/design/design-domain.md
     - Règles métier: backend/design/Regles-metier.md
-    - Diagramme de classes: backend/annexes/Diagramme-classes.md
-
-  - Design:
-    - Domain Layer: backend/design/design-domain.md
+    - Règles métier consolidées: backend/design/regles-metier-consolidees.md
     - Application Layer: backend/design/design-application.md
     - Infrastructure Layer: backend/design/design-infrastructure.md
     - API Layer — Contrats: backend/design/design-api.md
     - API Layer — Infrastructure: backend/design/design-api-infrastructure.md
+    - Stratégie de tests: backend/design/design-tests.md
 
-  - Features:
-    - Vue d'ensemble: backend/features/README.md
-    - Utilisateur:
-      - Authentification: backend/features/utilisateur/authentification.md
-      - Profil utilisateur: backend/features/utilisateur/profil-utilisateur.md
-      - Diet Plan: backend/features/utilisateur/diet-plan.md
-      - Diet: backend/features/utilisateur/diet.md
-      - Repas: backend/features/utilisateur/repas.md
-      - Aliments: backend/features/utilisateur/aliments.md
-      - Bilan nutritionnel: backend/features/utilisateur/bilan-nutritionnel.md
-      - Suivi du poids: backend/features/utilisateur/suivi-poids.md
-      - Abonnements: backend/features/utilisateur/abonnements.md
-      - RGPD — Droits de l'utilisateur: backend/features/utilisateur/rgpd-droits-utilisateur.md
-    - Interne:
-      - Admin dashboard: backend/features/interne/admin-dashboard.md
-      - RGPD — Purge des comptes: backend/features/interne/rgpd-purge-comptes.md
-      - OpenAPI: backend/features/interne/openapi.md
-      - Exception Filter: backend/features/interne/exception-filter.md
-      - Moteur de calcul nutritionnel: backend/features/interne/nutrition-calculator.md
-      - Niveaux de tests: backend/features/interne/niveaux-de-tests.md
-      - Recensement des tests: backend/features/interne/recensement-des-tests.md
-      - Mise à disposition des aliments: backend/features/interne/mise-a-disposition-aliments.md
-      - Cache des recherches d'aliments: backend/features/interne/recherche-aliments-cache.md
+  - Systèmes:
+    - Vue d'ensemble: backend/systemes/index.md
+    - Authentification: backend/systemes/authentification/index.md
+    - Profil utilisateur: backend/systemes/profil-utilisateur/index.md
+    - Diet Plan: backend/systemes/diet-plan/index.md
+    - Diet: backend/systemes/diet/index.md
+    - Repas: backend/systemes/repas/index.md
+    - Suivi du poids: backend/systemes/suivi-poids/index.md
+    - Aliments:
+      - Recherche d'aliments: backend/systemes/aliments/index.md
+      - Cache des recherches: backend/systemes/aliments/cache-recherche.md
+      - Workflow — Cache des recherches: backend/systemes/aliments/workflow-cache-recherche.md
+      - Mise à disposition du catalogue: backend/systemes/aliments/mise-a-disposition.md
+      - Workflow — Import du catalogue: backend/systemes/aliments/workflow-import.md
+      - Source Open Food Facts: backend/systemes/aliments/source-open-food-facts.md
+    - Bilan nutritionnel:
+      - Bilan nutritionnel: backend/systemes/bilan-nutritionnel/index.md
+      - Moteur de calcul: backend/systemes/bilan-nutritionnel/moteur-de-calcul.md
+    - Abonnements: backend/systemes/abonnements/index.md
+    - RGPD:
+      - Droits de l'utilisateur: backend/systemes/rgpd/index.md
+      - Purge des comptes: backend/systemes/rgpd/purge-des-comptes.md
+    - Administration: backend/systemes/administration/index.md
+    - Plateforme API:
+      - OpenAPI: backend/systemes/plateforme/openapi.md
+      - Exception Filter: backend/systemes/plateforme/exception-filter.md
 
-  - Infrastructure:
-    - Setup: backend/annexes/infrastructure-setup.md
-    - Keycloak Admin: backend/annexes/infrastructure-keycloak-admin.md
-    - Workflow — Mise à disposition des aliments: backend/annexes/workflow-import-aliments.md
-    - Workflow — Cache des recherches d'aliments: backend/annexes/workflow-cache-recherche-aliments.md
-    - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
-    - Hangfire: backend/annexes/infrastructure-hangfire.md
-    - Redis: backend/annexes/infrastructure-redis.md
-    - Publication docs: backend/annexes/infrastructure-docs.md
-    - Workflows: backend/annexes/workflows.md
+  - Briques techniques:
+    - Environnement local: backend/briques/environnement-local.md
+    - Redis: backend/briques/redis.md
+    - Hangfire: backend/briques/hangfire.md
+    - Keycloak Admin: backend/briques/keycloak-admin.md
+    - Stripe: backend/briques/stripe.md
+    - Publication de la documentation: backend/briques/publication-docs.md
+
+  - Qualité:
+    - Niveaux de tests: backend/qualite/niveaux-de-tests.md
+    - Recensement des tests: backend/qualite/recensement-des-tests.md
+
+  - Référence:
+    - Diagramme de classes: backend/reference/diagramme-classes.md
+    - Flux métier: backend/reference/flux-metier.md
+    - Concept — Moteur: backend/reference/concept-moteur.md
+    - Règles de découpage des tickets: backend/reference/regles-tickets.md

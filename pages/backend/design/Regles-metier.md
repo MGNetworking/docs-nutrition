@@ -1,7 +1,7 @@
 # Règles métier — catalogue des formules
 
 > ⚠️ **Ce document n'est pas la source de vérité.** Celle-ci est
-> [`regles-metier-consolidees.md`](regles-metier-consolidees.md), organisée par entité et alignée
+> [`design/regles-metier-consolidees.md`](regles-metier-consolidees.md), organisée par entité et alignée
 > sur le code.
 >
 > Ce document-ci est un **catalogue de référence des formules nutritionnelles**, y compris celles
@@ -17,7 +17,7 @@
 | Katch-McArdle | 🔲 documentaire, non implémentée |
 | Harris-Benedict (1919) | 🔲 documentaire, non implémentée |
 
-> En cas de divergence entre ce document et `regles-metier-consolidees.md`, **c'est ce dernier
+> En cas de divergence entre ce document et `design/regles-metier-consolidees.md`, **c'est ce dernier
 > qui fait foi** (corrigé le 2026-07-23, audit de documentation).
 
 ---
