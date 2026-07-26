@@ -1,0 +1,2670 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+        <link rel="prev" href="../environnement-local/">
+      
+      
+        <link rel="next" href="../hangfire/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Redis - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#redis" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Redis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Spécifications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../design/design-domain/" class="md-tabs__link">
+          
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../systemes/" class="md-tabs__link">
+          
+  
+  Systèmes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../environnement-local/" class="md-tabs__link">
+          
+  
+  Briques techniques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../qualite/niveaux-de-tests/" class="md-tabs__link">
+          
+  
+  Qualité
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/diagramme-classes/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spécifications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Spécifications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Design
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-domain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/regles-metier-consolidees/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier consolidées
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-application/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Application Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Infrastructure Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Contrats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-api-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stratégie de tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Systèmes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Systèmes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            Aliments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recherche d'aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/cache-recherche/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cache des recherches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/workflow-cache-recherche/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflow — Cache des recherches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/mise-a-disposition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mise à disposition du catalogue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/workflow-import/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflow — Import du catalogue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/source-open-food-facts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Source Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            Bilan nutritionnel
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/bilan-nutritionnel/moteur-de-calcul/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Moteur de calcul
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_11" id="__nav_4_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            RGPD
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Droits de l'utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/rgpd/purge-des-comptes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Purge des comptes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/administration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Plateforme API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            Plateforme API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/plateforme/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/plateforme/exception-filter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exception Filter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Briques techniques
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Briques techniques
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../environnement-local/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Environnement local
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Redis
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Redis
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pourquoi-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi Redis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-le-client-fonctionne-le-modele-mental" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment le client fonctionne — le modèle mental
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comment le client fonctionne — le modèle mental">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-multiplexeur-nest-pas-une-connexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le multiplexeur n'est pas une connexion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deux-portes-dentree-a-ne-pas-confondre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deux portes d'entrée, à ne pas confondre
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-demarrage-est-tolerant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le démarrage est tolérant
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valeur-par-environnement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valeur par environnement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-conteneur-dev-et-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le conteneur (dev et CI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#le-contenu-du-keyspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le contenu du keyspace
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observer-et-deboguer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observer et déboguer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Observer et déboguer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verifier-quun-cache-hit-se-produit-vraiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vérifier qu'un cache hit se produit vraiment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#points-de-vigilance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Points de vigilance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Points de vigilance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#une-panne-prolongee-coute-de-la-latence" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Une panne prolongée coûte de la latence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-version-de-schema-doit-etre-incrementee-a-la-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ La version de schéma doit être incrémentée à la main
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serverkeys-parcourt-tous-les-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ server.Keys() parcourt tous les endpoints
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voir-aussi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Voir aussi
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stripe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stripe
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../publication-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication de la documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Qualité
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Qualité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qualite/niveaux-de-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Niveaux de tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qualite/recensement-des-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recensement des tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Référence
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Référence
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/flux-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flux métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/concept-moteur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concept — Moteur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/regles-tickets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles de découpage des tickets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pourquoi-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi Redis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-le-client-fonctionne-le-modele-mental" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment le client fonctionne — le modèle mental
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comment le client fonctionne — le modèle mental">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-multiplexeur-nest-pas-une-connexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le multiplexeur n'est pas une connexion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deux-portes-dentree-a-ne-pas-confondre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deux portes d'entrée, à ne pas confondre
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-demarrage-est-tolerant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le démarrage est tolérant
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valeur-par-environnement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valeur par environnement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-conteneur-dev-et-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le conteneur (dev et CI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#le-contenu-du-keyspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le contenu du keyspace
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observer-et-deboguer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observer et déboguer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Observer et déboguer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verifier-quun-cache-hit-se-produit-vraiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vérifier qu'un cache hit se produit vraiment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#points-de-vigilance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Points de vigilance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Points de vigilance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#une-panne-prolongee-coute-de-la-latence" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Une panne prolongée coûte de la latence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-version-de-schema-doit-etre-incrementee-a-la-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ La version de schéma doit être incrémentée à la main
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serverkeys-parcourt-tous-les-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ server.Keys() parcourt tous les endpoints
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voir-aussi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Voir aussi
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="redis">Redis<a class="headerlink" href="#redis" title="Permanent link">&para;</a></h1>
+<p><strong>Ajouté le :</strong> 2026-07-26</p>
+<blockquote>
+<p><strong>Portée de ce document : Redis en tant que brique d'infrastructure, et elle seule.</strong>
+Redis est un service <strong>partagé</strong> : il ne « sert » aucune fonctionnalité en particulier. Il n'a
+aujourd'hui qu'un seul usage — le cache des recherches d'aliments — mais rien dans sa
+configuration ne lui est propre : un second usage viendrait s'y ajouter sans rien modifier ici.</p>
+<p>➜ Pour comprendre <strong>comment le cache des recherches fonctionne de bout en bout</strong> (le parcours
+d'une recherche, l'invalidation après import, les décisions), lire d'abord
+<a href="../../systemes/aliments/workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a>. Ce document-ci ne sert qu'à approfondir la brique.</p>
+<p>➜ Pour <strong>démarrer l'environnement local</strong> (ports, docker-compose, comptes), voir
+<a href="../environnement-local/">Environnement local et production</a>.</p>
+</blockquote>
+<hr />
+<h2 id="pourquoi-redis">Pourquoi Redis<a class="headerlink" href="#pourquoi-redis" title="Permanent link">&para;</a></h2>
+<p>Le besoin est de <strong>mémoriser des résultats de recherche entre les requêtes</strong>, avec expiration
+automatique.</p>
+<p><strong><code>IMemoryCache</code> a été écarté.</strong> Le cache serait vécu dans le process de l'API, avec trois
+conséquences rédhibitoires :</p>
+<table>
+<thead>
+<tr>
+<th>Limite de <code>IMemoryCache</code></th>
+<th>Conséquence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Un cache par instance</td>
+<td>Deux pods K3s ⇒ deux caches distincts, taux de succès divisé</td>
+</tr>
+<tr>
+<td>Perdu à chaque redémarrage</td>
+<td>Chaque déploiement repart d'un cache froid</td>
+</tr>
+<tr>
+<td>Pas d'accès depuis l'extérieur du process</td>
+<td>Le job d'import ne pourrait pas invalider le cache d'un autre pod</td>
+</tr>
+</tbody>
+</table>
+<p>Redis règle les trois : un store <strong>externe et partagé</strong>, qui survit au redémarrage de l'API,
+avec une expiration (<code>TTL</code>) native et une sélection de clés par motif.</p>
+<p><strong>Le coût assumé</strong> : un service de plus à déployer et à surveiller, et un appel réseau là où
+<code>IMemoryCache</code> n'avait qu'un accès mémoire.</p>
+<hr />
+<h2 id="comment-le-client-fonctionne-le-modele-mental">Comment le client fonctionne — le modèle mental<a class="headerlink" href="#comment-le-client-fonctionne-le-modele-mental" title="Permanent link">&para;</a></h2>
+<p>Le projet parle à Redis via <strong>StackExchange.Redis</strong>, et plus précisément via
+<code>IConnectionMultiplexer</code> plutôt que l'abstraction .NET <code>IDistributedCache</code>.</p>
+<blockquote>
+<p>Le <em>pourquoi</em> de ce choix — et l'option écartée en détail — est documenté au §4 du
+<a href="../../systemes/aliments/workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a>. Ce document n'en décrit que les conséquences pratiques.</p>
+</blockquote>
+<h3 id="le-multiplexeur-nest-pas-une-connexion">Le multiplexeur n'est pas une connexion<a class="headerlink" href="#le-multiplexeur-nest-pas-une-connexion" title="Permanent link">&para;</a></h3>
+<p><code>IConnectionMultiplexer</code> ne représente pas <em>une</em> connexion mais <strong>le client complet</strong>, qui
+multiplexe toutes les commandes de l'application sur un petit nombre de sockets. Il est coûteux à
+créer, thread-safe, et prévu pour vivre aussi longtemps que l'application.</p>
+<p>D'où les durées de vie enregistrées dans <code>Infrastructure/DependencyInjection.cs</code> :</p>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Durée de vie</th>
+<th>Raison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IConnectionMultiplexer</code></td>
+<td><strong>Singleton</strong></td>
+<td>Coûteux à créer, thread-safe — une seule instance pour tout le process</td>
+</tr>
+<tr>
+<td><code>RedisFoodCacheService</code></td>
+<td><strong>Scoped</strong></td>
+<td>Simple consommateur du multiplexeur, aligné sur les autres services de la couche</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Ne jamais créer un <code>ConnectionMultiplexer</code> à la volée</strong> dans un service ou une méthode :
+c'est l'anti-pattern classique de StackExchange.Redis (épuisement des sockets).</p>
+</blockquote>
+<h3 id="deux-portes-dentree-a-ne-pas-confondre">Deux portes d'entrée, à ne pas confondre<a class="headerlink" href="#deux-portes-dentree-a-ne-pas-confondre" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">_redis</span><span class="p">.</span><span class="n">GetDatabase</span><span class="p">()</span><span class="w">          </span><span class="c1">// les commandes de données : GET, SET, DEL…</span>
+<span class="n">_redis</span><span class="p">.</span><span class="n">GetServer</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span><span class="w">    </span><span class="c1">// les commandes d&#39;administration : KEYS/SCAN, INFO, FLUSHDB…</span>
+</code></pre></div>
+<p><code>GetDatabase()</code> sans argument cible la <strong>base 0</strong> — le projet n'en utilise pas d'autre.</p>
+<p><code>GetServer()</code> est nécessaire parce que le parcours de clés par motif est une commande <em>serveur</em>,
+pas une commande <em>données</em>. C'est précisément la capacité qui a justifié le choix
+d'<code>IConnectionMultiplexer</code>, et elle est utilisée par <code>InvalidateAllSearchesAsync</code>.</p>
+<h3 id="le-demarrage-est-tolerant">Le démarrage est tolérant<a class="headerlink" href="#le-demarrage-est-tolerant" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">options</span><span class="p">.</span><span class="n">AbortOnConnectFail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+</code></pre></div>
+<p>Sans ce réglage, une instance Redis injoignable <strong>à l'instant du démarrage</strong> empêcherait l'API
+entière de démarrer — le multiplexeur étant un singleton résolu au démarrage du conteneur DI.
+Avec, <code>Connect</code> retourne immédiatement et la connexion est retentée en arrière-plan.</p>
+<p><strong>Ce réglage ne concerne que le démarrage.</strong> Une panne survenant en cours d'exécution est traitée
+séparément, par le repli de <code>GetAsync</code> / <code>SetAsync</code> sur la base — voir « Points de vigilance ».</p>
+<hr />
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>La clé racine est <code>Redis</code>, et <strong>elle n'est pas dans <code>ConnectionStrings</code></strong> — le code lit
+<code>configuration["Redis:ConnectionString"]</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Rôle</th>
+<th>Défaut si absente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Redis:ConnectionString</code></td>
+<td>Adresse du serveur, au format StackExchange.Redis (<code>hôte:port</code>)</td>
+<td>aucun — <code>null</code> fait échouer le démarrage</td>
+</tr>
+<tr>
+<td><code>Redis:SearchCacheTtlHours</code></td>
+<td>Durée de vie des entrées de cache, en heures</td>
+<td><code>24</code> (constante <code>DefaultTtlHours</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="valeur-par-environnement">Valeur par environnement<a class="headerlink" href="#valeur-par-environnement" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Environnement</th>
+<th>Fichier / source</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base commune</td>
+<td><code>appsettings.json</code></td>
+<td><code>""</code> + <code>SearchCacheTtlHours: 24</code></td>
+</tr>
+<tr>
+<td>Dev local (<code>dotnet run</code>)</td>
+<td><code>appsettings.Development.json</code></td>
+<td><code>localhost:6336</code></td>
+</tr>
+<tr>
+<td>Dev conteneurisé (profil <code>full</code>)</td>
+<td><code>appsettings.Docker.json</code></td>
+<td><code>redis:6379</code></td>
+</tr>
+<tr>
+<td>Production K3s</td>
+<td>ConfigMap, variable d'environnement</td>
+<td><code>Redis__ConnectionString</code></td>
+</tr>
+</tbody>
+</table>
+<p>Deux points qui surprennent à la première lecture :</p>
+<ul>
+<li><strong>Seul <code>appsettings.json</code> porte <code>SearchCacheTtlHours</code>.</strong> Les fichiers d'environnement ne
+  redéfinissent que la chaîne de connexion ; le TTL est hérité de la base commune.</li>
+<li><strong>Le port diffère selon d'où l'on appelle.</strong> <code>6336</code> est le port publié côté hôte par
+  docker-compose ; à l'intérieur du réseau Docker, c'est le port natif <code>6379</code> sur l'hôte <code>redis</code>.
+  En K3s, le double soulignement <code>__</code> remplace le <code>:</code> de la clé de configuration.</li>
+</ul>
+<h3 id="le-conteneur-dev-et-ci">Le conteneur (dev et CI)<a class="headerlink" href="#le-conteneur-dev-et-ci" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">redis</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7</span>
+<span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-redis</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;6336:6379&quot;</span>
+<span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis-data:/data</span>
+<span class="w">  </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;redis-cli&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ping&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3s</span>
+<span class="w">    </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
+<p>L'API du profil <code>full</code> déclare <code>depends_on: redis: condition: service_healthy</code> — elle ne démarre
+donc qu'une fois le <code>PING</code> satisfait.</p>
+<p><strong>La version <code>redis:7</code> est figée</strong> et doit rester alignée avec les manifests K3s : c'est le seul
+alignement exigé entre les environnements.</p>
+<blockquote>
+<p>Le volume <code>redis-data</code> conserve les sauvegardes sur disque écrites par la configuration par
+défaut de l'image. Ce n'est <strong>pas</strong> une garantie de durabilité, et le projet n'en dépend pas :
+un cache perdu se reconstitue tout seul à la recherche suivante.</p>
+</blockquote>
+<hr />
+<h2 id="le-contenu-du-keyspace">Le contenu du keyspace<a class="headerlink" href="#le-contenu-du-keyspace" title="Permanent link">&para;</a></h2>
+<p>Aujourd'hui, toutes les clés écrites par l'application partagent le même préfixe :</p>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Motif de clé</td>
+<td><code>food:search:v1:&lt;mot-clé normalisé&gt;</code></td>
+</tr>
+<tr>
+<td>Normalisation</td>
+<td>minuscules (<code>ToLowerInvariant</code>) + espaces de bord retirés (<code>Trim</code>)</td>
+</tr>
+<tr>
+<td>Version de schéma</td>
+<td><code>v1</code> — constante <code>SchemaVersion</code>, à incrémenter si <code>FoodItemSearchResponse</code> change de forme</td>
+</tr>
+<tr>
+<td>Type Redis</td>
+<td>chaîne simple (<code>StringSet</code> / <code>StringGet</code>)</td>
+</tr>
+<tr>
+<td>Valeur</td>
+<td>JSON d'une <code>List&lt;FoodItemSearchResponse&gt;</code></td>
+</tr>
+<tr>
+<td>Expiration</td>
+<td>absolue, posée <strong>à l'écriture</strong> — jamais prolongée par une lecture</td>
+</tr>
+</tbody>
+</table>
+<p>Le préfixe joue un double rôle : il isole l'usage « recherche d'aliments » des futurs usages de
+Redis, <strong>et</strong> il sert de motif d'invalidation globale — <code>food:search:*</code>, <strong>sans la version</strong>, pour
+que les entrées d'un schéma antérieur soient effacées elles aussi.</p>
+<blockquote>
+<p><strong>Le JSON stocké est en PascalCase</strong> (<code>System.Text.Json</code> appelé sans options), alors que la
+réponse HTTP de l'API est en camelCase (défaut ASP.NET Core). Ce n'est pas une incohérence :
+les deux sérialisations sont indépendantes. Mais il ne faut pas s'en étonner en lisant une
+valeur avec <code>redis-cli</code>.</p>
+</blockquote>
+<hr />
+<h2 id="observer-et-deboguer">Observer et déboguer<a class="headerlink" href="#observer-et-deboguer" title="Permanent link">&para;</a></h2>
+<p>Toutes les commandes ci-dessous passent par le conteneur de développement.</p>
+<p><strong>Ouvrir une session :</strong></p>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nutrition-redis<span class="w"> </span>redis-cli
+</code></pre></div>
+<p><strong>Lister les recherches actuellement en cache :</strong></p>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nutrition-redis<span class="w"> </span>redis-cli<span class="w"> </span>--scan<span class="w"> </span>--pattern<span class="w"> </span><span class="s2">&quot;food:search:*&quot;</span>
+</code></pre></div>
+<p><strong>Vérifier le temps de vie restant d'une entrée</strong> (en secondes ; <code>-2</code> = clé absente, <code>-1</code> = sans
+expiration) :</p>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nutrition-redis<span class="w"> </span>redis-cli<span class="w"> </span>TTL<span class="w"> </span><span class="s2">&quot;food:search:v1:poulet&quot;</span>
+</code></pre></div>
+<p><strong>Lire la valeur mise en cache :</strong></p>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nutrition-redis<span class="w"> </span>redis-cli<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;food:search:v1:poulet&quot;</span>
+</code></pre></div>
+<p><strong>Forcer un cache miss sur un mot-clé, pour rejouer le chemin PostgreSQL :</strong></p>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nutrition-redis<span class="w"> </span>redis-cli<span class="w"> </span>DEL<span class="w"> </span><span class="s2">&quot;food:search:v1:poulet&quot;</span>
+</code></pre></div>
+<p><strong>Repartir d'un cache entièrement vide :</strong></p>
+<div class="language-bash highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>nutrition-redis<span class="w"> </span>redis-cli<span class="w"> </span>FLUSHDB
+</code></pre></div>
+<h3 id="verifier-quun-cache-hit-se-produit-vraiment">Vérifier qu'un cache hit se produit vraiment<a class="headerlink" href="#verifier-quun-cache-hit-se-produit-vraiment" title="Permanent link">&para;</a></h3>
+<p>La seule preuve fiable est <strong>l'absence de requête SQL</strong> au second appel : le corps de la réponse
+HTTP est identique dans les deux cas. La marche à suivre : vider la clé (<code>DEL</code>), activer la
+journalisation SQL d'EF Core, appeler la recherche deux fois de suite, et constater que le
+<code>SELECT</code> n'apparaît qu'au premier appel.</p>
+<p>Le mot-clé doit être écrit <strong>tel qu'il est normalisé</strong> : <code>« Poulet »</code> et <code>« poulet »</code> partagent
+l'entrée <code>food:search:poulet</code>.</p>
+<hr />
+<h2 id="points-de-vigilance">Points de vigilance<a class="headerlink" href="#points-de-vigilance" title="Permanent link">&para;</a></h2>
+<h3 id="une-panne-prolongee-coute-de-la-latence">⚠️ Une panne prolongée coûte de la latence<a class="headerlink" href="#une-panne-prolongee-coute-de-la-latence" title="Permanent link">&para;</a></h3>
+<p><code>GetAsync</code> et <code>SetAsync</code> interceptent <code>RedisException</code> : une panne fait retomber la recherche sur
+PostgreSQL au lieu de produire une erreur 500 (le détail est au §4 du
+<a href="../../systemes/aliments/workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a>). Mais <strong>chaque requête tente d'abord de joindre Redis</strong> et
+attend l'expiration du délai avant de basculer.</p>
+<p>Aucun disjoncteur n'est en place : c'est un choix, réversible si des pannes durables se
+manifestent. Les délais se règlent dans la chaîne de connexion
+(<code>connectTimeout</code>, <code>syncTimeout</code>) sans toucher au code.</p>
+<p><strong>L'invalidation, elle, n'est pas protégée</strong> — un échec de <code>InvalidateAllSearchesAsync</code> fait
+échouer le job d'import, volontairement : mieux vaut un job en erreur qu'un catalogue périmé servi
+en silence pendant 24 h.</p>
+<h3 id="la-version-de-schema-doit-etre-incrementee-a-la-main">⚠️ La version de schéma doit être incrémentée à la main<a class="headerlink" href="#la-version-de-schema-doit-etre-incrementee-a-la-main" title="Permanent link">&para;</a></h3>
+<p>Les entrées stockent du JSON de <code>FoodItemSearchResponse</code> et la clé porte une version (<code>v1</code>).
+<strong>Tout changement de forme du DTO impose de passer <code>SchemaVersion</code> à <code>v2</code></strong> — sans quoi les
+entrées déjà en cache deviennent indésérialisables et <code>JsonSerializer.Deserialize</code> lève, pendant
+toute leur durée de vie restante.</p>
+<p>Rien ne détecte l'oubli. C'est assumé : la <code>JsonException</code> n'est <strong>pas</strong> interceptée, précisément
+pour que le défaut se signale au lieu d'être masqué — à la différence d'une <code>RedisException</code>, qui
+n'est qu'une panne d'infrastructure.</p>
+<blockquote>
+<p>En dépannage immédiat, un <code>FLUSHDB</code> fait disparaître le symptôme ; le bump de version reste le
+geste correct.</p>
+</blockquote>
+<h3 id="serverkeys-parcourt-tous-les-endpoints">⚠️ <code>server.Keys()</code> parcourt tous les endpoints<a class="headerlink" href="#serverkeys-parcourt-tous-les-endpoints" title="Permanent link">&para;</a></h3>
+<p><code>InvalidateAllSearchesAsync</code> itère sur <code>GetEndPoints()</code> et supprime les clés du motif sur chacun.
+C'est correct sur l'instance unique actuelle. Deux réserves si la topologie évolue :</p>
+<ul>
+<li>avec des réplicas, les endpoints renverraient les mêmes clés plusieurs fois, et les suppressions
+  doivent viser le maître ;</li>
+<li><code>server.Keys()</code> s'appuie sur <code>SCAN</code> (Redis ≥ 2.8), donc sans blocage du serveur — mais le
+  parcours reste proportionnel à la taille du keyspace.</li>
+</ul>
+<hr />
+<h2 id="voir-aussi">Voir aussi<a class="headerlink" href="#voir-aussi" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sujet</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Le fonctionnement du cache de bout en bout</td>
+<td><a href="../../systemes/aliments/workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a></td>
+</tr>
+<tr>
+<td>Le besoin et le périmètre du cache</td>
+<td><a href="../../systemes/aliments/cache-recherche/">Cache des recherches d'aliments</a></td>
+</tr>
+<tr>
+<td>Le job qui invalide le cache après import</td>
+<td><a href="../../systemes/aliments/workflow-import/">Workflow — Mise à disposition des aliments</a></td>
+</tr>
+<tr>
+<td>Ports, docker-compose, manifests K3s</td>
+<td><a href="../environnement-local/">Environnement local et production</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

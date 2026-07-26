@@ -1,0 +1,2605 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+        <link rel="prev" href="../mise-a-disposition/">
+      
+      
+        <link rel="next" href="../source-open-food-facts/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Workflow — Import du catalogue - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#workflow-mise-a-disposition-des-aliments" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Workflow — Import du catalogue
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Spécifications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../design/design-domain/" class="md-tabs__link">
+          
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  Systèmes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../briques/environnement-local/" class="md-tabs__link">
+          
+  
+  Briques techniques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../qualite/niveaux-de-tests/" class="md-tabs__link">
+          
+  
+  Qualité
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/diagramme-classes/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spécifications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Spécifications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Design
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/design-domain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/regles-metier-consolidees/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier consolidées
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/design-application/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Application Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/design-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Infrastructure Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/design-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Contrats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/design-api-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design/design-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stratégie de tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Systèmes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Systèmes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            Aliments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recherche d'aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cache-recherche/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cache des recherches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workflow-cache-recherche/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflow — Cache des recherches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mise-a-disposition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mise à disposition du catalogue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Workflow — Import du catalogue
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Workflow — Import du catalogue
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Vue d'ensemble
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-qui-fait-quoi-les-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Qui fait quoi — les classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Qui fait quoi — les classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volet-remplissage-une-chaine-de-quatre-maillons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volet Remplissage — une chaîne de quatre maillons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volet-supervision-deux-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volet Supervision — deux classes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-le-parcours-dun-produit-du-fichier-off-a-la-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Le parcours d'un produit — du fichier OFF à la base
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Le parcours d'un produit — du fichier OFF à la base">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-par-etape" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape par étape
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-fait-rejeter-un-produit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui fait rejeter un produit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-le-parcours-de-la-supervision-de-lexecution-a-lapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Le parcours de la supervision — de l'exécution à l'API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-les-decisions-et-leurs-raisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Les décisions et leurs raisons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etat-de-confiance-ce-qui-est-verifie-ce-qui-ne-lest-pas" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. État de confiance — ce qui est vérifié, ce qui ne l'est pas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ou-creuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Où creuser
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../source-open-food-facts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Source Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            Bilan nutritionnel
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bilan-nutritionnel/moteur-de-calcul/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Moteur de calcul
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_11" id="__nav_4_11_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            RGPD
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Droits de l'utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/purge-des-comptes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Purge des comptes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../administration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Plateforme API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            Plateforme API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plateforme/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plateforme/exception-filter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exception Filter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Briques techniques
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Briques techniques
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../briques/environnement-local/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Environnement local
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../briques/redis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Redis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../briques/hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../briques/keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../briques/stripe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stripe
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../briques/publication-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication de la documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Qualité
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Qualité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../qualite/niveaux-de-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Niveaux de tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../qualite/recensement-des-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recensement des tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Référence
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Référence
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/flux-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flux métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/concept-moteur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concept — Moteur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/regles-tickets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles de découpage des tickets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Vue d'ensemble
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-qui-fait-quoi-les-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Qui fait quoi — les classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Qui fait quoi — les classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volet-remplissage-une-chaine-de-quatre-maillons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volet Remplissage — une chaîne de quatre maillons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volet-supervision-deux-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volet Supervision — deux classes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-le-parcours-dun-produit-du-fichier-off-a-la-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Le parcours d'un produit — du fichier OFF à la base
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Le parcours d'un produit — du fichier OFF à la base">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-par-etape" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape par étape
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-fait-rejeter-un-produit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui fait rejeter un produit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-le-parcours-de-la-supervision-de-lexecution-a-lapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Le parcours de la supervision — de l'exécution à l'API
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-les-decisions-et-leurs-raisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Les décisions et leurs raisons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etat-de-confiance-ce-qui-est-verifie-ce-qui-ne-lest-pas" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. État de confiance — ce qui est vérifié, ce qui ne l'est pas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ou-creuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Où creuser
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="workflow-mise-a-disposition-des-aliments">Workflow — Mise à disposition des aliments<a class="headerlink" href="#workflow-mise-a-disposition-des-aliments" title="Permanent link">&para;</a></h1>
+<p><strong>Ajouté le :</strong> 2026-07-23
+<strong>Feature associée :</strong> <a href="../mise-a-disposition/">Mise à disposition des aliments</a>
+<strong>Ticket :</strong> NTR-55</p>
+<blockquote>
+<p><strong>Ce document explique comment le système fonctionne, de bout en bout.</strong>
+Les deux annexes voisines décrivent chacune une brique isolée : <a href="../../../briques/hangfire/">Hangfire — moteur de jobs récurrents</a>
+le <strong>moteur de jobs</strong>, <a href="../source-open-food-facts/">Source Open Food Facts — import du catalogue</a> la <strong>source de données</strong>. Ce document-ci
+est celui qui les assemble — c'est le point d'entrée à lire en premier.</p>
+</blockquote>
+<hr />
+<h2 id="1-vue-densemble">1. Vue d'ensemble<a class="headerlink" href="#1-vue-densemble" title="Permanent link">&para;</a></h2>
+<p>La fonctionnalité a <strong>deux volets indépendants</strong>, qui ne communiquent jamais directement :</p>
+<div class="language-text highlight"><pre><span></span><code>🕒 3h00 UTC, chaque nuit              👤 L&#39;administrateur ouvre le back-office
+   Hangfire déclenche le job             GET /api/v1/admin/system/health
+            │                                        │
+            ▼                                        ▼
+    ┌───────────────────┐                  ┌────────────────────────┐
+    │   REMPLISSAGE     │                  │      SUPERVISION       │
+    │   OffImportJob    │                  │  JobMonitoringService  │
+    └───────────────────┘                  └────────────────────────┘
+            │                                        │
+   écrit dans FoodItem                    lit l&#39;état dans hangfire.hash
+            │                                        │
+            └──────────────► PostgreSQL ◄────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Volet</th>
+<th>Question à laquelle il répond</th>
+<th>Résultat visible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Remplissage</strong></td>
+<td>« comment le catalogue d'aliments se remplit-il ? »</td>
+<td>La recherche d'aliments trouve des produits</td>
+</tr>
+<tr>
+<td><strong>Supervision</strong></td>
+<td>« l'import a-t-il tourné, a-t-il réussi ? »</td>
+<td>Le back-office affiche l'état des jobs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Le lien entre les deux passe par PostgreSQL.</strong> Hangfire enregistre chaque exécution dans ses
+propres tables ; la supervision relit ces traces. Aucun appel direct entre les deux volets —
+c'est ce découplage qui rend l'historique fiable même après un redémarrage de l'application.</p>
+<hr />
+<h2 id="2-qui-fait-quoi-les-classes">2. Qui fait quoi — les classes<a class="headerlink" href="#2-qui-fait-quoi-les-classes" title="Permanent link">&para;</a></h2>
+<p>L'organisation sépare <strong>le moteur</strong> (partagé par tous les jobs) et <strong>chaque job métier</strong> :</p>
+<div class="language-text highlight"><pre><span></span><code>Infrastructure/
+├── Scheduling/              ← la mécanique Hangfire — ce ne sont pas des jobs
+│   ├── HangfireAdminAuthorizationFilter.cs
+│   └── JobMonitoringService.cs
+└── Jobs/
+    └── OffImport/           ← un dossier par job, avec tout ce qui lui appartient
+        ├── IOffImportJob.cs / OffImportJob.cs
+        ├── OffDumpReader.cs
+        └── OffProduct.cs / OffProductMapper.cs
+</code></pre></div>
+<blockquote>
+<p><strong>Règle de rangement</strong> : <code>Scheduling/</code> = le moteur, une seule fois. <code>Jobs/&lt;NomDuJob&gt;/</code> = un
+dossier par job. La purge RGPD (NTR-56) aura donc son propre <code>Jobs/RgpdPurge/</code>, sans se mélanger
+à l'import.</p>
+</blockquote>
+<h3 id="volet-remplissage-une-chaine-de-quatre-maillons">Volet Remplissage — une chaîne de quatre maillons<a class="headerlink" href="#volet-remplissage-une-chaine-de-quatre-maillons" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code>OffDumpReader  ──►  OffProductMapper  ──►  OffProduct  ──►  OffImportJob
+   (lire)              (traduire)          (transporter)      (ranger)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Classe</th>
+<th>Responsabilité unique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OffDumpReader</code></td>
+<td>Télécharge le dump <code>.gz</code> et le décompresse <strong>au fil de l'eau</strong>, en livrant les lignes une par une. Le fichier n'est jamais chargé entièrement en mémoire.</td>
+</tr>
+<tr>
+<td><code>OffProductMapper</code></td>
+<td>Traduit une ligne JSON brute en objet exploitable : arrondit les valeurs, convertit les allergènes, <strong>rejette</strong> les produits inexploitables. Classe statique, sans état.</td>
+</tr>
+<tr>
+<td><code>OffProduct</code></td>
+<td>Simple porteur de données (record). Aucune logique.</td>
+</tr>
+<tr>
+<td><code>IOffImportJob</code></td>
+<td>Contrat — permet à Hangfire de résoudre le job via l'injection de dépendances.</td>
+</tr>
+<tr>
+<td><code>OffImportJob</code></td>
+<td>Orchestre : lit, fait traduire, regroupe par lots, décide créer/mettre à jour, persiste.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="volet-supervision-deux-classes">Volet Supervision — deux classes<a class="headerlink" href="#volet-supervision-deux-classes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Classe</th>
+<th>Responsabilité unique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JobMonitoringService</code></td>
+<td>Répond « quels jobs sont planifiés, quand ont-ils tourné, quand repassent-ils ? » via une requête SQL sur <code>hangfire.hash</code>.</td>
+</tr>
+<tr>
+<td><code>HangfireAdminAuthorizationFilter</code></td>
+<td>Garde-barrière du tableau de bord <code>/hangfire</code> : authentifié <strong>et</strong> rôle <code>admin</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-le-parcours-dun-produit-du-fichier-off-a-la-base">3. Le parcours d'un produit — du fichier OFF à la base<a class="headerlink" href="#3-le-parcours-dun-produit-du-fichier-off-a-la-base" title="Permanent link">&para;</a></h2>
+<h3 id="etape-par-etape">Étape par étape<a class="headerlink" href="#etape-par-etape" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Déclenchement</strong> — Hangfire appelle <code>OffImportJob.RunAsync()</code> à 03h00 UTC.</li>
+<li><strong>Lecture</strong> — <code>OffDumpReader</code> ouvre le flux HTTP, décompresse le gzip, et rend chaque ligne
+   JSON (un produit = une ligne, format JSONL).</li>
+<li><strong>Traduction</strong> — chaque ligne passe par <code>OffProductMapper.TryMap()</code> :</li>
+<li>extraction de <code>code</code>, <code>product_name</code>, <code>nutriments</code>, <code>allergens_tags</code> ;</li>
+<li><strong>arrondi</strong> des macros au plus proche (<code>6.3 → 6</code>, <code>57.5 → 58</code>) — le modèle les stocke en entiers ;</li>
+<li><strong>conversion des allergènes</strong> via une table <code>en:milk → Allergen.Milk</code> (14 allergènes UE) ;</li>
+<li><strong>retourne <code>null</code></strong> si le produit est inexploitable → il est compté « ignoré » et <strong>la boucle continue</strong>.</li>
+<li><strong>Accumulation</strong> — les produits valides s'empilent jusqu'à atteindre la taille de lot (1 000 par défaut).</li>
+<li><strong>Persistance du lot</strong> (<code>PersistBatchAsync</code>) :</li>
+<li>dédoublonnage par code-barres à l'intérieur du lot ;</li>
+<li><strong>une seule requête</strong> demande quels codes existent déjà (<code>GetByOffIdsAsync</code>) ;</li>
+<li>existe → <code>FoodItem.UpdateFromImport(...)</code> ; sinon → nouveau <code>FoodItem</code> ajouté au lot ;</li>
+<li><code>AddRangeAsync</code> puis <code>SaveChangesAsync</code> — une écriture groupée.</li>
+<li><strong>Bilan</strong> — en fin de parcours, journalisation : <em>« X produits importés, Y ignorés »</em>.</li>
+<li><strong>Invalidation du cache</strong> — si au moins un produit a été importé, toutes les recherches en
+   cache sont supprimées (<code>InvalidateAllSearchesAsync</code>) : elles portaient sur l'ancien catalogue.
+   Voir <a href="../workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a>.</li>
+</ol>
+<h3 id="ce-qui-fait-rejeter-un-produit">Ce qui fait rejeter un produit<a class="headerlink" href="#ce-qui-fait-rejeter-un-produit" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cas</th>
+<th>Comportement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON invalide</td>
+<td>ignoré, l'import continue</td>
+</tr>
+<tr>
+<td>Code-barres ou nom absent / vide</td>
+<td>ignoré — inexploitable par le catalogue</td>
+</tr>
+<tr>
+<td>Valeur nutritionnelle négative</td>
+<td>ignoré — donnée aberrante</td>
+</tr>
+<tr>
+<td>Nutriments absents</td>
+<td><strong>accepté</strong>, valeurs à 0</td>
+</tr>
+<tr>
+<td>Allergène inconnu du référentiel</td>
+<td><strong>accepté</strong>, l'allergène seul est ignoré</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Principe directeur : <strong>une ligne défectueuse ne doit jamais interrompre un import de 3 millions
+de produits.</strong> Seule une panne réseau propage une exception — et déclenche alors le retry Hangfire.</p>
+</blockquote>
+<hr />
+<h2 id="4-le-parcours-de-la-supervision-de-lexecution-a-lapi">4. Le parcours de la supervision — de l'exécution à l'API<a class="headerlink" href="#4-le-parcours-de-la-supervision-de-lexecution-a-lapi" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code>OffImportJob s&#39;exécute
+        │
+        ▼
+Hangfire écrit l&#39;état dans PostgreSQL (schéma hangfire)
+        │
+        ▼
+JobMonitoringService lit hangfire.hash (clé recurring-job:import-off)
+        │
+        ▼
+AdminService.GetSystemHealthAsync() assemble la réponse
+        │
+        ▼
+GET /admin/system/health → { foodItemsCount, lastImportAt, hangfireJobs[] }
+</code></pre></div>
+<p><strong>Pourquoi <code>hangfire.hash</code> et non l'historique brut</strong> — les tables <code>job</code>/<code>state</code> contiennent
+l'historique des exécutions, mais ne donnent <strong>ni la prochaine exécution planifiée, ni la liste
+des jobs récurrents</strong>. Les deux vivent dans <code>hash</code>, sous la clé <code>recurring-job:&lt;id&gt;</code>.</p>
+<p><strong>Réponse type</strong> (job enregistré, jamais exécuté) :</p>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;foodItemsCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;lastImportAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;hangfireJobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;jobName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;import-off&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;lastRun&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;nextRun&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-07-24T03:00:00Z&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Scheduled&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Le nom du job est un contrat.</strong> <code>AdminService</code> dérive <code>lastImportAt</code> en cherchant le job nommé
+<code>import-off</code> (constante <code>IJobMonitoringService.ImportOffJobName</code>). Enregistrer le job sous un
+autre nom ferait rester <code>lastImportAt</code> à <code>null</code> <strong>en permanence, sans aucune erreur visible</strong>.</p>
+<hr />
+<h2 id="5-les-decisions-et-leurs-raisons">5. Les décisions et leurs raisons<a class="headerlink" href="#5-les-decisions-et-leurs-raisons" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Décision</th>
+<th>Raison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Traitement par lots</strong> (1 000, configurable)</td>
+<td>3 M+ de produits traités un par un = autant d'allers-retours SQL. Le lot ramène cela à une lecture et une écriture groupées.</td>
+</tr>
+<tr>
+<td><strong>Un scope DI neuf par lot</strong></td>
+<td>Sans cela, le <code>ChangeTracker</code> d'EF Core accumule tous les produits en mémoire jusqu'à saturation. Le scope est détruit après chaque lot → <strong>mémoire constante</strong>, quelle que soit la taille du dump.</td>
+</tr>
+<tr>
+<td><strong>Lecture en streaming</strong></td>
+<td>Le dump pèse plusieurs Go compressés : il ne peut pas être chargé en mémoire.</td>
+</tr>
+<tr>
+<td><strong>Produits invalides ignorés</strong></td>
+<td>Un import massif doit être tolérant aux données sales, sinon un seul produit corrompu annule la nuit entière.</td>
+</tr>
+<tr>
+<td><strong>Arrondi des macros</strong></td>
+<td>Le modèle <code>FoodItem</code> stocke les macros en entiers ; OFF publie des décimaux. Perte assumée et documentée.</td>
+</tr>
+<tr>
+<td><strong>Allergènes inconnus ignorés</strong></td>
+<td>OFF publie des tags hors des 14 allergènes UE. Le produit reste importé, seul le tag inconnu est écarté.</td>
+</tr>
+<tr>
+<td><strong>Identifiant <code>import-off</code></strong></td>
+<td>Le contrat <code>IJobMonitoringService</code> fait foi (et non <code>off-import</code>, qui figurait dans une version antérieure de la doc).</td>
+</tr>
+<tr>
+<td><strong>URL du dump en configuration</strong></td>
+<td>Section <code>OpenFoodFacts</code> — jamais d'URL en dur, comme Redis ou la chaîne de connexion.</td>
+</tr>
+<tr>
+<td><strong>Invalidation du cache en fin d'import</strong></td>
+<td>Le catalogue vient de changer : les recherches mémorisées portent sur des données périmées. Sans cela, une entrée créée juste avant 03h00 serait servie près de 24 h avec l'ancien catalogue. Déclenchée <strong>seulement si au moins un produit a été importé</strong>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-etat-de-confiance-ce-qui-est-verifie-ce-qui-ne-lest-pas">6. État de confiance — ce qui est vérifié, ce qui ne l'est pas<a class="headerlink" href="#6-etat-de-confiance-ce-qui-est-verifie-ce-qui-ne-lest-pas" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Niveau de vérification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OffProductMapper</code></td>
+<td>✅ <strong>19 tests automatisés</strong> — arrondi, allergènes (connus / inconnus / doublons), rejets, nombres en texte</td>
+</tr>
+<tr>
+<td>Routes <code>/admin/**</code></td>
+<td>✅ vérifié manuellement — passées de 500 à 200</td>
+</tr>
+<tr>
+<td>Enregistrement et supervision du job</td>
+<td>✅ vérifié manuellement — <code>import-off</code> visible avec sa prochaine exécution</td>
+</tr>
+<tr>
+<td><code>JobMonitoringService</code></td>
+<td>⚠️ tests automatisés <strong>en attente</strong> (nécessite une base réelle) — stubs en place</td>
+</tr>
+<tr>
+<td><code>OffImportJob</code></td>
+<td>⚠️ <strong>jamais exécuté sur un dump réel</strong> — la logique n'a pas encore avalé de vrai fichier</td>
+</tr>
+<tr>
+<td><code>OffDumpReader</code></td>
+<td>⚠️ non testé (dépend du réseau)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Le risque résiduel est concentré sur l'<strong>import réel</strong> : la mécanique est en place et raisonnée,
+mais elle n'a pas encore été éprouvée de bout en bout sur un fichier Open Food Facts.</p>
+</blockquote>
+<hr />
+<h2 id="7-configuration">7. Configuration<a class="headerlink" href="#7-configuration" title="Permanent link">&para;</a></h2>
+<div class="language-json highlight"><pre><span></span><code><span class="nt">&quot;OpenFoodFacts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;DumpUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://static.openfoodfacts.org/data/openfoodfacts-products.jsonl.gz&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;BatchSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="8-ou-creuser">8. Où creuser<a class="headerlink" href="#8-ou-creuser" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sujet</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Le moteur de jobs (Hangfire, dashboard, tables)</td>
+<td><a href="../../../briques/hangfire/">Hangfire — moteur de jobs récurrents</a></td>
+</tr>
+<tr>
+<td>La source de données (pourquoi un dump, quels champs)</td>
+<td><a href="../source-open-food-facts/">Source Open Food Facts — import du catalogue</a></td>
+</tr>
+<tr>
+<td>Le besoin métier et le périmètre</td>
+<td><a href="../mise-a-disposition/">Mise à disposition des aliments</a></td>
+</tr>
+<tr>
+<td>La recherche d'aliments qui consomme le catalogue</td>
+<td><a href="../">Aliments</a></td>
+</tr>
+<tr>
+<td>Le cache des recherches, invalidé en fin d'import</td>
+<td><a href="../workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a></td>
+</tr>
+<tr>
+<td>L'endpoint de santé système</td>
+<td><a href="../../administration/">Back-office Admin</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3348 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation technique du projet Nutrition API">
+      
+      
+        <meta name="author" content="Maxime Ghalem">
+      
+      
+      
+        <link rel="prev" href="../../systemes/plateforme/exception-filter/">
+      
+      
+        <link rel="next" href="../redis/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Environnement local - Nutrition API — Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#environnement-local-et-production" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nutrition API — Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Environnement local
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode sombre"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mode sombre" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Mode clair"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mode clair" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Accueil
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
+          
+  
+  Spécifications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../design/design-domain/" class="md-tabs__link">
+          
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../systemes/" class="md-tabs__link">
+          
+  
+  Systèmes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  Briques techniques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../qualite/niveaux-de-tests/" class="md-tabs__link">
+          
+  
+  Qualité
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/diagramme-classes/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Nutrition API — Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accueil
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Spécifications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Spécifications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cas d'usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs fonctionnelles
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Specs techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contraintes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Design
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-domain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modèle domaine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/Regles-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/regles-metier-consolidees/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles métier consolidées
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-application/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Application Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Infrastructure Layer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Contrats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-api-infrastructure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Layer — Infrastructure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../design/design-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stratégie de tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Systèmes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Systèmes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vue d'ensemble
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/authentification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentification
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/profil-utilisateur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profil utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/diet-plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet Plan
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/diet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/repas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Repas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/suivi-poids/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Suivi du poids
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Aliments
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            Aliments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recherche d'aliments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/cache-recherche/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cache des recherches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/workflow-cache-recherche/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflow — Cache des recherches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/mise-a-disposition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mise à disposition du catalogue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/workflow-import/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workflow — Import du catalogue
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/source-open-food-facts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Source Open Food Facts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
+            <span class="md-nav__icon md-icon"></span>
+            Bilan nutritionnel
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/bilan-nutritionnel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bilan nutritionnel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/bilan-nutritionnel/moteur-de-calcul/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Moteur de calcul
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/abonnements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abonnements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_11" id="__nav_4_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    RGPD
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            RGPD
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/rgpd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Droits de l'utilisateur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/rgpd/purge-des-comptes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Purge des comptes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/administration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Plateforme API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            Plateforme API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/plateforme/openapi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenAPI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/plateforme/exception-filter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exception Filter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Briques techniques
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Briques techniques
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Environnement local
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Environnement local
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-1-environnement-de-developpement-local-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 1 — Environnement de développement local (docker-compose)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1 — Environnement de développement local (docker-compose)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-locale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture locale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichiers-reels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichiers réels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demarrage-la-voie-normale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Démarrage — la voie normale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#les-deux-modes-dexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les deux modes d'exécution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acces-et-comptes-de-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accès et comptes de test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#points-dattention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Points d'attention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#donnees-de-developpement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Données de développement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-production-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2 — Production (K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2 — Production (K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perimetre-de-ce-projet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Périmètre de ce projet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichiers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcnutritionapiapidockerfile-existant" class="md-nav__link">
+    <span class="md-ellipsis">
+      src/NutritionApi.Api/Dockerfile — existant
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sconfigmapyaml-variables-non-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/configmap.yaml — variables non-sensibles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8ssecretyamlexample-structure-valeurs-vides-committe" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/secret.yaml.example — structure (valeurs vides, committé)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sdeploymentyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/deployment.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sserviceyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/service.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8singressyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/ingress.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#premier-deploiement-manuel-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Premier déploiement manuel (vérification)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-cicd-github-actions-deploiement-automatique-sur-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflows-reellement-presents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflows réellement présents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-densemble-de-la-cible" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vue d'ensemble de la cible
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1a. Créer un Service Account K3s dédié au déploiement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-extraire-le-kubeconfig-du-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      1b. Extraire le kubeconfig du Service Account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-ajouter-les-secrets-dans-le-depot-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      1c. Ajouter les secrets dans le dépôt GitHub
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1d-activer-ghcr-pour-le-depot" class="md-nav__link">
+    <span class="md-ellipsis">
+      1d. Activer GHCR pour le dépôt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1e-verifier-que-le-namespace-et-les-secrets-k3s-existent" class="md-nav__link">
+    <span class="md-ellipsis">
+      1e. Vérifier que le namespace et les secrets K3s existent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-workflow-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 2 — Workflow GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 2 — Workflow GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsdeployyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/deploy.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-pipeline-ci-tests-build-tests-sur-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 3 — Pipeline CI tests (build + tests sur PR)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 3 — Pipeline CI tests (build + tests sur PR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsciyml-ebauche-initiale" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/ci.yml (ébauche initiale)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordre-global-quand-faire-quoi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ordre global — quand faire quoi
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Redis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hangfire/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hangfire
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keycloak-admin/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Admin
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stripe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stripe
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../publication-docs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publication de la documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Qualité
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Qualité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qualite/niveaux-de-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Niveaux de tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qualite/recensement-des-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recensement des tests
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Référence
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Référence
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/diagramme-classes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Diagramme de classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/flux-metier/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flux métier
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/concept-moteur/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concept — Moteur
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/regles-tickets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Règles de découpage des tickets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-1-environnement-de-developpement-local-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 1 — Environnement de développement local (docker-compose)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1 — Environnement de développement local (docker-compose)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-locale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture locale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichiers-reels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichiers réels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demarrage-la-voie-normale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Démarrage — la voie normale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#les-deux-modes-dexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les deux modes d'exécution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acces-et-comptes-de-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accès et comptes de test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#points-dattention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Points d'attention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#donnees-de-developpement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Données de développement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-production-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2 — Production (K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2 — Production (K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perimetre-de-ce-projet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Périmètre de ce projet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fichiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fichiers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srcnutritionapiapidockerfile-existant" class="md-nav__link">
+    <span class="md-ellipsis">
+      src/NutritionApi.Api/Dockerfile — existant
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sconfigmapyaml-variables-non-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/configmap.yaml — variables non-sensibles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8ssecretyamlexample-structure-valeurs-vides-committe" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/secret.yaml.example — structure (valeurs vides, committé)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sdeploymentyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/deployment.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8sserviceyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/service.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrak8singressyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      infra/k8s/ingress.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#premier-deploiement-manuel-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Premier déploiement manuel (vérification)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-cicd-github-actions-deploiement-automatique-sur-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflows-reellement-presents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflows réellement présents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-densemble-de-la-cible" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vue d'ensemble de la cible
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1a. Créer un Service Account K3s dédié au déploiement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-extraire-le-kubeconfig-du-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      1b. Extraire le kubeconfig du Service Account
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-ajouter-les-secrets-dans-le-depot-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      1c. Ajouter les secrets dans le dépôt GitHub
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1d-activer-ghcr-pour-le-depot" class="md-nav__link">
+    <span class="md-ellipsis">
+      1d. Activer GHCR pour le dépôt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1e-verifier-que-le-namespace-et-les-secrets-k3s-existent" class="md-nav__link">
+    <span class="md-ellipsis">
+      1e. Vérifier que le namespace et les secrets K3s existent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-workflow-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 2 — Workflow GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 2 — Workflow GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsdeployyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/deploy.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-pipeline-ci-tests-build-tests-sur-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Étape 3 — Pipeline CI tests (build + tests sur PR)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Étape 3 — Pipeline CI tests (build + tests sur PR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#githubworkflowsciyml-ebauche-initiale" class="md-nav__link">
+    <span class="md-ellipsis">
+      .github/workflows/ci.yml (ébauche initiale)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordre-global-quand-faire-quoi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ordre global — quand faire quoi
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="environnement-local-et-production">Environnement local et production<a class="headerlink" href="#environnement-local-et-production" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Ce document couvre l'infrastructure nécessaire pour faire tourner le projet en local et en production.
+Il complète <a href="../keycloak-admin/">Keycloak Admin API — Connexion et opérations</a> (Admin API RGPD) et <a href="../hangfire/">Hangfire — moteur de jobs récurrents</a> (jobs planifiés).</p>
+</blockquote>
+<hr />
+<h2 id="section-1-environnement-de-developpement-local-docker-compose">Section 1 — Environnement de développement local (docker-compose)<a class="headerlink" href="#section-1-environnement-de-developpement-local-docker-compose" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Réécrit le 2026-07-23</strong> d'après le code réel — la version précédente décrivait une
+arborescence <code>infra/dev/</code> et une base Keycloak séparée qui n'ont jamais existé.</p>
+</blockquote>
+<h3 id="architecture-locale">Architecture locale<a class="headerlink" href="#architecture-locale" title="Permanent link">&para;</a></h3>
+<p>Trois services conteneurisés, l'API tournant <strong>sur le poste</strong> (<code>dotnet run</code>) et s'y connectant
+via <code>localhost</code> :</p>
+<div class="language-text highlight"><pre><span></span><code>        dotnet run (host, port 5099)
+                   │
+     ┌─────────────┼─────────────┐
+     ▼             ▼             ▼
+ PostgreSQL      Redis        Keycloak
+localhost:5445  :6336      :8778 (admin)
+</code></pre></div>
+<p><strong>Les ports externes sont volontairement décalés</strong> (5445, 6336, 8778) pour ne pas entrer en
+conflit avec des instances déjà présentes sur le poste. Les ports internes aux conteneurs restent
+standards (5432, 6379, 8080).</p>
+<p>Keycloak tourne en <code>start-dev</code> avec une base H2 embarquée et <strong>sans volume</strong> : le realm est
+réimporté à chaque recréation du conteneur, ce qui garantit un environnement reproductible.</p>
+<h3 id="fichiers-reels">Fichiers réels<a class="headerlink" href="#fichiers-reels" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code>nutrition-api/
+├── docker-compose.yml            ← 3 services + profil « full »
+├── Dockerfile.migrations         ← conteneur one-shot des migrations EF Core
+├── seed-dev.sql                  ← données métier de développement
+├── keycloak/
+│   └── realm-export.json         ← realm, client, rôles, comptes de test
+├── scripts/
+│   ├── lib.sh                    ← fonctions partagées (attente healthcheck…)
+│   ├── dev-up.sh                 ← démarre les services, migre, seede
+│   ├── dev-down.sh               ← arrête (conserve les données)
+│   ├── dev-reset.sh              ← remet à zéro (supprime les volumes)
+│   └── docker-up.sh              ← stack complète, API conteneurisée
+└── src/NutritionApi.Api/
+    └── Dockerfile                ← image de l&#39;API
+</code></pre></div>
+<blockquote>
+<p>Il n'y a <strong>ni fichier <code>.env</code>, ni dossier <code>infra/</code></strong> : les valeurs de développement sont écrites
+directement dans <code>docker-compose.yml</code> (elles ne sont pas des secrets) et la configuration de
+l'API vit dans <code>appsettings.Development.json</code> / <code>appsettings.Docker.json</code>.</p>
+</blockquote>
+<h3 id="demarrage-la-voie-normale">Démarrage — la voie normale<a class="headerlink" href="#demarrage-la-voie-normale" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code>./scripts/dev-up.sh
+</code></pre></div>
+<p>Le script enchaîne tout : démarrage des trois services, <strong>attente effective des healthchecks</strong>,
+application des migrations EF Core, puis chargement de <code>seed-dev.sql</code>. Il affiche en fin
+d'exécution les accès et les comptes de test.</p>
+<div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>src/NutritionApi.Api<span class="w">      </span><span class="c1"># API sur http://localhost:5099</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./scripts/dev-up.sh</code></td>
+<td>Démarre, migre, seede — <strong>conserve</strong> les données existantes</td>
+</tr>
+<tr>
+<td><code>./scripts/dev-down.sh</code></td>
+<td>Arrête les services, <strong>conserve</strong> les volumes</td>
+</tr>
+<tr>
+<td><code>./scripts/dev-reset.sh</code></td>
+<td>Arrête et <strong>supprime les volumes</strong> — repart d'une base vierge</td>
+</tr>
+<tr>
+<td><code>./scripts/docker-up.sh</code></td>
+<td>Stack complète avec l'API conteneurisée (<code>--rebuild</code> pour forcer le build)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="les-deux-modes-dexecution">Les deux modes d'exécution<a class="headerlink" href="#les-deux-modes-dexecution" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Commande</th>
+<th>Port API</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dev</strong> (API sur le poste)</td>
+<td><code>dev-up.sh</code> + <code>dotnet run</code></td>
+<td><strong>5099</strong></td>
+<td><code>appsettings.Development.json</code></td>
+</tr>
+<tr>
+<td><strong>Docker</strong> (API conteneurisée)</td>
+<td><code>docker-up.sh</code></td>
+<td><strong>5100</strong></td>
+<td><code>appsettings.Docker.json</code> (<code>ASPNETCORE_ENVIRONMENT=Docker</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Le mode Docker s'appuie sur le <strong>profil <code>full</code></strong> de docker-compose, qui ajoute deux services :
+<code>migrations</code> (conteneur one-shot) puis <code>api</code>, laquelle ne démarre qu'une fois <strong>les migrations
+terminées avec succès</strong> et Redis et Keycloak déclarés sains.</p>
+<blockquote>
+<p>Choisir l'environnement Postman correspondant au mode utilisé — un port erroné donne des
+requêtes qui n'aboutissent pas.</p>
+</blockquote>
+<h3 id="acces-et-comptes-de-test">Accès et comptes de test<a class="headerlink" href="#acces-et-comptes-de-test" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Accès</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td><code>localhost:5445</code> — base <code>nutrition_dev</code>, <code>postgres</code> / <code>postgres</code></td>
+</tr>
+<tr>
+<td>Redis</td>
+<td><code>localhost:6336</code></td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td><code>http://localhost:8778</code> — console admin <code>admin</code> / <code>admin</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Compte</th>
+<th>Rôle Keycloak</th>
+<th>Abonnement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test-user</code></td>
+<td><code>user</code></td>
+<td>Free</td>
+</tr>
+<tr>
+<td><code>test-pro</code></td>
+<td><code>user</code></td>
+<td>Pro</td>
+</tr>
+<tr>
+<td><code>test-admin</code></td>
+<td><code>admin</code></td>
+<td>Free</td>
+</tr>
+</tbody>
+</table>
+<p>Mot de passe commun : <code>test</code>. Ces comptes sont définis dans <code>keycloak/realm-export.json</code> et
+leurs profils correspondants sont créés par <code>seed-dev.sql</code>.</p>
+<h3 id="points-dattention">Points d'attention<a class="headerlink" href="#points-dattention" title="Permanent link">&para;</a></h3>
+<p><strong>Les migrations ne sont jamais appliquées au démarrage de l'application.</strong> Elles passent par
+<code>dotnet ef database update</code> (via <code>dev-up.sh</code>) ou par le conteneur <code>migrations</code>. Raison : en
+production, plusieurs pods les appliqueraient simultanément, un échec deviendrait une panne de
+démarrage, et l'application conserverait des privilèges DDL en permanence.</p>
+<p><strong><code>KC_HOSTNAME</code> est figé sur <code>http://localhost:8778</code>.</strong> Sans cela, Keycloak déduit l'issuer des
+jetons de l'en-tête <code>Host</code> : un jeton obtenu depuis le poste porterait <code>localhost:8778</code> alors que
+l'API conteneurisée attendrait <code>keycloak:8080</code>, et la validation échouerait.
+<code>KC_HOSTNAME_BACKCHANNEL_DYNAMIC</code> laisse les appels internes (récupération des clés de signature)
+utiliser le nom de service Docker.</p>
+<p><strong>Le healthcheck Keycloak interroge le port 9000</strong>, pas le 8080 : c'est là qu'est exposé
+<code>/health/ready</code>. L'image ne contenant ni <code>curl</code> ni <code>wget</code>, le test passe par <code>/dev/tcp</code> de bash.</p>
+<p><strong>Versions d'images figées</strong> (<code>postgres:16</code>, <code>redis:7</code>, <code>keycloak:26.0</code>) — à maintenir alignées
+avec les manifests K3s de production. C'est le <strong>seul</strong> alignement exigé entre les environnements.</p>
+<h3 id="donnees-de-developpement">Données de développement<a class="headerlink" href="#donnees-de-developpement" title="Permanent link">&para;</a></h3>
+<p><code>seed-dev.sql</code> charge des données métier (utilisateurs correspondant aux comptes Keycloak,
+aliments, plans). Il est rejoué à chaque <code>dev-up.sh</code>.</p>
+<p>Le catalogue <code>FoodItem</code> réel est alimenté par le job d'import Open Food Facts — voir
+<a href="../../systemes/aliments/workflow-import/">Workflow — Mise à disposition des aliments</a>.</p>
+<h2 id="section-2-production-k3s">Section 2 — Production (K3s)<a class="headerlink" href="#section-2-production-k3s" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>🔲 <strong>Cible, non réalisée.</strong> Aucun déploiement n'a encore eu lieu : les manifests K8s n'existent
+pas dans le dépôt. Cette section décrit la conception visée. Les seuls éléments déjà présents
+sont les deux Dockerfile (API et migrations).</p>
+</blockquote>
+<h3 id="perimetre-de-ce-projet">Périmètre de ce projet<a class="headerlink" href="#perimetre-de-ce-projet" title="Permanent link">&para;</a></h3>
+<p>PostgreSQL, Keycloak et Redis sont déployés et gérés par un <strong>projet d'infrastructure séparé</strong> (K3s). Ce projet contient uniquement :
+- Le <code>Dockerfile</code> pour builder l'image de l'API
+- La configuration de connexion de l'API vers les services K3s
+- Les manifests K8s de l'API elle-même (Deployment + Service + Ingress)</p>
+<div class="language-text highlight"><pre><span></span><code>K3s cluster (projet infra séparé)
+├── PostgreSQL
+├── Keycloak
+└── Redis
+        ↑
+  nutrition-api (Deployment — ce projet)
+</code></pre></div>
+<hr />
+<h3 id="fichiers">Fichiers<a class="headerlink" href="#fichiers" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>État au 2026-07-23</strong> — le <code>Dockerfile</code> <strong>existe déjà</strong> ; les manifests K8s restent à créer.</p>
+</blockquote>
+<div class="language-text highlight"><pre><span></span><code>nutrition-api/
+├── src/NutritionApi.Api/Dockerfile   ✅ existe (image de l&#39;API)
+├── Dockerfile.migrations             ✅ existe (migrations one-shot)
+└── infra/                            🔲 à créer
+    └── k8s/
+        ├── configmap.yaml
+        ├── secret.yaml.example
+        ├── deployment.yaml
+        ├── service.yaml
+        └── ingress.yaml
+</code></pre></div>
+<blockquote>
+<p><strong><code>.gitignore</code> — ajouter :</strong> <code>infra/k8s/secret.yaml</code> (garder uniquement <code>secret.yaml.example</code>)</p>
+</blockquote>
+<hr />
+<h3 id="srcnutritionapiapidockerfile-existant"><code>src/NutritionApi.Api/Dockerfile</code> — existant<a class="headerlink" href="#srcnutritionapiapidockerfile-existant" title="Permanent link">&para;</a></h3>
+<p>Le Dockerfile réel diffère de l'ébauche initiale : il <strong>existe déjà</strong>, se trouve <strong>dans le
+dossier du projet API</strong> (et non à la racine), et le nom du projet est <code>NutritionApi.Api</code> — pas
+<code>NutritionApi.API</code>.</p>
+<div class="language-dockerfile highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/aspnet:10.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">base</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">$APP_UID</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8081</span>
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/sdk:10.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">BUILD_CONFIGURATION</span><span class="o">=</span>Release
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/src</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Api/NutritionApi.Api.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Api/&quot;</span><span class="o">]</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Application/NutritionApi.Application.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Application/&quot;</span><span class="o">]</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Domain/NutritionApi.Domain.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Domain/&quot;</span><span class="o">]</span>
+<span class="k">COPY</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;src/NutritionApi.Infrastructure/NutritionApi.Infrastructure.csproj&quot;</span>,<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Infrastructure/&quot;</span><span class="o">]</span>
+<span class="k">RUN</span><span class="w"> </span>dotnet<span class="w"> </span>restore<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Api/NutritionApi.Api.csproj&quot;</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>dotnet<span class="w"> </span>build<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Api/NutritionApi.Api.csproj&quot;</span><span class="w"> </span>-c<span class="w"> </span><span class="nv">$BUILD_CONFIGURATION</span><span class="w"> </span>-o<span class="w"> </span>/app/build
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">build</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">publish</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">BUILD_CONFIGURATION</span><span class="o">=</span>Release
+<span class="k">RUN</span><span class="w"> </span>dotnet<span class="w"> </span>publish<span class="w"> </span><span class="s2">&quot;src/NutritionApi.Api/NutritionApi.Api.csproj&quot;</span><span class="w"> </span>-c<span class="w"> </span><span class="nv">$BUILD_CONFIGURATION</span><span class="w"> </span>-o<span class="w"> </span>/app/publish<span class="w"> </span>/p:UseAppHost<span class="o">=</span>false
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">final</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>publish<span class="w"> </span>/app/publish<span class="w"> </span>.
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dotnet&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;NutritionApi.Api.dll&quot;</span><span class="p">]</span>
+</code></pre></div>
+<blockquote>
+<p>Le <strong>contexte de build est la racine du dépôt</strong>, pas le dossier du Dockerfile — les chemins
+<code>COPY</code> partent de <code>src/</code>. C'est ainsi que <code>docker-compose.yml</code> l'invoque
+(<code>context: .</code> + <code>dockerfile: src/NutritionApi.Api/Dockerfile</code>).</p>
+<p><strong>Les migrations ont leur propre image</strong> (<code>Dockerfile.migrations</code>), exécutée en conteneur
+one-shot avant le démarrage de l'API — l'application n'applique jamais les migrations
+elle-même.</p>
+</blockquote>
+<hr />
+<h3 id="infrak8sconfigmapyaml-variables-non-sensibles"><code>infra/k8s/configmap.yaml</code> — variables non-sensibles<a class="headerlink" href="#infrak8sconfigmapyaml-variables-non-sensibles" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-config</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ASPNETCORE_ENVIRONMENT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Production</span>
+<span class="w">  </span><span class="nt">Keycloak__Authority</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&lt;keycloak-k3s-domain&gt;/realms/nutrition&quot;</span>
+<span class="w">  </span><span class="nt">Keycloak__Realm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="w">  </span><span class="nt">Keycloak__ClientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">Keycloak__ServiceClientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-service</span>
+<span class="w">  </span><span class="nt">Keycloak__AdminBaseUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&lt;keycloak-k3s-domain&gt;&quot;</span>
+<span class="w">  </span><span class="nt">Redis__ConnectionString</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;redis-service-k3s&gt;:6379&quot;</span>
+</code></pre></div>
+<blockquote>
+<p><strong>La clé est bien <code>Redis__ConnectionString</code></strong> — le code lit <code>configuration["Redis:ConnectionString"]</code>
+(<code>Infrastructure/DependencyInjection.cs</code>), pas la section <code>ConnectionStrings</code>. Avec un autre nom,
+la valeur est <code>null</code> et l'API échoue au démarrage sur <code>ConfigurationOptions.Parse</code>.
+<em>(Corrigé après relecture du code — la clé documentée précédemment était erronée.)</em></p>
+</blockquote>
+<hr />
+<h3 id="infrak8ssecretyamlexample-structure-valeurs-vides-committe"><code>infra/k8s/secret.yaml.example</code> — structure (valeurs vides, committé)<a class="headerlink" href="#infrak8ssecretyamlexample-structure-valeurs-vides-committe" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-secret</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">stringData</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ConnectionStrings__NutritionDb</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">    </span><span class="c1"># Host=&lt;pg-k3s&gt;;Port=5432;Database=nutrition;Username=...;Password=...</span>
+<span class="w">  </span><span class="nt">Keycloak__ServiceClientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">     </span><span class="c1"># secret du client nutrition-api-service sur Keycloak K3s</span>
+</code></pre></div>
+<p><strong>Création du secret réel (CLI uniquement — jamais committé) :</strong></p>
+<div class="language-bash highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>nutrition-api-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="o">=</span>nutrition<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">ConnectionStrings__NutritionDb</span><span class="o">=</span><span class="s2">&quot;Host=&lt;pg-k3s&gt;;Port=5432;Database=nutrition;Username=...;Password=...&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">Keycloak__ServiceClientSecret</span><span class="o">=</span><span class="s2">&quot;&lt;secret&gt;&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="infrak8sdeploymentyaml"><code>infra/k8s/deployment.yaml</code><a class="headerlink" href="#infrak8sdeploymentyaml" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;registry&gt;/nutrition-api:latest</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">envFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">configMapRef</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-config</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretRef</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-secret</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health/ready</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
+<blockquote>
+<p>⚠️ <strong>Dépend de NTR-88</strong> — <code>/health</code> et <code>/health/ready</code> <strong>n'existent pas encore</strong>. Tant qu'ils ne
+sont pas implémentés, ce <code>readinessProbe</code> échouera : le pod ne sera jamais déclaré prêt et ne
+recevra donc <strong>aucun trafic</strong>. Retirer la sonde ou livrer NTR-88 avant le premier déploiement.</p>
+<p>Le chemin est <code>/health/ready</code> (état des dépendances : PostgreSQL, Redis) et non <code>/health</code>
+(l'application répond), conformément au découpage prévu par NTR-88.</p>
+</blockquote>
+<hr />
+<h3 id="infrak8sserviceyaml"><code>infra/k8s/service.yaml</code><a class="headerlink" href="#infrak8sserviceyaml" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-service</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+</code></pre></div>
+<hr />
+<h3 id="infrak8singressyaml"><code>infra/k8s/ingress.yaml</code><a class="headerlink" href="#infrak8singressyaml" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-ingress</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kubernetes.io/ingress.class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">traefik</span><span class="w">    </span><span class="c1"># K3s utilise Traefik par défaut</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.nutrition.example.com</span>
+<span class="w">      </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-tls</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api.nutrition.example.com</span>
+<span class="w">      </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">            </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">            </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition-api-service</span>
+<span class="w">                </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</code></pre></div>
+<hr />
+<h3 id="premier-deploiement-manuel-verification">Premier déploiement manuel (vérification)<a class="headerlink" href="#premier-deploiement-manuel-verification" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Prérequis : kubectl configuré sur le cluster K3s + secrets créés manuellement</span>
+
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/configmap.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/deployment.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/service.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>infra/k8s/ingress.yaml
+
+<span class="c1"># Vérifier</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>nutrition
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>nutrition<span class="w"> </span>deployment/nutrition-api
+</code></pre></div>
+<p>Ce déploiement initial est manuel. À partir du suivant, GitHub Actions prend le relais (voir Section 3).</p>
+<hr />
+<h2 id="section-3-cicd-github-actions-deploiement-automatique-sur-k3s">Section 3 — CI/CD GitHub Actions (déploiement automatique sur K3s)<a class="headerlink" href="#section-3-cicd-github-actions-deploiement-automatique-sur-k3s" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>🔲 <strong>Cible, non réalisée</strong> pour la partie déploiement. Les workflows de test existent et
+tournent ; les étapes de build d'image, de publication et de <code>kubectl</code> restent <strong>commentées</strong>
+dans <code>ci-deploy.yml</code>, faute de cluster et de registre.</p>
+</blockquote>
+<h3 id="workflows-reellement-presents">Workflows réellement présents<a class="headerlink" href="#workflows-reellement-presents" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code>.github/workflows/
+├── ci-unit.yml         ✅ PR vers dev   — build + tests
+├── ci-release.yml      ✅ PR vers main  — build + tests + couverture + rapport PR
+├── ci-deploy.yml       ⚠️ PR vers prod  — build Release ; déploiement encore commenté
+└── release-please.yml  ✅ push main     — tag vX.Y.Z + CHANGELOG
+</code></pre></div>
+<blockquote>
+<p>Il n'existe <strong>pas</strong> de <code>deploy.yml</code> : le déploiement est prévu dans <code>ci-deploy.yml</code>, déclenché
+par la transition <code>dev → prod</code> (et non par un push sur <code>main</code>).</p>
+</blockquote>
+<h3 id="vue-densemble-de-la-cible">Vue d'ensemble de la cible<a class="headerlink" href="#vue-densemble-de-la-cible" title="Permanent link">&para;</a></h3>
+<p>Le déploiement, une fois activé, suivra :</p>
+<div class="language-text highlight"><pre><span></span><code>PR dev → prod
+  → build image Docker
+  → push sur le registre de conteneurs
+  → kubectl set image sur le cluster K3s
+  → rollout status (succès ou rollback)
+</code></pre></div>
+<blockquote>
+<p>Le détail des transitions de branches et des workflows associés vit dans le <code>CONTRIBUTING.md</code>
+du dépôt <code>nutrition-api</code> — source de vérité sur ce point.</p>
+</blockquote>
+<hr />
+<h3 id="etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique">Étape 1 — Configuration serveur (une seule fois, avant le premier déploiement automatique)<a class="headerlink" href="#etape-1-configuration-serveur-une-seule-fois-avant-le-premier-deploiement-automatique" title="Permanent link">&para;</a></h3>
+<h4 id="1a-creer-un-service-account-k3s-dedie-au-deploiement">1a. Créer un Service Account K3s dédié au déploiement<a class="headerlink" href="#1a-creer-un-service-account-k3s-dedie-au-deploiement" title="Permanent link">&para;</a></h4>
+<p>Sur le serveur K3s, créer un compte de service limité au namespace <code>nutrition</code> :</p>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Sur le serveur K3s</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>serviceaccount<span class="w"> </span>github-actions-deployer<span class="w"> </span>-n<span class="w"> </span>nutrition
+
+kubectl<span class="w"> </span>create<span class="w"> </span>rolebinding<span class="w"> </span>github-actions-deployer-binding<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--clusterrole<span class="o">=</span>edit<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--serviceaccount<span class="o">=</span>nutrition:github-actions-deployer<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="o">=</span>nutrition
+</code></pre></div>
+<blockquote>
+<p><code>clusterrole=edit</code> donne le droit de mettre à jour les Deployments dans <code>nutrition</code> sans accès cluster-admin.</p>
+</blockquote>
+<h4 id="1b-extraire-le-kubeconfig-du-service-account">1b. Extraire le kubeconfig du Service Account<a class="headerlink" href="#1b-extraire-le-kubeconfig-du-service-account" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span class="c1"># Récupérer le token du Service Account</span>
+<span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>create<span class="w"> </span>token<span class="w"> </span>github-actions-deployer<span class="w"> </span>-n<span class="w"> </span>nutrition<span class="w"> </span>--duration<span class="o">=</span>87600h<span class="k">)</span>
+
+<span class="c1"># Récupérer le CA et le serveur</span>
+<span class="nv">CA</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--raw<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.clusters[0].cluster.certificate-authority-data}&#39;</span><span class="k">)</span>
+<span class="nv">SERVER</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>config<span class="w"> </span>view<span class="w"> </span>--raw<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.clusters[0].cluster.server}&#39;</span><span class="k">)</span>
+
+<span class="c1"># Construire le kubeconfig minimal</span>
+cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; kubeconfig-github-actions.yaml</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Config</span>
+<span class="s">clusters:</span>
+<span class="s">- cluster:</span>
+<span class="s">    certificate-authority-data: ${CA}</span>
+<span class="s">    server: ${SERVER}</span>
+<span class="s">  name: k3s</span>
+<span class="s">contexts:</span>
+<span class="s">- context:</span>
+<span class="s">    cluster: k3s</span>
+<span class="s">    user: github-actions-deployer</span>
+<span class="s">    namespace: nutrition</span>
+<span class="s">  name: nutrition</span>
+<span class="s">current-context: nutrition</span>
+<span class="s">users:</span>
+<span class="s">- name: github-actions-deployer</span>
+<span class="s">  user:</span>
+<span class="s">    token: ${TOKEN}</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Encoder en base64 pour GitHub Secrets</span>
+base64<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span>kubeconfig-github-actions.yaml
+<span class="c1"># → copier la sortie dans le secret GitHub KUBECONFIG_B64</span>
+
+<span class="c1"># Supprimer le fichier local immédiatement</span>
+rm<span class="w"> </span>kubeconfig-github-actions.yaml
+</code></pre></div>
+<h4 id="1c-ajouter-les-secrets-dans-le-depot-github">1c. Ajouter les secrets dans le dépôt GitHub<a class="headerlink" href="#1c-ajouter-les-secrets-dans-le-depot-github" title="Permanent link">&para;</a></h4>
+<p>Dans <code>GitHub → Settings → Secrets and variables → Actions</code> :</p>
+<table>
+<thead>
+<tr>
+<th>Secret</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KUBECONFIG_B64</code></td>
+<td>Sortie base64 de l'étape 1b</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>GITHUB_TOKEN</code> est fourni automatiquement par GitHub Actions — pas besoin de le créer. Il suffit pour pousser sur GHCR.</p>
+</blockquote>
+<h4 id="1d-activer-ghcr-pour-le-depot">1d. Activer GHCR pour le dépôt<a class="headerlink" href="#1d-activer-ghcr-pour-le-depot" title="Permanent link">&para;</a></h4>
+<p>Dans <code>GitHub → Settings → Packages</code> : s'assurer que le dépôt a accès à GitHub Container Registry. Par défaut c'est activé — aucune configuration manuelle requise.</p>
+<h4 id="1e-verifier-que-le-namespace-et-les-secrets-k3s-existent">1e. Vérifier que le namespace et les secrets K3s existent<a class="headerlink" href="#1e-verifier-que-le-namespace-et-les-secrets-k3s-existent" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>namespace<span class="w"> </span>nutrition
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>nutrition-api-secret<span class="w"> </span>-n<span class="w"> </span>nutrition
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>nutrition-api-tls<span class="w"> </span>-n<span class="w"> </span>nutrition<span class="w">    </span><span class="c1"># certificat TLS pour l&#39;Ingress</span>
+</code></pre></div>
+<p>Si l'un de ces éléments manque, se référer à la Section 2 pour les créer avant de lancer le pipeline.</p>
+<hr />
+<h3 id="etape-2-workflow-github-actions">Étape 2 — Workflow GitHub Actions<a class="headerlink" href="#etape-2-workflow-github-actions" title="Permanent link">&para;</a></h3>
+<h4 id="githubworkflowsdeployyml"><code>.github/workflows/deploy.yml</code><a class="headerlink" href="#githubworkflowsdeployyml" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build &amp; Deploy</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io</span>
+<span class="w">  </span><span class="nt">IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.repository }}/nutrition-api</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build-and-deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+<span class="w">      </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">     </span><span class="c1"># nécessaire pour pousser sur GHCR</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Login to GHCR</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/login-action@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">registry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ env.REGISTRY }}</span>
+<span class="w">          </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.actor }}</span>
+<span class="w">          </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and push image</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/build-push-action@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">          </span><span class="nt">push</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}</span>
+<span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup kubectl</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/setup-kubectl@v3</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure kubeconfig</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">mkdir -p $HOME/.kube</span>
+<span class="w">          </span><span class="no">echo &quot;${{ secrets.KUBECONFIG_B64 }}&quot; | base64 -d &gt; $HOME/.kube/config</span>
+<span class="w">          </span><span class="no">chmod 600 $HOME/.kube/config</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to K3s</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">kubectl set image deployment/nutrition-api \</span>
+<span class="w">            </span><span class="no">nutrition-api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \</span>
+<span class="w">            </span><span class="no">-n nutrition</span>
+<span class="w">          </span><span class="no">kubectl rollout status deployment/nutrition-api -n nutrition --timeout=120s</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify deployment</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl get pods -n nutrition</span>
+</code></pre></div>
+<hr />
+<h3 id="etape-3-pipeline-ci-tests-build-tests-sur-pr">Étape 3 — Pipeline CI tests (build + tests sur PR)<a class="headerlink" href="#etape-3-pipeline-ci-tests-build-tests-sur-pr" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Distinct du pipeline de déploiement — se déclenche sur chaque Pull Request avant merge.
+Fichiers présents dans le repo <code>nutrition-api</code>.</p>
+</blockquote>
+<div class="language-text highlight"><pre><span></span><code>.github/workflows/
+├── ci-unit.yml         PR vers dev
+├── ci-release.yml      PR vers main
+├── ci-deploy.yml       PR vers prod
+└── release-please.yml  push sur main
+</code></pre></div>
+<blockquote>
+<p>⚠️ Le fichier <code>ci.yml</code> ci-dessous est l'<strong>ébauche initiale</strong>, conservée à titre de référence.
+Les workflows réellement en place sont ceux listés au-dessus, différenciés par transition de
+branche — voir <code>CONTRIBUTING.md</code>.</p>
+</blockquote>
+<h4 id="githubworkflowsciyml-ebauche-initiale"><code>.github/workflows/ci.yml</code> (ébauche initiale)<a class="headerlink" href="#githubworkflowsciyml-ebauche-initiale" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build-and-test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+
+<span class="w">    </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">postgres</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition_test</span>
+<span class="w">          </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutrition_user</span>
+<span class="w">          </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_password</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432:5432</span>
+<span class="w">        </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">          </span><span class="no">--health-cmd pg_isready</span>
+<span class="w">          </span><span class="no">--health-interval 10s</span>
+<span class="w">          </span><span class="no">--health-retries 5</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup .NET 10</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-dotnet@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">dotnet-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;10.x&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restore</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet restore</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet build --no-restore --configuration Release</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests unitaires</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet test --no-build --configuration Release --filter &quot;Category=Unit&quot; --logger &quot;trx;LogFileName=unit-tests.trx&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tests intégration</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">ConnectionStrings__NutritionDb</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Host=localhost;Port=5432;Database=nutrition_test;Username=nutrition_user;Password=test_password&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet test --no-build --configuration Release --filter &quot;Category=Integration&quot; --logger &quot;trx;LogFileName=integration-tests.trx&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Publier les résultats de tests</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dorny/test-reporter@v1</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Résultats tests</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;**/*.trx&#39;</span>
+<span class="w">          </span><span class="nt">reporter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dotnet-trx</span>
+</code></pre></div>
+<blockquote>
+<p><strong>docker-compose vs service PostgreSQL GitHub Actions</strong> — les tests d'intégration de niveau 3 s'appuient sur le <code>docker-compose.yml</code> du projet (PostgreSQL, Redis, Keycloak), réutilisé en CI. Le bloc <code>services:</code> du workflow fait donc double emploi : monter les trois services via docker-compose et pointer la configuration dessus. Décision d'architecture du 2026-07-21 — voir <a href="../../qualite/niveaux-de-tests/">Niveaux de tests — définitions et périmètres</a>.</p>
+</blockquote>
+<hr />
+<h3 id="ordre-global-quand-faire-quoi">Ordre global — quand faire quoi<a class="headerlink" href="#ordre-global-quand-faire-quoi" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Étape</th>
+<th>Quand</th>
+<th>État</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workflows de tests (<code>ci-unit</code>, <code>ci-release</code>)</td>
+<td>Dès le premier commit sur une branche feature</td>
+<td>✅ en place</td>
+</tr>
+<tr>
+<td><code>Dockerfile</code> de l'API et des migrations</td>
+<td>Après que l'API tourne localement</td>
+<td>✅ en place</td>
+</tr>
+<tr>
+<td>Manifests K8s (<code>infra/k8s/</code>)</td>
+<td>Avant le premier déploiement</td>
+<td>🔲 à créer</td>
+</tr>
+<tr>
+<td>Section 2 — premier déploiement manuel</td>
+<td>Après les manifests, pour vérifier qu'ils sont corrects</td>
+<td>🔲</td>
+</tr>
+<tr>
+<td>Activation du déploiement dans <code>ci-deploy.yml</code></td>
+<td>Après le premier déploiement manuel validé</td>
+<td>🔲 étapes commentées</td>
+</tr>
+<tr>
+<td>PR <code>dev → prod</code></td>
+<td>Déploiement automatique via le pipeline</td>
+<td>🔲</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Les références <code>STORY-040</code> / <code>STORY-041</code> de la version initiale de ce document ne correspondent
+à aucun ticket : le projet est suivi dans Jira sous le préfixe <code>NTR</code> (epic <strong>NTR-80 — DevOps &amp;
+Environnement</strong>).</p>
+</blockquote>
+<hr />
+<p><em>Références : <a href="../keycloak-admin/">Keycloak Admin API — Connexion et opérations</a> (Admin API RGPD) · <a href="../hangfire/">Hangfire — moteur de jobs récurrents</a> (jobs Hangfire)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>
