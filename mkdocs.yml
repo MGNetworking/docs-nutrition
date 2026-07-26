@@ -103,5 +103,6 @@ nav:
     - Workflow — Cache des recherches d'aliments: backend/annexes/workflow-cache-recherche-aliments.md
     - Import Open Food Facts: backend/annexes/infrastructure-import-off.md
     - Hangfire: backend/annexes/infrastructure-hangfire.md
+    - Redis: backend/annexes/infrastructure-redis.md
     - Publication docs: backend/annexes/infrastructure-docs.md
     - Workflows: backend/annexes/workflows.md

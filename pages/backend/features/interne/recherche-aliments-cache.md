@@ -33,25 +33,27 @@ recherche ; l'utilisateur ne perçoit qu'un temps de réponse plus court.
 - Normalise les mots-clés (minuscules, espaces de bord retirés) pour que « Poulet » et
   « poulet » partagent la même entrée
 - Expire automatiquement les entrées après 24 h — aucune purge périodique nécessaire
+- **Se replie sur PostgreSQL si Redis est indisponible** : la recherche continue de répondre,
+  la dégradation est journalisée en avertissement
 
 ## Ce qu'elle ne fait pas
 
 - Ne met jamais en cache de données propres à un utilisateur — le catalogue est partagé
-- Ne se replie **pas** sur PostgreSQL si Redis tombe **en cours d'exécution** — voir la
-  limite connue ci-dessous
 - Ne conserve rien au-delà de 24 h, ni entre deux imports : le job d'import vide le cache dès
   qu'il a modifié le catalogue
 
 ## Limite connue
 
-⚠️ **La résilience en cours d'exécution n'est pas traitée.** Si Redis devient indisponible
-pendant que l'application tourne, la recherche renvoie une erreur 500 au lieu de se replier sur
-PostgreSQL — alors même que la base détient les données. Le correctif est rédigé et documenté
-(voir le workflow, §6), mais **non implémenté et non ticketé**.
+⚠️ **Une panne de Redis ralentit les recherches sans les interrompre.** Le repli est immédiat
+côté résultat, mais chaque requête tente d'abord de joindre Redis et attend l'expiration du délai
+avant de basculer sur la base. Si la panne dure, cette attente s'ajoute à chaque appel. Un
+disjoncteur (*circuit breaker*) supprimerait ce coût ; il a été écarté tant qu'aucune panne
+durable n'est constatée — voir le workflow, §4.
 
 ## Dépendances
 
-- Redis — stockage des entrées de cache (`docker-compose.yml`, manifests K3s)
+- Redis — stockage des entrées de cache. La brique elle-même (client, configuration par
+  environnement, débogage) est décrite dans `annexes/infrastructure-redis.md`
 - PostgreSQL — source de vérité du catalogue `FoodItem`
 - `features/utilisateur/aliments.md` — la fonctionnalité utilisateur accélérée par ce cache
 - `features/interne/mise-a-disposition-aliments.md` — le job qui met à jour le catalogue mis en cache

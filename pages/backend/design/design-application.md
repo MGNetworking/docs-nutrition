@@ -379,6 +379,9 @@ public interface IFoodCacheService
     Task<List<FoodItemSearchResponse>?> GetAsync(string keyword);
     Task SetAsync(string keyword, List<FoodItemSearchResponse> results);
     Task InvalidateAsync(string keyword);
+
+    // Ajoutée en NTR-55 : vider le cache après un import qui a modifié le catalogue.
+    Task InvalidateAllSearchesAsync();
 }
 ```
 

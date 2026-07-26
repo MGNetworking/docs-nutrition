@@ -54,7 +54,7 @@ Infrastructure/
 
 | Classe | Responsabilité |
 |---|---|
-| `IFoodCacheService` | Contrat côté Application : `GetAsync`, `SetAsync`, `InvalidateAsync`. Ne connaît pas Redis. |
+| `IFoodCacheService` | Contrat côté Application : `GetAsync`, `SetAsync`, `InvalidateAsync`, `InvalidateAllSearchesAsync`. Ne connaît pas Redis. |
 | `RedisFoodCacheService` | Traduit ce contrat en commandes Redis : construction de la clé, sérialisation JSON, durée de vie. |
 | `FoodItemService` | Orchestre : interroge le cache, décide de basculer sur la base, réalimente le cache. **C'est lui qui porte la stratégie**, pas le cache. |
 
@@ -83,7 +83,7 @@ return foodItemsResponses.Take(limit).ToList();
 
 | Étape | Ce qui se passe |
 |---|---|
-| **1. Clé** | `food:search:` + mot-clé **normalisé** (minuscules, espaces de bord retirés). « Poulet » et « poulet  » partagent donc la même entrée. |
+| **1. Clé** | `food:search:v1:` + mot-clé **normalisé** (minuscules, espaces de bord retirés). « Poulet » et « poulet  » partagent donc la même entrée. Le `v1` est la version de la forme sérialisée — voir §4. |
 | **2. Lecture** | `StringGetAsync` — une valeur JSON, ou rien. |
 | **3a. Trouvé** | Désérialisation, troncature à `limit`, retour. **Aucune requête SQL.** |
 | **3b. Absent** | `SearchByKeywordAsync` (recherche insensible à la casse, triée par nom) → conversion en DTO. |
@@ -121,6 +121,9 @@ foreach (var key in server.Keys(pattern: "food:search:*"))
     await db.KeyDeleteAsync(key);
 ```
 
+> Le motif s'arrête volontairement à `food:search:` sans la version : une entrée écrite par une
+> version de schéma antérieure doit être supprimée elle aussi.
+
 `IDistributedCache` n'expose que `RemoveAsync(string key)` : il faudrait **nommer** chaque clé. Or
 les clés naissent des saisies des utilisateurs et ne sont recensées nulle part — il faudrait tenir
 soi-même un index, c'est-à-dire réimplémenter ce que Redis sait déjà faire.
@@ -145,26 +148,61 @@ cache devient opérationnel dès que Redis répond.
 Alignée sur la fréquence du job d'import quotidien : les entrées expirent d'elles-mêmes, ce qui
 évite toute purge périodique. Configurable via `Redis:SearchCacheTtlHours`.
 
+### Le repli sur la base plutôt que l'erreur 500
+
+`AbortOnConnectFail = false` ne protège que le **démarrage**. Une panne survenant *pendant*
+l'exécution levait une exception qui traversait le service et le controller jusqu'à
+`ExceptionMiddleware`, et devenait une **erreur 500** — alors que PostgreSQL, qui détient les
+vraies données, fonctionnait parfaitement. Inversion de priorité : un cache est une optimisation,
+sa disparition doit coûter de la performance, pas de la disponibilité.
+
+`GetAsync` et `SetAsync` interceptent donc `RedisException` :
+
+| Méthode | Comportement en panne |
+|---|---|
+| `GetAsync` | Retourne `null` — la valeur qui signifie déjà « pas de cache », donc **aucune modification de `FoodItemService`** |
+| `SetAsync` | Ignore l'échec : le résultat a déjà été retourné à l'utilisateur |
+| `InvalidateAsync` / `InvalidateAllSearchesAsync` | **Non protégées** — voir ci-dessous |
+
+Deux points volontaires :
+
+- **`RedisException`, jamais `Exception`.** Une panne d'infrastructure se contourne ; une erreur
+  de désérialisation révèle un vrai défaut et doit remonter.
+- **Journalisation en avertissement.** Une dégradation silencieuse ne se manifesterait que par une
+  lenteur inexpliquée.
+
+**L'invalidation reste bloquante, elle.** Si `InvalidateAllSearchesAsync` échouait en silence, un
+import réussi laisserait servir un catalogue périmé jusqu'à 24 h. L'exception remonte donc à
+Hangfire, qui marque le job en échec — visible et retentable.
+
+**Ce qui n'a pas été retenu** : un disjoncteur (*circuit breaker*, type Polly). Sans lui, chaque
+requête attend l'expiration du délai Redis avant de basculer sur la base. Cela ne vaut le coût
+d'une dépendance supplémentaire que si des pannes durables se manifestent.
+
+### Une version dans la clé, plutôt qu'une purge au déploiement
+
+Les entrées stockent du JSON de `FoodItemSearchResponse`. Sans marqueur de version, un changement
+de forme du DTO rendait les entrées déjà en cache indésérialisables — donc en erreur — **jusqu'au
+terme de leur durée de vie**, soit 24 h.
+
+La clé porte désormais `v1`. Changer la forme du DTO s'accompagne d'un passage à `v2` : les
+anciennes entrées deviennent simplement inatteignables et expirent seules.
+
+**L'option écartée** était un `FLUSHDB` au déploiement : gratuit en code, mais dépendant d'un geste
+humain à ne pas oublier. L'option retenue déplace l'oubli possible vers un endroit visible — la
+constante `SchemaVersion`, juste à côté du DTO concerné.
+
+> Ce choix ne détecte pas l'oubli du bump : une `JsonException` reste alors possible, et c'est
+> assumé — elle signale précisément le défaut plutôt que de le masquer.
+
 ---
 
 ## 5. Ce que le cache ne couvre pas encore
 
-### ⚠️ La résilience en cours d'exécution — non traitée
+### ✅ La résilience en cours d'exécution — implémentée
 
-`AbortOnConnectFail = false` protège **uniquement le démarrage**. Si Redis tombe pendant que
-l'application tourne, chaque appel au cache lève une exception qui n'est interceptée nulle part :
-elle traverse le service et le controller, atteint `ExceptionMiddleware`, et devient une **erreur 500**.
-
-**C'est une inversion de priorité** : un cache est une optimisation ; sa disparition devrait coûter
-de la performance, pas de la disponibilité — d'autant que PostgreSQL, qui détient les vraies
-données, fonctionne parfaitement.
-
-**Le correctif est déjà rédigé** : intercepter `RedisException` (et surtout pas `Exception`, qui
-masquerait les vrais bugs de désérialisation), retourner `null` en lecture — valeur déjà interprétée
-comme « pas de cache », donc **aucune modification de `FoodItemService` nécessaire** — ignorer
-l'échec en écriture, et journaliser en avertissement pour que la dégradation ne soit pas silencieuse.
-
-> **Statut : non implémenté, aucun ticket créé.**
+Traitée par le repli décrit au §4. Il subsiste un coût de latence pendant une panne, faute de
+disjoncteur : chaque requête attend l'expiration du délai Redis avant de basculer sur la base.
 
 ### ✅ Invalidation après l'import — implémentée (NTR-55)
 
@@ -184,11 +222,14 @@ première recherche suivante, sur des données à jour.
 
 | Élément | Niveau de vérification |
 |---|---|
-| Comportement cache-first | ✅ vérifié manuellement — cache vide → 1 requête SQL, cache trouvé → 0 requête |
-| `FoodItemService.SearchAsync` | ✅ couvert par les tests unitaires de la couche Application (mocks) |
-| `RedisFoodCacheService` | ⚠️ pas de test automatisé — nécessite un Redis réel → **NTR-73** (niveau 3) |
-| Invalidation après import | ⚠️ implémentée, **non testée** — couverture prévue par **NTR-73** |
-| Résilience en cours d'exécution | ❌ non implémentée (voir §5) |
+| Comportement cache-first | ⚠️ vérifié manuellement — cache vide → 1 requête SQL, cache trouvé → 0 requête |
+| `FoodItemService.SearchAsync` | ✅ tests unitaires de la couche Application (mocks) |
+| `RedisFoodCacheService` — clé versionnée, normalisation, durée de vie | ✅ 12 tests unitaires Infrastructure (mocks Moq) |
+| Repli quand Redis est indisponible | ✅ tests unitaires — `GetAsync` retourne `null`, `SetAsync` n'échoue pas, avertissement journalisé dans les deux cas |
+| Invalidation après import | ✅ testée unitairement (motif toutes versions, suppression de chaque clé) |
+| Échec de l'invalidation qui doit rester bloquant | ✅ test unitaire — l'exception remonte bien |
+| Comportement contre un **Redis réel** (`SCAN`, sérialisation de bout en bout) | ⚠️ jamais exécuté — couverture prévue par **NTR-73** (niveau 3) |
+| Topologie multi-endpoints ou avec réplicas | ❌ non vérifié — voir `infrastructure-redis.md` |
 
 ---
 
@@ -215,4 +256,5 @@ première recherche suivante, sur des données à jour.
 | Le besoin et le périmètre | `features/interne/recherche-aliments-cache.md` |
 | La recherche vue par l'utilisateur | `features/utilisateur/aliments.md` |
 | Le job qui met à jour le catalogue mis en cache | `annexes/workflow-import-aliments.md` |
-| L'environnement Redis (docker-compose, ports) | `annexes/infrastructure-setup.md` |
+| Redis comme brique : client, configuration, débogage `redis-cli` | `annexes/infrastructure-redis.md` |
+| L'environnement de développement (docker-compose, ports) | `annexes/infrastructure-setup.md` |

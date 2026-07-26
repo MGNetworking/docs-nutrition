@@ -322,39 +322,55 @@ public sealed class UserRepository : IUserRepository
 
 ## 5. Configuration Redis
 
+> **Section alignée sur le code après implémentation (NTR-54 / NTR-55).** Elle décrivait
+> auparavant une mise en œuvre à base de `IDistributedCache`, option finalement écartée.
+> ➜ Détail de la brique : `annexes/infrastructure-redis.md` · fonctionnement d'ensemble :
+> `annexes/workflow-cache-recherche-aliments.md`.
+
 ### Package NuGet
 
 ```xml
-<PackageReference Include="StackExchange.Redis" Version="2.8.*" />
-<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.*" />
+<PackageReference Include="StackExchange.Redis" Version="3.0.17" />
 ```
+
+**Un seul package** : l'abstraction `Microsoft.Extensions.Caching.StackExchangeRedis`
+(`IDistributedCache`) n'est pas utilisée. Elle n'expose que `RemoveAsync(string key)`, incapable
+de supprimer les clés par motif — opération requise pour vider le cache après un import.
 
 ### Structure des clés
 
 | Cas d'usage | Clé Redis | Type de valeur |
 |---|---|---|
-| Résultats de recherche par mot-clé | `food:search:{keyword_normalisé}` | JSON (`List<FoodItemSearchResponse>`) |
+| Résultats de recherche par mot-clé | `food:search:{version}:{keyword_normalisé}` | JSON (`List<FoodItemSearchResponse>`) |
 
-Le mot-clé est normalisé : minuscules + trim avant d'être utilisé comme clé.
+Le mot-clé est normalisé : minuscules + trim avant d'être utilisé comme clé. La clé porte aussi la
+**version de la forme sérialisée**, à incrémenter quand `FoodItemSearchResponse` change de forme.
 
 ```csharp
-var cacheKey = $"food:search:{keyword.ToLowerInvariant().Trim()}";
+var cacheKey = $"food:search:{SchemaVersion}:{keyword.ToLowerInvariant().Trim()}";
 ```
 
 ### TTL
 
 | Clé | TTL |
 |---|---|
-| `food:search:*` | **24 heures** — aligné sur la fréquence du job d'import OFF |
+| `food:search:*` | **24 heures** par défaut — aligné sur la fréquence du job d'import OFF, configurable via `Redis:SearchCacheTtlHours` |
+
+L'expiration est absolue, posée à l'écriture : une lecture ne la prolonge pas.
 
 ### Stratégie d'invalidation
 
-Le job `OffImportJob` invalide le cache après chaque import réussi en supprimant toutes les clés `food:search:*`.
+`OffImportJob` vide le cache en fin d'import, **uniquement si au moins un produit a été importé** —
+un catalogue inchangé ne justifie pas de le vider.
 
 ```csharp
 // Dans OffImportJob, après l'import
-await _cache.KeyDeleteByPatternAsync("food:search:*");
+if (imported > 0)
+    await _foodCache.InvalidateAllSearchesAsync();
 ```
+
+Le motif supprimé est `food:search:*`, **sans la version de schéma** : les entrées écrites par une
+version antérieure doivent disparaître elles aussi.
 
 ### Implémentation — `RedisFoodCacheService`
 
@@ -363,24 +379,42 @@ await _cache.KeyDeleteByPatternAsync("food:search:*");
 ```csharp
 public sealed class RedisFoodCacheService : IFoodCacheService
 {
-    private readonly IDistributedCache _cache;
-    private static readonly TimeSpan Ttl = TimeSpan.FromHours(24);
+    private readonly IConnectionMultiplexer _redis;
+    private readonly ILogger<RedisFoodCacheService> _logger;
+    private readonly TimeSpan _ttl;   // Redis:SearchCacheTtlHours, défaut 24 h
 
-    public async Task<List<FoodItemSearchResponse>?> GetSearchResultsAsync(string keyword) { ... }
-    public async Task SetSearchResultsAsync(string keyword, List<FoodItemSearchResponse> results) { ... }
-    public async Task InvalidateSearchCacheAsync() { ... }
+    public Task<List<FoodItemSearchResponse>?> GetAsync(string keyword) { ... }
+    public Task SetAsync(string keyword, List<FoodItemSearchResponse> results) { ... }
+    public Task InvalidateAsync(string keyword) { ... }
+    public Task InvalidateAllSearchesAsync() { ... }
 }
 ```
 
-### Configuration dans `Program.cs`
+`GetAsync` et `SetAsync` interceptent `RedisException` : une panne du cache fait retomber la
+recherche sur PostgreSQL au lieu de produire une erreur 500. Les deux méthodes d'invalidation ne
+sont **pas** protégées — un échec doit faire échouer l'import plutôt que laisser servir un
+catalogue périmé.
+
+### Enregistrement — `Infrastructure/DependencyInjection.cs`
+
+L'enregistrement vit dans `InfrastructureExtensions.AddInfrastructure`, pas dans `Program.cs`.
 
 ```csharp
-builder.Services.AddStackExchangeRedisCache(options =>
+// Le multiplexeur est coûteux à créer et thread-safe : une seule instance partagée.
+services.AddSingleton<IConnectionMultiplexer>(_ =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "nutrition:";
+    var options = ConfigurationOptions.Parse(configuration["Redis:ConnectionString"]!);
+
+    // Sans cela, une instance Redis indisponible empêcherait l'API de démarrer.
+    options.AbortOnConnectFail = false;
+
+    return ConnectionMultiplexer.Connect(options);
 });
+
+services.AddScoped<IFoodCacheService, RedisFoodCacheService>();
 ```
+
+La clé de configuration est `Redis:ConnectionString` — **pas** une entrée de `ConnectionStrings`.
 
 ---
 
@@ -492,7 +526,8 @@ public static class InfrastructureExtensions
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
         services.AddScoped<ISavedFoodItemRepository, SavedFoodItemRepository>();
 
-        // Cache Redis
+        // Cache Redis — multiplexeur partagé en Singleton, service consommateur en Scoped (voir §5)
+        services.AddSingleton<IConnectionMultiplexer>(_ => { /* ConfigurationOptions.Parse, AbortOnConnectFail */ });
         services.AddScoped<IFoodCacheService, RedisFoodCacheService>();
 
         // Services externes

@@ -238,8 +238,13 @@ data:
   Keycloak__ClientId: nutrition-api
   Keycloak__ServiceClientId: nutrition-api-service
   Keycloak__AdminBaseUrl: "https://<keycloak-k3s-domain>"
-  ConnectionStrings__Redis: "<redis-service-k3s>:6379"
+  Redis__ConnectionString: "<redis-service-k3s>:6379"
 ```
+
+> **La clé est bien `Redis__ConnectionString`** — le code lit `configuration["Redis:ConnectionString"]`
+> (`Infrastructure/DependencyInjection.cs`), pas la section `ConnectionStrings`. Avec un autre nom,
+> la valeur est `null` et l'API échoue au démarrage sur `ConfigurationOptions.Parse`.
+> *(Corrigé après relecture du code — la clé documentée précédemment était erronée.)*
 
 ---
 

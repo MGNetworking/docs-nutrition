@@ -27,6 +27,7 @@
 | Domain / Value Objects / Entités | `NutritionApi.Domain.Tests` |
 | Services applicatifs | `NutritionApi.Application.Tests` |
 | Traduction Open Food Facts (code pur) | `Jobs/OffImport/OffProductMapperTest.cs` |
+| Cache Redis (multiplexeur mocké — clé, durée de vie, repli en panne) | `Caching/RedisFoodCacheServiceTest.cs` |
 
 ---
 
