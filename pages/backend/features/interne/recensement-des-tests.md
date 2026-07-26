@@ -32,7 +32,8 @@
 
 ## Niveau 2 — Tests d'intégration interne
 
-Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111.
+Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111. Les sections RgpdController et
+NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachées au chapeau NTR-29.
 
 ### Middlewares transverses (NTR-105)
 
@@ -114,7 +115,7 @@ Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111.
 
 ---
 
-### RgpdController — `* /api/v1/rgpd` (⚠️ aucun ticket — à créer)
+### RgpdController — `* /api/v1/rgpd` (NTR-29)
 > Restriction : `[Authorize]`. Ces routes sont portées par `RgpdController`, **pas** par
 > `UsersController` — voir `features/utilisateur/rgpd-droits-utilisateur.md`.
 
@@ -170,7 +171,7 @@ Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111.
 
 ---
 
-### NutritionController — `GET /api/v1/nutrition/{id}/bilan` (⚠️ aucun ticket — à créer)
+### NutritionController — `GET /api/v1/nutrition/{id}/bilan` (NTR-29)
 > Restriction : `[Authorize]` — le bilan est porté par `NutritionController`, **pas** par
 > `DietsController`. Le `{id}` est celui de la Diet.
 
