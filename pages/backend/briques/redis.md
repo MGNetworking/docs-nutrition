@@ -1,4 +1,4 @@
-# Infrastructure — Redis
+# Redis
 
 **Ajouté le :** 2026-07-26
 
@@ -9,10 +9,10 @@
 >
 > ➜ Pour comprendre **comment le cache des recherches fonctionne de bout en bout** (le parcours
 > d'une recherche, l'invalidation après import, les décisions), lire d'abord
-> `systemes/aliments/workflow-cache-recherche.md`. Ce document-ci ne sert qu'à approfondir la brique.
+> [Workflow — Cache des recherches d'aliments](../systemes/aliments/workflow-cache-recherche.md). Ce document-ci ne sert qu'à approfondir la brique.
 >
 > ➜ Pour **démarrer l'environnement local** (ports, docker-compose, comptes), voir
-> `briques/environnement-local.md`.
+> [Environnement local et production](environnement-local.md).
 
 ---
 
@@ -44,7 +44,7 @@ Le projet parle à Redis via **StackExchange.Redis**, et plus précisément via
 `IConnectionMultiplexer` plutôt que l'abstraction .NET `IDistributedCache`.
 
 > Le *pourquoi* de ce choix — et l'option écartée en détail — est documenté au §4 du
-> `systemes/aliments/workflow-cache-recherche.md`. Ce document n'en décrit que les conséquences pratiques.
+> [Workflow — Cache des recherches d'aliments](../systemes/aliments/workflow-cache-recherche.md). Ce document n'en décrit que les conséquences pratiques.
 
 ### Le multiplexeur n'est pas une connexion
 
@@ -229,7 +229,7 @@ l'entrée `food:search:poulet`.
 
 `GetAsync` et `SetAsync` interceptent `RedisException` : une panne fait retomber la recherche sur
 PostgreSQL au lieu de produire une erreur 500 (le détail est au §4 du
-`systemes/aliments/workflow-cache-recherche.md`). Mais **chaque requête tente d'abord de joindre Redis** et
+[Workflow — Cache des recherches d'aliments](../systemes/aliments/workflow-cache-recherche.md)). Mais **chaque requête tente d'abord de joindre Redis** et
 attend l'expiration du délai avant de basculer.
 
 Aucun disjoncteur n'est en place : c'est un choix, réversible si des pannes durables se
@@ -270,7 +270,7 @@ C'est correct sur l'instance unique actuelle. Deux réserves si la topologie év
 
 | Sujet | Document |
 |---|---|
-| Le fonctionnement du cache de bout en bout | `systemes/aliments/workflow-cache-recherche.md` |
-| Le besoin et le périmètre du cache | `systemes/aliments/cache-recherche.md` |
-| Le job qui invalide le cache après import | `systemes/aliments/workflow-import.md` |
-| Ports, docker-compose, manifests K3s | `briques/environnement-local.md` |
+| Le fonctionnement du cache de bout en bout | [Workflow — Cache des recherches d'aliments](../systemes/aliments/workflow-cache-recherche.md) |
+| Le besoin et le périmètre du cache | [Cache des recherches d'aliments](../systemes/aliments/cache-recherche.md) |
+| Le job qui invalide le cache après import | [Workflow — Mise à disposition des aliments](../systemes/aliments/workflow-import.md) |
+| Ports, docker-compose, manifests K3s | [Environnement local et production](environnement-local.md) |

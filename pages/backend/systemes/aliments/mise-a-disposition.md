@@ -2,9 +2,9 @@
 
 **Ajouté le :** 2026-07-23
 **Type :** Interne
-**Référence spec :** `systemes/aliments/workflow-import.md` (fonctionnement de bout en bout)
+**Référence spec :** [Workflow — Mise à disposition des aliments](workflow-import.md) (fonctionnement de bout en bout)
 
-> Fonctionnalité de fonctionnement applicatif : elle alimente le catalogue interrogé par la recherche d'aliments (`systemes/aliments/index.md`) et expose son état de santé au back-office admin (`systemes/administration/index.md`).
+> Fonctionnalité de fonctionnement applicatif : elle alimente le catalogue interrogé par la recherche d'aliments ([Aliments](index.md)) et expose son état de santé au back-office admin ([Back-office Admin](../administration/index.md)).
 
 ---
 
@@ -46,11 +46,11 @@ Aucun acteur humain pour le remplissage — job de fond déclenché par le plani
 
 | Méthode | Endpoint | Description |
 |---|---|---|
-| `GET` | `/admin/system/health` | Santé des jobs planifiés (dont le dernier import OFF) — voir `systemes/administration/index.md` |
+| `GET` | `/admin/system/health` | Santé des jobs planifiés (dont le dernier import OFF) — voir [Back-office Admin](../administration/index.md) |
 
 ## Comprendre le fonctionnement
 
-➜ **`systemes/aliments/workflow-import.md`** — le document à lire en premier : schéma d'ensemble,
+➜ **[Workflow — Mise à disposition des aliments](workflow-import.md)** — le document à lire en premier : schéma d'ensemble,
 rôle de chaque classe, parcours d'un produit, parcours de la supervision, décisions et raisons.
 
 Les deux annexes ci-dessous n'éclairent chacune **qu'une brique isolée** ; elles ne décrivent pas
@@ -58,11 +58,11 @@ le fonctionnement d'ensemble :
 
 | Brique | Document | Ce qu'il couvre |
 |---|---|---|
-| Le moteur de jobs | `briques/hangfire.md` | Planification, stockage, dashboard — **partagé** avec la purge RGPD |
-| La source de données | `systemes/aliments/source-open-food-facts.md` | Pourquoi un dump, quels champs sont repris, à quelle fréquence |
+| Le moteur de jobs | [Hangfire — moteur de jobs récurrents](../../briques/hangfire.md) | Planification, stockage, dashboard — **partagé** avec la purge RGPD |
+| La source de données | [Source Open Food Facts — import du catalogue](source-open-food-facts.md) | Pourquoi un dump, quels champs sont repris, à quelle fréquence |
 
 ## Dépendances
 
 - PostgreSQL — table `FoodItem` alimentée par l'import, et stockage de l'état des jobs
-- `systemes/aliments/index.md` — la fonctionnalité utilisateur consommatrice du catalogue
-- `systemes/administration/index.md` — expose la supervision de l'import
+- [Aliments](index.md) — la fonctionnalité utilisateur consommatrice du catalogue
+- [Back-office Admin](../administration/index.md) — expose la supervision de l'import

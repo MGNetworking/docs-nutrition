@@ -29,8 +29,8 @@ Tous les utilisateurs (Free, Pro, Business).
 
 ## Ce qu'elle ne fait pas
 
-- Ne stocke pas le poids sur le profil — géré via `WeightEntry` (voir `systemes/suivi-poids/index.md`)
-- Ne calcule pas le `CalorieTarget` — calculé au lancement d'un régime (voir `systemes/diet/index.md`)
+- Ne stocke pas le poids sur le profil — géré via `WeightEntry` (voir [Suivi du poids](../suivi-poids/index.md))
+- Ne calcule pas le `CalorieTarget` — calculé au lancement d'un régime (voir [Régimes (Diet)](../diet/index.md))
 
 ## Endpoints
 

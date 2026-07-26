@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Utilisateur
-**Référence spec :** `reference/diagrammes/workflow_bilan-nutritionnel.mermaid` · `docs/pages/backend/3.nutrition-specifications-fonctionnelles.md`
+**Référence spec :** `reference/diagrammes/workflow_bilan-nutritionnel.mermaid` · [3.nutrition-specifications-fonctionnelles](../../3.nutrition-specifications-fonctionnelles.md)
 
 ---
 
@@ -41,7 +41,7 @@ Tous les utilisateurs — période accessible limitée selon le tier :
 | `GET` | `/api/v1/nutrition/{id}/bilan` | Bilan nutritionnel d'un régime |
 
 > Route portée par `NutritionController`, **et non par `DietsController`** — corrigé le
-> 2026-07-23 d'après `design/design-api.md` et le code.
+> 2026-07-23 d'après [Design technique — Couche API](../../design/design-api.md) et le code.
 
 ## Réponse
 

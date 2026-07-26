@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Interne
-**Référence spec :** `docs/pages/backend/7.nutrition-admin.md`
+**Référence spec :** [Back-office Admin — API Nutrition](../../7.nutrition-admin.md)
 
 ---
 

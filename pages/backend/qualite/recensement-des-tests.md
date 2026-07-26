@@ -1,10 +1,10 @@
 # Recensement des tests
 
 **Type :** Interne
-**Référence spec :** [`qualite/niveaux-de-tests.md`](niveaux-de-tests.md)
+**Référence spec :** [Niveaux de tests — définitions et périmètres](niveaux-de-tests.md)](niveaux-de-tests.md)
 
 > **Portée de ce document : le périmètre — l'inventaire des cas qui doivent exister.**
-> Il ne définit pas les niveaux (voir [`qualite/niveaux-de-tests.md`](niveaux-de-tests.md)) et **ne porte
+> Il ne définit pas les niveaux (voir [Niveaux de tests — définitions et périmètres](niveaux-de-tests.md)](niveaux-de-tests.md)) et **ne porte
 > aucun état d'avancement**.
 
 > **Où lire l'avancement**
@@ -118,7 +118,7 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 
 ### RgpdController — `* /api/v1/rgpd` (NTR-29)
 > Restriction : `[Authorize]`. Ces routes sont portées par `RgpdController`, **pas** par
-> `UsersController` — voir `systemes/rgpd/index.md`.
+> `UsersController` — voir [RGPD — Droits de l'utilisateur](../systemes/rgpd/index.md).
 
 | ID | Endpoint | Scénario | Résultat attendu |
 |----|----------|----------|------------------|
@@ -187,7 +187,7 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 ---
 
 ### FoodItemsController — `GET /api/v1/food-items` (NTR-110)
-> Restriction : `[Authorize]` — orchestration Redis + PostgreSQL (voir `systemes/aliments/workflow-cache-recherche.md`)
+> Restriction : `[Authorize]` — orchestration Redis + PostgreSQL (voir [Workflow — Cache des recherches d'aliments](../systemes/aliments/workflow-cache-recherche.md))
 
 | ID | Endpoint | Scénario | Résultat attendu |
 |----|----------|----------|------------------|

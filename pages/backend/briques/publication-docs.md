@@ -1,4 +1,4 @@
-# Infrastructure Docs — Publication automatique (MkDocs + GitHub Pages)
+# Publication de la documentation (MkDocs + GitHub Pages)
 
 > Ce document couvre la mise en place de la publication automatique du repo docs.
 > Approche : **Docs-as-code** — les modifications markdown déclenchent un build MkDocs et un déploiement GitHub Pages.
@@ -254,4 +254,4 @@ mkdocs serve
 
 ---
 
-*Références : `briques/environnement-local.md` (CI/CD API)*
+*Références : [Environnement local et production](environnement-local.md) (CI/CD API)*

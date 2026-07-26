@@ -10,20 +10,20 @@
 
 ## Les systèmes
 
-| Système | Porte d'entrée | Ce que le dossier contient en plus |
-|---|---|---|
-| Authentification | [authentification/](authentification/index.md) | — |
-| Profil utilisateur | [profil-utilisateur/](profil-utilisateur/index.md) | — |
-| Plans alimentaires (DietPlan) | [diet-plan/](diet-plan/index.md) | — |
-| Régimes (Diet) | [diet/](diet/index.md) | — |
-| Repas | [repas/](repas/index.md) | — |
-| Suivi du poids | [suivi-poids/](suivi-poids/index.md) | — |
-| Aliments | [aliments/](aliments/index.md) | cache des recherches, mise à disposition du catalogue, source Open Food Facts, et leurs deux workflows |
-| Bilan nutritionnel | [bilan-nutritionnel/](bilan-nutritionnel/index.md) | moteur de calcul |
-| Abonnements | [abonnements/](abonnements/index.md) | — |
-| RGPD | [rgpd/](rgpd/index.md) | purge des comptes |
-| Administration | [administration/](administration/index.md) | — |
-| Plateforme API | [plateforme/openapi.md](plateforme/openapi.md) | OpenAPI, Exception Filter — le comportement transverse de l'API |
+| Système | Ce que le dossier contient en plus |
+|---|---|
+| [Authentification](authentification/index.md) | — |
+| [Profil utilisateur](profil-utilisateur/index.md) | — |
+| [Plans alimentaires (DietPlan)](diet-plan/index.md) | — |
+| [Régimes (Diet)](diet/index.md) | — |
+| [Repas](repas/index.md) | — |
+| [Suivi du poids](suivi-poids/index.md) | — |
+| [Aliments](aliments/index.md) | [cache des recherches](aliments/cache-recherche.md) et [son workflow](aliments/workflow-cache-recherche.md), [mise à disposition du catalogue](aliments/mise-a-disposition.md) et [son workflow](aliments/workflow-import.md), [source Open Food Facts](aliments/source-open-food-facts.md) |
+| [Bilan nutritionnel](bilan-nutritionnel/index.md) | [moteur de calcul](bilan-nutritionnel/moteur-de-calcul.md) |
+| [Abonnements & tiers](abonnements/index.md) | — |
+| [RGPD — Droits de l'utilisateur](rgpd/index.md) | [purge des comptes](rgpd/purge-des-comptes.md) |
+| [Back-office Admin](administration/index.md) | — |
+| [OpenAPI / Swagger UI](plateforme/openapi.md) | [Exception Filter](plateforme/exception-filter.md) — le comportement transverse de l'API |
 
 ---
 
@@ -46,9 +46,9 @@ La nature d'une fiche se lit dans son en-tête `**Type :** Utilisateur | Interne
 
 | Sujet | Où |
 |---|---|
-| Les technologies tierces | [../briques/redis.md](../briques/redis.md) et les autres pages de `briques/` |
-| La démarche de test | [../qualite/niveaux-de-tests.md](../qualite/niveaux-de-tests.md) |
-| Les vues transverses (diagramme de classes, flux métier) | [../reference/diagramme-classes.md](../reference/diagramme-classes.md) |
+| Les technologies tierces | [Redis](../briques/redis.md) et les autres pages de `briques/` |
+| La démarche de test | [Niveaux de tests — définitions et périmètres](../qualite/niveaux-de-tests.md) |
+| Les vues transverses (diagramme de classes, flux métier) | [Diagramme de classes — API Nutrition](../reference/diagramme-classes.md) |
 
 ---
 

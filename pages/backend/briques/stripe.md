@@ -4,7 +4,7 @@
 > aucun champ `StripeCustomerId` sur `User`, pas de `IStripeWebhookService`.
 >
 > Ce document décrit comment Stripe communiquera avec l'API ASP.NET Core pour synchroniser les changements d'abonnement.
-> Référence feature : `systemes/abonnements/index.md`
+> Référence feature : [Abonnements & tiers](../systemes/abonnements/index.md)
 
 ---
 

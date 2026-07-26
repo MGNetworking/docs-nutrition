@@ -1,4 +1,4 @@
-# Workflows — Flux métier
+# Flux métier
 
 > Tous les flux séquentiels du système Nutrition API.
 > Source : fichiers `.mermaid` dans `reference/diagrammes/`.

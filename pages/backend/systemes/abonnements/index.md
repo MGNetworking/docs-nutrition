@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Utilisateur
-**Référence spec :** `docs/pages/backend/6.nutrition-abonnements.md`
+**Référence spec :** [Abonnements & Tiers — API Nutrition](../../6.nutrition-abonnements.md)
 
 ---
 
@@ -30,7 +30,7 @@ Les vérifications de tier s'effectuent automatiquement à chaque opération lim
 
 ## Ce qu'elle ne fait pas
 
-- Ne gère pas le paiement — délégué à Stripe (voir `briques/stripe.md`)
+- Ne gère pas le paiement — délégué à Stripe (voir [Stripe — Intégration webhooks & abonnements](../../briques/stripe.md))
 - Ne stocke jamais le tier dans le JWT — `User.SubscriptionTier` en DB est la seule source de vérité
 
 ## Intégration Stripe
@@ -48,7 +48,7 @@ Deux champs de liaison prévus sur `User` :
 | `StripeCustomerId` | `string?` | Retrouver le User depuis un événement Stripe |
 | `StripeSubscriptionId` | `string?` | Identifier l'abonnement actif |
 
-**Détail complet :** `briques/stripe.md`
+**Détail complet :** [Stripe — Intégration webhooks & abonnements](../../briques/stripe.md)
 
 ## Limites par tier
 
@@ -67,4 +67,4 @@ Deux champs de liaison prévus sur `User` :
 - `SubscriptionGuard` (couche Application) — helper centralisé pour toutes les vérifications
 - `IStripeWebhookService` (couche Application) — mise à jour du tier sur événement Stripe
 - Toutes les fonctionnalités avec limites (DietPlan, Repas, Aliments, Bilan)
-- `briques/stripe.md` — workflow webhook, configuration, événements
+- [Stripe — Intégration webhooks & abonnements](../../briques/stripe.md) — workflow webhook, configuration, événements

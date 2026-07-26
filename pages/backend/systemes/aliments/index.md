@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Utilisateur
-**Référence spec :** `reference/diagrammes/workflow_recherche-aliment.mermaid` · `systemes/aliments/source-open-food-facts.md`
+**Référence spec :** `reference/diagrammes/workflow_recherche-aliment.mermaid` · [Source Open Food Facts — import du catalogue](source-open-food-facts.md)
 
 ---
 
@@ -49,5 +49,5 @@ Permettre à l'utilisateur de rechercher des aliments parmi 3M+ produits issus d
 
 - Redis (cache recherche)
 - PostgreSQL `FoodItem` (base pré-remplie)
-- Job import Open Food Facts (quotidien — voir `systemes/aliments/source-open-food-facts.md`)
+- Job import Open Food Facts (quotidien — voir [Source Open Food Facts — import du catalogue](source-open-food-facts.md))
 - `Abonnements` — limite SavedFoodItems selon tier

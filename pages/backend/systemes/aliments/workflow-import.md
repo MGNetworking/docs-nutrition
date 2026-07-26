@@ -1,12 +1,12 @@
 # Workflow — Mise à disposition des aliments
 
 **Ajouté le :** 2026-07-23
-**Feature associée :** `systemes/aliments/mise-a-disposition.md`
+**Feature associée :** [Mise à disposition des aliments](mise-a-disposition.md)
 **Ticket :** NTR-55
 
 > **Ce document explique comment le système fonctionne, de bout en bout.**
-> Les deux annexes voisines décrivent chacune une brique isolée : `briques/hangfire.md`
-> le **moteur de jobs**, `systemes/aliments/source-open-food-facts.md` la **source de données**. Ce document-ci
+> Les deux annexes voisines décrivent chacune une brique isolée : [Hangfire — moteur de jobs récurrents](../../briques/hangfire.md)
+> le **moteur de jobs**, [Source Open Food Facts — import du catalogue](source-open-food-facts.md) la **source de données**. Ce document-ci
 > est celui qui les assemble — c'est le point d'entrée à lire en premier.
 
 ---
@@ -106,7 +106,7 @@ OffDumpReader  ──►  OffProductMapper  ──►  OffProduct  ──►  Of
 6. **Bilan** — en fin de parcours, journalisation : *« X produits importés, Y ignorés »*.
 7. **Invalidation du cache** — si au moins un produit a été importé, toutes les recherches en
    cache sont supprimées (`InvalidateAllSearchesAsync`) : elles portaient sur l'ancien catalogue.
-   Voir `systemes/aliments/workflow-cache-recherche.md`.
+   Voir [Workflow — Cache des recherches d'aliments](workflow-cache-recherche.md).
 
 ### Ce qui fait rejeter un produit
 
@@ -210,9 +210,9 @@ autre nom ferait rester `lastImportAt` à `null` **en permanence, sans aucune er
 
 | Sujet | Document |
 |---|---|
-| Le moteur de jobs (Hangfire, dashboard, tables) | `briques/hangfire.md` |
-| La source de données (pourquoi un dump, quels champs) | `systemes/aliments/source-open-food-facts.md` |
-| Le besoin métier et le périmètre | `systemes/aliments/mise-a-disposition.md` |
-| La recherche d'aliments qui consomme le catalogue | `systemes/aliments/index.md` |
-| Le cache des recherches, invalidé en fin d'import | `systemes/aliments/workflow-cache-recherche.md` |
-| L'endpoint de santé système | `systemes/administration/index.md` |
+| Le moteur de jobs (Hangfire, dashboard, tables) | [Hangfire — moteur de jobs récurrents](../../briques/hangfire.md) |
+| La source de données (pourquoi un dump, quels champs) | [Source Open Food Facts — import du catalogue](source-open-food-facts.md) |
+| Le besoin métier et le périmètre | [Mise à disposition des aliments](mise-a-disposition.md) |
+| La recherche d'aliments qui consomme le catalogue | [Aliments](index.md) |
+| Le cache des recherches, invalidé en fin d'import | [Workflow — Cache des recherches d'aliments](workflow-cache-recherche.md) |
+| L'endpoint de santé système | [Back-office Admin](../administration/index.md) |

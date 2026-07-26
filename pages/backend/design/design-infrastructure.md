@@ -1,7 +1,7 @@
 # Design technique — Couche Infrastructure
 
 > Document de référence obligatoire avant tout ticket de la couche Infrastructure.
-> Modèle domaine : `docs/pages/backend/design/design-domain.md`
+> Modèle domaine : [Modèle domaine — API de Gestion de Régime Alimentaire](design-domain.md)
 
 ---
 
@@ -324,8 +324,8 @@ public sealed class UserRepository : IUserRepository
 
 > **Section alignée sur le code après implémentation (NTR-54 / NTR-55).** Elle décrivait
 > auparavant une mise en œuvre à base de `IDistributedCache`, option finalement écartée.
-> ➜ Détail de la brique : `briques/redis.md` · fonctionnement d'ensemble :
-> `systemes/aliments/workflow-cache-recherche.md`.
+> ➜ Détail de la brique : [Redis](../briques/redis.md) · fonctionnement d'ensemble :
+> [Workflow — Cache des recherches d'aliments](../systemes/aliments/workflow-cache-recherche.md).
 
 ### Package NuGet
 
@@ -420,7 +420,7 @@ La clé de configuration est `Redis:ConnectionString` — **pas** une entrée de
 
 ## 6. Configuration Hangfire
 
-Voir `briques/hangfire.md` pour le détail complet.
+Voir [Hangfire — moteur de jobs récurrents](../briques/hangfire.md) pour le détail complet.
 
 ### Jobs planifiés
 

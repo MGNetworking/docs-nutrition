@@ -1,7 +1,7 @@
 # Workflow — Cache des recherches d'aliments
 
 **Ajouté le :** 2026-07-23
-**Feature associée :** `systemes/aliments/cache-recherche.md`
+**Feature associée :** [Cache des recherches d'aliments](cache-recherche.md)
 **Ticket :** NTR-54
 
 > **Ce document explique comment le cache fonctionne, de bout en bout** — le chemin d'une
@@ -229,7 +229,7 @@ première recherche suivante, sur des données à jour.
 | Invalidation après import | ✅ testée unitairement (motif toutes versions, suppression de chaque clé) |
 | Échec de l'invalidation qui doit rester bloquant | ✅ test unitaire — l'exception remonte bien |
 | Comportement contre un **Redis réel** (`SCAN`, sérialisation de bout en bout) | ⚠️ jamais exécuté — couverture prévue par **NTR-73** (niveau 3) |
-| Topologie multi-endpoints ou avec réplicas | ❌ non vérifié — voir `briques/redis.md` |
+| Topologie multi-endpoints ou avec réplicas | ❌ non vérifié — voir [Redis](../../briques/redis.md) |
 
 ---
 
@@ -253,8 +253,8 @@ première recherche suivante, sur des données à jour.
 
 | Sujet | Document |
 |---|---|
-| Le besoin et le périmètre | `systemes/aliments/cache-recherche.md` |
-| La recherche vue par l'utilisateur | `systemes/aliments/index.md` |
-| Le job qui met à jour le catalogue mis en cache | `systemes/aliments/workflow-import.md` |
-| Redis comme brique : client, configuration, débogage `redis-cli` | `briques/redis.md` |
-| L'environnement de développement (docker-compose, ports) | `briques/environnement-local.md` |
+| Le besoin et le périmètre | [Cache des recherches d'aliments](cache-recherche.md) |
+| La recherche vue par l'utilisateur | [Aliments](index.md) |
+| Le job qui met à jour le catalogue mis en cache | [Workflow — Mise à disposition des aliments](workflow-import.md) |
+| Redis comme brique : client, configuration, débogage `redis-cli` | [Redis](../../briques/redis.md) |
+| L'environnement de développement (docker-compose, ports) | [Environnement local et production](../../briques/environnement-local.md) |

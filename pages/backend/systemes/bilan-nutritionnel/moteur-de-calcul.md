@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-06-12
 **Type :** Interne
-**Référence spec :** `docs/pages/backend/design/Regles-metier.md` · `docs/pages/backend/design/regles-metier-consolidees.md`
+**Référence spec :** [Règles métier — catalogue des formules](../../design/Regles-metier.md) · [Règles métier consolidées](../../design/regles-metier-consolidees.md)
 
 ---
 
@@ -137,7 +137,7 @@ Retourne la répartition macros par défaut selon le type de régime.
 
 `src/NutritionApi.Application/Services/NutritionCalculator.cs`
 
-Service applicatif statique — pas d'état, pas de dépendances injectées. Les calculs BMR/TDEE sont des règles métier de la couche Application selon `design/regles-metier-consolidees.md`.
+Service applicatif statique — pas d'état, pas de dépendances injectées. Les calculs BMR/TDEE sont des règles métier de la couche Application selon [Règles métier consolidées](../../design/regles-metier-consolidees.md).
 
 ## Dépendances
 

@@ -2,7 +2,7 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Interne
-**Référence spec :** `docs/pages/backend/4.nutrition-specifications-techniques.md`
+**Référence spec :** [Installer ReportGenerator (une seule fois, outil global)](../../4.nutrition-specifications-techniques.md)
 
 ---
 

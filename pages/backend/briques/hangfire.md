@@ -1,4 +1,4 @@
-# Infrastructure — Hangfire (jobs récurrents)
+# Hangfire — moteur de jobs récurrents
 
 **Ajouté le :** 2026-05-02
 
@@ -8,7 +8,7 @@
 > stockage, dashboard, supervision.
 >
 > ➜ Pour comprendre **comment fonctionne l'import des aliments de bout en bout**, lire d'abord
-> `systemes/aliments/workflow-import.md`. Ce document-ci ne sert qu'à approfondir la brique Hangfire.
+> [Workflow — Mise à disposition des aliments](../systemes/aliments/workflow-import.md). Ce document-ci ne sert qu'à approfondir la brique Hangfire.
 
 ---
 
@@ -249,7 +249,7 @@ le schéma **`hangfire`** (minuscules), avec des noms de tables et de colonnes �
 
 ## Voir aussi
 
-- `systemes/aliments/source-open-food-facts.md` — logique métier du job d'import OFF
-- `briques/keycloak-admin.md` — appel Keycloak Admin pour la purge RGPD
-- `docs/pages/backend/7.nutrition-admin.md` — endpoint `GET /admin/system/health`
-- `systemes/rgpd/purge-des-comptes.md` — feature RGPD (purge, grace period)
+- [Source Open Food Facts — import du catalogue](../systemes/aliments/source-open-food-facts.md) — logique métier du job d'import OFF
+- [Keycloak Admin API — Connexion et opérations](keycloak-admin.md) — appel Keycloak Admin pour la purge RGPD
+- [Back-office Admin — API Nutrition](../7.nutrition-admin.md) — endpoint `GET /admin/system/health`
+- [RGPD — Purge des comptes](../systemes/rgpd/purge-des-comptes.md) — feature RGPD (purge, grace period)

@@ -2,9 +2,9 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Interne
-**Référence spec :** `reference/diagrammes/workflow_rgpd.mermaid` · `briques/keycloak-admin.md`
+**Référence spec :** `reference/diagrammes/workflow_rgpd.mermaid` · [Keycloak Admin API — Connexion et opérations](../../briques/keycloak-admin.md)
 
-> Les droits exercés par l'utilisateur (export, demande de suppression, réactivation) sont une fonctionnalité distincte — voir `systemes/rgpd/index.md`.
+> Les droits exercés par l'utilisateur (export, demande de suppression, réactivation) sont une fonctionnalité distincte — voir [RGPD — Droits de l'utilisateur](index.md).
 
 ---
 
@@ -48,7 +48,7 @@ Aucun acteur humain — job de fond déclenché par le planificateur (Hangfire).
 
 ## Dépendances
 
-- Hangfire — planification et historique d'exécution (`briques/hangfire.md`)
-- Keycloak Admin API — suppression définitive du compte (`briques/keycloak-admin.md`)
+- Hangfire — planification et historique d'exécution ([Hangfire — moteur de jobs récurrents](../../briques/hangfire.md))
+- Keycloak Admin API — suppression définitive du compte ([Keycloak Admin API — Connexion et opérations](../../briques/keycloak-admin.md))
 - PostgreSQL — suppression cascade des données de l'utilisateur
-- `systemes/rgpd/index.md` — l'amont : c'est la demande de suppression qui met le compte en grace period
+- [RGPD — Droits de l'utilisateur](index.md) — l'amont : c'est la demande de suppression qui met le compte en grace period

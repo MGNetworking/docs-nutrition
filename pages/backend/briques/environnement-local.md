@@ -1,7 +1,7 @@
-# Infrastructure Setup — Développement local et Production
+# Environnement local et production
 
 > Ce document couvre l'infrastructure nécessaire pour faire tourner le projet en local et en production.
-> Il complète `briques/keycloak-admin.md` (Admin API RGPD) et `briques/hangfire.md` (jobs planifiés).
+> Il complète [Keycloak Admin API — Connexion et opérations](keycloak-admin.md) (Admin API RGPD) et [Hangfire — moteur de jobs récurrents](hangfire.md) (jobs planifiés).
 
 ---
 
@@ -131,7 +131,7 @@ avec les manifests K3s de production. C'est le **seul** alignement exigé entre 
 aliments, plans). Il est rejoué à chaque `dev-up.sh`.
 
 Le catalogue `FoodItem` réel est alimenté par le job d'import Open Food Facts — voir
-`systemes/aliments/workflow-import.md`.
+[Workflow — Mise à disposition des aliments](../systemes/aliments/workflow-import.md).
 
 
 ## Section 2 — Production (K3s)
@@ -647,7 +647,7 @@ jobs:
           reporter: dotnet-trx
 ```
 
-> **docker-compose vs service PostgreSQL GitHub Actions** — les tests d'intégration de niveau 3 s'appuient sur le `docker-compose.yml` du projet (PostgreSQL, Redis, Keycloak), réutilisé en CI. Le bloc `services:` du workflow fait donc double emploi : monter les trois services via docker-compose et pointer la configuration dessus. Décision d'architecture du 2026-07-21 — voir `qualite/niveaux-de-tests.md`.
+> **docker-compose vs service PostgreSQL GitHub Actions** — les tests d'intégration de niveau 3 s'appuient sur le `docker-compose.yml` du projet (PostgreSQL, Redis, Keycloak), réutilisé en CI. Le bloc `services:` du workflow fait donc double emploi : monter les trois services via docker-compose et pointer la configuration dessus. Décision d'architecture du 2026-07-21 — voir [Niveaux de tests — définitions et périmètres](../qualite/niveaux-de-tests.md).
 
 ---
 
@@ -668,4 +668,4 @@ jobs:
 
 ---
 
-*Références : `briques/keycloak-admin.md` (Admin API RGPD) · `briques/hangfire.md` (jobs Hangfire)*
+*Références : [Keycloak Admin API — Connexion et opérations](keycloak-admin.md) (Admin API RGPD) · [Hangfire — moteur de jobs récurrents](hangfire.md) (jobs Hangfire)*

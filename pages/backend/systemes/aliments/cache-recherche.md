@@ -2,10 +2,10 @@
 
 **Ajouté le :** 2026-07-23
 **Type :** Interne
-**Référence spec :** `systemes/aliments/workflow-cache-recherche.md` (fonctionnement de bout en bout)
+**Référence spec :** [Workflow — Cache des recherches d'aliments](workflow-cache-recherche.md) (fonctionnement de bout en bout)
 
 > Fonctionnalité de fonctionnement applicatif : elle accélère la recherche d'aliments
-> (`systemes/aliments/index.md`) sans jamais être visible par l'utilisateur.
+> ([Aliments](index.md)) sans jamais être visible par l'utilisateur.
 
 ---
 
@@ -53,7 +53,7 @@ durable n'est constatée — voir le workflow, §4.
 ## Dépendances
 
 - Redis — stockage des entrées de cache. La brique elle-même (client, configuration par
-  environnement, débogage) est décrite dans `briques/redis.md`
+  environnement, débogage) est décrite dans [Redis](../../briques/redis.md)
 - PostgreSQL — source de vérité du catalogue `FoodItem`
-- `systemes/aliments/index.md` — la fonctionnalité utilisateur accélérée par ce cache
-- `systemes/aliments/mise-a-disposition.md` — le job qui met à jour le catalogue mis en cache
+- [Aliments](index.md) — la fonctionnalité utilisateur accélérée par ce cache
+- [Mise à disposition des aliments](mise-a-disposition.md) — le job qui met à jour le catalogue mis en cache

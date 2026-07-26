@@ -1,6 +1,6 @@
 # Règles métier consolidées
 
-> Document de référence unique — toutes les règles métier extraites de `design/design-domain.md`, `design/design-application.md`, `design/design-api.md` et `design/Regles-metier.md`.
+> Document de référence unique — toutes les règles métier extraites de [Modèle domaine — API de Gestion de Régime Alimentaire](design-domain.md), [Design technique — Couche Application](design-application.md), [Design technique — Couche API](design-api.md) et [Règles métier — catalogue des formules](Regles-metier.md).
 > Organisé par entité. Évite de naviguer entre plusieurs fichiers pour retrouver une règle.
 
 ---
@@ -160,7 +160,7 @@ Le choix se fait par l'énumération `BmrFormula`, via `NutritionCalculatorFacto
 | Homme | `88,362 + (13,397 × P) + (4,799 × T) - (5,677 × A)` |
 | Femme | `447,593 + (9,247 × P) + (3,098 × T) - (4,330 × A)` |
 
-> Les autres formules citées dans `design/Regles-metier.md` (Katch-McArdle, Harris-Benedict 1919) sont
+> Les autres formules citées dans [Règles métier — catalogue des formules](Regles-metier.md) (Katch-McArdle, Harris-Benedict 1919) sont
 > **documentaires : aucune n'est implémentée.**
 
 ### TDEE

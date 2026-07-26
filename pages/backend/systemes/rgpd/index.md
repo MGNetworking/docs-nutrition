@@ -2,9 +2,9 @@
 
 **Ajouté le :** 2026-05-02
 **Type :** Utilisateur
-**Référence spec :** `reference/diagrammes/workflow_rgpd.mermaid` · `briques/keycloak-admin.md`
+**Référence spec :** `reference/diagrammes/workflow_rgpd.mermaid` · [Keycloak Admin API — Connexion et opérations](../../briques/keycloak-admin.md)
 
-> La suppression effective des comptes après la grace period est une fonctionnalité interne distincte — voir `systemes/rgpd/purge-des-comptes.md`.
+> La suppression effective des comptes après la grace period est une fonctionnalité interne distincte — voir [RGPD — Purge des comptes](purge-des-comptes.md).
 
 ---
 
@@ -36,7 +36,7 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 ## Ce qu'elle ne fait pas
 
 - Ne supprime pas immédiatement — grace period obligatoire de 30 jours
-- Ne réalise pas la suppression définitive elle-même — c'est le rôle du job de purge (`systemes/rgpd/purge-des-comptes.md`)
+- Ne réalise pas la suppression définitive elle-même — c'est le rôle du job de purge ([RGPD — Purge des comptes](purge-des-comptes.md))
 
 ## Endpoints
 
@@ -47,7 +47,7 @@ Tous les utilisateurs — droits non conditionnés au tier (obligations légales
 | `POST` | `/api/v1/rgpd/reactivate` | Annuler la suppression (< 30 jours) |
 
 > Ces routes sont portées par `RgpdController` (`api/v1/rgpd`), **et non par `UsersController`** —
-> corrigé le 2026-07-23 après confrontation à `design/design-api.md` et au code.
+> corrigé le 2026-07-23 après confrontation à [Design technique — Couche API](../../design/design-api.md) et au code.
 
 ## Export RGPD — implémentation technique
 
@@ -147,6 +147,6 @@ Le service ne sait pas comment les données sont livrées — c'est la responsab
 ## Dépendances
 
 - Keycloak Admin API — désactivation / réactivation du compte Keycloak
-- `briques/keycloak-admin.md` — mécanisme de connexion service account
+- [Keycloak Admin API — Connexion et opérations](../../briques/keycloak-admin.md) — mécanisme de connexion service account
 - Service email — envoi du lien de réactivation signé
-- `systemes/rgpd/purge-des-comptes.md` — suppression définitive après la grace period
+- [RGPD — Purge des comptes](purge-des-comptes.md) — suppression définitive après la grace period

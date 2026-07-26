@@ -1,11 +1,11 @@
 # Niveaux de tests — définitions et périmètres
 
 **Type :** Interne
-**Référence spec :** [`design/design-tests.md`](../design/design-tests.md)
+**Référence spec :** [Stratégie de Tests du Projet](../design/design-tests.md)](../design/design-tests.md)
 
 > **Portée de ce document : ce qu'est chaque niveau de test, et où s'arrête son périmètre.**
 > Il ne recense aucun test précis — pour la liste des tests à écrire et leur avancement, voir
-> [`qualite/recensement-des-tests.md`](recensement-des-tests.md).
+> [Recensement des tests](recensement-des-tests.md)](recensement-des-tests.md).
 
 ---
 
@@ -159,6 +159,6 @@ dans git. Provisionnement : NTR-125.
 
 | Sujet | Document |
 |---|---|
-| La liste des tests à écrire et leur avancement | [`qualite/recensement-des-tests.md`](recensement-des-tests.md) |
-| La stratégie de référence (source de vérité) | [`design/design-tests.md`](../design/design-tests.md) |
+| La liste des tests à écrire et leur avancement | [Recensement des tests](recensement-des-tests.md)](recensement-des-tests.md) |
+| La stratégie de référence (source de vérité) | [Stratégie de Tests du Projet](../design/design-tests.md)](../design/design-tests.md) |
 | Le workflow Git et les branches | `CONTRIBUTING.md` du dépôt `nutrition-api` |

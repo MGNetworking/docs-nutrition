@@ -1,7 +1,7 @@
 # Diagramme de classes — API Nutrition
 
-> Généré depuis `design/design-domain.md`.
-> Source de vérité : `design/design-domain.md` — modifier ce fichier en cas de changement.
+> Généré depuis [Modèle domaine — API de Gestion de Régime Alimentaire](../design/design-domain.md).
+> Source de vérité : [Modèle domaine — API de Gestion de Régime Alimentaire](../design/design-domain.md) — modifier ce fichier en cas de changement.
 
 ---
 
