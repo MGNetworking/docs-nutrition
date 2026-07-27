@@ -1,11 +1,17 @@
 # Keycloak Admin API — Connexion et opérations
 
-> 🔲 **Cible, non implémentée** (vérifié le 2026-07-23) — le contrat `IKeycloakAdminService`
-> existe dans la couche Application, mais **aucune classe ne l'implémente** et `RgpdService` ne
-> l'appelle pas. La désactivation et la suppression des comptes Keycloak ne sont donc pas
-> effectives.
+> **Portée de ce document : la connexion de l'API à Keycloak Admin, et elle seule.**
+> ➜ Pour la suppression des comptes de bout en bout, lire [RGPD — Purge des comptes](../systemes/rgpd/purge-des-comptes.md).
 >
-> Ce document décrit comment l'API ASP.NET Core se connectera à Keycloak Admin pour gérer les comptes utilisateur dans le cadre du workflow RGPD.
+> **État au 2026-07-27**
+>
+> | | |
+> |---|---|
+> | ✅ | `KeycloakAdminService` et `KeycloakTokenProvider` sont implémentés et couverts par 22 tests unitaires (NTR-133) |
+> | 🔲 | `RgpdService` n'appelle pas encore `DisableUserAsync` / `EnableUserAsync` — la désactivation au moment de la demande de suppression n'est donc pas effective |
+> | 🔲 | Le job de purge qui consomme `DeleteUserAsync` reste à écrire (NTR-56) |
+> | ⚠️ | Le client de service `nutrition-api-service` doit être créé dans le realm — voir « Configuration côté Keycloak » |
+>
 > Référence workflow : `reference/diagrammes/workflow_rgpd.mermaid`
 
 ---
@@ -95,32 +101,90 @@ Keycloak__ServiceClientSecret=<secret>
 
 Ces valeurs ne doivent jamais être dans le code source. En développement : `dotnet user-secrets`. En production : variables d'environnement injectées par Kubernetes (Secret).
 
-### Service dédié — `IKeycloakAdminService`
+`appsettings.json` déclare les quatre clés avec des valeurs vides, à l'exception de `ServiceClientId`
+qui porte sa valeur par défaut `nutrition-api-service`.
 
-L'API expose une interface dans la couche **Infrastructure** :
+> La section `Keycloak` est **partagée** avec la validation des jetons entrants (`Authority`,
+> `Audience`, `RequireHttpsMetadata`, lues dans `Program.cs`). `KeycloakAdminOptions` ne lie que les
+> quatre clés d'administration ; les deux usages cohabitent sans se gêner.
+
+### Le contrat — `IKeycloakAdminService`
+
+L'interface vit dans la couche **Application** (`Application/Interfaces/ExternalServices/`) : c'est
+Application qui a besoin d'agir sur les comptes, Infrastructure ne fait qu'obéir au contrat. Elle ne
+porte pas de `CancellationToken` — les appelants sont un job de fond et un service applicatif, aucun
+n'a de jeton d'annulation à propager.
 
 ```csharp
 public interface IKeycloakAdminService
 {
-    Task DisableUserAsync(string keycloakId, CancellationToken ct);
-    Task EnableUserAsync(string keycloakId, CancellationToken ct);
-    Task DeleteUserAsync(string keycloakId, CancellationToken ct);
+    Task DisableUserAsync(string keycloakId);
+    Task EnableUserAsync(string keycloakId);
+    Task DeleteUserAsync(string keycloakId);
 }
 ```
 
-L'implémentation (`KeycloakAdminService`) :
-1. Obtient un service token via `client_credentials` (mis en cache)
-2. Appelle l'endpoint Admin avec `HttpClient`
-3. Gère les erreurs HTTP (404 = compte déjà supprimé, 401 = token expiré → retry)
+### Les deux classes d'implémentation
 
-### Résilience avec Polly
+`NutritionApi.Infrastructure/ExternalServices/Keycloak/` :
 
-Le service token peut expirer entre l'obtention et l'appel Admin. Polly gère le retry :
+| Classe | Responsabilité unique | Durée de vie |
+|---|---|---|
+| `KeycloakAdminOptions` | Porter les 4 paramètres de la section `Keycloak` | — |
+| `IKeycloakTokenProvider` / `KeycloakTokenProvider` | Obtenir et **mémoriser** le jeton de service | **Singleton** |
+| `KeycloakAdminService` | Appeler l'API Admin avec ce jeton | Transient (client typé) |
 
+Le fournisseur de jetons est séparé du service pour une raison précise : le jeton doit survivre aux
+requêtes, alors que l'appel Admin est sans état. Les fusionner aurait forcé le service entier en
+singleton, ou le jeton à être redemandé à chaque appel.
+
+#### Le cache du jeton
+
+`KeycloakTokenProvider` conserve le jeton et sa date d'expiration, et le renouvelle **30 secondes
+avant** son échéance réelle : sans cette marge, un jeton obtenu juste avant l'expiration pourrait
+périmer entre son obtention et l'appel Admin qui l'utilise.
+
+Un `SemaphoreSlim` protège le renouvellement — au démarrage, dix requêtes simultanées ne déclenchent
+qu'une seule demande de jeton, les autres attendant le résultat. Le motif est un double contrôle :
+le cache est testé une première fois sans verrou, puis une seconde fois après l'avoir obtenu.
+
+L'horloge est injectée (`TimeProvider`), ce qui permet aux tests de vérifier l'expiration sans
+attendre réellement.
+
+### Résilience — deux mécanismes distincts
+
+| Cas | Traité par | Comment |
+|---|---|---|
+| **401** Unauthorized | `KeycloakAdminService` lui-même | Invalide le jeton mémorisé, puis **rejoue une fois**. Un second 401 lève. |
+| **5xx / 408 / 429 / timeout** | `AddStandardResilienceHandler()` (`Microsoft.Extensions.Http.Resilience`) | Retry exponentiel, disjoncteur et délai d'attente standards, posés sur le client HTTP |
+| **404** Not Found | `KeycloakAdminService` lui-même | Le compte n'existe plus côté Keycloak : l'opération est sans objet, journalisée en avertissement, **pas d'exception** |
+
+Le 401 ne peut pas être délégué au handler standard : seul le service sait qu'il faut **invalider le
+cache du jeton** avant de rejouer — un simple retry rejouerait avec le même jeton périmé.
+
+> `Microsoft.Extensions.Http.Resilience` remplace l'ancien `Polly.Extensions.Http`. Polly reste le
+> moteur sous-jacent, mais la configuration passe désormais par le `IHttpClientBuilder`.
+
+### Enregistrement — `NutritionApi.Infrastructure/DependencyInjection.cs`
+
+```csharp
+services.Configure<KeycloakAdminOptions>(configuration.GetSection(KeycloakAdminOptions.SectionName));
+services.AddSingleton(TimeProvider.System);
+
+services.AddHttpClient(KeycloakTokenProvider.HttpClientName)
+        .AddStandardResilienceHandler();
+
+services.AddSingleton<IKeycloakTokenProvider>(sp => new KeycloakTokenProvider(
+    sp.GetRequiredService<IHttpClientFactory>().CreateClient(KeycloakTokenProvider.HttpClientName),
+    sp.GetRequiredService<IOptions<KeycloakAdminOptions>>(),
+    sp.GetRequiredService<TimeProvider>()));
+
+services.AddHttpClient<IKeycloakAdminService, KeycloakAdminService>(KeycloakAdminService.HttpClientName)
+        .AddStandardResilienceHandler();
 ```
-- 401 Unauthorized → invalider le cache token + retry 1 fois
-- 5xx / timeout    → retry exponentiel (3 tentatives max)
-```
+
+Le fournisseur est enregistré par fabrique et non par `AddHttpClient<,>` : cette dernière n'enregistre
+qu'en `Transient`, ce qui viderait le cache du jeton à chaque requête.
 
 ---
 

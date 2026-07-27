@@ -28,9 +28,14 @@ Aucun acteur humain — job de fond déclenché par le planificateur (Hangfire).
 - Supprime définitivement le compte correspondant dans Keycloak
 - Enregistre l'exécution dans l'historique Hangfire (visible depuis le back-office admin)
 
-> 🔲 **Rien de tout cela n'est implémenté à ce jour** (vérifié le 2026-07-23) — le job de purge
-> est le ticket **NTR-56**, et `IKeycloakAdminService` n'a aucune implémentation. Seule
-> l'infrastructure Hangfire qui le fera tourner est en place (NTR-55).
+> **État au 2026-07-27** — le job lui-même n'existe pas encore.
+>
+> | | |
+> |---|---|
+> | ✅ | L'infrastructure Hangfire qui le fera tourner (NTR-55) |
+> | ✅ | L'accès à Keycloak Admin — `KeycloakAdminService.DeleteUserAsync` (NTR-133) |
+> | 🔲 | Le job `RgpdPurgeJob` : sélection des comptes, cascade PostgreSQL, appel Keycloak (**NTR-56**) |
+> | 🔲 | Les méthodes de `IUserRepository` permettant de **lister** et supprimer les comptes expirés — seul `CountInGracePeriodAsync` existe |
 
 ## Ce qu'elle ne fait pas
 
