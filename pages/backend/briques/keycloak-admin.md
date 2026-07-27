@@ -8,8 +8,8 @@
 > | | |
 > |---|---|
 > | ✅ | `KeycloakAdminService` et `KeycloakTokenProvider` sont implémentés et couverts par 22 tests unitaires (NTR-133) |
+> | ✅ | `RgpdPurgeJob` consomme `DeleteUserAsync` (NTR-56) |
 > | 🔲 | `RgpdService` n'appelle pas encore `DisableUserAsync` / `EnableUserAsync` — la désactivation au moment de la demande de suppression n'est donc pas effective |
-> | 🔲 | Le job de purge qui consomme `DeleteUserAsync` reste à écrire (NTR-56) |
 > | ⚠️ | Le client de service `nutrition-api-service` doit être créé dans le realm — voir « Configuration côté Keycloak » |
 >
 > Référence workflow : `reference/diagrammes/workflow_rgpd.mermaid`
@@ -224,7 +224,14 @@ Le `KeycloakId` est extrait du JWT à chaque requête (claim `sub`) et utilisé 
 - Il ne gère pas la logique des 30 jours — c'est l'API qui contrôle `DeletedAt`
 - Il ne déclenche pas d'email — c'est le service email de l'application
 
-La suppression dans Keycloak (`DELETE /admin/realms/{realm}/users/{id}`) est la **dernière étape** de la purge, après la suppression complète des données PostgreSQL.
+La suppression dans Keycloak (`DELETE /admin/realms/{realm}/users/{id}`) est la **première étape** de
+la purge, avant la suppression des données PostgreSQL — et non l'inverse, comme le prévoyait la
+spécification initiale.
+
+La raison est l'idempotence du job : si l'appel Keycloak échoue, rien n'est supprimé et le compte
+reste sélectionnable au passage suivant. Dans l'ordre inverse, un échec Keycloak après une base déjà
+purgée laisserait un compte orphelin que plus aucune exécution ne sélectionnerait.
+Voir [RGPD — Purge des comptes](../systemes/rgpd/purge-des-comptes.md).
 
 ---
 
