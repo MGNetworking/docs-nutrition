@@ -131,6 +131,7 @@ nav:
       - Purge des comptes: backend/systemes/rgpd/purge-des-comptes.md
     - Administration: backend/systemes/administration/index.md
     - Plateforme API:
+      - Pipeline HTTP: backend/systemes/plateforme/pipeline-http.md
       - OpenAPI: backend/systemes/plateforme/openapi.md
       - Exception Filter: backend/systemes/plateforme/exception-filter.md
 
