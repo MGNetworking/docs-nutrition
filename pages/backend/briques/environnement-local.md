@@ -93,9 +93,20 @@ terminées avec succès** et Redis et Keycloak déclarés sains.
 
 | Service | Accès |
 |---|---|
+| **API** | `http://localhost:5099` (dev) · `http://localhost:5100` (Docker) |
+| **Swagger UI** | `http://localhost:5099/swagger` — spec brute sur `/swagger/v1/swagger.json` |
+| **Dashboard Hangfire** | `http://localhost:5099/hangfire` — **rôle `admin` requis** |
 | PostgreSQL | `localhost:5445` — base `nutrition_dev`, `postgres` / `postgres` |
 | Redis | `localhost:6336` |
 | Keycloak | `http://localhost:8778` — console admin `admin` / `admin` |
+
+> **Swagger et le dashboard Hangfire sont des pages web** : ils s'ouvrent au navigateur, pas dans
+> Postman. La collection ne contient d'eux que des vérifications de statut (accès refusé à un
+> non-admin, spec bien générée) — leur contenu n'y est pas exploitable.
+>
+> Swagger est monté **uniquement hors production** (`if (!app.Environment.IsProduction())` dans
+> `Program.cs`). Le dashboard Hangfire, lui, existe dans tous les environnements, protégé par
+> `HangfireAdminAuthorizationFilter`.
 
 | Compte | Rôle Keycloak | Abonnement |
 |---|---|---|
