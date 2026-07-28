@@ -145,6 +145,7 @@ nav:
 
   - Qualité:
     - Niveaux de tests: backend/qualite/niveaux-de-tests.md
+    - Écrire un test de niveau 2: backend/qualite/tests-niveau-2.md
     - Recensement des tests: backend/qualite/recensement-des-tests.md
 
   - Référence:
