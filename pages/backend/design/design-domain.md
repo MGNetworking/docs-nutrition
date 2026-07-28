@@ -94,7 +94,7 @@ Point d'entrée du système. Tout appartient à un User.
 | Height              | float               | En centimètres — fixe sur User             |
 | ActivityLevel       | enum ActivityLevel  |                                            |
 | Allergies           | List\<Allergen\>    | Enum calqué sur les 14 allergènes EU (Open Food Facts) — liste vide = confirmé aucune allergie |
-| DietaryPreferences  | List\<string\>      | Libre (non filtrant) — liste vide = confirmé aucune préférence                     |
+| DietaryPreferences  | List\<DietaryPreference\> | Enum en liste fermée (non filtrant) — liste vide = confirmé aucune préférence. Typé en NTR-76 ; était une `List<string>` libre. |
 | CreatedAt           | DateTime            |                                            |
 | DeletedAt           | DateTime?           | Null = compte actif / Renseigné = suppression demandée (grace period 30 jours) |
 | SubscriptionTier    | enum SubscriptionTier | Free par défaut à la création — source de vérité en base (pas dans le JWT) |

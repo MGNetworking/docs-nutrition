@@ -258,7 +258,7 @@ public class DietPlansController : ControllerBase
 | `height` | `float` (cm) | ✅ |
 | `weight` | `float` (kg) | ✅ — crée la première `WeightEntry` |
 | `allergies` | `List<Allergen>` | ✅ — liste vide = aucune allergie confirmée |
-| `dietaryPreferences` | `List<string>` | ✅ — liste vide = aucune préférence confirmée |
+| `dietaryPreferences` | `List<DietaryPreference>` | ✅ — liste vide = aucune préférence confirmée |
 
 **Response 201** `UserProfileResponse`
 
@@ -271,7 +271,7 @@ public class DietPlansController : ControllerBase
 | `activityLevel` | `ActivityLevel` |
 | `height` | `float` |
 | `allergies` | `List<Allergen>` |
-| `dietaryPreferences` | `List<string>` |
+| `dietaryPreferences` | `List<DietaryPreference>` |
 | `subscriptionTier` | `SubscriptionTier` |
 | `createdAt` | `DateTime` |
 
@@ -305,7 +305,7 @@ public class DietPlansController : ControllerBase
 | `activityLevel` | `ActivityLevel` | ✅ |
 | `height` | `float` (cm) | ✅ |
 | `allergies` | `List<Allergen>` | ✅ |
-| `dietaryPreferences` | `List<string>` | ✅ |
+| `dietaryPreferences` | `List<DietaryPreference>` | ✅ |
 
 **Response 200** `UserProfileResponse`
 

@@ -19,7 +19,7 @@ classDiagram
         +float Height
         +ActivityLevel ActivityLevel
         +List~Allergen~ Allergies
-        +List~string~ DietaryPreferences
+        +List~DietaryPreference~ DietaryPreferences
         +SubscriptionTier SubscriptionTier
         +DateTime CreatedAt
         +DateTime? DeletedAt
