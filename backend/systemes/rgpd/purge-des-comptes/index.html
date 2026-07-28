@@ -550,6 +550,20 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#lordre-des-suppressions-keycloak-dabord">
+<span class="md-ellipsis">
+      L'ordre des suppressions — Keycloak d'abord
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#la-cascade-postgresql">
+<span class="md-ellipsis">
+      La cascade PostgreSQL
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#ce-quelle-ne-fait-pas">
 <span class="md-ellipsis">
       Ce qu'elle ne fait pas
@@ -597,6 +611,13 @@
             Plateforme API
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../plateforme/pipeline-http/">
+<span class="md-ellipsis">
+    Pipeline HTTP
+  </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../plateforme/openapi/">
 <span class="md-ellipsis">
@@ -795,6 +816,20 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#lordre-des-suppressions-keycloak-dabord">
+<span class="md-ellipsis">
+      L'ordre des suppressions — Keycloak d'abord
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#la-cascade-postgresql">
+<span class="md-ellipsis">
+      La cascade PostgreSQL
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#ce-quelle-ne-fait-pas">
 <span class="md-ellipsis">
       Ce qu'elle ne fait pas
@@ -841,16 +876,81 @@
 </ul>
 <h2 id="ce-quelle-fait">Ce qu'elle fait<a class="headerlink" href="#ce-quelle-fait" title="Permanent link">¶</a></h2>
 <ul>
-<li>Sélectionne les comptes dont la grace period est expirée</li>
-<li>Supprime les données en cascade dans PostgreSQL</li>
-<li>Supprime définitivement le compte correspondant dans Keycloak</li>
+<li>Sélectionne les comptes dont la grace period est expirée (<code>DeletedAt &lt;= J-30</code>)</li>
+<li>Supprime définitivement le compte dans Keycloak</li>
+<li>Supprime ensuite les données dans PostgreSQL, en cascade</li>
 <li>Enregistre l'exécution dans l'historique Hangfire (visible depuis le back-office admin)</li>
 </ul>
 <blockquote>
-<p>🔲 <strong>Rien de tout cela n'est implémenté à ce jour</strong> (vérifié le 2026-07-23) — le job de purge
-est le ticket <strong>NTR-56</strong>, et <code>IKeycloakAdminService</code> n'a aucune implémentation. Seule
-l'infrastructure Hangfire qui le fera tourner est en place (NTR-55).</p>
+<p><strong>État au 2026-07-27</strong> — livré (NTR-56).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Le job <code>RgpdPurgeJob</code> et son enregistrement Hangfire, couverts par 9 tests unitaires</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>L'accès à Keycloak Admin — <code>KeycloakAdminService.DeleteUserAsync</code> (NTR-133)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>L'infrastructure Hangfire qui le fait tourner (NTR-55)</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Test d'intégration niveau 3 — purge déclenchée manuellement contre un vrai Keycloak et une vraie base (NTR-28, IT-EXT-08)</td>
+</tr>
+<tr>
+<td>❌</td>
+<td><code>RgpdService</code> n'appelle toujours pas <code>DisableUserAsync</code> à la demande de suppression : le compte reste actif dans Keycloak pendant la grace period</td>
+</tr>
+</tbody>
+</table>
 </blockquote>
+<h2 id="lordre-des-suppressions-keycloak-dabord">L'ordre des suppressions — Keycloak d'abord<a class="headerlink" href="#lordre-des-suppressions-keycloak-dabord" title="Permanent link">¶</a></h2>
+<p>C'est l'inverse de ce que prévoyait la spécification initiale, et la raison tient à l'idempotence du
+job.</p>
+<table>
+<thead>
+<tr>
+<th>Scénario</th>
+<th>Avec Keycloak d'abord</th>
+<th>Avec PostgreSQL d'abord</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keycloak indisponible</td>
+<td>Rien n'est supprimé, le compte reste sélectionnable au prochain passage</td>
+<td>Les données sont parties, le compte n'est plus sélectionné → <strong>compte Keycloak orphelin définitif</strong></td>
+</tr>
+<tr>
+<td>Keycloak passe, PostgreSQL échoue</td>
+<td>Au passage suivant, <code>DeleteUserAsync</code> renvoie 404 (ignoré), puis la base est purgée</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Un compte orphelin dans Keycloak est une violation persistante du droit à l'effacement : c'est le
+seul état dont le job ne peut pas se relever seul. L'ordre retenu rend chaque tentative rejouable.</p>
+<h2 id="la-cascade-postgresql">La cascade PostgreSQL<a class="headerlink" href="#la-cascade-postgresql" title="Permanent link">¶</a></h2>
+<p>Le job n'écrit <strong>aucune suppression table par table</strong>. Toutes les clés étrangères qui pointent vers
+<code>users</code> sont déclarées <code>ON DELETE CASCADE</code> dès la migration initiale :</p>
+<div class="language-text highlight"><pre><span></span><code>users ←cascade─ meals ←cascade─ meal_items
+      ←cascade─ weight_entries
+      ←cascade─ saved_food_items
+      ←cascade─ diet_plans
+      ←cascade─ diets
+</code></pre></div>
+<p>Un unique <code>DELETE</code> sur <code>users</code> suffit donc, et l'ordre est garanti par la base. Réécrire la cascade
+dans le job aurait créé un second endroit où maintenir cet ordre le jour où une table s'ajoute.</p>
 <h2 id="ce-quelle-ne-fait-pas">Ce qu'elle ne fait pas<a class="headerlink" href="#ce-quelle-ne-fait-pas" title="Permanent link">¶</a></h2>
 <ul>
 <li>Ne supprime jamais un compte avant l'expiration des 30 jours de grace period</li>
@@ -871,8 +971,16 @@ l'infrastructure Hangfire qui le fera tourner est en place (NTR-55).</p>
 <td>Hangfire (<code>RecurringJob</code>)</td>
 </tr>
 <tr>
+<td>Identifiant</td>
+<td><code>rgpd-purge</code> — constante <code>IJobMonitoringService.RgpdPurgeJobName</code></td>
+</tr>
+<tr>
 <td>Fréquence</td>
-<td>Quotidienne, nuit (<code>rgpd-purge</code>)</td>
+<td><code>30 3 * * *</code> — chaque nuit à 03h30 UTC, 30 min après l'import Open Food Facts</td>
+</tr>
+<tr>
+<td>Échec</td>
+<td>Un compte en échec fait échouer le job entier, ce qui déclenche le retry Hangfire. Les comptes déjà purgés ne sont pas repris — ils ne sont plus sélectionnés.</td>
 </tr>
 <tr>
 <td>Historique</td>

@@ -1419,6 +1419,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../systemes/plateforme/pipeline-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pipeline HTTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../systemes/plateforme/openapi/" class="md-nav__link">
         
   
@@ -2719,6 +2740,18 @@ requêtes qui n'aboutissent pas.</p>
 </thead>
 <tbody>
 <tr>
+<td><strong>API</strong></td>
+<td><code>http://localhost:5099</code> (dev) · <code>http://localhost:5100</code> (Docker)</td>
+</tr>
+<tr>
+<td><strong>Swagger UI</strong></td>
+<td><code>http://localhost:5099/swagger</code> — spec brute sur <code>/swagger/v1/swagger.json</code></td>
+</tr>
+<tr>
+<td><strong>Dashboard Hangfire</strong></td>
+<td><code>http://localhost:5099/hangfire</code> — <strong>rôle <code>admin</code> requis</strong></td>
+</tr>
+<tr>
 <td>PostgreSQL</td>
 <td><code>localhost:5445</code> — base <code>nutrition_dev</code>, <code>postgres</code> / <code>postgres</code></td>
 </tr>
@@ -2732,6 +2765,14 @@ requêtes qui n'aboutissent pas.</p>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Swagger et le dashboard Hangfire sont des pages web</strong> : ils s'ouvrent au navigateur, pas dans
+Postman. La collection ne contient d'eux que des vérifications de statut (accès refusé à un
+non-admin, spec bien générée) — leur contenu n'y est pas exploitable.</p>
+<p>Swagger est monté <strong>uniquement hors production</strong> (<code>if (!app.Environment.IsProduction())</code> dans
+<code>Program.cs</code>). Le dashboard Hangfire, lui, existe dans tous les environnements, protégé par
+<code>HangfireAdminAuthorizationFilter</code>.</p>
+</blockquote>
 <table>
 <thead>
 <tr>

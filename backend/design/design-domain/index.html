@@ -1755,6 +1755,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../systemes/plateforme/pipeline-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pipeline HTTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../systemes/plateforme/openapi/" class="md-nav__link">
         
   
@@ -2702,8 +2723,8 @@ Source : cas d'usage (UC01-UC10) + règles métier.</p>
 </tr>
 <tr>
 <td>DietaryPreferences</td>
-<td>List\&lt;string&gt;</td>
-<td>Libre (non filtrant) — liste vide = confirmé aucune préférence</td>
+<td>List\&lt;DietaryPreference&gt;</td>
+<td>Enum en liste fermée (non filtrant) — liste vide = confirmé aucune préférence. Typé en NTR-76 ; était une <code>List&lt;string&gt;</code> libre.</td>
 </tr>
 <tr>
 <td>CreatedAt</td>

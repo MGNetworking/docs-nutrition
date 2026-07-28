@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../../administration/">
       
       
-        <link rel="next" href="../../abonnements/">
+        <link rel="next" href="../openapi/">
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Moteur de calcul - Nutrition API — Documentation</title>
+        <title>Pipeline HTTP - Nutrition API — Documentation</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#moteur-de-calcul-nutritionnel-nutritioncalculator" class="md-skip">
+        <a href="#workflow-pipeline-http" class="md-skip">
           Aller au contenu
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Moteur de calcul
+              Pipeline HTTP
             
           </span>
         </div>
@@ -1162,8 +1162,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1178,11 +1176,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
         
           
           <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="">
@@ -1196,7 +1194,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_9">
             <span class="md-nav__icon md-icon"></span>
             Bilan nutritionnel
@@ -1210,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../bilan-nutritionnel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1228,30 +1226,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Moteur de calcul
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../bilan-nutritionnel/moteur-de-calcul/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1260,182 +1238,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table des matières
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#objectif" class="md-nav__link">
-    <span class="md-ellipsis">
-      Objectif
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#qui-lutilise" class="md-nav__link">
-    <span class="md-ellipsis">
-      Qui l'utilise
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quand" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quand
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ce-quil-fait" class="md-nav__link">
-    <span class="md-ellipsis">
-      Ce qu'il fait
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Ce qu'il fait">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nutritionneeds-calculateuser-user-float-weightkg-goal-goal-macrodistribution-macros" class="md-nav__link">
-    <span class="md-ellipsis">
-      NutritionNeeds Calculate(User user, float weightKg, Goal goal, MacroDistribution macros)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NutritionNeeds Calculate(User user, float weightKg, Goal goal, MacroDistribution macros)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-age" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Âge
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-bmr-mifflin-st-jeor-formule-prioritaire" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. BMR — Mifflin-St Jeor (formule prioritaire)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2b-bmr-harris-benedict-revisee-formule-alternative" class="md-nav__link">
-    <span class="md-ellipsis">
-      2b. BMR — Harris-Benedict révisée (formule alternative)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-tdee-bmr-nap" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. TDEE : BMR × NAP
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-calorietarget-selon-objectif" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. CalorieTarget selon objectif
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macrograms-togramsmacrodistribution-macros-int-calorietarget" class="md-nav__link">
-    <span class="md-ellipsis">
-      MacroGrams ToGrams(MacroDistribution macros, int calorieTarget)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macrodistribution-getdefaultmacrosdiettype-diettype" class="md-nav__link">
-    <span class="md-ellipsis">
-      MacroDistribution GetDefaultMacros(DietType dietType)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#calculs-complementaires-non-implementes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Calculs complémentaires — 🔲 non implémentés
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ce-quil-ne-fait-pas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Ce qu'il ne fait pas
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emplacement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Emplacement
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependances" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dépendances
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1588,6 +1390,8 @@
                 
   
   
+    
+  
   
   
     
@@ -1602,11 +1406,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_13" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_13" checked>
         
           
           <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="">
@@ -1620,7 +1424,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_13">
             <span class="md-nav__icon md-icon"></span>
             Plateforme API
@@ -1631,10 +1435,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../plateforme/pipeline-http/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Pipeline HTTP
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1643,6 +1467,98 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Vue d'ensemble
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-qui-fait-quoi" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Qui fait quoi
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-le-parcours-dune-requete" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Le parcours d'une requête
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-decisions-et-leurs-raisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Décisions et leurs raisons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ce-qui-nest-pas-couvert" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Ce qui n'est pas couvert
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ou-creuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Où creuser
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1655,7 +1571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plateforme/openapi/" class="md-nav__link">
+      <a href="../openapi/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1676,7 +1592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plateforme/exception-filter/" class="md-nav__link">
+      <a href="../exception-filter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2125,156 +2041,72 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#objectif" class="md-nav__link">
+  <a href="#1-vue-densemble" class="md-nav__link">
     <span class="md-ellipsis">
-      Objectif
+      1. Vue d'ensemble
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#qui-lutilise" class="md-nav__link">
+  <a href="#2-qui-fait-quoi" class="md-nav__link">
     <span class="md-ellipsis">
-      Qui l'utilise
+      2. Qui fait quoi
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#quand" class="md-nav__link">
+  <a href="#3-le-parcours-dune-requete" class="md-nav__link">
     <span class="md-ellipsis">
-      Quand
+      3. Le parcours d'une requête
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ce-quil-fait" class="md-nav__link">
+  <a href="#4-decisions-et-leurs-raisons" class="md-nav__link">
     <span class="md-ellipsis">
-      Ce qu'il fait
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Ce qu'il fait">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nutritionneeds-calculateuser-user-float-weightkg-goal-goal-macrodistribution-macros" class="md-nav__link">
-    <span class="md-ellipsis">
-      NutritionNeeds Calculate(User user, float weightKg, Goal goal, MacroDistribution macros)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NutritionNeeds Calculate(User user, float weightKg, Goal goal, MacroDistribution macros)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-age" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Âge
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-bmr-mifflin-st-jeor-formule-prioritaire" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. BMR — Mifflin-St Jeor (formule prioritaire)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2b-bmr-harris-benedict-revisee-formule-alternative" class="md-nav__link">
-    <span class="md-ellipsis">
-      2b. BMR — Harris-Benedict révisée (formule alternative)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-tdee-bmr-nap" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. TDEE : BMR × NAP
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-calorietarget-selon-objectif" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. CalorieTarget selon objectif
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macrograms-togramsmacrodistribution-macros-int-calorietarget" class="md-nav__link">
-    <span class="md-ellipsis">
-      MacroGrams ToGrams(MacroDistribution macros, int calorieTarget)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macrodistribution-getdefaultmacrosdiettype-diettype" class="md-nav__link">
-    <span class="md-ellipsis">
-      MacroDistribution GetDefaultMacros(DietType dietType)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#calculs-complementaires-non-implementes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Calculs complémentaires — 🔲 non implémentés
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ce-quil-ne-fait-pas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Ce qu'il ne fait pas
+      4. Décisions et leurs raisons
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#emplacement" class="md-nav__link">
+  <a href="#5-ce-qui-nest-pas-couvert" class="md-nav__link">
     <span class="md-ellipsis">
-      Emplacement
+      5. Ce qui n'est pas couvert
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependances" class="md-nav__link">
+  <a href="#6-etat-de-confiance" class="md-nav__link">
     <span class="md-ellipsis">
-      Dépendances
+      6. État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ou-creuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Où creuser
     </span>
   </a>
   
@@ -2295,269 +2127,252 @@
                   
 
 
-<h1 id="moteur-de-calcul-nutritionnel-nutritioncalculator">Moteur de calcul nutritionnel (NutritionCalculator)<a class="headerlink" href="#moteur-de-calcul-nutritionnel-nutritioncalculator" title="Permanent link">&para;</a></h1>
-<p><strong>Ajouté le :</strong> 2026-06-12
-<strong>Type :</strong> Interne
-<strong>Référence spec :</strong> <a href="../../../design/Regles-metier/">Règles métier — catalogue des formules</a> · <a href="../../../design/regles-metier-consolidees/">Règles métier consolidées</a></p>
-<hr />
-<h2 id="objectif">Objectif<a class="headerlink" href="#objectif" title="Permanent link">&para;</a></h2>
-<p>Centraliser toute la logique de calcul nutritionnel dans un service statique de la couche Application. Éviter la duplication de formules métier à travers les services applicatifs.</p>
-<h2 id="qui-lutilise">Qui l'utilise<a class="headerlink" href="#qui-lutilise" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>DietPlansService.LaunchAsync</code> — calcul du <code>CalorieTarget</code> au lancement d'un régime</li>
-<li><code>UserService.GetUserProfileAsync</code> — calcul des <code>NutritionNeeds</code> pour le profil utilisateur (à venir)</li>
-<li>Tout futur service ayant besoin d'un calcul nutritionnel</li>
-</ul>
-<h2 id="quand">Quand<a class="headerlink" href="#quand" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Au lancement d'un <code>DietPlan</code> → création d'une <code>Diet</code> avec <code>CalorieTarget</code> figé</li>
-<li>À la lecture du profil utilisateur → affichage des besoins caloriques journaliers</li>
-</ul>
-<hr />
-<h2 id="ce-quil-fait">Ce qu'il fait<a class="headerlink" href="#ce-quil-fait" title="Permanent link">&para;</a></h2>
-<h3 id="nutritionneeds-calculateuser-user-float-weightkg-goal-goal-macrodistribution-macros"><code>NutritionNeeds Calculate(User user, float weightKg, Goal goal, MacroDistribution macros)</code><a class="headerlink" href="#nutritionneeds-calculateuser-user-float-weightkg-goal-goal-macrodistribution-macros" title="Permanent link">&para;</a></h3>
-<p>Calcule les besoins caloriques complets d'un utilisateur à un instant T.</p>
-<p><strong>Entrées :</strong>
-- <code>user</code> — profil (genre, taille, date de naissance, niveau d'activité)
-- <code>weightKg</code> — poids actuel de l'utilisateur (issu du <code>WeightEntry</code> le plus récent)
-- <code>goal</code> — objectif (<code>WeightLoss</code>, <code>Maintenance</code>, <code>WeightGain</code>)
-- <code>macros</code> — répartition macros en pourcentages</p>
-<p><strong>Calculs :</strong></p>
-<h4 id="1-age">1. Âge<a class="headerlink" href="#1-age" title="Permanent link">&para;</a></h4>
-<p>Calculé depuis <code>BirthDate</code>, corrigé si l'anniversaire n'est pas encore passé cette année.</p>
-<h4 id="2-bmr-mifflin-st-jeor-formule-prioritaire">2. BMR — Mifflin-St Jeor (formule prioritaire)<a class="headerlink" href="#2-bmr-mifflin-st-jeor-formule-prioritaire" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Sexe</th>
-<th>Formule</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Homme</td>
-<td><code>(10 × P) + (6.25 × T) - (5 × A) + 5</code></td>
-</tr>
-<tr>
-<td>Femme</td>
-<td><code>(10 × P) + (6.25 × T) - (5 × A) - 161</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="2b-bmr-harris-benedict-revisee-formule-alternative">2b. BMR — Harris-Benedict révisée (formule alternative)<a class="headerlink" href="#2b-bmr-harris-benedict-revisee-formule-alternative" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Sexe</th>
-<th>Formule</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Homme</td>
-<td><code>88.362 + (13.397 × P) + (4.799 × T) - (5.677 × A)</code></td>
-</tr>
-<tr>
-<td>Femme</td>
-<td><code>447.593 + (9.247 × P) + (3.098 × T) - (4.330 × A)</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="3-tdee-bmr-nap">3. TDEE : <code>BMR × NAP</code><a class="headerlink" href="#3-tdee-bmr-nap" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>ActivityLevel</th>
-<th>NAP</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Sedentary</td>
-<td>1.2</td>
-<td>Peu ou pas d'exercice — travail de bureau</td>
-</tr>
-<tr>
-<td>LightlyActive</td>
-<td>1.375</td>
-<td>Exercice léger 1-3 jours/semaine</td>
-</tr>
-<tr>
-<td>ModeratelyActive</td>
-<td>1.55</td>
-<td>Exercice modéré 3-5 jours/semaine</td>
-</tr>
-<tr>
-<td>VeryActive</td>
-<td>1.725</td>
-<td>Exercice intense 6-7 jours/semaine</td>
-</tr>
-<tr>
-<td>ExtremelyActive</td>
-<td>1.9</td>
-<td>Travail physique intense — athlètes professionnels</td>
-</tr>
-</tbody>
-</table>
-<h4 id="4-calorietarget-selon-objectif">4. CalorieTarget selon objectif<a class="headerlink" href="#4-calorietarget-selon-objectif" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Goal</th>
-<th>Formule</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>WeightLoss</td>
-<td><code>TDEE - min(TDEE × 15%, 500 kcal)</code></td>
-</tr>
-<tr>
-<td>Maintenance</td>
-<td><code>TDEE</code></td>
-</tr>
-<tr>
-<td>WeightGain</td>
-<td><code>TDEE + min(TDEE × 15%, 500 kcal)</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Retourne :</strong> <code>NutritionNeeds</code> — value object contenant <code>Bmr</code>, <code>Tdee</code>, <code>TargetCalories</code>, <code>MacroDistribution</code></p>
-<hr />
-<h3 id="macrograms-togramsmacrodistribution-macros-int-calorietarget"><code>MacroGrams ToGrams(MacroDistribution macros, int calorieTarget)</code><a class="headerlink" href="#macrograms-togramsmacrodistribution-macros-int-calorietarget" title="Permanent link">&para;</a></h3>
-<p>Convertit une répartition macros en pourcentages vers des grammes journaliers.</p>
-<p><strong>Valeurs caloriques par macronutriment :</strong></p>
-<table>
-<thead>
-<tr>
-<th>Macro</th>
-<th>kcal/g</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Protéines</td>
-<td>4</td>
-</tr>
-<tr>
-<td>Glucides</td>
-<td>4</td>
-</tr>
-<tr>
-<td>Lipides</td>
-<td>9</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Formules :</strong></p>
-<table>
-<thead>
-<tr>
-<th>Macro</th>
-<th>Formule</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Protéines (g)</td>
-<td><code>CalorieTarget × %P ÷ 4</code></td>
-</tr>
-<tr>
-<td>Glucides (g)</td>
-<td><code>CalorieTarget × %C ÷ 4</code></td>
-</tr>
-<tr>
-<td>Lipides (g)</td>
-<td><code>CalorieTarget × %L ÷ 9</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Retourne :</strong> <code>MacroGrams</code> — value object contenant <code>ProteinG</code>, <code>CarbG</code>, <code>FatG</code> (à créer)</p>
-<hr />
-<h3 id="macrodistribution-getdefaultmacrosdiettype-diettype"><code>MacroDistribution GetDefaultMacros(DietType dietType)</code><a class="headerlink" href="#macrodistribution-getdefaultmacrosdiettype-diettype" title="Permanent link">&para;</a></h3>
-<p>Retourne la répartition macros par défaut selon le type de régime.</p>
-<table>
-<thead>
-<tr>
-<th>DietType</th>
-<th>Glucides</th>
-<th>Lipides</th>
-<th>Protéines</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Balanced</td>
-<td>50%</td>
-<td>30%</td>
-<td>20%</td>
-</tr>
-<tr>
-<td>HighProtein</td>
-<td>40%</td>
-<td>30%</td>
-<td>30%</td>
-</tr>
-<tr>
-<td>Keto</td>
-<td>5%</td>
-<td>70%</td>
-<td>25%</td>
-</tr>
-</tbody>
-</table>
+<h1 id="workflow-pipeline-http">Workflow — Pipeline HTTP<a class="headerlink" href="#workflow-pipeline-http" title="Permanent link">&para;</a></h1>
+<p><strong>Ajouté le :</strong> 2026-07-27 · <strong>Feature associée :</strong> Plateforme API · <strong>Ticket :</strong> NTR-121</p>
 <blockquote>
-<p>Les autres types (Mediterranean, LowCarb, Vegetarian, Vegan, Custom) n'ont pas de valeurs par défaut définies dans les specs — à compléter.</p>
+<p>Ce document explique la traversée d'une requête de bout en bout : quel composant s'exécute, dans
+quel ordre, et pourquoi cet ordre. Les fiches voisines ne décrivent chacune qu'un maillon —
+<a href="../exception-filter/">Exception Filter</a> pour la traduction des erreurs,
+<a href="../openapi/">OpenAPI</a> pour la spec.</p>
 </blockquote>
 <hr />
-<h3 id="calculs-complementaires-non-implementes">Calculs complémentaires — 🔲 non implémentés<a class="headerlink" href="#calculs-complementaires-non-implementes" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>Vérifié le 2026-07-23 : aucune de ces trois méthodes n'existe dans le code. Seules <code>Calculate</code>,
-<code>GetDefaultMacros</code> et <code>ToGrams</code> sont présentes sur <code>NutritionCalculator</code>.</p>
-</blockquote>
+<h2 id="1-vue-densemble">1. Vue d'ensemble<a class="headerlink" href="#1-vue-densemble" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code>                    ┌─────────────────────────────────────────────┐
+   requête HTTP ───►│ RequestLoggingMiddleware                    │  chronomètre démarré
+                    ├─────────────────────────────────────────────┤
+                    │ UseSwagger / UseSwaggerUI   (hors prod)     │
+                    ├─────────────────────────────────────────────┤
+                    │ UseHttpsRedirection                         │
+                    ├─────────────────────────────────────────────┤
+                    │ UseCors(&quot;front&quot;)                            │
+                    ├─────────────────────────────────────────────┤
+                    │ ExceptionMiddleware                         │  filet d&#39;erreurs
+                    ├─────────────────────────────────────────────┤
+                    │ UseAuthentication                           │  JWT → ClaimsPrincipal
+                    ├─────────────────────────────────────────────┤
+                    │ UseAuthorization                            │  policies, rôles
+                    ├─────────────────────────────────────────────┤
+                    │ MapHangfireDashboard(&quot;/hangfire&quot;)           │  ─┐ sortie possible
+                    ├─────────────────────────────────────────────┤   │
+                    │ UserResolutionMiddleware                    │   │ keycloakId → User.Id
+                    ├─────────────────────────────────────────────┤   │
+                    │ MapControllers                              │   │
+                    └─────────────────────────────────────────────┘  ─┘
+                            │
+   réponse HTTP ◄───────────┘  chronomètre arrêté, une ligne de log émise
+</code></pre></div>
+<h2 id="2-qui-fait-quoi">2. Qui fait quoi<a class="headerlink" href="#2-qui-fait-quoi" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code>NutritionApi.Api/
+├── Program.cs                        — compose le pipeline, dans cet ordre
+└── Middleware/
+    ├── RequestLoggingMiddleware.cs   — trace la requête
+    ├── ExceptionMiddleware.cs        — traduit les exceptions en réponses HTTP
+    └── UserResolutionMiddleware.cs   — résout l&#39;utilisateur interne
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Méthode</th>
-<th>Formule</th>
-<th>Retourne</th>
+<th>Composant</th>
+<th>Responsabilité unique</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>CalculateImc(float weightKg, float heightCm)</code></td>
-<td><code>P ÷ (T/100)²</code></td>
-<td><code>float</code></td>
+<td><code>RequestLoggingMiddleware</code></td>
+<td>Émettre <strong>une</strong> entrée de journal par requête : méthode, route, statut, durée</td>
 </tr>
 <tr>
-<td><code>CalculateWaterNeeds(float weightKg)</code></td>
-<td><code>P × 0.033</code></td>
-<td><code>float</code> (litres)</td>
+<td><code>UseHttpsRedirection</code></td>
+<td>Rediriger le trafic en clair vers HTTPS</td>
 </tr>
 <tr>
-<td><code>CalculateActivityExpenditure(float weightKg, float metValue, int durationMin)</code></td>
-<td><code>durée(min) × MET × P ÷ 60</code></td>
-<td><code>float</code> (kcal)</td>
+<td><code>UseCors("front")</code></td>
+<td>Refuser les appels dont l'origine n'est pas déclarée</td>
+</tr>
+<tr>
+<td><code>ExceptionMiddleware</code></td>
+<td>Convertir toute exception non gérée en réponse HTTP normalisée</td>
+</tr>
+<tr>
+<td><code>UseAuthentication</code></td>
+<td>Valider le JWT Keycloak et peupler <code>HttpContext.User</code></td>
+</tr>
+<tr>
+<td><code>UseAuthorization</code></td>
+<td>Appliquer les policies (<code>AdminOnly</code>) et les rôles</td>
+</tr>
+<tr>
+<td><code>MapHangfireDashboard</code></td>
+<td>Servir <code>/hangfire</code>, protégé par <code>HangfireAdminAuthorizationFilter</code></td>
+</tr>
+<tr>
+<td><code>UserResolutionMiddleware</code></td>
+<td>Traduire le <code>sub</code> du token en <code>User.Id</code> interne, déposé dans <code>HttpContext.Items</code></td>
+</tr>
+<tr>
+<td><code>MapControllers</code></td>
+<td>Router vers l'action et exécuter le traitement métier</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="ce-quil-ne-fait-pas">Ce qu'il ne fait pas<a class="headerlink" href="#ce-quil-ne-fait-pas" title="Permanent link">&para;</a></h2>
+<h2 id="3-le-parcours-dune-requete">3. Le parcours d'une requête<a class="headerlink" href="#3-le-parcours-dune-requete" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Le chronomètre démarre.</strong> <code>RequestLoggingMiddleware</code> retient l'horodatage et passe la main.</li>
+<li><strong>Redirection HTTPS</strong> si la requête est arrivée en clair — la réponse est un 307, et elle sera
+   tracée comme telle.</li>
+<li><strong>CORS.</strong> Si l'origine n'est pas dans <code>Cors:AllowedOrigins</code>, les en-têtes d'autorisation ne sont
+   pas émis et le navigateur bloque la réponse côté client.</li>
+<li><strong>Le filet d'erreurs se déploie.</strong> À partir d'ici, toute exception remonte à
+   <code>ExceptionMiddleware</code>, qui produit la réponse HTTP correspondante.</li>
+<li><strong>Authentification.</strong> Le JWT est validé contre la clé publique Keycloak ; <code>KeycloakClaimsTransformation</code>
+   convertit <code>realm_access.roles</code> en <code>ClaimTypes.Role</code> standards.</li>
+<li><strong>Autorisation.</strong> Les policies s'appliquent. Un refus produit un 401 ou un 403.</li>
+<li><strong><code>/hangfire</code> sort du pipeline</strong> si la route correspond : le dashboard répond directement.</li>
+<li><strong>Résolution de l'utilisateur.</strong> <code>UserResolutionMiddleware</code> échange le <code>sub</code> contre le <code>User.Id</code>
+   interne. Un compte absent en base donne un 401, même avec un token valide.</li>
+<li><strong>L'action s'exécute</strong>, la réponse remonte.</li>
+<li><strong>Le chronomètre s'arrête.</strong> Le <code>finally</code> de <code>RequestLoggingMiddleware</code> lit le statut réellement
+    écrit et émet la ligne de journal.</li>
+</ol>
+<h2 id="4-decisions-et-leurs-raisons">4. Décisions et leurs raisons<a class="headerlink" href="#4-decisions-et-leurs-raisons" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Décision</th>
+<th>Pourquoi</th>
+<th>Option écartée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Le logging est <strong>en tête</strong>, avant <code>ExceptionMiddleware</code></td>
+<td>C'est la seule position d'où la durée couvre le traitement entier et d'où le statut lu est le statut final — y compris le 500 écrit par <code>ExceptionMiddleware</code>.</td>
+<td>Le placer après : la durée exclurait le traitement d'erreur, et une requête en échec serait tracée avec le statut par défaut 200.</td>
+</tr>
+<tr>
+<td>Le logging <strong>relance</strong> l'exception</td>
+<td>La réponse d'erreur appartient à <code>ExceptionMiddleware</code>, et à lui seul. Deux composants qui écrivent la réponse, c'est une réponse corrompue.</td>
+<td>Capturer et répondre depuis le logging : duplication de la logique d'erreur.</td>
+</tr>
+<tr>
+<td>Niveau gradué sur le statut (Information / Warning ≥ 400 / Error ≥ 500)</td>
+<td>Un 500 noyé au niveau Information est invisible en production. La graduation rend le journal filtrable sans parser le message.</td>
+<td>Tout en Information : simple, mais inutilisable pour l'alerte.</td>
+</tr>
+<tr>
+<td>CORS <strong>fermé par défaut</strong> — section vide = aucune origine</td>
+<td>Un oubli de configuration doit bloquer, jamais ouvrir. Une politique permissive oubliée en production est une faille silencieuse.</td>
+<td><code>AllowAnyOrigin()</code> en développement : diverge de la production, et masque les erreurs de configuration jusqu'au déploiement.</td>
+</tr>
+<tr>
+<td><code>UseCors</code> <strong>avant</strong> <code>ExceptionMiddleware</code></td>
+<td>Une requête refusée par CORS n'a pas à traverser le reste du pipeline.</td>
+<td>Après l'authentification : coût inutile et en-têtes CORS absents des réponses d'erreur.</td>
+</tr>
+<tr>
+<td>Le dashboard Hangfire est monté <strong>après</strong> <code>UseAuthorization</code></td>
+<td>Son filtre lit <code>HttpContext.User</code>, qui n'est peuplé qu'après les middlewares d'authentification.</td>
+<td>Avant : le filtre verrait un utilisateur vide et refuserait tout le monde.</td>
+</tr>
+<tr>
+<td>…et <strong>avant</strong> <code>UserResolutionMiddleware</code></td>
+<td>Le dashboard n'a pas besoin de la correspondance <code>keycloakId</code> → <code>User</code> interne.</td>
+<td>Après : un administrateur sans profil applicatif en base serait refusé.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-ce-qui-nest-pas-couvert">5. Ce qui n'est pas couvert<a class="headerlink" href="#5-ce-qui-nest-pas-couvert" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Manque</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cors:AllowedOrigins</code> est <strong>vide</strong> dans <code>appsettings.json</code></td>
+<td>À renseigner par environnement — en l'état, aucun appel cross-origin ne passe</td>
+</tr>
+<tr>
+<td>Aucune limitation de débit (<em>rate limiting</em>)</td>
+<td>Non prévu à ce stade</td>
+</tr>
+<tr>
+<td>Le journal ne porte pas d'identifiant de corrélation</td>
+<td>Le <code>TraceIdentifier</code> d'ASP.NET existe mais n'est pas repris dans la trace</td>
+</tr>
+<tr>
+<td>Le corps des requêtes et réponses n'est jamais journalisé</td>
+<td>Volontaire — données personnelles</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-etat-de-confiance">6. État de confiance<a class="headerlink" href="#6-etat-de-confiance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Marque</th>
+<th>Élément</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Contenu et niveau de la trace, comportement en cas d'exception — <code>RequestLoggingMiddleware</code> couvert par 15 cas de test</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Traduction des exceptions en statuts — <code>ExceptionMiddlewareTest</code></td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Résolution de l'utilisateur — <code>UserResolutionMiddlewareTest</code></td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>L'<strong>ordre</strong> du pipeline : établi par lecture de <code>Program.cs</code> et raisonnement, jamais constaté sur une requête réelle</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Le comportement CORS de bout en bout — demande un navigateur et une origine tierce</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Le refus du dashboard Hangfire à un non-admin — test de niveau 3 (NTR-28)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-configuration">7. Configuration<a class="headerlink" href="#7-configuration" title="Permanent link">&para;</a></h2>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Cors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;AllowedOrigins&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cors:AllowedOrigins</code></td>
+<td>Tableau des origines acceptées, schéma et port compris (<code>https://app.exemple.fr</code>). Vide = tout refusé.</td>
+</tr>
+</tbody>
+</table>
+<p>La politique autorise tout en-tête, toute méthode, et les <em>credentials</em> — mais uniquement pour ces
+origines. <code>AllowCredentials()</code> est d'ailleurs incompatible avec une origine générique : la liste
+explicite n'est pas seulement plus sûre, elle est obligatoire ici.</p>
+<h2 id="8-ou-creuser">8. Où creuser<a class="headerlink" href="#8-ou-creuser" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Ne persiste rien — calcul pur sans effet de bord</li>
-<li>Ne récupère pas le <code>WeightEntry</code> — c'est la responsabilité du service appelant</li>
-<li>Ne calcule pas le bilan nutritionnel journalier — c'est le rôle de <code>DietsService</code></li>
-</ul>
-<h2 id="emplacement">Emplacement<a class="headerlink" href="#emplacement" title="Permanent link">&para;</a></h2>
-<p><code>src/NutritionApi.Application/Services/NutritionCalculator.cs</code></p>
-<p>Service applicatif statique — pas d'état, pas de dépendances injectées. Les calculs BMR/TDEE sont des règles métier de la couche Application selon <a href="../../../design/regles-metier-consolidees/">Règles métier consolidées</a>.</p>
-<h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>User</code> — source des données profil</li>
-<li><code>NutritionNeeds</code> — value object retourné par <code>Calculate</code></li>
-<li><code>MacroGrams</code> — value object retourné par <code>ToGrams</code> (à créer)</li>
-<li><code>MacroDistribution</code> — répartition macros en entrée et en retour de <code>GetDefaultMacros</code></li>
+<li><a href="../exception-filter/">Exception Filter</a> — le détail de la traduction exception → statut HTTP</li>
+<li><a href="../openapi/">OpenAPI</a> — la spec, et pourquoi <code>/hangfire</code> n'y figure pas</li>
+<li><a href="../../../briques/hangfire/">Hangfire — moteur de jobs récurrents</a> — le dashboard et son filtre d'autorisation</li>
+<li><a href="../../../briques/keycloak-admin/">Keycloak Admin API</a> — l'administration des comptes, hors pipeline</li>
 </ul>
 
 

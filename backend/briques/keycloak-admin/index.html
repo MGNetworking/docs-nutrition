@@ -534,6 +534,13 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../systemes/plateforme/pipeline-http/">
+<span class="md-ellipsis">
+    Pipeline HTTP
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../systemes/plateforme/openapi/">
 <span class="md-ellipsis">
     OpenAPI
@@ -680,16 +687,41 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#service-dedie-ikeycloakadminservice">
+<a class="md-nav__link" href="#le-contrat-ikeycloakadminservice">
 <span class="md-ellipsis">
-      Service dédié — IKeycloakAdminService
+      Le contrat — IKeycloakAdminService
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#resilience-avec-polly">
+<a class="md-nav__link" href="#les-deux-classes-dimplementation">
 <span class="md-ellipsis">
-      Résilience avec Polly
+      Les deux classes d'implémentation
+    </span>
+</a>
+<nav aria-label="Les deux classes d'implémentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#le-cache-du-jeton">
+<span class="md-ellipsis">
+      Le cache du jeton
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resilience-deux-mecanismes-distincts">
+<span class="md-ellipsis">
+      Résilience — deux mécanismes distincts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enregistrement-nutritionapiinfrastructuredependencyinjectioncs">
+<span class="md-ellipsis">
+      Enregistrement — NutritionApi.Infrastructure/DependencyInjection.cs
     </span>
 </a>
 </li>
@@ -900,16 +932,41 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#service-dedie-ikeycloakadminservice">
+<a class="md-nav__link" href="#le-contrat-ikeycloakadminservice">
 <span class="md-ellipsis">
-      Service dédié — IKeycloakAdminService
+      Le contrat — IKeycloakAdminService
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#resilience-avec-polly">
+<a class="md-nav__link" href="#les-deux-classes-dimplementation">
 <span class="md-ellipsis">
-      Résilience avec Polly
+      Les deux classes d'implémentation
+    </span>
+</a>
+<nav aria-label="Les deux classes d'implémentation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#le-cache-du-jeton">
+<span class="md-ellipsis">
+      Le cache du jeton
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#resilience-deux-mecanismes-distincts">
+<span class="md-ellipsis">
+      Résilience — deux mécanismes distincts
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enregistrement-nutritionapiinfrastructuredependencyinjectioncs">
+<span class="md-ellipsis">
+      Enregistrement — NutritionApi.Infrastructure/DependencyInjection.cs
     </span>
 </a>
 </li>
@@ -946,12 +1003,36 @@
 <article class="md-content__inner md-typeset">
 <h1 id="keycloak-admin-api-connexion-et-operations">Keycloak Admin API — Connexion et opérations<a class="headerlink" href="#keycloak-admin-api-connexion-et-operations" title="Permanent link">¶</a></h1>
 <blockquote>
-<p>🔲 <strong>Cible, non implémentée</strong> (vérifié le 2026-07-23) — le contrat <code>IKeycloakAdminService</code>
-existe dans la couche Application, mais <strong>aucune classe ne l'implémente</strong> et <code>RgpdService</code> ne
-l'appelle pas. La désactivation et la suppression des comptes Keycloak ne sont donc pas
-effectives.</p>
-<p>Ce document décrit comment l'API ASP.NET Core se connectera à Keycloak Admin pour gérer les comptes utilisateur dans le cadre du workflow RGPD.
-Référence workflow : <code>reference/diagrammes/workflow_rgpd.mermaid</code></p>
+<p><strong>Portée de ce document : la connexion de l'API à Keycloak Admin, et elle seule.</strong>
+➜ Pour la suppression des comptes de bout en bout, lire <a href="../../systemes/rgpd/purge-des-comptes/">RGPD — Purge des comptes</a>.</p>
+<p><strong>État au 2026-07-27</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td><code>KeycloakAdminService</code> et <code>KeycloakTokenProvider</code> sont implémentés et couverts par 22 tests unitaires (NTR-133)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td><code>RgpdPurgeJob</code> consomme <code>DeleteUserAsync</code> (NTR-56)</td>
+</tr>
+<tr>
+<td>🔲</td>
+<td><code>RgpdService</code> n'appelle pas encore <code>DisableUserAsync</code> / <code>EnableUserAsync</code> — la désactivation au moment de la demande de suppression n'est donc pas effective</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Le client de service <code>nutrition-api-service</code> doit être créé dans le realm — voir « Configuration côté Keycloak »</td>
+</tr>
+</tbody>
+</table>
+<p>Référence workflow : <code>reference/diagrammes/workflow_rgpd.mermaid</code></p>
 </blockquote>
 <hr/>
 <h2 id="pourquoi-lapi-doit-parler-a-keycloak-admin">Pourquoi l'API doit parler à Keycloak Admin<a class="headerlink" href="#pourquoi-lapi-doit-parler-a-keycloak-admin" title="Permanent link">¶</a></h2>
@@ -1055,24 +1136,115 @@ Keycloak__ServiceClientId=nutrition-api-service
 Keycloak__ServiceClientSecret=&lt;secret&gt;
 </code></pre></div>
 <p>Ces valeurs ne doivent jamais être dans le code source. En développement : <code>dotnet user-secrets</code>. En production : variables d'environnement injectées par Kubernetes (Secret).</p>
-<h3 id="service-dedie-ikeycloakadminservice">Service dédié — <code>IKeycloakAdminService</code><a class="headerlink" href="#service-dedie-ikeycloakadminservice" title="Permanent link">¶</a></h3>
-<p>L'API expose une interface dans la couche <strong>Infrastructure</strong> :</p>
+<p><code>appsettings.json</code> déclare les quatre clés avec des valeurs vides, à l'exception de <code>ServiceClientId</code>
+qui porte sa valeur par défaut <code>nutrition-api-service</code>.</p>
+<blockquote>
+<p>La section <code>Keycloak</code> est <strong>partagée</strong> avec la validation des jetons entrants (<code>Authority</code>,
+<code>Audience</code>, <code>RequireHttpsMetadata</code>, lues dans <code>Program.cs</code>). <code>KeycloakAdminOptions</code> ne lie que les
+quatre clés d'administration ; les deux usages cohabitent sans se gêner.</p>
+</blockquote>
+<h3 id="le-contrat-ikeycloakadminservice">Le contrat — <code>IKeycloakAdminService</code><a class="headerlink" href="#le-contrat-ikeycloakadminservice" title="Permanent link">¶</a></h3>
+<p>L'interface vit dans la couche <strong>Application</strong> (<code>Application/Interfaces/ExternalServices/</code>) : c'est
+Application qui a besoin d'agir sur les comptes, Infrastructure ne fait qu'obéir au contrat. Elle ne
+porte pas de <code>CancellationToken</code> — les appelants sont un job de fond et un service applicatif, aucun
+n'a de jeton d'annulation à propager.</p>
 <div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IKeycloakAdminService</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DisableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">EnableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">ct</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DisableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">EnableUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">DeleteUserAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">keycloakId</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>L'implémentation (<code>KeycloakAdminService</code>) :
-1. Obtient un service token via <code>client_credentials</code> (mis en cache)
-2. Appelle l'endpoint Admin avec <code>HttpClient</code>
-3. Gère les erreurs HTTP (404 = compte déjà supprimé, 401 = token expiré → retry)</p>
-<h3 id="resilience-avec-polly">Résilience avec Polly<a class="headerlink" href="#resilience-avec-polly" title="Permanent link">¶</a></h3>
-<p>Le service token peut expirer entre l'obtention et l'appel Admin. Polly gère le retry :</p>
-<div class="language-text highlight"><pre><span></span><code>- 401 Unauthorized → invalider le cache token + retry 1 fois
-- 5xx / timeout    → retry exponentiel (3 tentatives max)
+<h3 id="les-deux-classes-dimplementation">Les deux classes d'implémentation<a class="headerlink" href="#les-deux-classes-dimplementation" title="Permanent link">¶</a></h3>
+<p><code>NutritionApi.Infrastructure/ExternalServices/Keycloak/</code> :</p>
+<table>
+<thead>
+<tr>
+<th>Classe</th>
+<th>Responsabilité unique</th>
+<th>Durée de vie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KeycloakAdminOptions</code></td>
+<td>Porter les 4 paramètres de la section <code>Keycloak</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>IKeycloakTokenProvider</code> / <code>KeycloakTokenProvider</code></td>
+<td>Obtenir et <strong>mémoriser</strong> le jeton de service</td>
+<td><strong>Singleton</strong></td>
+</tr>
+<tr>
+<td><code>KeycloakAdminService</code></td>
+<td>Appeler l'API Admin avec ce jeton</td>
+<td>Transient (client typé)</td>
+</tr>
+</tbody>
+</table>
+<p>Le fournisseur de jetons est séparé du service pour une raison précise : le jeton doit survivre aux
+requêtes, alors que l'appel Admin est sans état. Les fusionner aurait forcé le service entier en
+singleton, ou le jeton à être redemandé à chaque appel.</p>
+<h4 id="le-cache-du-jeton">Le cache du jeton<a class="headerlink" href="#le-cache-du-jeton" title="Permanent link">¶</a></h4>
+<p><code>KeycloakTokenProvider</code> conserve le jeton et sa date d'expiration, et le renouvelle <strong>30 secondes
+avant</strong> son échéance réelle : sans cette marge, un jeton obtenu juste avant l'expiration pourrait
+périmer entre son obtention et l'appel Admin qui l'utilise.</p>
+<p>Un <code>SemaphoreSlim</code> protège le renouvellement — au démarrage, dix requêtes simultanées ne déclenchent
+qu'une seule demande de jeton, les autres attendant le résultat. Le motif est un double contrôle :
+le cache est testé une première fois sans verrou, puis une seconde fois après l'avoir obtenu.</p>
+<p>L'horloge est injectée (<code>TimeProvider</code>), ce qui permet aux tests de vérifier l'expiration sans
+attendre réellement.</p>
+<h3 id="resilience-deux-mecanismes-distincts">Résilience — deux mécanismes distincts<a class="headerlink" href="#resilience-deux-mecanismes-distincts" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cas</th>
+<th>Traité par</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>401</strong> Unauthorized</td>
+<td><code>KeycloakAdminService</code> lui-même</td>
+<td>Invalide le jeton mémorisé, puis <strong>rejoue une fois</strong>. Un second 401 lève.</td>
+</tr>
+<tr>
+<td><strong>5xx / 408 / 429 / timeout</strong></td>
+<td><code>AddStandardResilienceHandler()</code> (<code>Microsoft.Extensions.Http.Resilience</code>)</td>
+<td>Retry exponentiel, disjoncteur et délai d'attente standards, posés sur le client HTTP</td>
+</tr>
+<tr>
+<td><strong>404</strong> Not Found</td>
+<td><code>KeycloakAdminService</code> lui-même</td>
+<td>Le compte n'existe plus côté Keycloak : l'opération est sans objet, journalisée en avertissement, <strong>pas d'exception</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Le 401 ne peut pas être délégué au handler standard : seul le service sait qu'il faut <strong>invalider le
+cache du jeton</strong> avant de rejouer — un simple retry rejouerait avec le même jeton périmé.</p>
+<blockquote>
+<p><code>Microsoft.Extensions.Http.Resilience</code> remplace l'ancien <code>Polly.Extensions.Http</code>. Polly reste le
+moteur sous-jacent, mais la configuration passe désormais par le <code>IHttpClientBuilder</code>.</p>
+</blockquote>
+<h3 id="enregistrement-nutritionapiinfrastructuredependencyinjectioncs">Enregistrement — <code>NutritionApi.Infrastructure/DependencyInjection.cs</code><a class="headerlink" href="#enregistrement-nutritionapiinfrastructuredependencyinjectioncs" title="Permanent link">¶</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">services</span><span class="p">.</span><span class="n">Configure</span><span class="o">&lt;</span><span class="n">KeycloakAdminOptions</span><span class="o">&gt;</span><span class="p">(</span><span class="n">configuration</span><span class="p">.</span><span class="n">GetSection</span><span class="p">(</span><span class="n">KeycloakAdminOptions</span><span class="p">.</span><span class="n">SectionName</span><span class="p">));</span>
+<span class="n">services</span><span class="p">.</span><span class="n">AddSingleton</span><span class="p">(</span><span class="n">TimeProvider</span><span class="p">.</span><span class="n">System</span><span class="p">);</span>
+
+<span class="n">services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="p">(</span><span class="n">KeycloakTokenProvider</span><span class="p">.</span><span class="n">HttpClientName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">AddStandardResilienceHandler</span><span class="p">();</span>
+
+<span class="n">services</span><span class="p">.</span><span class="n">AddSingleton</span><span class="o">&lt;</span><span class="n">IKeycloakTokenProvider</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sp</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KeycloakTokenProvider</span><span class="p">(</span>
+<span class="w">    </span><span class="n">sp</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="o">&lt;</span><span class="n">IHttpClientFactory</span><span class="o">&gt;</span><span class="p">().</span><span class="n">CreateClient</span><span class="p">(</span><span class="n">KeycloakTokenProvider</span><span class="p">.</span><span class="n">HttpClientName</span><span class="p">),</span>
+<span class="w">    </span><span class="n">sp</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="o">&lt;</span><span class="n">IOptions</span><span class="o">&lt;</span><span class="n">KeycloakAdminOptions</span><span class="o">&gt;&gt;</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">sp</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="o">&lt;</span><span class="n">TimeProvider</span><span class="o">&gt;</span><span class="p">()));</span>
+
+<span class="n">services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="o">&lt;</span><span class="n">IKeycloakAdminService</span><span class="p">,</span><span class="w"> </span><span class="n">KeycloakAdminService</span><span class="o">&gt;</span><span class="p">(</span><span class="n">KeycloakAdminService</span><span class="p">.</span><span class="n">HttpClientName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">AddStandardResilienceHandler</span><span class="p">();</span>
 </code></pre></div>
+<p>Le fournisseur est enregistré par fabrique et non par <code>AddHttpClient&lt;,&gt;</code> : cette dernière n'enregistre
+qu'en <code>Transient</code>, ce qui viderait le cache du jeton à chaque requête.</p>
 <hr/>
 <h2 id="flux-complet-suppression-de-compte">Flux complet — Suppression de compte<a class="headerlink" href="#flux-complet-suppression-de-compte" title="Permanent link">¶</a></h2>
 <div class="language-text highlight"><pre><span></span><code>1. API reçoit DELETE /users/me
@@ -1122,7 +1294,13 @@ Keycloak__ServiceClientSecret=&lt;secret&gt;
 <li>Il ne gère pas la logique des 30 jours — c'est l'API qui contrôle <code>DeletedAt</code></li>
 <li>Il ne déclenche pas d'email — c'est le service email de l'application</li>
 </ul>
-<p>La suppression dans Keycloak (<code>DELETE /admin/realms/{realm}/users/{id}</code>) est la <strong>dernière étape</strong> de la purge, après la suppression complète des données PostgreSQL.</p>
+<p>La suppression dans Keycloak (<code>DELETE /admin/realms/{realm}/users/{id}</code>) est la <strong>première étape</strong> de
+la purge, avant la suppression des données PostgreSQL — et non l'inverse, comme le prévoyait la
+spécification initiale.</p>
+<p>La raison est l'idempotence du job : si l'appel Keycloak échoue, rien n'est supprimé et le compte
+reste sélectionnable au passage suivant. Dans l'ordre inverse, un échec Keycloak après une base déjà
+purgée laisserait un compte orphelin que plus aucune exécution ne sélectionnerait.
+Voir <a href="../../systemes/rgpd/purge-des-comptes/">RGPD — Purge des comptes</a>.</p>
 <hr/>
 <p><em>Référence : <a href="https://www.keycloak.org/docs-api/latest/rest-api/">Keycloak Admin REST API</a></em></p>
 </article>
