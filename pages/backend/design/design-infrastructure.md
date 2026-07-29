@@ -90,6 +90,40 @@ services.AddDbContext<AppDbContext>(options =>
 | `MacroProteinPercentage` | `macro_protein_percentage` |
 | `CaloriesPer100g` | `calories_per_100g` |
 
+### Traduction des échecs PostgreSQL — `DatabaseExceptionInterceptor`
+
+**Ajouté par NTR-135.** Un intercepteur EF Core traduit les échecs de base en exceptions
+applicatives, en un point unique pour **toutes** les commandes :
+
+```csharp
+// Infrastructure/DependencyInjection.cs
+services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString)
+           .UseSnakeCaseNamingConvention()
+           .AddInterceptors(new DatabaseExceptionInterceptor()));
+```
+
+| Échec | Traduit en | Réponse HTTP |
+|---|---|---|
+| `PostgresException` code **`23505`** (violation d'unicité) | `ConflictException` | 409 |
+| `NpgsqlException`, `SocketException`, `TimeoutException` | `ServiceUnavailableException("PostgreSQL")` | 503 |
+| Tout autre code SQL | *non traduit* | 500 |
+
+**Pourquoi un intercepteur plutôt qu'un `try/catch` par repository :** la seconde option
+représentait une cinquantaine de blocs identiques, à maintenir en cohérence. L'intercepteur couvre
+lectures et écritures en une seule implémentation.
+
+**Pourquoi les autres codes SQL ne sont pas traduits :** une violation de clé étrangère ou un
+type invalide signalent un défaut applicatif, pas une saisie que le client puisse corriger. Les
+masquer en 4xx les rendrait invisibles.
+
+> **Piège à connaître.** Lors d'un `SaveChanges`, EF Core **enveloppe** l'erreur Npgsql dans une
+> `DbUpdateException`. La discrimination porte donc sur l'exception **interne**, jamais sur le type
+> externe — sans quoi aucune écriture ne serait correctement traduite.
+
+La couche API n'a ainsi jamais à connaître Npgsql : elle ne voit que des abstractions d'Application.
+Voir [Exception Filter](../systemes/plateforme/exception-filter.md).
+
 ### Approche Fluent API
 
 **Règle :** Fluent API uniquement — aucune Data Annotation sur les entités Domain.
@@ -424,10 +458,13 @@ Voir [Hangfire — moteur de jobs récurrents](../briques/hangfire.md) pour le d
 
 ### Jobs planifiés
 
-| Job | Classe | Schedule (cron) | Heure UTC |
-|---|---|---|---|
-| Import Open Food Facts | `OffImportJob` | `0 3 * * *` | 03h00 |
-| Purge RGPD | `RgpdPurgeJob` | `30 3 * * *` | 03h30 |
+| Job | Classe | Schedule (cron) | Heure UTC | État |
+|---|---|---|---|---|
+| Import Open Food Facts | `OffImportJob` | `Cron.Daily(3)` = `0 3 * * *` | 03h00 | ✅ Livré (NTR-55) |
+| Purge RGPD | `RgpdPurgeJob` | `30 3 * * *` | 03h30 | ⏳ À venir (NTR-56) |
+
+> Cible de conception. **Seul `import-off` est réellement enregistré aujourd'hui** — la classe
+> `RgpdPurgeJob` et son interface n'existent pas encore dans le code.
 
 ### Interfaces des jobs
 
@@ -438,7 +475,7 @@ public interface IOffImportJob
     Task RunAsync();
 }
 
-// Infrastructure/Jobs/RgpdPurge/IRgpdPurgeJob.cs
+// Infrastructure/Jobs/RgpdPurge/IRgpdPurgeJob.cs — ⏳ NTR-56, fichier pas encore créé
 public interface IRgpdPurgeJob
 {
     Task RunAsync();
@@ -447,9 +484,13 @@ public interface IRgpdPurgeJob
 
 ### Stockage
 
-Schéma PostgreSQL dédié `HangFire` — créé automatiquement au démarrage (`PrepareSchemaIfNecessary = true`).
+Schéma PostgreSQL dédié `hangfire` (minuscules) — créé automatiquement au démarrage. C'est le
+comportement par défaut de `Hangfire.PostgreSql` : ni `SchemaName` ni `PrepareSchemaIfNecessary`
+ne sont passés dans le code.
 
 **Aucune migration EF Core** pour les tables Hangfire — elles sont gérées par le package lui-même.
+
+➜ Détail du fonctionnement, du dashboard et de la supervision : [Hangfire — moteur de jobs récurrents](../briques/hangfire.md).
 
 ### File d'attente (queue)
 
@@ -510,9 +551,11 @@ public static class InfrastructureExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
         // EF Core + PostgreSQL
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Default"))
+            options.UseNpgsql(connectionString)
                    .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
@@ -533,19 +576,21 @@ public static class InfrastructureExtensions
         // Services externes
         services.AddScoped<IKeycloakAdminService, KeycloakAdminService>();
 
-        // Hangfire
+        // Hangfire — schéma "hangfire" et création des tables : valeurs par défaut du package
         services.AddHangfire(config => config
-            .UsePostgreSqlStorage(configuration.GetConnectionString("Default"),
-                new PostgreSqlStorageOptions
-                {
-                    SchemaName = "HangFire",
-                    PrepareSchemaIfNecessary = true
-                }));
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
         services.AddHangfireServer();
 
+        // Supervision des jobs planifiés
+        services.AddScoped<IJobMonitoringService, JobMonitoringService>();
+
         // Jobs Hangfire
+        services.AddHttpClient<IOffDumpReader, OffDumpReader>();
         services.AddScoped<IOffImportJob, OffImportJob>();
-        services.AddScoped<IRgpdPurgeJob, RgpdPurgeJob>();
+        services.AddScoped<IRgpdPurgeJob, RgpdPurgeJob>();   // ⏳ NTR-56 — pas encore implémenté
 
         return services;
     }

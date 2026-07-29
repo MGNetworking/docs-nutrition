@@ -53,7 +53,7 @@ NutritionApi.Api/
 | `RequestLoggingMiddleware` | Émettre **une** entrée de journal par requête : méthode, route, statut, durée |
 | `UseHttpsRedirection` | Rediriger le trafic en clair vers HTTPS |
 | `UseCors("front")` | Refuser les appels dont l'origine n'est pas déclarée |
-| `ExceptionMiddleware` | Convertir toute exception non gérée en réponse HTTP normalisée |
+| `ExceptionMiddleware` | Convertir toute exception non gérée en réponse HTTP normalisée (RFC 9457, avec `traceId`) — voir [Exception Filter](exception-filter.md) |
 | `UseAuthentication` | Valider le JWT Keycloak et peupler `HttpContext.User` |
 | `UseAuthorization` | Appliquer les policies (`AdminOnly`) et les rôles |
 | `MapHangfireDashboard` | Servir `/hangfire`, protégé par `HangfireAdminAuthorizationFilter` |
@@ -105,7 +105,8 @@ NutritionApi.Api/
 | Marque | Élément |
 |---|---|
 | ✅ | Contenu et niveau de la trace, comportement en cas d'exception — `RequestLoggingMiddleware` couvert par 15 cas de test |
-| ✅ | Traduction des exceptions en statuts — `ExceptionMiddlewareTest` |
+| ✅ | Traduction des exceptions en statuts — 16 tests dans `ExceptionMiddlewareTest`, dont les invariants de domaine (422), les dépendances injoignables (503) et l'annulation client, ajoutés par NTR-135 |
+| ✅ | Aucune fuite de message interne ni de nom de dépendance dans les réponses d'erreur |
 | ✅ | Résolution de l'utilisateur — `UserResolutionMiddlewareTest` |
 | ⚠️ | L'**ordre** du pipeline : établi par lecture de `Program.cs` et raisonnement, jamais constaté sur une requête réelle |
 | ❌ | Le comportement CORS de bout en bout — demande un navigateur et une origine tierce |

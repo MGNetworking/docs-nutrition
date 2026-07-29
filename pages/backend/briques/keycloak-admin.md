@@ -158,12 +158,44 @@ attendre réellement.
 | **401** Unauthorized | `KeycloakAdminService` lui-même | Invalide le jeton mémorisé, puis **rejoue une fois**. Un second 401 lève. |
 | **5xx / 408 / 429 / timeout** | `AddStandardResilienceHandler()` (`Microsoft.Extensions.Http.Resilience`) | Retry exponentiel, disjoncteur et délai d'attente standards, posés sur le client HTTP |
 | **404** Not Found | `KeycloakAdminService` lui-même | Le compte n'existe plus côté Keycloak : l'opération est sans objet, journalisée en avertissement, **pas d'exception** |
+| **Keycloak injoignable** | `KeycloakAdminService` lui-même | `ServiceUnavailableException("Keycloak")` → **503** avec `Retry-After` (NTR-135) |
 
 Le 401 ne peut pas être délégué au handler standard : seul le service sait qu'il faut **invalider le
 cache du jeton** avant de rejouer — un simple retry rejouerait avec le même jeton périmé.
 
 > `Microsoft.Extensions.Http.Resilience` remplace l'ancien `Polly.Extensions.Http`. Polly reste le
 > moteur sous-jacent, mais la configuration passe désormais par le `IHttpClientBuilder`.
+
+#### Quand toutes les tentatives ont échoué — le 503 (NTR-135)
+
+Une fois le handler de résilience épuisé, l'échec réseau remonte. `KeycloakAdminService` le traduit
+alors en `ServiceUnavailableException`, que le middleware d'exceptions convertit en **503** :
+
+```csharp
+catch (HttpRequestException exception) when (exception.StatusCode is null)
+{
+    throw new ServiceUnavailableException("Keycloak", exception);
+}
+catch (TaskCanceledException exception)
+{
+    throw new ServiceUnavailableException("Keycloak", exception);
+}
+```
+
+**La clause `when` est le cœur de la distinction.** `HttpRequestException` recouvre deux situations
+très différentes :
+
+| `StatusCode` | Situation | Traitement |
+|---|---|---|
+| `null` | Aucune réponse — Keycloak est injoignable | **503**, panne passagère |
+| renseigné | Keycloak a répondu par une erreur HTTP (via `EnsureSuccessStatusCode`) | remonte tel quel → **500** |
+
+Les confondre masquerait un défaut de configuration — un client de service mal déclaré, un rôle
+`manage-users` absent — en panne passagère. L'administrateur attendrait que « ça revienne », alors
+que rien ne reviendrait.
+
+C'est cette traduction qui évite à la couche API de connaître `HttpRequestException` : elle ne voit
+qu'une abstraction d'Application. Voir [Exception Filter](../systemes/plateforme/exception-filter.md).
 
 ### Enregistrement — `NutritionApi.Infrastructure/DependencyInjection.cs`
 
