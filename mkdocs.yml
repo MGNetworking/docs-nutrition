@@ -134,6 +134,7 @@ nav:
       - Pipeline HTTP: backend/systemes/plateforme/pipeline-http.md
       - OpenAPI: backend/systemes/plateforme/openapi.md
       - Exception Filter: backend/systemes/plateforme/exception-filter.md
+      - Observabilité: backend/systemes/plateforme/observabilite.md
 
   - Briques techniques:
     - Environnement local: backend/briques/environnement-local.md
