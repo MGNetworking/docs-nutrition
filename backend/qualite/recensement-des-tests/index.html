@@ -2495,8 +2495,20 @@ aucun état d'avancement</strong>.</p>
 </table>
 <hr />
 <h2 id="niveau-2-tests-dintegration-interne">Niveau 2 — Tests d'intégration interne<a class="headerlink" href="#niveau-2-tests-dintegration-interne" title="Permanent link">&para;</a></h2>
-<p>Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111. Les sections RgpdController et
-NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachées au chapeau NTR-29.</p>
+<p>Jira : NTR-29 (chapeau) → NTR-134 (socle) et sous-tâches NTR-105 à NTR-111. Les sections
+RgpdController et NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachées au
+chapeau NTR-29.</p>
+<blockquote>
+<p><strong>État au 2026-07-29 — 100 tests livrés.</strong> Les identifiants au-delà de la nomenclature initiale
+(IT-ADM-10+, IT-USR-17+, IT-DP-11+, IT-DT-13+, IT-ML-17+) ont été ajoutés <strong>pendant</strong>
+l'implémentation : ils couvrent des comportements que le recensement initial ne prévoyait pas —
+ownership, limites de palier, invariants de domaine. Ils sont consignés ici pour que le
+recensement reste le reflet de ce qui existe.</p>
+<p>Le socle est décrit dans <a href="../tests-niveau-2/">Écrire un test de niveau 2</a>.</p>
+<p><strong>Trois défauts de production ont été découverts par ces tests</strong>, aucun n'étant détectable en test
+unitaire : toute saisie invalide renvoyait 500 (NTR-135), aucun utilisateur ne pouvait s'inscrire
+(NTR-142), et vider un repas renvoyait 500. Les trois sont corrigés.</p>
+</blockquote>
 <h3 id="middlewares-transverses-ntr-105">Middlewares transverses (NTR-105)<a class="headerlink" href="#middlewares-transverses-ntr-105" title="Permanent link">&para;</a></h3>
 <h4 id="userresolutionmiddleware">UserResolutionMiddleware<a class="headerlink" href="#userresolutionmiddleware" title="Permanent link">&para;</a></h4>
 <table>
@@ -2617,7 +2629,7 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 <tr>
 <td>IT-PIPE-03</td>
 <td>Paramètre <code>{id:guid}</code> avec GUID malformé</td>
-<td>400</td>
+<td><strong>404</strong> — corrigé après implémentation : la contrainte <code>:guid</code> participe à la <strong>sélection</strong> de l'endpoint, une valeur non conforme empêche la route de correspondre. Il n'y a donc aucune action à exécuter, et rien qui puisse produire un 400.</td>
 </tr>
 </tbody>
 </table>
@@ -2689,6 +2701,24 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 <td><code>DELETE /admin/diet-plans/templates/{id}</code></td>
 <td>Template inexistant</td>
 <td>404</td>
+</tr>
+<tr>
+<td>IT-ADM-10</td>
+<td><code>PUT /admin/diet-plans/templates/{id}</code></td>
+<td>L'identifiant désigne un plan <strong>personnel</strong></td>
+<td>404 — la route admin ne doit pas révéler l'existence d'un plan qui n'est pas un template</td>
+</tr>
+<tr>
+<td>IT-ADM-11</td>
+<td><code>POST /admin/diet-plans/templates</code></td>
+<td>Macros dont la somme n'atteint pas 100 %</td>
+<td>422 — invariant de <code>MacroDistribution</code></td>
+</tr>
+<tr>
+<td>IT-ADM-12</td>
+<td><code>GET /admin/system/health</code></td>
+<td>User sans rôle admin</td>
+<td>403</td>
 </tr>
 </tbody>
 </table>
@@ -2802,6 +2832,42 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 <td><code>DELETE /users/me/saved-food-items/{id}</code></td>
 <td>Favori inexistant</td>
 <td>404</td>
+</tr>
+<tr>
+<td>IT-USR-17</td>
+<td><code>PUT /users/me</code></td>
+<td>Date de naissance dans le futur</td>
+<td>422 — invariant de <code>User</code></td>
+</tr>
+<tr>
+<td>IT-USR-18</td>
+<td><code>PUT /users/me</code></td>
+<td>Taille négative</td>
+<td>422 — invariant de <code>User</code></td>
+</tr>
+<tr>
+<td>IT-USR-19</td>
+<td><code>PUT /users/me/weight-entries/{id}</code></td>
+<td>Pesée appartenant à un autre utilisateur</td>
+<td>404 — et non 403 : révéler son existence serait une fuite d'information</td>
+</tr>
+<tr>
+<td>IT-USR-20</td>
+<td><code>POST /users/me/saved-food-items</code></td>
+<td>Limite du palier atteinte (Free : 10)</td>
+<td>403</td>
+</tr>
+<tr>
+<td>IT-USR-21</td>
+<td><code>DELETE /users/me/saved-food-items/{id}</code></td>
+<td>Favori appartenant à un autre utilisateur</td>
+<td>403</td>
+</tr>
+<tr>
+<td>IT-USR-22</td>
+<td><code>GET /users/me</code></td>
+<td>Jeton valide, aucun profil en base</td>
+<td>401 — la dispense <code>[AllowWithoutProfile]</code> ne vaut que pour la création</td>
 </tr>
 </tbody>
 </table>
@@ -2934,6 +3000,24 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 <td>User Pro/Business</td>
 <td>200 liste templates</td>
 </tr>
+<tr>
+<td>IT-DP-11</td>
+<td><code>POST /diet-plans</code></td>
+<td>Limite du palier atteinte (Free : 2)</td>
+<td>403</td>
+</tr>
+<tr>
+<td>IT-DP-12</td>
+<td><code>POST /diet-plans</code></td>
+<td>Palier Pro sous sa limite (20) alors que le quota Free serait dépassé</td>
+<td>201</td>
+</tr>
+<tr>
+<td>IT-DP-13</td>
+<td><code>POST /diet-plans</code></td>
+<td>Champ <code>name</code> absent du corps JSON</td>
+<td>400 — validation de liaison de modèle, distincte du 422 des invariants</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
@@ -3026,6 +3110,18 @@ section suivante.</p>
 <td><code>POST /diets/{id}/launch</code></td>
 <td>Données du plan insuffisantes</td>
 <td>422</td>
+</tr>
+<tr>
+<td>IT-DT-13</td>
+<td><code>GET /diets/{id}</code></td>
+<td>Diète appartenant à un autre utilisateur</td>
+<td>403</td>
+</tr>
+<tr>
+<td>IT-DT-14</td>
+<td><code>POST /diets/{id}/launch</code></td>
+<td>Lancement d'un <strong>template</strong> en palier Free</td>
+<td>403</td>
 </tr>
 </tbody>
 </table>
@@ -3228,6 +3324,30 @@ section suivante.</p>
 <td><code>DELETE /meals/{id}/items/{itemId}</code></td>
 <td>Item inexistant</td>
 <td>404</td>
+</tr>
+<tr>
+<td>IT-ML-17</td>
+<td><code>DELETE /meals/{id}/items/{itemId}</code></td>
+<td><strong>Dernier</strong> item du repas</td>
+<td>422 — le domaine interdit de vider un repas ; il faut supprimer le repas lui-même</td>
+</tr>
+<tr>
+<td>IT-ML-18</td>
+<td><code>POST /meals</code></td>
+<td>Repas <strong>ponctuel</strong> alors que le quota de repas sauvegardés est dépassé</td>
+<td>201 — la limite ne s'applique qu'aux repas sauvegardés</td>
+</tr>
+<tr>
+<td>IT-ML-19</td>
+<td><code>POST /meals</code></td>
+<td>Quantité négative sur un item</td>
+<td>422 — invariant de <code>MealItem</code></td>
+</tr>
+<tr>
+<td>IT-ML-20</td>
+<td><code>GET /meals/{id}</code></td>
+<td>Repas appartenant à un autre utilisateur</td>
+<td>403</td>
 </tr>
 </tbody>
 </table>
