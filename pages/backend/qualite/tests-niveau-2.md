@@ -231,6 +231,35 @@ avec un code sans rapport avec ce qu'il vérifie.
 sujet doit l'armer lui-même — ou s'en servir volontairement, comme le fait
 `AuthenticatedRequest_WithUnknownUser_Returns401`.
 
+**Une seule action y échappe** : `POST /users/me`, marquée `[AllowWithoutProfile]`. Sans cette
+dispense, la création de profil était inatteignable — il fallait déjà en posséder un (NTR-142).
+Voir [Pipeline HTTP](../systemes/plateforme/pipeline-http.md).
+
+## 5 bis. Le second piège — `Verify` sur des doublures partagées
+
+```csharp
+_factory.DietPlans.Verify(r => r.AddAsync(It.IsAny<DietPlan>()), Times.Never);
+```
+
+Cette vérification compte les appels **depuis le début de la suite**, tous tests confondus : la
+fabrique est partagée. Un test peut donc échouer à cause d'un autre, avec un symptôme
+caractéristique — **il passe seul et échoue dans sa classe**.
+
+D'où l'appel systématique dans le constructeur de chaque classe de tests :
+
+```csharp
+public MonTest(ApiFactory factory)
+{
+    _factory = factory;
+    _factory.ResetInvocations();   // efface l'historique d'appels, pas les configurations
+}
+```
+
+xUnit instancie la classe avant **chaque** méthode : la remise à zéro est donc automatique.
+
+> Sans cela, les `Times.Never` passent **par chance**, selon l'ordre d'exécution. C'est le défaut le
+> plus insidieux de ce socle : il produit des faux négatifs, pas des faux positifs.
+
 ---
 
 ## 6. Écrire un test — le gabarit

@@ -11,6 +11,43 @@
 
 ## 1. Vue d'ensemble
 
+### Deux phases, pas une
+
+Le routage **sélectionne** l'action au tout début, et ce n'est qu'à la toute fin qu'elle est
+**exécutée**. Tous les middlewares s'exécutent entre les deux.
+
+```
+┌─ SÉLECTION ────────────────────────────────────────────────┐
+│  UseRouting()                                              │
+│    compare l'URL aux routes → trouve l'action              │
+│    la dépose dans HttpContext, avec ses attributs          │
+│    ⚠️ le controller n'est PAS instancié, l'action PAS appelée│
+└────────────────────────────────────────────────────────────┘
+                          ↓  les middlewares (ci-dessous)
+┌─ EXÉCUTION ────────────────────────────────────────────────┐
+│  UseEndpoints()                                            │
+│    instancie le controller, injecte ses dépendances,       │
+│    appelle enfin l'action                                  │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Ni `UseRouting` ni `UseEndpoints` n'apparaissent dans `Program.cs`.** Depuis .NET 6,
+`WebApplication` les insère automatiquement — au début et à la fin du pipeline — dès qu'un `Map*`
+est présent. `app.MapControllers()` suffit à les déclencher.
+
+C'est cette séparation qui rend les attributs exploitables : `UseAuthorization` lit `[Authorize]` sur
+l'action **déjà sélectionnée**, sans quoi il ne saurait pas quelle policy appliquer. Elle explique
+aussi deux comportements observés :
+
+- **Un GUID malformé donne 404, pas 400.** La contrainte `{id:guid}` participe à la sélection :
+  aucune action ne correspond, il n'y a rien à exécuter.
+- **`/hangfire` ne traverse pas les middlewares suivants.** C'est un endpoint sélectionné en phase 1,
+  qui répond avant d'atteindre `UserResolutionMiddleware`.
+
+Si un middleware interrompt entre les deux phases, **le controller n'est jamais instancié**.
+
+### Le pipeline
+
 ```
                     ┌─────────────────────────────────────────────┐
    requête HTTP ───►│ RequestLoggingMiddleware                    │  chronomètre démarré
@@ -57,7 +94,7 @@ NutritionApi.Api/
 | `UseAuthentication` | Valider le JWT Keycloak et peupler `HttpContext.User` |
 | `UseAuthorization` | Appliquer les policies (`AdminOnly`) et les rôles |
 | `MapHangfireDashboard` | Servir `/hangfire`, protégé par `HangfireAdminAuthorizationFilter` |
-| `UserResolutionMiddleware` | Traduire le `sub` du token en `User.Id` interne, déposé dans `HttpContext.Items` |
+| `UserResolutionMiddleware` | Traduire le `sub` du token en `User.Id` interne, déposé dans `HttpContext.Items` — **et refuser** la requête si aucun profil ne correspond, sauf sur les actions marquées `[AllowWithoutProfile]` |
 | `MapControllers` | Router vers l'action et exécuter le traitement métier |
 
 ## 3. Le parcours d'une requête
@@ -74,7 +111,8 @@ NutritionApi.Api/
 6. **Autorisation.** Les policies s'appliquent. Un refus produit un 401 ou un 403.
 7. **`/hangfire` sort du pipeline** si la route correspond : le dashboard répond directement.
 8. **Résolution de l'utilisateur.** `UserResolutionMiddleware` échange le `sub` contre le `User.Id`
-   interne. Un compte absent en base donne un 401, même avec un token valide.
+   interne. Un compte absent en base donne un 401, même avec un token valide — **sauf** si l'action
+   porte `[AllowWithoutProfile]`.
 9. **L'action s'exécute**, la réponse remonte.
 10. **Le chronomètre s'arrête.** Le `finally` de `RequestLoggingMiddleware` lit le statut réellement
     écrit et émet la ligne de journal.
@@ -90,6 +128,34 @@ NutritionApi.Api/
 | `UseCors` **avant** `ExceptionMiddleware` | Une requête refusée par CORS n'a pas à traverser le reste du pipeline. | Après l'authentification : coût inutile et en-têtes CORS absents des réponses d'erreur. |
 | Le dashboard Hangfire est monté **après** `UseAuthorization` | Son filtre lit `HttpContext.User`, qui n'est peuplé qu'après les middlewares d'authentification. | Avant : le filtre verrait un utilisateur vide et refuserait tout le monde. |
 | …et **avant** `UserResolutionMiddleware` | Le dashboard n'a pas besoin de la correspondance `keycloakId` → `User` interne. | Après : un administrateur sans profil applicatif en base serait refusé. |
+| La dispense de profil est un **attribut**, pas une liste de chemins | `[AllowWithoutProfile]` vit sur l'action qu'il concerne et la suit si sa route change. | Comparer `Request.Path` dans le middleware : plus court, mais renommer la route romprait la dispense **silencieusement** — et le blocage reviendrait à l'identique (NTR-142). |
+
+### La dispense `[AllowWithoutProfile]`
+
+`POST /users/me` crée le profil utilisateur. Sans dispense, `UserResolutionMiddleware` le refusait :
+**il fallait déjà posséder un profil pour en créer un** — aucun utilisateur ne pouvait s'inscrire
+(NTR-142).
+
+```csharp
+// UsersController.cs — l'étiquette
+[HttpPost("me")]
+[AllowWithoutProfile]
+public async Task<IActionResult> CreateUser(...)
+
+// UserResolutionMiddleware.cs — le lecteur
+private static bool AllowsMissingProfile(HttpContext context)
+    => context.GetEndpoint()?.Metadata.GetMetadata<AllowWithoutProfileAttribute>() is not null;
+```
+
+Un attribut n'exécute rien : il **stocke** une information dans l'assembly. Le middleware la **lit**
+via `GetEndpoint()`, disponible parce que le routage a déjà eu lieu (phase 1). Les deux morceaux
+sont indissociables — l'attribut seul est inerte, la lecture seule ne trouve rien.
+
+`[Authorize]` fonctionne exactement ainsi : la seule différence est que son lecteur est fourni par
+Microsoft.
+
+> La dispense ne vaut **que** pour l'action marquée. Partout ailleurs, un jeton valide sans profil
+> reste refusé — c'est vérifié par un test dédié.
 
 ## 5. Ce qui n'est pas couvert
 

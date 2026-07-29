@@ -60,6 +60,40 @@ Le message d'origine est **transmis au client** : il vient du domaine et décrit
 > ils restent journalisés, et la convention du projet fait d'`ArgumentException` le signal d'une
 > donnée invalide.
 
+### Pourquoi `InvalidOperationException` n'est **pas** dans la grille
+
+Le domaine l'utilise pour certains invariants — « un repas doit garder au moins un aliment »
+(`Meal.RemoveMealItem`). Il serait tentant de la mapper en 422 comme `ArgumentException`.
+
+**Ce serait une erreur.** `InvalidOperationException` est levée partout par le framework lui-même :
+`.First()` sur une collection vide, `.Single()` avec plusieurs éléments, un `DbContext` déjà libéré.
+Ces cas sont des **défauts de code**.
+
+La différence tient au traitement, pas au message :
+
+| | 500 | 422 |
+|---|---|---|
+| Journal | `Error`, avec la trace | `Warning`, sans trace |
+| Lecture | « le code a un défaut » | « le client a mal saisi » |
+| Suite | on investigue | on ignore |
+
+Un `.First()` sur liste vide devenu 422 serait rangé parmi les erreurs de saisie : il
+n'apparaîtrait dans aucune alerte, et survivrait indéfiniment.
+
+**La traduction se fait donc dans le service**, là où le sens de l'exception est connu :
+
+```csharp
+// MealService.RemoveItemAsync
+if (meal.MealItems.Count <= 1)
+    throw new UnprocessableException("A meal must keep at least one item. Delete the meal instead.");
+```
+
+Même principe que le 404 sur `MealItem` introuvable : un cas identifié est traduit à l'endroit où on
+sait ce qu'il signifie, plutôt qu'un type entier au niveau du middleware.
+
+`ArgumentException` fait exception à cette règle parce que le projet lui a donné une **convention**
+explicite (`conventions.md`) : elle signale un invariant de domaine violé, jamais autre chose.
+
 ### Pourquoi l'annulation client est conditionnelle
 
 ```csharp
