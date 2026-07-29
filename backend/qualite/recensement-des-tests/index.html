@@ -3353,8 +3353,12 @@ section suivante.</p>
 </table>
 <hr />
 <h2 id="niveau-3-tests-dintegration-externe">Niveau 3 — Tests d'intégration externe<a class="headerlink" href="#niveau-3-tests-dintegration-externe" title="Permanent link">&para;</a></h2>
-<p>Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).</p>
+<p>Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
+<strong>18 cas</strong> — IT-EXT-01 à 14 et IT-JOB-01 à 04.</p>
 <h3 id="chaine-dauthentification-keycloak-reel">Chaîne d'authentification — Keycloak réel<a class="headerlink" href="#chaine-dauthentification-keycloak-reel" title="Permanent link">&para;</a></h3>
+<p>Transférés depuis NTR-74 le 2026-07-27 : au niveau 2, le <code>TestAuthHandler</code> remplace le schéma
+d'authentification, donc court-circuite précisément le composant à éprouver. Ces cas ne peuvent
+vivre qu'ici.</p>
 <table>
 <thead>
 <tr>

@@ -2260,7 +2260,14 @@ contrôle pas.</p>
 Keycloak) sont ceux du <code>docker-compose.yml</code> de développement, réutilisés en CI. Ce choix permet de
 valider ce que des conteneurs isolés ne peuvent pas : <strong>la configuration Docker, le réseau entre
 composants et la chaîne JWT réelle</strong>. Décision d'architecture actée le 2026-07-21.</p>
-<p><strong>Outil</strong> : <code>WebApplicationFactory&lt;Program&gt;</code> + docker-compose · <strong>Cible</strong> : 5 à 10 tests · <strong>Jira</strong> : NTR-28</p>
+<p><strong>Conditions de démarrage</strong> — après la couche Infrastructure, quand les repositories et le schéma
+DB sont stables. Chaque session de test dispose d'une <strong>base isolée</strong> (<code>docker-compose.PostgreSql</code>)
+et d'un <strong>cache isolé</strong> (<code>docker-compose.Redis</code>).</p>
+<p><strong>Outil</strong> : <code>WebApplicationFactory&lt;Program&gt;</code> + docker-compose · <strong>Cible</strong> : 18 tests · <strong>Jira</strong> : NTR-28</p>
+<blockquote>
+<p>L'estimation d'origine était de 5 à 10 tests. Elle a été révisée après les transferts de NTR-74
+(validation JWT) et NTR-135 (branchement de l'intercepteur), et l'ajout des cas de statut Hangfire.</p>
+</blockquote>
 <hr />
 <h2 id="niveau-4-smoke-tests-environnement-deploye">Niveau 4 — Smoke tests (environnement déployé)<a class="headerlink" href="#niveau-4-smoke-tests-environnement-deploye" title="Permanent link">&para;</a></h2>
 <blockquote>
