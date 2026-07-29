@@ -16,7 +16,7 @@
         <link rel="prev" href="../openapi/">
       
       
-        <link rel="next" href="../../../briques/environnement-local/">
+        <link rel="next" href="../observabilite/">
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
@@ -1535,15 +1535,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#qui-lutilise" class="md-nav__link">
-    <span class="md-ellipsis">
-      Qui l'utilise
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ce-quil-fait" class="md-nav__link">
     <span class="md-ellipsis">
       Ce qu'il fait
@@ -1562,18 +1553,126 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mappings-exception-http" class="md-nav__link">
+  <a href="#grille-de-traduction" class="md-nav__link">
     <span class="md-ellipsis">
-      Mappings exception → HTTP
+      Grille de traduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Grille de traduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-argumentexception-donne-422-et-non-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi ArgumentException donne 422 et non 500
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-invalidoperationexception-nest-pas-dans-la-grille" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi InvalidOperationException n'est pas dans la grille
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-lannulation-client-est-conditionnelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi l'annulation client est conditionnelle
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-de-reponse-rfc-9457" class="md-nav__link">
+    <span class="md-ellipsis">
+      Format de réponse — RFC 9457
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Format de réponse — RFC 9457">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-le-traceid-est-indispensable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi le traceId est indispensable
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-qui-ne-franchit-jamais-la-frontiere-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui ne franchit jamais la frontière HTTP
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependances" class="md-nav__link">
+  <a href="#graduation-des-journaux" class="md-nav__link">
     <span class="md-ellipsis">
-      Dépendances
+      Graduation des journaux
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-regle-de-couche" class="md-nav__link">
+    <span class="md-ellipsis">
+      La règle de couche
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La règle de couche">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-cas-redis-pas-de-503" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le cas Redis — pas de 503
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voir-aussi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Voir aussi
     </span>
   </a>
   
@@ -1583,6 +1682,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observabilite/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Observabilité
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1844,6 +1964,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../qualite/tests-niveau-2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -2032,15 +2173,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#qui-lutilise" class="md-nav__link">
-    <span class="md-ellipsis">
-      Qui l'utilise
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ce-quil-fait" class="md-nav__link">
     <span class="md-ellipsis">
       Ce qu'il fait
@@ -2059,18 +2191,126 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mappings-exception-http" class="md-nav__link">
+  <a href="#grille-de-traduction" class="md-nav__link">
     <span class="md-ellipsis">
-      Mappings exception → HTTP
+      Grille de traduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Grille de traduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-argumentexception-donne-422-et-non-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi ArgumentException donne 422 et non 500
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-invalidoperationexception-nest-pas-dans-la-grille" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi InvalidOperationException n'est pas dans la grille
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-lannulation-client-est-conditionnelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi l'annulation client est conditionnelle
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-de-reponse-rfc-9457" class="md-nav__link">
+    <span class="md-ellipsis">
+      Format de réponse — RFC 9457
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Format de réponse — RFC 9457">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-le-traceid-est-indispensable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi le traceId est indispensable
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-qui-ne-franchit-jamais-la-frontiere-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qui ne franchit jamais la frontière HTTP
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependances" class="md-nav__link">
+  <a href="#graduation-des-journaux" class="md-nav__link">
     <span class="md-ellipsis">
-      Dépendances
+      Graduation des journaux
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-regle-de-couche" class="md-nav__link">
+    <span class="md-ellipsis">
+      La règle de couche
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La règle de couche">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-cas-redis-pas-de-503" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le cas Redis — pas de 503
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voir-aussi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Voir aussi
     </span>
   </a>
   
@@ -2092,73 +2332,348 @@
 
 
 <h1 id="exception-filter-middleware">Exception Filter (Middleware)<a class="headerlink" href="#exception-filter-middleware" title="Permanent link">&para;</a></h1>
-<p><strong>Ajouté le :</strong> 2026-05-25
+<p><strong>Ajouté le :</strong> 2026-05-25 · <strong>Refondu le :</strong> 2026-07-29 (NTR-135)
 <strong>Type :</strong> Interne</p>
+<blockquote>
+<p>Ce document décrit la traduction des exceptions en réponses HTTP.
+➜ Pour la position du middleware dans la chaîne, voir <a href="../pipeline-http/">Pipeline HTTP</a>.
+➜ Pour la collecte et l'exploitation des journaux qu'il émet, voir <a href="../observabilite/">Observabilité</a>.</p>
+</blockquote>
 <hr />
 <h2 id="objectif">Objectif<a class="headerlink" href="#objectif" title="Permanent link">&para;</a></h2>
-<p>Intercepter les exceptions métier lancées par les couches Domain et Application, et les mapper en réponses HTTP structurées avec un message lisible par l'utilisateur.</p>
-<h2 id="qui-lutilise">Qui l'utilise<a class="headerlink" href="#qui-lutilise" title="Permanent link">&para;</a></h2>
-<p>Toutes les requêtes — le filtre est global sur l'ensemble des endpoints.</p>
+<p>Traduire toute exception non gérée en réponse HTTP normalisée, sans jamais laisser fuiter de détail
+d'infrastructure vers le client.</p>
 <h2 id="ce-quil-fait">Ce qu'il fait<a class="headerlink" href="#ce-quil-fait" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Intercepte les exceptions métier et retourne une réponse HTTP avec un code et un message explicite</li>
-<li>Laisse remonter les exceptions non gérées (erreurs système → 500)</li>
+<li>Traduit les exceptions applicatives et les invariants du domaine en codes HTTP</li>
+<li>Produit un <code>ProblemDetails</code> conforme à la <strong>RFC 9457</strong>, porteur d'un <code>traceId</code></li>
+<li>Gradue la journalisation selon que la faute est côté client ou côté serveur</li>
 </ul>
 <h2 id="ce-quil-ne-fait-pas">Ce qu'il ne fait pas<a class="headerlink" href="#ce-quil-ne-fait-pas" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Ne gère pas les erreurs JWT (401) — responsabilité du middleware Keycloak</li>
-<li>Ne gère pas la validation des inputs (400) — responsabilité du model binding / FluentValidation ASP.NET</li>
+<li>Ne gère pas l'authentification (401) — c'est le pipeline d'auth</li>
+<li>Ne gère pas la validation de liaison de modèle (400) — c'est <code>[ApiController]</code> et les DataAnnotations</li>
+<li><strong>Ne connaît ni Npgsql ni StackExchange.Redis</strong> — voir « La règle de couche » plus bas</li>
 </ul>
-<h2 id="mappings-exception-http">Mappings exception → HTTP<a class="headerlink" href="#mappings-exception-http" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="grille-de-traduction">Grille de traduction<a class="headerlink" href="#grille-de-traduction" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Exception</th>
-<th>Code HTTP</th>
-<th>Cas métier</th>
+<th>Code</th>
+<th>Origine typique</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ConflictException</code></td>
-<td>409</td>
-<td>Diet active déjà existante pour cet utilisateur</td>
-</tr>
-<tr>
-<td><code>ConflictException</code></td>
-<td>409</td>
-<td>FoodItem déjà sauvegardé par cet utilisateur</td>
-</tr>
-<tr>
-<td><code>ConflictException</code></td>
-<td>409</td>
-<td>Pesée déjà enregistrée à cette date pour cet utilisateur</td>
-</tr>
-<tr>
 <td><code>NotFoundException</code></td>
-<td>404</td>
-<td>Ressource introuvable (Diet, Meal, FoodItem, WeightEntry, DietPlan)</td>
+<td><strong>404</strong></td>
+<td>Ressource inexistante — Diet, Meal, FoodItem, WeightEntry, DietPlan, MealItem</td>
+</tr>
+<tr>
+<td><code>ConflictException</code></td>
+<td><strong>409</strong></td>
+<td>Diet déjà active · aliment déjà en favori · pesée déjà saisie à cette date · violation d'unicité en base</td>
+</tr>
+<tr>
+<td><code>ForbiddenException</code></td>
+<td><strong>403</strong></td>
+<td>Ownership violée · limite de palier atteinte · templates interdits au palier Free</td>
 </tr>
 <tr>
 <td><code>UnprocessableException</code></td>
-<td>422</td>
-<td>Lancement d'un régime sans WeightEntry existant</td>
+<td><strong>422</strong></td>
+<td>Lancement d'un régime sans pesée existante</td>
 </tr>
 <tr>
-<td><code>ForbiddenException</code></td>
-<td>403</td>
-<td>Limite tier dépassée (repas sauvegardés, historique poids, période bilan)</td>
+<td><strong><code>ArgumentException</code></strong> et dérivées</td>
+<td><strong>422</strong></td>
+<td>Invariant du domaine violé — macros ≠ 100 %, date future, poids négatif, énumération à <code>Unknown</code></td>
 </tr>
 <tr>
-<td><code>ForbiddenException</code></td>
-<td>403</td>
-<td>Accès aux templates DietPlan bloqué pour tier Free</td>
+<td><strong><code>ServiceUnavailableException</code></strong></td>
+<td><strong>503</strong></td>
+<td>PostgreSQL ou Keycloak injoignable — avec en-tête <code>Retry-After</code></td>
+</tr>
+<tr>
+<td><strong><code>OperationCanceledException</code></strong></td>
+<td><em>aucune</em></td>
+<td>Le client s'est déconnecté — <strong>seulement</strong> si <code>RequestAborted</code> est déclenché</td>
+</tr>
+<tr>
+<td>Toute autre exception</td>
+<td><strong>500</strong></td>
+<td>Défaut inattendu</td>
 </tr>
 </tbody>
 </table>
-<h2 id="dependances">Dépendances<a class="headerlink" href="#dependances" title="Permanent link">&para;</a></h2>
+<h3 id="pourquoi-argumentexception-donne-422-et-non-500">Pourquoi <code>ArgumentException</code> donne 422 et non 500<a class="headerlink" href="#pourquoi-argumentexception-donne-422-et-non-500" title="Permanent link">&para;</a></h3>
+<p>Par convention du projet (<code>conventions.md</code>), les invariants du domaine s'expriment par
+<code>ArgumentException</code> et <code>ArgumentOutOfRangeException</code>. Ces exceptions signalent donc <strong>une donnée
+invalide</strong>, pas un défaut interne.</p>
+<p>Avant NTR-135, elles tombaient dans le filet générique : une saisie erronée produisait un <strong>500</strong>,
+et le contrat OpenAPI — qui annonce 422 — n'était pas tenu. Le défaut a été découvert par
+<code>IT_DP_03</code>, premier test à faire traverser le pipeline complet à une donnée invalide.</p>
+<p>Le message d'origine est <strong>transmis au client</strong> : il vient du domaine et décrit la règle violée
+(« Macro percentages must sum to 100 »), ce qui est exactement ce dont l'appelant a besoin.</p>
+<blockquote>
+<p><strong>Limite assumée.</strong> Une quinzaine de sites lèvent <code>ArgumentException</code> sans être atteignables par
+une saisie — <code>SubscriptionGuard</code>, <code>NutritionCalculator</code>, <code>KeycloakAdminService</code>. Ceux-là signalent
+un vrai défaut et se retrouvent désormais en 422 au lieu de 500. La contrepartie est acceptée :
+ils restent journalisés, et la convention du projet fait d'<code>ArgumentException</code> le signal d'une
+donnée invalide.</p>
+</blockquote>
+<h3 id="pourquoi-invalidoperationexception-nest-pas-dans-la-grille">Pourquoi <code>InvalidOperationException</code> n'est <strong>pas</strong> dans la grille<a class="headerlink" href="#pourquoi-invalidoperationexception-nest-pas-dans-la-grille" title="Permanent link">&para;</a></h3>
+<p>Le domaine l'utilise pour certains invariants — « un repas doit garder au moins un aliment »
+(<code>Meal.RemoveMealItem</code>). Il serait tentant de la mapper en 422 comme <code>ArgumentException</code>.</p>
+<p><strong>Ce serait une erreur.</strong> <code>InvalidOperationException</code> est levée partout par le framework lui-même :
+<code>.First()</code> sur une collection vide, <code>.Single()</code> avec plusieurs éléments, un <code>DbContext</code> déjà libéré.
+Ces cas sont des <strong>défauts de code</strong>.</p>
+<p>La différence tient au traitement, pas au message :</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>500</th>
+<th>422</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Journal</td>
+<td><code>Error</code>, avec la trace</td>
+<td><code>Warning</code>, sans trace</td>
+</tr>
+<tr>
+<td>Lecture</td>
+<td>« le code a un défaut »</td>
+<td>« le client a mal saisi »</td>
+</tr>
+<tr>
+<td>Suite</td>
+<td>on investigue</td>
+<td>on ignore</td>
+</tr>
+</tbody>
+</table>
+<p>Un <code>.First()</code> sur liste vide devenu 422 serait rangé parmi les erreurs de saisie : il
+n'apparaîtrait dans aucune alerte, et survivrait indéfiniment.</p>
+<p><strong>La traduction se fait donc dans le service</strong>, là où le sens de l'exception est connu :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// MealService.RemoveItemAsync</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">meal</span><span class="p">.</span><span class="n">MealItems</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">UnprocessableException</span><span class="p">(</span><span class="s">&quot;A meal must keep at least one item. Delete the meal instead.&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>Même principe que le 404 sur <code>MealItem</code> introuvable : un cas identifié est traduit à l'endroit où on
+sait ce qu'il signifie, plutôt qu'un type entier au niveau du middleware.</p>
+<p><code>ArgumentException</code> fait exception à cette règle parce que le projet lui a donné une <strong>convention</strong>
+explicite (<code>conventions.md</code>) : elle signale un invariant de domaine violé, jamais autre chose.</p>
+<h3 id="pourquoi-lannulation-client-est-conditionnelle">Pourquoi l'annulation client est conditionnelle<a class="headerlink" href="#pourquoi-lannulation-client-est-conditionnelle" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">OperationCanceledException</span><span class="p">)</span><span class="w"> </span><span class="n">when</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">RequestAborted</span><span class="p">.</span><span class="n">IsCancellationRequested</span><span class="p">)</span>
+</code></pre></div>
+<p>Sans la clause <code>when</code>, <strong>tout</strong> délai dépassé interne serait silencieusement absorbé. La condition
+distingue « le client est parti » — qui n'est pas un incident — de « une opération a expiré côté
+serveur », qui en est un et reste en 500.</p>
+<hr />
+<h2 id="format-de-reponse-rfc-9457">Format de réponse — RFC 9457<a class="headerlink" href="#format-de-reponse-rfc-9457" title="Permanent link">&para;</a></h2>
+<div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://tools.ietf.org/html/rfc9110#section-15.5.5&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ressource introuvable&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DietPlan not found.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;traceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0HN7GK2M4V9PL:00000003&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>Identifiant <strong>stable</strong> du type de problème — c'est sur lui que s'appuie un client généré (NSwag, Kiota), pas sur le libellé</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Libellé de la catégorie, invariant pour un même statut</td>
+</tr>
+<tr>
+<td><code>detail</code></td>
+<td>Message destiné à l'appelant. <strong>Générique</strong> pour les 500 et 503.</td>
+</tr>
+<tr>
+<td><code>traceId</code></td>
+<td><code>HttpContext.TraceIdentifier</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="pourquoi-le-traceid-est-indispensable">Pourquoi le <code>traceId</code> est indispensable<a class="headerlink" href="#pourquoi-le-traceid-est-indispensable" title="Permanent link">&para;</a></h3>
+<p>Sans lui, un utilisateur signalant « j'ai eu une erreur » ne laisse <strong>aucun moyen</strong> de retrouver
+l'entrée de journal correspondante. Le réflexe devient alors de rendre les messages plus bavards —
+c'est-à-dire exactement ce qu'il faut éviter.</p>
+<p>L'identifiant est opaque : il n'a aucune valeur pour un attaquant, et c'est lui qui <strong>permet</strong> de
+garder les messages muets.</p>
+<hr />
+<h2 id="ce-qui-ne-franchit-jamais-la-frontiere-http">Ce qui ne franchit jamais la frontière HTTP<a class="headerlink" href="#ce-qui-ne-franchit-jamais-la-frontiere-http" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cas</th>
+<th>Ce que reçoit le client</th>
+<th>Ce que reçoit le journal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Erreur inattendue (500)</td>
+<td>« Une erreur interne est survenue. »</td>
+<td>L'exception complète, avec sa trace</td>
+</tr>
+<tr>
+<td>Dépendance injoignable (503)</td>
+<td>« Le service est temporairement indisponible… »</td>
+<td>Le <strong>nom de la dépendance</strong> et la cause technique</td>
+</tr>
+</tbody>
+</table>
+<p>Le nom de la dépendance est une information d'architecture : le divulguer renseignerait un attaquant
+sur la composition du système.</p>
+<hr />
+<h2 id="graduation-des-journaux">Graduation des journaux<a class="headerlink" href="#graduation-des-journaux" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Catégorie</th>
+<th>Niveau</th>
+<th>Trace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4xx — faute du client</td>
+<td><code>Warning</code></td>
+<td>non — il ne révèle aucun défaut</td>
+</tr>
+<tr>
+<td>503 — dépendance externe</td>
+<td><code>Error</code></td>
+<td>oui, avec la dépendance nommée</td>
+</tr>
+<tr>
+<td>500 — inattendu</td>
+<td><code>Error</code></td>
+<td>oui, complète</td>
+</tr>
+<tr>
+<td>Annulation client</td>
+<td><code>Information</code></td>
+<td>non</td>
+</tr>
+</tbody>
+</table>
+<p>Avant NTR-135, tout ce qui n'était pas traduit partait en <code>LogError</code> : une saisie invalide et une
+base morte déclenchaient la même alerte.</p>
+<hr />
+<h2 id="la-regle-de-couche">La règle de couche<a class="headerlink" href="#la-regle-de-couche" title="Permanent link">&para;</a></h2>
+<p>Le middleware appartient à la couche <strong>API</strong>. Lui faire attraper <code>NpgsqlException</code> ou
+<code>RedisConnectionException</code> l'obligerait à référencer des packages confinés à Infrastructure.</p>
+<p>C'est <strong>Infrastructure qui traduit</strong> :</p>
+<div class="language-text highlight"><pre><span></span><code>DatabaseExceptionInterceptor    ──┐
+KeycloakAdminService            ──┼── lèvent ServiceUnavailableException
+                                  │   (ou ConflictException sur violation d&#39;unicité)
+                                  ▼
+                     ExceptionMiddleware → 503 / 409
+                     (ne connaît ni Npgsql ni Redis)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Point de traduction</th>
+<th>Ce qu'il attrape</th>
+<th>Ce qu'il lève</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Persistence/Interceptors/DatabaseExceptionInterceptor</code></td>
+<td><code>PostgresException</code> code <code>23505</code></td>
+<td><code>ConflictException</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>NpgsqlException</code>, <code>SocketException</code>, <code>TimeoutException</code></td>
+<td><code>ServiceUnavailableException("PostgreSQL")</code></td>
+</tr>
+<tr>
+<td><code>ExternalServices/Keycloak/KeycloakAdminService</code></td>
+<td><code>HttpRequestException</code> <strong>sans statut</strong>, <code>TaskCanceledException</code></td>
+<td><code>ServiceUnavailableException("Keycloak")</code></td>
+</tr>
+</tbody>
+</table>
+<p>Deux discriminations méritent l'attention :</p>
+<p><strong><code>HttpRequestException</code> avec un statut n'est pas une indisponibilité</strong> — elle vient d'une réponse
+HTTP d'erreur de l'API Admin. La confondre masquerait un défaut de configuration en panne passagère.</p>
+<p><strong>EF Core enveloppe les erreurs Npgsql</strong> dans <code>DbUpdateException</code> lors d'un <code>SaveChanges</code>. La
+discrimination porte donc sur l'exception <strong>interne</strong>, jamais sur le type externe.</p>
+<h3 id="le-cas-redis-pas-de-503">Le cas Redis — pas de 503<a class="headerlink" href="#le-cas-redis-pas-de-503" title="Permanent link">&para;</a></h3>
+<p><code>RedisFoodCacheService</code> attrape ses propres <code>RedisException</code>, journalise en <code>Warning</code> et <strong>se replie
+sur PostgreSQL</strong>. La recherche fonctionne sans cache, plus lentement.</p>
+<p>Un 503 y serait disproportionné : le service rend le résultat attendu. Mais l'incident est
+<strong>journalisé</strong> — sans quoi la panne deviendrait invisible et le surcoût de latence inexplicable.</p>
+<hr />
+<h2 id="etat-de-confiance">État de confiance<a class="headerlink" href="#etat-de-confiance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Marque</th>
+<th>Élément</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Les sept traductions — 16 tests unitaires dans <code>ExceptionMiddlewareTest</code></td>
+</tr>
+<tr>
+<td>✅</td>
+<td><code>traceId</code>, <code>title</code> et <code>type</code> présents dans toute réponse d'erreur</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Aucune fuite de message interne en 500, ni de nom de dépendance en 503</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Discrimination des échecs PostgreSQL — 5 tests sur <code>DatabaseExceptionInterceptor.Translate</code></td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Keycloak injoignable et délai dépassé — 2 tests</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Bout en bout via le pipeline réel — <code>MiddlewaresIntegrationTest</code></td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Le branchement de l'intercepteur sur EF Core est configuré, <strong>jamais éprouvé contre une vraie base</strong> — niveau 3 (NTR-28)</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Comportement réel lors d'une coupure PostgreSQL ou Keycloak en cours d'exécution</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="voir-aussi">Voir aussi<a class="headerlink" href="#voir-aussi" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Toutes les couches Domain et Application — source des exceptions métier</li>
+<li><a href="../pipeline-http/">Pipeline HTTP</a> — position du middleware et ordre de traversée</li>
+<li><a href="../observabilite/">Observabilité</a> — collecte des journaux qu'il émet</li>
+<li><a href="../../../briques/keycloak-admin/">Keycloak Admin API</a> — la traduction côté Keycloak</li>
 </ul>
 
 

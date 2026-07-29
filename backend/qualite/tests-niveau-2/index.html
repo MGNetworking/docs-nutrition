@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../tests-niveau-2/">
+        <link rel="prev" href="../niveaux-de-tests/">
       
       
-        <link rel="next" href="../../reference/diagramme-classes/">
+        <link rel="next" href="../recensement-des-tests/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Recensement des tests - Nutrition API — Documentation</title>
+        <title>Écrire un test de niveau 2 - Nutrition API — Documentation</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#recensement-des-tests" class="md-skip">
+        <a href="#workflow-ecrire-un-test-de-niveau-2" class="md-skip">
           Aller au contenu
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Recensement des tests
+              Écrire un test de niveau 2
             
           </span>
         </div>
@@ -1754,27 +1754,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../tests-niveau-2/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Écrire un test de niveau 2
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -1791,7 +1770,7 @@
           
   
   <span class="md-ellipsis">
-    Recensement des tests
+    Écrire un test de niveau 2
   </span>
   
 
@@ -1802,7 +1781,7 @@
         
   
   <span class="md-ellipsis">
-    Recensement des tests
+    Écrire un test de niveau 2
   </span>
   
 
@@ -1824,142 +1803,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#niveau-1-tests-unitaires" class="md-nav__link">
+  <a href="#1-vue-densemble" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 1 — Tests unitaires
+      1. Vue d'ensemble
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#niveau-2-tests-dintegration-interne" class="md-nav__link">
+  <a href="#2-qui-fait-quoi" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 2 — Tests d'intégration interne
+      2. Qui fait quoi
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Niveau 2 — Tests d'intégration interne">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-apifactory-le-point-dentree" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. ApiFactory — le point d'entrée
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. ApiFactory — le point d'entrée">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#middlewares-transverses-ntr-105" class="md-nav__link">
+  <a href="#ce-dont-elle-herite" class="md-nav__link">
     <span class="md-ellipsis">
-      Middlewares transverses (NTR-105)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Middlewares transverses (NTR-105)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#userresolutionmiddleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      UserResolutionMiddleware
+      Ce dont elle hérite
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#exceptionmiddleware" class="md-nav__link">
+  <a href="#tu-ne-linstancies-jamais-xunit-sen-charge" class="md-nav__link">
     <span class="md-ellipsis">
-      ExceptionMiddleware
+      Tu ne l'instancies jamais — xUnit s'en charge
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#auth-jwt" class="md-nav__link">
+  <a href="#pourquoi-une-collection-et-non-iclassfixture" class="md-nav__link">
     <span class="md-ellipsis">
-      Auth JWT
+      Pourquoi une collection et non IClassFixture
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#pipeline-global" class="md-nav__link">
+  <a href="#les-trois-choses-quelle-fait" class="md-nav__link">
     <span class="md-ellipsis">
-      Pipeline global
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#admincontroller-getpostputdelete-apiv1admin-ntr-106" class="md-nav__link">
-    <span class="md-ellipsis">
-      AdminController — GET|POST|PUT|DELETE /api/v1/admin (NTR-106)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#userscontroller-apiv1usersme-ntr-107" class="md-nav__link">
-    <span class="md-ellipsis">
-      UsersController — * /api/v1/users/me (NTR-107)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rgpdcontroller-apiv1rgpd-ntr-29" class="md-nav__link">
-    <span class="md-ellipsis">
-      RgpdController — * /api/v1/rgpd (NTR-29)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dietplanscontroller-apiv1diet-plans-ntr-108" class="md-nav__link">
-    <span class="md-ellipsis">
-      DietPlansController — * /api/v1/diet-plans (NTR-108)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dietscontroller-apiv1diets-ntr-109" class="md-nav__link">
-    <span class="md-ellipsis">
-      DietsController — * /api/v1/diets (NTR-109)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nutritioncontroller-get-apiv1nutritionidbilan-ntr-29" class="md-nav__link">
-    <span class="md-ellipsis">
-      NutritionController — GET /api/v1/nutrition/{id}/bilan (NTR-29)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fooditemscontroller-get-apiv1food-items-ntr-110" class="md-nav__link">
-    <span class="md-ellipsis">
-      FoodItemsController — GET /api/v1/food-items (NTR-110)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mealscontroller-apiv1meals-ntr-111" class="md-nav__link">
-    <span class="md-ellipsis">
-      MealsController — * /api/v1/meals (NTR-111)
+      Les trois choses qu'elle fait
     </span>
   </a>
   
@@ -1971,55 +1872,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#niveau-3-tests-dintegration-externe" class="md-nav__link">
+  <a href="#4-testauthhandler-lidentite-sans-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 3 — Tests d'intégration externe
+      4. TestAuthHandler — l'identité sans Keycloak
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Niveau 3 — Tests d'intégration externe">
+    <nav class="md-nav" aria-label="4. TestAuthHandler — l'identité sans Keycloak">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#chaine-dauthentification-keycloak-reel" class="md-nav__link">
+  <a href="#le-probleme-quil-resout" class="md-nav__link">
     <span class="md-ellipsis">
-      Chaîne d'authentification — Keycloak réel
+      Le problème qu'il résout
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#repositories-postgresql-reel" class="md-nav__link">
+  <a href="#comment-il-sarticule-avec-le-reste" class="md-nav__link">
     <span class="md-ellipsis">
-      Repositories — PostgreSQL réel
+      Comment il s'articule avec le reste
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#traitement-des-erreurs-de-persistance-postgresql-reel" class="md-nav__link">
+  <a href="#deux-details-qui-comptent" class="md-nav__link">
     <span class="md-ellipsis">
-      Traitement des erreurs de persistance — PostgreSQL réel
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cache-redis-reel" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cache Redis réel
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jobs-hangfire" class="md-nav__link">
-    <span class="md-ellipsis">
-      Jobs Hangfire
+      Deux détails qui comptent
     </span>
   </a>
   
@@ -2031,9 +1914,87 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#niveau-4-smoke-tests-environnement-deploye" class="md-nav__link">
+  <a href="#5-le-piege-a-connaitre-userresolutionmiddleware" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 4 — Smoke tests (environnement déployé)
+      5. Le piège à connaître — UserResolutionMiddleware
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-bis-le-second-piege-verify-sur-des-doublures-partagees" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 bis. Le second piège — Verify sur des doublures partagées
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ecrire-un-test-le-gabarit" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Écrire un test — le gabarit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-lancer-les-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Lancer les tests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Lancer les tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comment-fonctionne-ce-filtre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment fonctionne ce filtre
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-decisions-et-leurs-raisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Décisions et leurs raisons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ce-qui-nest-pas-couvert" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Ce qui n'est pas couvert
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-ou-creuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Où creuser
     </span>
   </a>
   
@@ -2043,6 +2004,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recensement-des-tests/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Recensement des tests
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2213,142 +2195,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#niveau-1-tests-unitaires" class="md-nav__link">
+  <a href="#1-vue-densemble" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 1 — Tests unitaires
+      1. Vue d'ensemble
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#niveau-2-tests-dintegration-interne" class="md-nav__link">
+  <a href="#2-qui-fait-quoi" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 2 — Tests d'intégration interne
+      2. Qui fait quoi
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Niveau 2 — Tests d'intégration interne">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-apifactory-le-point-dentree" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. ApiFactory — le point d'entrée
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. ApiFactory — le point d'entrée">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#middlewares-transverses-ntr-105" class="md-nav__link">
+  <a href="#ce-dont-elle-herite" class="md-nav__link">
     <span class="md-ellipsis">
-      Middlewares transverses (NTR-105)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Middlewares transverses (NTR-105)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#userresolutionmiddleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      UserResolutionMiddleware
+      Ce dont elle hérite
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#exceptionmiddleware" class="md-nav__link">
+  <a href="#tu-ne-linstancies-jamais-xunit-sen-charge" class="md-nav__link">
     <span class="md-ellipsis">
-      ExceptionMiddleware
+      Tu ne l'instancies jamais — xUnit s'en charge
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#auth-jwt" class="md-nav__link">
+  <a href="#pourquoi-une-collection-et-non-iclassfixture" class="md-nav__link">
     <span class="md-ellipsis">
-      Auth JWT
+      Pourquoi une collection et non IClassFixture
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#pipeline-global" class="md-nav__link">
+  <a href="#les-trois-choses-quelle-fait" class="md-nav__link">
     <span class="md-ellipsis">
-      Pipeline global
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#admincontroller-getpostputdelete-apiv1admin-ntr-106" class="md-nav__link">
-    <span class="md-ellipsis">
-      AdminController — GET|POST|PUT|DELETE /api/v1/admin (NTR-106)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#userscontroller-apiv1usersme-ntr-107" class="md-nav__link">
-    <span class="md-ellipsis">
-      UsersController — * /api/v1/users/me (NTR-107)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rgpdcontroller-apiv1rgpd-ntr-29" class="md-nav__link">
-    <span class="md-ellipsis">
-      RgpdController — * /api/v1/rgpd (NTR-29)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dietplanscontroller-apiv1diet-plans-ntr-108" class="md-nav__link">
-    <span class="md-ellipsis">
-      DietPlansController — * /api/v1/diet-plans (NTR-108)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dietscontroller-apiv1diets-ntr-109" class="md-nav__link">
-    <span class="md-ellipsis">
-      DietsController — * /api/v1/diets (NTR-109)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nutritioncontroller-get-apiv1nutritionidbilan-ntr-29" class="md-nav__link">
-    <span class="md-ellipsis">
-      NutritionController — GET /api/v1/nutrition/{id}/bilan (NTR-29)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fooditemscontroller-get-apiv1food-items-ntr-110" class="md-nav__link">
-    <span class="md-ellipsis">
-      FoodItemsController — GET /api/v1/food-items (NTR-110)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mealscontroller-apiv1meals-ntr-111" class="md-nav__link">
-    <span class="md-ellipsis">
-      MealsController — * /api/v1/meals (NTR-111)
+      Les trois choses qu'elle fait
     </span>
   </a>
   
@@ -2360,55 +2264,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#niveau-3-tests-dintegration-externe" class="md-nav__link">
+  <a href="#4-testauthhandler-lidentite-sans-keycloak" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 3 — Tests d'intégration externe
+      4. TestAuthHandler — l'identité sans Keycloak
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Niveau 3 — Tests d'intégration externe">
+    <nav class="md-nav" aria-label="4. TestAuthHandler — l'identité sans Keycloak">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#chaine-dauthentification-keycloak-reel" class="md-nav__link">
+  <a href="#le-probleme-quil-resout" class="md-nav__link">
     <span class="md-ellipsis">
-      Chaîne d'authentification — Keycloak réel
+      Le problème qu'il résout
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#repositories-postgresql-reel" class="md-nav__link">
+  <a href="#comment-il-sarticule-avec-le-reste" class="md-nav__link">
     <span class="md-ellipsis">
-      Repositories — PostgreSQL réel
+      Comment il s'articule avec le reste
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#traitement-des-erreurs-de-persistance-postgresql-reel" class="md-nav__link">
+  <a href="#deux-details-qui-comptent" class="md-nav__link">
     <span class="md-ellipsis">
-      Traitement des erreurs de persistance — PostgreSQL réel
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cache-redis-reel" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cache Redis réel
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jobs-hangfire" class="md-nav__link">
-    <span class="md-ellipsis">
-      Jobs Hangfire
+      Deux détails qui comptent
     </span>
   </a>
   
@@ -2420,9 +2306,87 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#niveau-4-smoke-tests-environnement-deploye" class="md-nav__link">
+  <a href="#5-le-piege-a-connaitre-userresolutionmiddleware" class="md-nav__link">
     <span class="md-ellipsis">
-      Niveau 4 — Smoke tests (environnement déployé)
+      5. Le piège à connaître — UserResolutionMiddleware
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-bis-le-second-piege-verify-sur-des-doublures-partagees" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 bis. Le second piège — Verify sur des doublures partagées
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ecrire-un-test-le-gabarit" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Écrire un test — le gabarit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-lancer-les-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Lancer les tests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Lancer les tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comment-fonctionne-ce-filtre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment fonctionne ce filtre
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-decisions-et-leurs-raisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Décisions et leurs raisons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ce-qui-nest-pas-couvert" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Ce qui n'est pas couvert
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-ou-creuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Où creuser
     </span>
   </a>
   
@@ -2443,983 +2407,441 @@
                   
 
 
-<h1 id="recensement-des-tests">Recensement des tests<a class="headerlink" href="#recensement-des-tests" title="Permanent link">&para;</a></h1>
-<p><strong>Type :</strong> Interne
-<strong>Référence spec :</strong> <a href="../niveaux-de-tests/">Niveaux de tests — définitions et périmètres</a>](niveaux-de-tests.md)</p>
+<h1 id="workflow-ecrire-un-test-de-niveau-2">Workflow — Écrire un test de niveau 2<a class="headerlink" href="#workflow-ecrire-un-test-de-niveau-2" title="Permanent link">&para;</a></h1>
+<p><strong>Ajouté le :</strong> 2026-07-27 · <strong>Ticket :</strong> NTR-134 (socle) · <strong>Niveau :</strong> 2 — Intégration interne</p>
 <blockquote>
-<p><strong>Portée de ce document : le périmètre — l'inventaire des cas qui doivent exister.</strong>
-Il ne définit pas les niveaux (voir <a href="../niveaux-de-tests/">Niveaux de tests — définitions et périmètres</a>](niveaux-de-tests.md)) et <strong>ne porte
-aucun état d'avancement</strong>.</p>
-<p><strong>Où lire l'avancement</strong>
-— <strong>Jira</strong> fait foi : NTR-105 à NTR-111 (niveau 2), NTR-28 et ses sous-tâches (niveau 3).
-— Dans le code, les tests déjà cadrés existent en stubs <code>[Fact(Skip = "IT-XX-00 : …")]</code> :
-  compilés, ils ne peuvent pas dériver de la réalité.</p>
-<p>Une case à cocher ici créerait une troisième source de vérité, condamnée à devenir fausse.</p>
+<p>Ce document explique <strong>comment fonctionne le socle</strong> des tests de niveau 2 et comment s'en servir.
+Pour savoir <em>ce que</em> chaque niveau doit couvrir, lire <a href="../niveaux-de-tests/">Niveaux de tests</a> ;
+pour la liste des tests à écrire, <a href="../recensement-des-tests/">Recensement des tests</a>.</p>
 </blockquote>
 <hr />
-<h2 id="niveau-1-tests-unitaires">Niveau 1 — Tests unitaires<a class="headerlink" href="#niveau-1-tests-unitaires" title="Permanent link">&para;</a></h2>
-<p>Écrits au fil des tickets feature. Cible : ~400 tests.</p>
+<h2 id="1-vue-densemble">1. Vue d'ensemble<a class="headerlink" href="#1-vue-densemble" title="Permanent link">&para;</a></h2>
+<p>Un test de niveau 2 <strong>démarre l'API et lui envoie de vraies requêtes HTTP</strong>. Tout le pipeline
+s'exécute ; seules les dépendances externes sont remplacées.</p>
+<div class="language-text highlight"><pre><span></span><code>    ┌─────────────────── processus de test ────────────────────┐
+    │                                                          │
+    │   [ton test]                                             │
+    │       │  client.GetAsync(&quot;/api/v1/diet-plans&quot;)           │
+    │       ▼                                                  │
+    │   ┌──────────────────────────────────────────────┐       │
+    │   │  TON API, démarrée en mémoire                │       │
+    │   │                                              │       │
+    │   │   routing → auth → middlewares →             │  RÉEL │
+    │   │   Controller → Service                       │       │
+    │   │        │                                     │       │
+    │   │        ▼  IDietPlanRepository ───────────────┼── doublure Moq
+    │   │           IFoodCacheService  ────────────────┼── doublure Moq
+    │   └──────────────────────────────────────────────┘       │
+    └──────────────────────────────────────────────────────────┘
+
+    Aucun port réseau ouvert · aucun conteneur · aucune base
+</code></pre></div>
+<p><strong>La frontière est nette :</strong> tout ce qui est <strong>au-dessus</strong> des interfaces d'Application est réel,
+tout ce qui est <strong>en dessous</strong> est une doublure.</p>
+<hr />
+<h2 id="2-qui-fait-quoi">2. Qui fait quoi<a class="headerlink" href="#2-qui-fait-quoi" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code>tests/NutritionApi.Api.Tests/Integration/
+├── Fixtures/                      ← l&#39;outillage partagé, ne teste rien
+│   ├── ApiFactory.cs              — démarre l&#39;API, substitue les dépendances
+│   ├── ApiCollection.cs           — partage la fabrique entre toutes les classes
+│   └── TestAuthHandler.cs         — fabrique l&#39;identité de l&#39;appelant
+├── ApiFactoryTest.cs              — vérifie le socle lui-même
+└── &lt;Controller&gt;IntegrationTest.cs — les tests métier (NTR-105 à NTR-111)
+</code></pre></div>
+<p>Le dossier <code>Fixtures/</code> isole la mécanique des cas d'usage, sur le même principe que
+<code>Infrastructure/Scheduling/</code> séparé de <code>Infrastructure/Jobs/</code>.</p>
 <table>
 <thead>
 <tr>
-<th>Périmètre</th>
-<th>Fichiers de tests</th>
+<th>Classe</th>
+<th>Responsabilité unique</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Controllers (service mocké, HttpContext manuel)</td>
-<td><code>*ControllerTest.cs</code></td>
+<td><code>ApiFactory</code></td>
+<td>Démarrer l'API, substituer les 11 interfaces de frontière, fournir des clients HTTP</td>
 </tr>
 <tr>
-<td>Middlewares (pipeline mocké)</td>
-<td><code>UserResolutionMiddlewareTest.cs</code>, <code>ExceptionMiddlewareTest.cs</code></td>
+<td><code>TestAuthHandler</code></td>
+<td>Traduire des en-têtes en <code>ClaimsPrincipal</code>, à la place du JWT Keycloak</td>
 </tr>
 <tr>
-<td>Domain / Value Objects / Entités</td>
-<td><code>NutritionApi.Domain.Tests</code></td>
-</tr>
-<tr>
-<td>Services applicatifs</td>
-<td><code>NutritionApi.Application.Tests</code></td>
-</tr>
-<tr>
-<td>Traduction Open Food Facts (code pur)</td>
-<td><code>Jobs/OffImport/OffProductMapperTest.cs</code></td>
-</tr>
-<tr>
-<td>Cache Redis (multiplexeur mocké — clé, durée de vie, repli en panne)</td>
-<td><code>Caching/RedisFoodCacheServiceTest.cs</code></td>
+<td><code>ApiFactoryTest</code></td>
+<td>Prouver que le socle fonctionne avant que les tests métier ne s'y fient</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="niveau-2-tests-dintegration-interne">Niveau 2 — Tests d'intégration interne<a class="headerlink" href="#niveau-2-tests-dintegration-interne" title="Permanent link">&para;</a></h2>
-<p>Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111. Les sections RgpdController et
-NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachées au chapeau NTR-29.</p>
-<h3 id="middlewares-transverses-ntr-105">Middlewares transverses (NTR-105)<a class="headerlink" href="#middlewares-transverses-ntr-105" title="Permanent link">&para;</a></h3>
-<h4 id="userresolutionmiddleware">UserResolutionMiddleware<a class="headerlink" href="#userresolutionmiddleware" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-MW-01</td>
-<td>Token JWT valide + user présent en DB</td>
-<td><code>UserId</code> injecté dans <code>Items</code> → controller reçoit le bon Guid</td>
-</tr>
-<tr>
-<td>IT-MW-02</td>
-<td>Token JWT valide + user absent en DB (sub inconnu)</td>
-<td>401 — middleware coupe la chaîne</td>
-</tr>
-<tr>
-<td>IT-MW-03</td>
-<td>Requête sans token sur endpoint <code>[Authorize]</code></td>
-<td>401 — bloqué par JWT middleware avant <code>UserResolutionMiddleware</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="exceptionmiddleware">ExceptionMiddleware<a class="headerlink" href="#exceptionmiddleware" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-EX-01</td>
-<td>Service lève <code>NotFoundException</code></td>
-<td>404 ProblemDetails avec <code>detail</code> du message</td>
-</tr>
-<tr>
-<td>IT-EX-02</td>
-<td>Service lève <code>ConflictException</code></td>
-<td>409 ProblemDetails</td>
-</tr>
-<tr>
-<td>IT-EX-03</td>
-<td>Service lève <code>ForbiddenException</code></td>
-<td>403 ProblemDetails</td>
-</tr>
-<tr>
-<td>IT-EX-04</td>
-<td>Service lève <code>UnprocessableException</code></td>
-<td>422 ProblemDetails</td>
-</tr>
-<tr>
-<td>IT-EX-05</td>
-<td>Exception non gérée</td>
-<td>500 ProblemDetails — message générique</td>
-</tr>
-</tbody>
-</table>
-<h4 id="auth-jwt">Auth JWT<a class="headerlink" href="#auth-jwt" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-AUTH-01</td>
-<td>Token absent sur n'importe quel endpoint <code>[Authorize]</code></td>
-<td>401</td>
-</tr>
-<tr>
-<td>IT-AUTH-02</td>
-<td>Token expiré</td>
-<td>401</td>
-</tr>
-<tr>
-<td>IT-AUTH-03</td>
-<td>Token valide, rôle insuffisant (<code>[Authorize(Roles = "admin")]</code>)</td>
-<td>403</td>
-</tr>
-<tr>
-<td>IT-AUTH-04</td>
-<td>Token valide avec rôle <code>admin</code> → endpoint admin</td>
-<td>200/201/204 selon l'endpoint</td>
-</tr>
-</tbody>
-</table>
-<h4 id="pipeline-global">Pipeline global<a class="headerlink" href="#pipeline-global" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-PIPE-01</td>
-<td>Body JSON invalide (model binding failure)</td>
-<td>400 ProblemDetails standard ASP.NET</td>
-</tr>
-<tr>
-<td>IT-PIPE-02</td>
-<td>Route inexistante</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-PIPE-03</td>
-<td>Paramètre <code>{id:guid}</code> avec GUID malformé</td>
-<td>400</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="admincontroller-getpostputdelete-apiv1admin-ntr-106">AdminController — <code>GET|POST|PUT|DELETE /api/v1/admin</code> (NTR-106)<a class="headerlink" href="#admincontroller-getpostputdelete-apiv1admin-ntr-106" title="Permanent link">&para;</a></h3>
+<h2 id="3-apifactory-le-point-dentree">3. <code>ApiFactory</code> — le point d'entrée<a class="headerlink" href="#3-apifactory-le-point-dentree" title="Permanent link">&para;</a></h2>
+<h3 id="ce-dont-elle-herite">Ce dont elle hérite<a class="headerlink" href="#ce-dont-elle-herite" title="Permanent link">&para;</a></h3>
+<p><code>WebApplicationFactory&lt;T&gt;</code> est <strong>fournie par Microsoft</strong> (package <code>Microsoft.AspNetCore.Mvc.Testing</code>).
+Elle sait démarrer une application ASP.NET Core dans un processus de test. <code>ApiFactory</code> ne fait
+qu'en personnaliser trois aspects.</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiFactory</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">WebApplicationFactory</span><span class="o">&lt;</span><span class="n">Program</span><span class="o">&gt;</span>
+</code></pre></div>
+<p>Le paramètre <code>&lt;Program&gt;</code> est <strong>le lien avec ton API</strong> : il désigne un type de l'assembly de
+l'application, ce qui permet à la fabrique de retrouver cet assembly puis son point d'entrée.</p>
 <blockquote>
-<p>Restriction : <code>[Authorize(Roles = "admin")]</code></p>
+<p><strong>Pourquoi <code>public partial class Program;</code> dans <code>Program.cs</code></strong>
+Les instructions de haut niveau (<code>Program.cs</code> sans classe ni <code>Main</code> explicites) font générer par
+le compilateur une classe <code>Program</code> <strong><code>internal</code></strong> — invisible depuis le projet de test.
+<code>WebApplicationFactory&lt;Program&gt;</code> ne compilerait pas. Cette déclaration partielle vide fusionne
+avec la classe générée et la rend publique. Elle ne contient aucun code.</p>
 </blockquote>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-ADM-01</td>
-<td><code>GET /admin/dashboard</code></td>
-<td>User sans rôle admin</td>
-<td>403</td>
-</tr>
-<tr>
-<td>IT-ADM-02</td>
-<td><code>GET /admin/dashboard</code></td>
-<td>User avec rôle admin</td>
-<td>200 <code>AdminDashboardResponse</code></td>
-</tr>
-<tr>
-<td>IT-ADM-03</td>
-<td><code>GET /admin/system/health</code></td>
-<td>User admin</td>
-<td>200 <code>SystemHealthResponse</code></td>
-</tr>
-<tr>
-<td>IT-ADM-04</td>
-<td><code>POST /admin/diet-plans/templates</code></td>
-<td>Body valide</td>
-<td>201 <code>DietPlanResponse</code></td>
-</tr>
-<tr>
-<td>IT-ADM-05</td>
-<td><code>POST /admin/diet-plans/templates</code></td>
-<td>Body invalide</td>
-<td>422</td>
-</tr>
-<tr>
-<td>IT-ADM-06</td>
-<td><code>PUT /admin/diet-plans/templates/{id}</code></td>
-<td>Template existant</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-ADM-07</td>
-<td><code>PUT /admin/diet-plans/templates/{id}</code></td>
-<td>Template inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-ADM-08</td>
-<td><code>DELETE /admin/diet-plans/templates/{id}</code></td>
-<td>Template existant</td>
-<td>204</td>
-</tr>
-<tr>
-<td>IT-ADM-09</td>
-<td><code>DELETE /admin/diet-plans/templates/{id}</code></td>
-<td>Template inexistant</td>
-<td>404</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="userscontroller-apiv1usersme-ntr-107">UsersController — <code>* /api/v1/users/me</code> (NTR-107)<a class="headerlink" href="#userscontroller-apiv1usersme-ntr-107" title="Permanent link">&para;</a></h3>
+<h3 id="tu-ne-linstancies-jamais-xunit-sen-charge">Tu ne l'instancies jamais — xUnit s'en charge<a class="headerlink" href="#tu-ne-linstancies-jamais-xunit-sen-charge" title="Permanent link">&para;</a></h3>
+<div class="language-csharp highlight"><pre><span></span><code><span class="na">[Collection(ApiCollection.Name)]</span><span class="w">            </span><span class="c1">// ← rattache la classe à la collection partagée</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DietPlansIntegrationTest</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ApiFactory</span><span class="w"> </span><span class="n">_factory</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">DietPlansIntegrationTest</span><span class="p">(</span><span class="n">ApiFactory</span><span class="w"> </span><span class="n">factory</span><span class="p">)</span><span class="w">   </span><span class="c1">// ← xUnit l&#39;injecte</span>
+<span class="w">        </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>xUnit voit l'attribut <code>[Collection]</code>, retrouve la fabrique associée à cette collection, et la passe
+au constructeur.</p>
+<h3 id="pourquoi-une-collection-et-non-iclassfixture">Pourquoi une collection et non <code>IClassFixture</code><a class="headerlink" href="#pourquoi-une-collection-et-non-iclassfixture" title="Permanent link">&para;</a></h3>
+<p><code>IClassFixture&lt;ApiFactory&gt;</code> aurait créé <strong>une fabrique par classe de test</strong> — donc un démarrage
+d'API par fichier. Mesuré sur ce projet : environ <strong>38 secondes à chaque fois</strong>. Avec les sept
+fichiers de tests prévus, cela ferait plus de quatre minutes passées à démarrer la même application.</p>
+<p><code>ICollectionFixture</code>, déclaré une fois dans <code>Fixtures/ApiCollection.cs</code>, ramène ce coût à <strong>un seul
+démarrage pour toute la suite</strong> :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="na">[CollectionDefinition(Name)]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiCollection</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ICollectionFixture</span><span class="o">&lt;</span><span class="n">ApiFactory</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;API niveau 2&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Vérifié : 20 tests répartis sur deux classes passent de 76 s à 38 s.</p>
 <blockquote>
-<p>Restriction : <code>[Authorize]</code> — lit <code>sub</code> claim (pas de <code>UserResolutionMiddleware</code> sur ces endpoints)</p>
+<p><strong>Deux conséquences à connaître.</strong></p>
+<p><strong>Les classes d'une même collection ne s'exécutent pas en parallèle.</strong> xUnit les sérialise. C'est
+ici souhaitable — elles partagent des doublures mutables.</p>
+<p><strong>Les doublures sont partagées entre toutes les classes.</strong> Un <code>Setup</code> posé par un test survit aux
+suivants. D'où la règle : <strong>chaque test arme explicitement les doublures qu'il utilise</strong>, sans
+jamais compter sur l'état laissé par un autre. Un test qui « passe parce qu'un précédent a armé le
+mock » est un test faux.</p>
 </blockquote>
+<h3 id="les-trois-choses-quelle-fait">Les trois choses qu'elle fait<a class="headerlink" href="#les-trois-choses-quelle-fait" title="Permanent link">&para;</a></h3>
+<p><strong>a. Elle neutralise ce qui exigerait une infrastructure</strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">services</span><span class="p">.</span><span class="n">RemoveAll</span><span class="o">&lt;</span><span class="n">IHostedService</span><span class="o">&gt;</span><span class="p">();</span>
+</code></pre></div>
+<p>Une seule ligne, deux effets : elle retire le <strong>serveur Hangfire</strong> et le
+<strong><code>RecurringJobRegistrationService</code></strong>. Tous deux sont des hosted services, et tous deux
+contacteraient PostgreSQL au démarrage. C'est précisément pour rendre cette ligne possible que
+l'enregistrement des jobs a quitté <code>Program.cs</code> (NTR-29) — un appel statique aurait échappé à
+la substitution.</p>
+<p><strong>b. Elle substitue les 11 interfaces de frontière</strong></p>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
+<th></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>IT-USR-01</td>
-<td><code>POST /users/me</code></td>
-<td>Nouveau user (sub inconnu)</td>
-<td>201 <code>UserProfileResponse</code></td>
+<td>7 repositories</td>
+<td><code>IUserRepository</code>, <code>IDietPlanRepository</code>, <code>IDietRepository</code>, <code>IMealRepository</code>, <code>IFoodItemRepository</code>, <code>IWeightEntryRepository</code>, <code>ISavedFoodItemRepository</code></td>
 </tr>
 <tr>
-<td>IT-USR-02</td>
-<td><code>POST /users/me</code></td>
-<td>User déjà existant (sub connu)</td>
-<td>409</td>
+<td>Unité de travail</td>
+<td><code>IUnitOfWork</code></td>
 </tr>
 <tr>
-<td>IT-USR-03</td>
-<td><code>GET /users/me</code></td>
-<td>User existant</td>
-<td>200 <code>UserProfileResponse</code></td>
-</tr>
-<tr>
-<td>IT-USR-04</td>
-<td><code>GET /users/me</code></td>
-<td>sub valide mais absent en DB</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-USR-05</td>
-<td><code>PUT /users/me</code></td>
-<td>User existant, body valide</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-USR-06</td>
-<td><code>PUT /users/me</code></td>
-<td>User inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-USR-07</td>
-<td><code>POST /users/me/weight-entries</code></td>
-<td>Entrée valide</td>
-<td>201 <code>WeightEntryResponse</code></td>
-</tr>
-<tr>
-<td>IT-USR-08</td>
-<td><code>POST /users/me/weight-entries</code></td>
-<td>Date déjà enregistrée</td>
-<td>409</td>
-</tr>
-<tr>
-<td>IT-USR-09</td>
-<td><code>GET /users/me/weight-entries</code></td>
-<td>User avec historique</td>
-<td>200 liste</td>
-</tr>
-<tr>
-<td>IT-USR-10</td>
-<td><code>PUT /users/me/weight-entries/{id}</code></td>
-<td>Entrée existante</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-USR-11</td>
-<td><code>PUT /users/me/weight-entries/{id}</code></td>
-<td>Entrée inexistante</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-USR-12</td>
-<td><code>GET /users/me/saved-food-items</code></td>
-<td>User avec favoris</td>
-<td>200 liste</td>
-</tr>
-<tr>
-<td>IT-USR-13</td>
-<td><code>POST /users/me/saved-food-items</code></td>
-<td>Aliment non déjà sauvegardé</td>
-<td>201</td>
-</tr>
-<tr>
-<td>IT-USR-14</td>
-<td><code>POST /users/me/saved-food-items</code></td>
-<td>Aliment déjà sauvegardé</td>
-<td>409</td>
-</tr>
-<tr>
-<td>IT-USR-15</td>
-<td><code>DELETE /users/me/saved-food-items/{id}</code></td>
-<td>Favori existant</td>
-<td>204</td>
-</tr>
-<tr>
-<td>IT-USR-16</td>
-<td><code>DELETE /users/me/saved-food-items/{id}</code></td>
-<td>Favori inexistant</td>
-<td>404</td>
+<td>Services externes</td>
+<td><code>IFoodCacheService</code>, <code>IKeycloakAdminService</code>, <code>IJobMonitoringService</code></td>
 </tr>
 </tbody>
 </table>
+<p>Chacune est exposée en propriété publique, pour que le test décide de ses réponses :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">_factory</span><span class="p">.</span><span class="n">DietPlans</span>
+<span class="w">        </span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">GetUserPlansAsync</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="o">&lt;</span><span class="n">Guid</span><span class="o">&gt;</span><span class="p">()))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">ReturnsAsync</span><span class="p">([</span><span class="n">unPlan</span><span class="p">]);</span>
+</code></pre></div>
+<p><strong>c. Elle fournit des clients HTTP</strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">_factory</span><span class="p">.</span><span class="n">CreateAnonymousClient</span><span class="p">()</span><span class="w">                    </span><span class="c1">// aucune identité   → teste les 401</span>
+<span class="n">_factory</span><span class="p">.</span><span class="n">CreateAuthenticatedClient</span><span class="p">()</span><span class="w">                </span><span class="c1">// utilisateur normal</span>
+<span class="n">_factory</span><span class="p">.</span><span class="n">CreateAuthenticatedClient</span><span class="p">(</span><span class="n">roles</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;admin&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// administrateur    → teste les 403</span>
+</code></pre></div>
 <hr />
-<h3 id="rgpdcontroller-apiv1rgpd-ntr-29">RgpdController — <code>* /api/v1/rgpd</code> (NTR-29)<a class="headerlink" href="#rgpdcontroller-apiv1rgpd-ntr-29" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>Restriction : <code>[Authorize]</code>. Ces routes sont portées par <code>RgpdController</code>, <strong>pas</strong> par
-<code>UsersController</code> — voir <a href="../../systemes/rgpd/">RGPD — Droits de l'utilisateur</a>.</p>
-</blockquote>
+<h2 id="4-testauthhandler-lidentite-sans-keycloak">4. <code>TestAuthHandler</code> — l'identité sans Keycloak<a class="headerlink" href="#4-testauthhandler-lidentite-sans-keycloak" title="Permanent link">&para;</a></h2>
+<h3 id="le-probleme-quil-resout">Le problème qu'il résout<a class="headerlink" href="#le-probleme-quil-resout" title="Permanent link">&para;</a></h3>
+<p>En production, l'appelant envoie <code>Authorization: Bearer eyJhbG…</code>, et ASP.NET valide la signature
+auprès de Keycloak. <strong>En test, il n'y a pas de Keycloak : aucun jeton valide n'est productible.</strong></p>
+<p>Sans solution, tous les endpoints <code>[Authorize]</code> répondraient 401 et rien ne serait testable.</p>
+<h3 id="comment-il-sarticule-avec-le-reste">Comment il s'articule avec le reste<a class="headerlink" href="#comment-il-sarticule-avec-le-reste" title="Permanent link">&para;</a></h3>
+<p><code>AuthenticationHandler</code> est une classe <strong>d'ASP.NET Core</strong>. On en écrit une implémentation de test,
+<code>ApiFactory</code> la déclare comme schéma par défaut, et <strong>tout le reste du pipeline continue de
+fonctionner sans savoir que le jeton est faux</strong> :</p>
+<div class="language-text highlight"><pre><span></span><code>CreateAuthenticatedClient(roles: &quot;admin&quot;)
+   │  pose les en-têtes X-Test-Sub et X-Test-Roles sur le HttpClient
+   ▼
+TestAuthHandler.HandleAuthenticateAsync()
+   │  lit les en-têtes → construit un ClaimsPrincipal
+   ▼
+HttpContext.User  ← rempli, exactement comme avec un vrai JWT
+   │
+   ├──► [Authorize]                  fonctionne
+   ├──► policy AdminOnly             fonctionne
+   └──► UserResolutionMiddleware     lit le claim &quot;sub&quot;, interroge IUserRepository
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
+<th></th>
+<th>Production</th>
+<th>Test</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>IT-RGPD-01</td>
-<td><code>DELETE /rgpd</code></td>
-<td>User existant</td>
-<td>204</td>
+<td>L'appelant envoie</td>
+<td><code>Authorization: Bearer eyJ…</code></td>
+<td><code>X-Test-Sub: 1111-…</code></td>
 </tr>
 <tr>
-<td>IT-RGPD-02</td>
-<td><code>DELETE /rgpd</code></td>
-<td>User inexistant</td>
-<td>404</td>
+<td>Qui vérifie</td>
+<td>JwtBearer → clés Keycloak</td>
+<td><code>TestAuthHandler</code></td>
 </tr>
 <tr>
-<td>IT-RGPD-03</td>
-<td><code>POST /rgpd/reactivate</code></td>
-<td>User inactif</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-RGPD-04</td>
-<td><code>POST /rgpd/reactivate</code></td>
-<td>User déjà actif</td>
-<td>409</td>
-</tr>
-<tr>
-<td>IT-RGPD-05</td>
-<td><code>POST /rgpd/reactivate</code></td>
-<td>User inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-RGPD-06</td>
-<td><code>GET /rgpd/export</code></td>
-<td>User existant</td>
-<td>200 avec données RGPD (ZIP)</td>
+<td>Résultat</td>
+<td><code>HttpContext.User</code> rempli</td>
+<td><code>HttpContext.User</code> rempli — <strong>identique</strong></td>
 </tr>
 </tbody>
 </table>
+<h3 id="deux-details-qui-comptent">Deux détails qui comptent<a class="headerlink" href="#deux-details-qui-comptent" title="Permanent link">&para;</a></h3>
+<p><strong>Sans en-tête, pas d'authentification.</strong> Le handler renvoie <code>NoResult()</code>, ce qui produit un vrai
+401 — c'est ainsi que <code>CreateAnonymousClient()</code> permet de tester les endpoints protégés.</p>
+<p><strong>Le claim s'appelle <code>sub</code>, pas autre chose.</strong> L'API configure <code>MapInboundClaims = false</code> et
+<code>UserResolutionMiddleware</code> lit littéralement <code>"sub"</code>. Le handler pose donc ce nom exact.</p>
+<p><strong>Le type de rôle est déclaré explicitement</strong> dans le <code>ClaimsIdentity</code>, faute de quoi <code>IsInRole</code> et
+la policy <code>AdminOnly</code> ne reconnaîtraient pas les rôles posés.</p>
 <hr />
-<h3 id="dietplanscontroller-apiv1diet-plans-ntr-108">DietPlansController — <code>* /api/v1/diet-plans</code> (NTR-108)<a class="headerlink" href="#dietplanscontroller-apiv1diet-plans-ntr-108" title="Permanent link">&para;</a></h3>
+<h2 id="5-le-piege-a-connaitre-userresolutionmiddleware">5. Le piège à connaître — <code>UserResolutionMiddleware</code><a class="headerlink" href="#5-le-piege-a-connaitre-userresolutionmiddleware" title="Permanent link">&para;</a></h2>
+<p>Ce middleware s'exécute sur <strong>chaque requête authentifiée</strong> :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_userRepository</span><span class="p">.</span><span class="n">GetByKeycloakIdAsync</span><span class="p">(</span><span class="n">keycloakId</span><span class="o">!</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">StatusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">401</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Si la doublure d'<code>IUserRepository</code> n'est pas armée, elle renvoie <code>null</code> → <strong>401</strong>, et le test échoue
+avec un code sans rapport avec ce qu'il vérifie.</p>
+<p><code>ApiFactory</code> arme donc une valeur par défaut pour <code>DefaultSubject</code>. Un test qui utilise un autre
+sujet doit l'armer lui-même — ou s'en servir volontairement, comme le fait
+<code>AuthenticatedRequest_WithUnknownUser_Returns401</code>.</p>
+<p><strong>Une seule action y échappe</strong> : <code>POST /users/me</code>, marquée <code>[AllowWithoutProfile]</code>. Sans cette
+dispense, la création de profil était inatteignable — il fallait déjà en posséder un (NTR-142).
+Voir <a href="../../systemes/plateforme/pipeline-http/">Pipeline HTTP</a>.</p>
+<h2 id="5-bis-le-second-piege-verify-sur-des-doublures-partagees">5 bis. Le second piège — <code>Verify</code> sur des doublures partagées<a class="headerlink" href="#5-bis-le-second-piege-verify-sur-des-doublures-partagees" title="Permanent link">&para;</a></h2>
+<div class="language-csharp highlight"><pre><span></span><code><span class="n">_factory</span><span class="p">.</span><span class="n">DietPlans</span><span class="p">.</span><span class="n">Verify</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">AddAsync</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="o">&lt;</span><span class="n">DietPlan</span><span class="o">&gt;</span><span class="p">()),</span><span class="w"> </span><span class="n">Times</span><span class="p">.</span><span class="n">Never</span><span class="p">);</span>
+</code></pre></div>
+<p>Cette vérification compte les appels <strong>depuis le début de la suite</strong>, tous tests confondus : la
+fabrique est partagée. Un test peut donc échouer à cause d'un autre, avec un symptôme
+caractéristique — <strong>il passe seul et échoue dans sa classe</strong>.</p>
+<p>D'où l'appel systématique dans le constructeur de chaque classe de tests :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="nf">MonTest</span><span class="p">(</span><span class="n">ApiFactory</span><span class="w"> </span><span class="n">factory</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">_factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_factory</span><span class="p">.</span><span class="n">ResetInvocations</span><span class="p">();</span><span class="w">   </span><span class="c1">// efface l&#39;historique d&#39;appels, pas les configurations</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>xUnit instancie la classe avant <strong>chaque</strong> méthode : la remise à zéro est donc automatique.</p>
 <blockquote>
-<p>Restriction : <code>[Authorize]</code> — utilise <code>UserResolutionMiddleware</code> (Items["UserId"])</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-DP-01</td>
-<td><code>GET /diet-plans</code></td>
-<td>User avec plans</td>
-<td>200 — vérifie que <code>UserResolutionMiddleware</code> a injecté le bon <code>UserId</code></td>
-</tr>
-<tr>
-<td>IT-DP-02</td>
-<td><code>POST /diet-plans</code></td>
-<td>Body valide</td>
-<td>201 <code>DietPlanResponse</code></td>
-</tr>
-<tr>
-<td>IT-DP-03</td>
-<td><code>POST /diet-plans</code></td>
-<td>Body invalide</td>
-<td>422</td>
-</tr>
-<tr>
-<td>IT-DP-04</td>
-<td><code>PUT /diet-plans/{id}</code></td>
-<td>Plan existant et appartient à l'user</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-DP-05</td>
-<td><code>PUT /diet-plans/{id}</code></td>
-<td>Plan appartenant à un autre user</td>
-<td>403</td>
-</tr>
-<tr>
-<td>IT-DP-06</td>
-<td><code>PUT /diet-plans/{id}</code></td>
-<td>Plan inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-DP-07</td>
-<td><code>DELETE /diet-plans/{id}</code></td>
-<td>Plan existant et ownership</td>
-<td>204</td>
-</tr>
-<tr>
-<td>IT-DP-08</td>
-<td><code>DELETE /diet-plans/{id}</code></td>
-<td>Plan inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-DP-09</td>
-<td><code>GET /diet-plans/templates</code></td>
-<td>User Free</td>
-<td>403</td>
-</tr>
-<tr>
-<td>IT-DP-10</td>
-<td><code>GET /diet-plans/templates</code></td>
-<td>User Pro/Business</td>
-<td>200 liste templates</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>Le lancement d'un plan (<code>POST /diets/{id}/launch</code>) est porté par <code>DietsController</code> — voir la
-section suivante.</p>
+<p>Sans cela, les <code>Times.Never</code> passent <strong>par chance</strong>, selon l'ordre d'exécution. C'est le défaut le
+plus insidieux de ce socle : il produit des faux négatifs, pas des faux positifs.</p>
 </blockquote>
 <hr />
-<h3 id="dietscontroller-apiv1diets-ntr-109">DietsController — <code>* /api/v1/diets</code> (NTR-109)<a class="headerlink" href="#dietscontroller-apiv1diets-ntr-109" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>Restriction : <code>[Authorize]</code> — utilise <code>UserResolutionMiddleware</code></p>
-</blockquote>
+<h2 id="6-ecrire-un-test-le-gabarit">6. Écrire un test — le gabarit<a class="headerlink" href="#6-ecrire-un-test-le-gabarit" title="Permanent link">&para;</a></h2>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">NutritionApi.Api.Tests.Integration</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="nn">NutritionApi.Api.Tests.Integration.Fixtures</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Net</span><span class="p">;</span>
+
+<span class="na">[Collection(ApiCollection.Name)]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DietPlansIntegrationTest</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ApiFactory</span><span class="w"> </span><span class="n">_factory</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">DietPlansIntegrationTest</span><span class="p">(</span><span class="n">ApiFactory</span><span class="w"> </span><span class="n">factory</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">;</span>
+
+<span class="w">    </span><span class="na">[Fact]</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">GetAll_WhenAuthenticated_Returns200</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_factory</span><span class="p">.</span><span class="n">DietPlans</span>
+<span class="w">                </span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">GetUserPlansAsync</span><span class="p">(</span><span class="n">It</span><span class="p">.</span><span class="n">IsAny</span><span class="o">&lt;</span><span class="n">Guid</span><span class="o">&gt;</span><span class="p">()))</span>
+<span class="w">                </span><span class="p">.</span><span class="n">ReturnsAsync</span><span class="p">([]);</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_factory</span><span class="p">.</span><span class="n">CreateAuthenticatedClient</span><span class="p">().</span><span class="n">GetAsync</span><span class="p">(</span><span class="s">&quot;/api/v1/diet-plans&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">Assert</span><span class="p">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">OK</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="na">[Fact]</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">GetAll_WithoutToken_Returns401</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_factory</span><span class="p">.</span><span class="n">CreateAnonymousClient</span><span class="p">().</span><span class="n">GetAsync</span><span class="p">(</span><span class="s">&quot;/api/v1/diet-plans&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">Assert</span><span class="p">.</span><span class="n">Equal</span><span class="p">(</span><span class="n">HttpStatusCode</span><span class="p">.</span><span class="n">Unauthorized</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="n">StatusCode</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="7-lancer-les-tests">7. Lancer les tests<a class="headerlink" href="#7-lancer-les-tests" title="Permanent link">&para;</a></h2>
+<p>Aucune commande spécifique : ce sont des tests xUnit ordinaires.</p>
+<div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p>Pour ne lancer que les tests d'intégration :</p>
+<div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;FullyQualifiedName~Integration&quot;</span>
+</code></pre></div>
+<h3 id="comment-fonctionne-ce-filtre">Comment fonctionne ce filtre<a class="headerlink" href="#comment-fonctionne-ce-filtre" title="Permanent link">&para;</a></h3>
+<p><code>--filter</code> est une option <strong>native de <code>dotnet test</code></strong>. Elle porte sur des propriétés du test :</p>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
+<th>Élément</th>
+<th>Signification</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>IT-DT-01</td>
-<td><code>GET /diets/active</code></td>
-<td>Diet active existante</td>
-<td>200 <code>DietResponse</code></td>
+<td><code>FullyQualifiedName</code></td>
+<td>Le nom complet du test, <strong>namespace compris</strong> — par exemple <code>NutritionApi.Api.Tests.Integration.ApiFactoryTest.ProtectedEndpoint_WithoutIdentity_Returns401</code></td>
 </tr>
 <tr>
-<td>IT-DT-02</td>
-<td><code>GET /diets/active</code></td>
-<td>Aucune diet active</td>
-<td>404</td>
+<td><code>~</code></td>
+<td>« contient » (les autres opérateurs sont <code>=</code>, <code>!=</code>, <code>!~</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Tous les tests de niveau 2 vivent dans le namespace <code>NutritionApi.Api.Tests.Integration</code>, donc leur
+nom complet contient <code>Integration</code>. <strong>C'est le namespace, et lui seul, qui rend cette sélection
+possible</strong> — d'où la règle : un test de niveau 2 se place dans <code>Integration/</code>, sans exception.</p>
+<p>Quelques variantes utiles :</p>
+<div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;FullyQualifiedName!~Integration&quot;</span><span class="w">                    </span><span class="c1"># tout sauf le niveau 2</span>
+dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;FullyQualifiedName~Integration.DietPlans&quot;</span><span class="w">           </span><span class="c1"># un seul fichier</span>
+dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;FullyQualifiedName~ApiFactoryTest&quot;</span><span class="w">                  </span><span class="c1"># le socle seul</span>
+</code></pre></div>
+<hr />
+<h2 id="8-decisions-et-leurs-raisons">8. Décisions et leurs raisons<a class="headerlink" href="#8-decisions-et-leurs-raisons" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Décision</th>
+<th>Pourquoi</th>
+<th>Option écartée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Doublures aux interfaces d'Application</td>
+<td>Le niveau 2 répond à « le pipeline HTTP fonctionne-t-il ? » — aucune de ces questions n'exige une base. La persistance réelle est le sujet du niveau 3.</td>
+<td>Base réelle : le niveau 2 deviendrait un niveau 3 lent, et les deux feraient doublon.</td>
 </tr>
 <tr>
-<td>IT-DT-03</td>
-<td><code>GET /diets</code></td>
-<td>Historique non vide</td>
-<td>200 liste</td>
+<td><strong>Ni InMemory ni SQLite</strong></td>
+<td>Ils ignorent <code>UseSnakeCaseNamingConvention</code>, les colonnes <code>text[]</code> avec <code>ValueComparer</code>, et les <code>ON DELETE CASCADE</code> dont dépend <code>RgpdPurgeJob</code>. Ils donneraient une <strong>fausse</strong> confiance.</td>
+<td>EF Core InMemory — déconseillé par l'équipe EF elle-même pour tester.</td>
 </tr>
 <tr>
-<td>IT-DT-04</td>
-<td><code>GET /diets/{id}</code></td>
-<td>Diet existante et ownership</td>
-<td>200</td>
+<td><code>TestAuthHandler</code></td>
+<td>Sans Keycloak, aucun jeton signé n'est productible.</td>
+<td>JWT auto-signés + serveur JWKS factice : lourd, et la validation réelle appartient au niveau 3.</td>
 </tr>
 <tr>
-<td>IT-DT-05</td>
-<td><code>GET /diets/{id}</code></td>
-<td>Diet inexistante</td>
-<td>404</td>
+<td>La validation JWT n'est <strong>pas</strong> testée ici</td>
+<td>Le handler remplace précisément le composant qu'il s'agirait d'éprouver.</td>
+<td>La tester quand même : elle ne prouverait rien. → NTR-28.</td>
 </tr>
 <tr>
-<td>IT-DT-06</td>
-<td><code>POST /diets/{id}/archive</code></td>
-<td>Diet active → archivée</td>
-<td>200 avec nouveau statut</td>
+<td><code>ICollectionFixture</code> plutôt que <code>IClassFixture</code></td>
+<td>Un seul démarrage d'API pour <strong>toute la suite</strong>, au lieu d'un par classe — 38 s économisées par fichier de tests.</td>
+<td><code>IClassFixture</code> : plus de quatre minutes de démarrages cumulés avec les sept fichiers prévus.</td>
 </tr>
 <tr>
-<td>IT-DT-07</td>
-<td><code>POST /diets/{id}/archive</code></td>
-<td>Diet déjà archivée</td>
-<td>422</td>
-</tr>
-<tr>
-<td>IT-DT-08</td>
-<td><code>POST /diets/{id}/archive</code></td>
-<td>Diet inexistante</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-DT-09</td>
-<td><code>POST /diets/{id}/launch</code></td>
-<td>Plan valide, pas de Diet active</td>
-<td>201 <code>DietResponse</code></td>
-</tr>
-<tr>
-<td>IT-DT-10</td>
-<td><code>POST /diets/{id}/launch</code></td>
-<td>Diet déjà active (409 métier)</td>
-<td>409</td>
-</tr>
-<tr>
-<td>IT-DT-11</td>
-<td><code>POST /diets/{id}/launch</code></td>
-<td>Plan inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-DT-12</td>
-<td><code>POST /diets/{id}/launch</code></td>
-<td>Données du plan insuffisantes</td>
-<td>422</td>
+<td>Dossier <code>Fixtures/</code></td>
+<td>L'outillage partagé ne se mêle pas aux cas d'usage.</td>
+<td>Tout à plat : dix fichiers de nature différente dans un même dossier.</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h3 id="nutritioncontroller-get-apiv1nutritionidbilan-ntr-29">NutritionController — <code>GET /api/v1/nutrition/{id}/bilan</code> (NTR-29)<a class="headerlink" href="#nutritioncontroller-get-apiv1nutritionidbilan-ntr-29" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>Restriction : <code>[Authorize]</code> — le bilan est porté par <code>NutritionController</code>, <strong>pas</strong> par
-<code>DietsController</code>. Le <code>{id}</code> est celui de la Diet.</p>
-</blockquote>
+<h2 id="9-ce-qui-nest-pas-couvert">9. Ce qui n'est pas couvert<a class="headerlink" href="#9-ce-qui-nest-pas-couvert" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
+<th>Manque</th>
+<th>Statut</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>IT-NUT-01</td>
-<td><code>GET /nutrition/{id}/bilan?period=day</code></td>
-<td>Bilan journalier</td>
-<td>200 <code>NutritionBilanResponse</code></td>
+<td>Validation réelle des jetons (signature, issuer, expiration)</td>
+<td>Volontaire — NTR-28</td>
 </tr>
 <tr>
-<td>IT-NUT-02</td>
-<td><code>GET /nutrition/{id}/bilan?period=week</code></td>
-<td>Bilan hebdomadaire</td>
-<td>200</td>
+<td>Requêtes SQL, migrations, cascades PostgreSQL</td>
+<td>Volontaire — NTR-28</td>
 </tr>
 <tr>
-<td>IT-NUT-03</td>
-<td><code>GET /nutrition/{id}/bilan?period=custom&amp;startDate=...&amp;endDate=...</code></td>
-<td>Bilan sur plage personnalisée</td>
-<td>200</td>
+<td>TTL Redis, orchestration cache/base</td>
+<td>Volontaire — NTR-73</td>
 </tr>
 <tr>
-<td>IT-NUT-04</td>
-<td><code>GET /nutrition/{id}/bilan</code></td>
-<td>Diet appartenant à un autre user</td>
-<td>403</td>
+<td>CORS</td>
+<td><strong>Non testable ici</strong> — Postman et <code>HttpClient</code> n'envoient pas d'en-tête <code>Origin</code> et n'appliquent pas la politique du navigateur</td>
 </tr>
 <tr>
-<td>IT-NUT-05</td>
-<td><code>GET /nutrition/{id}/bilan</code></td>
-<td>Diet inexistante</td>
-<td>404</td>
+<td>Dashboard Hangfire</td>
+<td>Retiré du pipeline de test avec les hosted services</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Limite de performance connue :</strong> le démarrage de l'hôte prend environ <strong>38 secondes</strong>, cause non
+identifiée — Hangfire, Redis, Keycloak et l'instrumentation de couverture ont été écartés par mesure.
+Il est payé une fois par classe de test. Passer en <code>ICollectionFixture</code> le ramènerait à une fois
+pour l'ensemble de la suite, au prix d'un état partagé entre classes.</p>
+<hr />
+<h2 id="10-etat-de-confiance">10. État de confiance<a class="headerlink" href="#10-etat-de-confiance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Marque</th>
+<th>Élément</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Le socle démarre sans PostgreSQL, Redis ni Keycloak — <code>ApiFactoryTest</code></td>
+</tr>
+<tr>
+<td>✅</td>
+<td>401 sans identité, 403 sans rôle admin, accès admin, 401 sur profil absent</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>La substitution des doublures est effective — prouvée par le test du profil inconnu</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Les 38 s de démarrage sont mesurées, pas expliquées</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Aucun test métier écrit à ce jour — c'est l'objet de NTR-105 à NTR-111</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h3 id="fooditemscontroller-get-apiv1food-items-ntr-110">FoodItemsController — <code>GET /api/v1/food-items</code> (NTR-110)<a class="headerlink" href="#fooditemscontroller-get-apiv1food-items-ntr-110" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>Restriction : <code>[Authorize]</code> — orchestration Redis + PostgreSQL (voir <a href="../../systemes/aliments/workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a>)</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-FD-01</td>
-<td><code>GET /food-items?search=poulet</code></td>
-<td>Cache Redis hit</td>
-<td>200 — résultat servi depuis Redis</td>
-</tr>
-<tr>
-<td>IT-FD-02</td>
-<td><code>GET /food-items?search=poulet</code></td>
-<td>Cache Redis miss → PostgreSQL</td>
-<td>200 — résultat depuis DB + stocké en Redis (TTL 24h)</td>
-</tr>
-<tr>
-<td>IT-FD-03</td>
-<td><code>GET /food-items?search=poulet&amp;limit=5</code></td>
-<td>Limit respectée</td>
-<td>200 — au plus 5 résultats</td>
-</tr>
-<tr>
-<td>IT-FD-04</td>
-<td><code>GET /food-items</code> (sans <code>search</code>)</td>
-<td>Paramètre obligatoire absent</td>
-<td>400</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="mealscontroller-apiv1meals-ntr-111">MealsController — <code>* /api/v1/meals</code> (NTR-111)<a class="headerlink" href="#mealscontroller-apiv1meals-ntr-111" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p>Restriction : <code>[Authorize]</code> — utilise <code>UserResolutionMiddleware</code></p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Endpoint</th>
-<th>Scénario</th>
-<th>Résultat attendu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-ML-01</td>
-<td><code>POST /meals</code></td>
-<td>User avec diet active, body valide</td>
-<td>201 <code>MealResponse</code></td>
-</tr>
-<tr>
-<td>IT-ML-02</td>
-<td><code>POST /meals</code></td>
-<td>User sans diet active</td>
-<td>403</td>
-</tr>
-<tr>
-<td>IT-ML-03</td>
-<td><code>POST /meals</code></td>
-<td>FoodItem référencé inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-ML-04</td>
-<td><code>GET /meals</code></td>
-<td>Sans filtre</td>
-<td>200 liste</td>
-</tr>
-<tr>
-<td>IT-ML-05</td>
-<td><code>GET /meals?saved=true</code></td>
-<td>Filtre repas sauvegardés</td>
-<td>200 — uniquement repas <code>saved</code></td>
-</tr>
-<tr>
-<td>IT-ML-06</td>
-<td><code>GET /meals?date=2024-01-15</code></td>
-<td>Filtre par date</td>
-<td>200 — uniquement repas du jour</td>
-</tr>
-<tr>
-<td>IT-ML-07</td>
-<td><code>GET /meals/{id}</code></td>
-<td>Repas existant et ownership</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-ML-08</td>
-<td><code>GET /meals/{id}</code></td>
-<td>Repas inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-ML-09</td>
-<td><code>PATCH /meals/{id}</code></td>
-<td>Repas existant</td>
-<td>200</td>
-</tr>
-<tr>
-<td>IT-ML-10</td>
-<td><code>PATCH /meals/{id}</code></td>
-<td>Repas inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-ML-11</td>
-<td><code>DELETE /meals/{id}</code></td>
-<td>Repas existant</td>
-<td>204</td>
-</tr>
-<tr>
-<td>IT-ML-12</td>
-<td><code>DELETE /meals/{id}</code></td>
-<td>Repas inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-ML-13</td>
-<td><code>POST /meals/{id}/items</code></td>
-<td>FoodItem valide</td>
-<td>201 <code>MealResponse</code> mis à jour</td>
-</tr>
-<tr>
-<td>IT-ML-14</td>
-<td><code>POST /meals/{id}/items</code></td>
-<td>Repas inexistant</td>
-<td>404</td>
-</tr>
-<tr>
-<td>IT-ML-15</td>
-<td><code>DELETE /meals/{id}/items/{itemId}</code></td>
-<td>Item existant</td>
-<td>204</td>
-</tr>
-<tr>
-<td>IT-ML-16</td>
-<td><code>DELETE /meals/{id}/items/{itemId}</code></td>
-<td>Item inexistant</td>
-<td>404</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="niveau-3-tests-dintegration-externe">Niveau 3 — Tests d'intégration externe<a class="headerlink" href="#niveau-3-tests-dintegration-externe" title="Permanent link">&para;</a></h2>
-<p>Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).</p>
-<h3 id="chaine-dauthentification-keycloak-reel">Chaîne d'authentification — Keycloak réel<a class="headerlink" href="#chaine-dauthentification-keycloak-reel" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Ce que l'on vérifie</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-EXT-09</td>
-<td>Token émis par Keycloak → <code>GET /api/v1/users/me</code></td>
-<td>Chaîne complète : issuer, audience et signature validés par l'API</td>
-</tr>
-<tr>
-<td>IT-EXT-10</td>
-<td>Token sans le rôle <code>admin</code> → <code>GET /api/v1/admin/dashboard</code></td>
-<td>403 — mapping <code>realm_access.roles</code> → policy AdminOnly</td>
-</tr>
-</tbody>
-</table>
-<h3 id="repositories-postgresql-reel">Repositories — PostgreSQL réel<a class="headerlink" href="#repositories-postgresql-reel" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Ce que l'on vérifie</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-EXT-01</td>
-<td><code>UserRepository.GetByKeycloakIdAsync</code> — user existant</td>
-<td>Lecture EF Core → PostgreSQL correcte</td>
-</tr>
-<tr>
-<td>IT-EXT-02</td>
-<td><code>DietPlanRepository.GetUserPlansAsync</code> — plans d'un user</td>
-<td>Filtre par UserId en DB</td>
-</tr>
-<tr>
-<td>IT-EXT-03</td>
-<td><code>DietRepository.GetActiveAsync</code> — diet active</td>
-<td>Requête avec filtre statut</td>
-</tr>
-<tr>
-<td>IT-EXT-04</td>
-<td>Migration EF Core appliquée sur schéma vierge</td>
-<td>Toutes les tables créées sans erreur</td>
-</tr>
-</tbody>
-</table>
-<h3 id="traitement-des-erreurs-de-persistance-postgresql-reel">Traitement des erreurs de persistance — PostgreSQL réel<a class="headerlink" href="#traitement-des-erreurs-de-persistance-postgresql-reel" title="Permanent link">&para;</a></h3>
-<p>Transférés depuis NTR-135 : ce sont les deux seuls cas de ce ticket qu'un test de niveau 2 ne peut
-pas couvrir, les doublures y remplaçant précisément le composant à éprouver.</p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Ce que l'on vérifie</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-EXT-13</td>
-<td>Deux <code>WeightEntry</code> à la même date pour le même user</td>
-<td><strong>409</strong> et non 500 — <code>DatabaseExceptionInterceptor</code> reçoit la <code>PostgresException</code> <code>23505</code> enveloppée par EF Core dans une <code>DbUpdateException</code>, et discrimine sur l'exception interne</td>
-</tr>
-<tr>
-<td>IT-EXT-14</td>
-<td>Conteneur PostgreSQL arrêté, puis appel d'un endpoint de lecture</td>
-<td><strong>503</strong> avec <code>Retry-After</code> et non 500 — chemin <code>NpgsqlException</code> → <code>ServiceUnavailableException</code></td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p><code>DatabaseExceptionInterceptor.Translate</code> est couvert par 5 tests unitaires. Ce qui reste à
-éprouver est le <strong>branchement</strong> : qu'EF Core invoque bien l'intercepteur au bon moment. Un
-<code>AddInterceptors</code> est une configuration, et une configuration ne se vérifie que contre une vraie base.</p>
-</blockquote>
-<h3 id="cache-redis-reel">Cache Redis réel<a class="headerlink" href="#cache-redis-reel" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Ce que l'on vérifie</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-EXT-05</td>
-<td><code>FoodItemService.SearchAsync</code> — cache miss puis hit</td>
-<td>Écriture + lecture Redis (TTL 24h)</td>
-</tr>
-<tr>
-<td>IT-EXT-06</td>
-<td>Expiration TTL Redis</td>
-<td>Après expiration, retour en PostgreSQL</td>
-</tr>
-<tr>
-<td>IT-EXT-11</td>
-<td>Import OFF ayant importé ≥ 1 produit → cache</td>
-<td>Clés <code>food:search:*</code> supprimées ; la recherche suivante renvoie les données à jour</td>
-</tr>
-<tr>
-<td>IT-EXT-12</td>
-<td>Import OFF n'ayant importé aucun produit</td>
-<td>Cache <strong>non</strong> vidé — catalogue inchangé</td>
-</tr>
-</tbody>
-</table>
-<h3 id="jobs-hangfire">Jobs Hangfire<a class="headerlink" href="#jobs-hangfire" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Ce que l'on vérifie</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-EXT-07</td>
-<td>Import OFF déclenché manuellement</td>
-<td>Job s'exécute, <code>FoodItem</code> insérés en DB</td>
-</tr>
-<tr>
-<td>IT-EXT-08</td>
-<td>Purge RGPD déclenchée manuellement</td>
-<td>Données anonymisées en DB après exécution</td>
-</tr>
-<tr>
-<td>IT-JOB-01</td>
-<td>Aucun job récurrent enregistré</td>
-<td><code>GetJobsStatusAsync</code> renvoie une liste vide</td>
-</tr>
-<tr>
-<td>IT-JOB-02</td>
-<td>Job enregistré, jamais exécuté</td>
-<td><code>LastRun</code> null, <code>NextRun</code> renseigné, statut <code>Scheduled</code></td>
-</tr>
-<tr>
-<td>IT-JOB-03</td>
-<td>Job exécuté avec succès</td>
-<td><code>LastRun</code> renseigné, statut <code>Succeeded</code></td>
-</tr>
-<tr>
-<td>IT-JOB-04</td>
-<td>Nom du job retourné</td>
-<td>Exactement <code>import-off</code> — garantit <code>LastImportAt</code> côté <code>AdminService</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="niveau-4-smoke-tests-environnement-deploye">Niveau 4 — Smoke tests (environnement déployé)<a class="headerlink" href="#niveau-4-smoke-tests-environnement-deploye" title="Permanent link">&para;</a></h2>
-<p>Jira : NTR-112 · Paliers : NTR-89 (palier 1), NTR-90 (palier 2), NTR-91 (palier 3).</p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Scénario</th>
-<th>Ce que l'on vérifie</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IT-SMOKE-01</td>
-<td><code>GET /health</code> et <code>GET /health/ready</code></td>
-<td>Pod API démarré ; PostgreSQL et Redis connectés (503 sinon) — <strong>dépend de NTR-88 : ces endpoints n'existent pas encore</strong></td>
-</tr>
-<tr>
-<td>IT-SMOKE-02</td>
-<td><code>GET /api/v1/users/me</code> avec le JWT du compte d'exploitation</td>
-<td>Keycloak joignable, JWT validé (issuer, audience, signature), DB répondante</td>
-</tr>
-<tr>
-<td>IT-SMOKE-03</td>
-<td><code>GET /api/v1/food-items?search=poulet</code></td>
-<td>Redis joignable, PostgreSQL joignable</td>
-</tr>
-</tbody>
-</table>
+<h2 id="11-ou-creuser">11. Où creuser<a class="headerlink" href="#11-ou-creuser" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../niveaux-de-tests/">Niveaux de tests</a> — ce que chaque niveau doit couvrir</li>
+<li><a href="../recensement-des-tests/">Recensement des tests</a> — la liste des cas à écrire</li>
+<li><a href="../../systemes/plateforme/pipeline-http/">Pipeline HTTP</a> — l'ordre des middlewares traversés</li>
+<li><a href="../../briques/hangfire/">Hangfire</a> — pourquoi l'enregistrement des jobs est un hosted service</li>
+</ul>
 
 
 

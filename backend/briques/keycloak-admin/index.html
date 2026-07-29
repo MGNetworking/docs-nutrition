@@ -554,6 +554,13 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../systemes/plateforme/observabilite/">
+<span class="md-ellipsis">
+    Observabilité
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -717,6 +724,17 @@
       Résilience — deux mécanismes distincts
     </span>
 </a>
+<nav aria-label="Résilience — deux mécanismes distincts" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quand-toutes-les-tentatives-ont-echoue-le-503-ntr-135">
+<span class="md-ellipsis">
+      Quand toutes les tentatives ont échoué — le 503 (NTR-135)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#enregistrement-nutritionapiinfrastructuredependencyinjectioncs">
@@ -787,6 +805,13 @@
 <a class="md-nav__link" href="../../qualite/niveaux-de-tests/">
 <span class="md-ellipsis">
     Niveaux de tests
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../qualite/tests-niveau-2/">
+<span class="md-ellipsis">
+    Écrire un test de niveau 2
   </span>
 </a>
 </li>
@@ -962,6 +987,17 @@
       Résilience — deux mécanismes distincts
     </span>
 </a>
+<nav aria-label="Résilience — deux mécanismes distincts" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quand-toutes-les-tentatives-ont-echoue-le-503-ntr-135">
+<span class="md-ellipsis">
+      Quand toutes les tentatives ont échoué — le 503 (NTR-135)
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#enregistrement-nutritionapiinfrastructuredependencyinjectioncs">
@@ -1220,6 +1256,11 @@ attendre réellement.</p>
 <td><code>KeycloakAdminService</code> lui-même</td>
 <td>Le compte n'existe plus côté Keycloak : l'opération est sans objet, journalisée en avertissement, <strong>pas d'exception</strong></td>
 </tr>
+<tr>
+<td><strong>Keycloak injoignable</strong></td>
+<td><code>KeycloakAdminService</code> lui-même</td>
+<td><code>ServiceUnavailableException("Keycloak")</code> → <strong>503</strong> avec <code>Retry-After</code> (NTR-135)</td>
+</tr>
 </tbody>
 </table>
 <p>Le 401 ne peut pas être délégué au handler standard : seul le service sait qu'il faut <strong>invalider le
@@ -1228,6 +1269,46 @@ cache du jeton</strong> avant de rejouer — un simple retry rejouerait avec le 
 <p><code>Microsoft.Extensions.Http.Resilience</code> remplace l'ancien <code>Polly.Extensions.Http</code>. Polly reste le
 moteur sous-jacent, mais la configuration passe désormais par le <code>IHttpClientBuilder</code>.</p>
 </blockquote>
+<h4 id="quand-toutes-les-tentatives-ont-echoue-le-503-ntr-135">Quand toutes les tentatives ont échoué — le 503 (NTR-135)<a class="headerlink" href="#quand-toutes-les-tentatives-ont-echoue-le-503-ntr-135" title="Permanent link">¶</a></h4>
+<p>Une fois le handler de résilience épuisé, l'échec réseau remonte. <code>KeycloakAdminService</code> le traduit
+alors en <code>ServiceUnavailableException</code>, que le middleware d'exceptions convertit en <strong>503</strong> :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">HttpRequestException</span><span class="w"> </span><span class="n">exception</span><span class="p">)</span><span class="w"> </span><span class="n">when</span><span class="w"> </span><span class="p">(</span><span class="n">exception</span><span class="p">.</span><span class="n">StatusCode</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ServiceUnavailableException</span><span class="p">(</span><span class="s">"Keycloak"</span><span class="p">,</span><span class="w"> </span><span class="n">exception</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">TaskCanceledException</span><span class="w"> </span><span class="n">exception</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ServiceUnavailableException</span><span class="p">(</span><span class="s">"Keycloak"</span><span class="p">,</span><span class="w"> </span><span class="n">exception</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>La clause <code>when</code> est le cœur de la distinction.</strong> <code>HttpRequestException</code> recouvre deux situations
+très différentes :</p>
+<table>
+<thead>
+<tr>
+<th><code>StatusCode</code></th>
+<th>Situation</th>
+<th>Traitement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>null</code></td>
+<td>Aucune réponse — Keycloak est injoignable</td>
+<td><strong>503</strong>, panne passagère</td>
+</tr>
+<tr>
+<td>renseigné</td>
+<td>Keycloak a répondu par une erreur HTTP (via <code>EnsureSuccessStatusCode</code>)</td>
+<td>remonte tel quel → <strong>500</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Les confondre masquerait un défaut de configuration — un client de service mal déclaré, un rôle
+<code>manage-users</code> absent — en panne passagère. L'administrateur attendrait que « ça revienne », alors
+que rien ne reviendrait.</p>
+<p>C'est cette traduction qui évite à la couche API de connaître <code>HttpRequestException</code> : elle ne voit
+qu'une abstraction d'Application. Voir <a href="../../systemes/plateforme/exception-filter/">Exception Filter</a>.</p>
 <h3 id="enregistrement-nutritionapiinfrastructuredependencyinjectioncs">Enregistrement — <code>NutritionApi.Infrastructure/DependencyInjection.cs</code><a class="headerlink" href="#enregistrement-nutritionapiinfrastructuredependencyinjectioncs" title="Permanent link">¶</a></h3>
 <div class="language-csharp highlight"><pre><span></span><code><span class="n">services</span><span class="p">.</span><span class="n">Configure</span><span class="o">&lt;</span><span class="n">KeycloakAdminOptions</span><span class="o">&gt;</span><span class="p">(</span><span class="n">configuration</span><span class="p">.</span><span class="n">GetSection</span><span class="p">(</span><span class="n">KeycloakAdminOptions</span><span class="p">.</span><span class="n">SectionName</span><span class="p">));</span>
 <span class="n">services</span><span class="p">.</span><span class="n">AddSingleton</span><span class="p">(</span><span class="n">TimeProvider</span><span class="p">.</span><span class="n">System</span><span class="p">);</span>

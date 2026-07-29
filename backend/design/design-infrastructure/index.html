@@ -793,6 +793,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#traduction-des-echecs-postgresql-databaseexceptioninterceptor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Traduction des échecs PostgreSQL — DatabaseExceptionInterceptor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#approche-fluent-api" class="md-nav__link">
     <span class="md-ellipsis">
       Approche Fluent API
@@ -1907,6 +1916,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systemes/plateforme/observabilite/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Observabilité
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2163,6 +2193,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../qualite/tests-niveau-2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -2373,6 +2424,15 @@
   <a href="#convention-de-nommage-snake_case-automatique" class="md-nav__link">
     <span class="md-ellipsis">
       Convention de nommage — snake_case automatique
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traduction-des-echecs-postgresql-databaseexceptioninterceptor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Traduction des échecs PostgreSQL — DatabaseExceptionInterceptor
     </span>
   </a>
   
@@ -2841,6 +2901,54 @@ Modèle domaine : <a href="../design-domain/">Modèle domaine — API de Gestion
 </tr>
 </tbody>
 </table>
+<h3 id="traduction-des-echecs-postgresql-databaseexceptioninterceptor">Traduction des échecs PostgreSQL — <code>DatabaseExceptionInterceptor</code><a class="headerlink" href="#traduction-des-echecs-postgresql-databaseexceptioninterceptor" title="Permanent link">&para;</a></h3>
+<p><strong>Ajouté par NTR-135.</strong> Un intercepteur EF Core traduit les échecs de base en exceptions
+applicatives, en un point unique pour <strong>toutes</strong> les commandes :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Infrastructure/DependencyInjection.cs</span>
+<span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">UseNpgsql</span><span class="p">(</span><span class="n">connectionString</span><span class="p">)</span>
+<span class="w">           </span><span class="p">.</span><span class="n">UseSnakeCaseNamingConvention</span><span class="p">()</span>
+<span class="w">           </span><span class="p">.</span><span class="n">AddInterceptors</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">DatabaseExceptionInterceptor</span><span class="p">()));</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Échec</th>
+<th>Traduit en</th>
+<th>Réponse HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PostgresException</code> code <strong><code>23505</code></strong> (violation d'unicité)</td>
+<td><code>ConflictException</code></td>
+<td>409</td>
+</tr>
+<tr>
+<td><code>NpgsqlException</code>, <code>SocketException</code>, <code>TimeoutException</code></td>
+<td><code>ServiceUnavailableException("PostgreSQL")</code></td>
+<td>503</td>
+</tr>
+<tr>
+<td>Tout autre code SQL</td>
+<td><em>non traduit</em></td>
+<td>500</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pourquoi un intercepteur plutôt qu'un <code>try/catch</code> par repository :</strong> la seconde option
+représentait une cinquantaine de blocs identiques, à maintenir en cohérence. L'intercepteur couvre
+lectures et écritures en une seule implémentation.</p>
+<p><strong>Pourquoi les autres codes SQL ne sont pas traduits :</strong> une violation de clé étrangère ou un
+type invalide signalent un défaut applicatif, pas une saisie que le client puisse corriger. Les
+masquer en 4xx les rendrait invisibles.</p>
+<blockquote>
+<p><strong>Piège à connaître.</strong> Lors d'un <code>SaveChanges</code>, EF Core <strong>enveloppe</strong> l'erreur Npgsql dans une
+<code>DbUpdateException</code>. La discrimination porte donc sur l'exception <strong>interne</strong>, jamais sur le type
+externe — sans quoi aucune écriture ne serait correctement traduite.</p>
+</blockquote>
+<p>La couche API n'a ainsi jamais à connaître Npgsql : elle ne voit que des abstractions d'Application.
+Voir <a href="../../systemes/plateforme/exception-filter/">Exception Filter</a>.</p>
 <h3 id="approche-fluent-api">Approche Fluent API<a class="headerlink" href="#approche-fluent-api" title="Permanent link">&para;</a></h3>
 <p><strong>Règle :</strong> Fluent API uniquement — aucune Data Annotation sur les entités Domain.</p>
 <p>Les entités Domain ne doivent pas connaître la persistance. Toute configuration EF Core est dans <code>Configurations/</code>.</p>
@@ -3460,23 +3568,30 @@ catalogue périmé.</p>
 <th>Classe</th>
 <th>Schedule (cron)</th>
 <th>Heure UTC</th>
+<th>État</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Import Open Food Facts</td>
 <td><code>OffImportJob</code></td>
-<td><code>0 3 * * *</code></td>
+<td><code>Cron.Daily(3)</code> = <code>0 3 * * *</code></td>
 <td>03h00</td>
+<td>✅ Livré (NTR-55)</td>
 </tr>
 <tr>
 <td>Purge RGPD</td>
 <td><code>RgpdPurgeJob</code></td>
 <td><code>30 3 * * *</code></td>
 <td>03h30</td>
+<td>⏳ À venir (NTR-56)</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>Cible de conception. <strong>Seul <code>import-off</code> est réellement enregistré aujourd'hui</strong> — la classe
+<code>RgpdPurgeJob</code> et son interface n'existent pas encore dans le code.</p>
+</blockquote>
 <h3 id="interfaces-des-jobs">Interfaces des jobs<a class="headerlink" href="#interfaces-des-jobs" title="Permanent link">&para;</a></h3>
 <div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Infrastructure/Jobs/OffImport/IOffImportJob.cs</span>
 <span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IOffImportJob</span>
@@ -3484,15 +3599,18 @@ catalogue périmé.</p>
 <span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">RunAsync</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="c1">// Infrastructure/Jobs/RgpdPurge/IRgpdPurgeJob.cs</span>
+<span class="c1">// Infrastructure/Jobs/RgpdPurge/IRgpdPurgeJob.cs — ⏳ NTR-56, fichier pas encore créé</span>
 <span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IRgpdPurgeJob</span>
 <span class="p">{</span>
 <span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="nf">RunAsync</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="stockage">Stockage<a class="headerlink" href="#stockage" title="Permanent link">&para;</a></h3>
-<p>Schéma PostgreSQL dédié <code>HangFire</code> — créé automatiquement au démarrage (<code>PrepareSchemaIfNecessary = true</code>).</p>
+<p>Schéma PostgreSQL dédié <code>hangfire</code> (minuscules) — créé automatiquement au démarrage. C'est le
+comportement par défaut de <code>Hangfire.PostgreSql</code> : ni <code>SchemaName</code> ni <code>PrepareSchemaIfNecessary</code>
+ne sont passés dans le code.</p>
 <p><strong>Aucune migration EF Core</strong> pour les tables Hangfire — elles sont gérées par le package lui-même.</p>
+<p>➜ Détail du fonctionnement, du dashboard et de la supervision : <a href="../../briques/hangfire/">Hangfire — moteur de jobs récurrents</a>.</p>
 <h3 id="file-dattente-queue">File d'attente (queue)<a class="headerlink" href="#file-dattente-queue" title="Permanent link">&para;</a></h3>
 <p>File par défaut (<code>default</code>) pour les deux jobs. Pas de file dédiée par job — le volume est trop faible pour justifier une ségrégation.</p>
 <hr />
@@ -3537,9 +3655,11 @@ dotnet<span class="w"> </span>ef<span class="w"> </span>database<span class="w">
 <span class="w">        </span><span class="k">this</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="n">services</span><span class="p">,</span>
 <span class="w">        </span><span class="n">IConfiguration</span><span class="w"> </span><span class="n">configuration</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">connectionString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;DefaultConnection&quot;</span><span class="p">);</span>
+
 <span class="w">        </span><span class="c1">// EF Core + PostgreSQL</span>
 <span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddDbContext</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
-<span class="w">            </span><span class="n">options</span><span class="p">.</span><span class="n">UseNpgsql</span><span class="p">(</span><span class="n">configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">))</span>
+<span class="w">            </span><span class="n">options</span><span class="p">.</span><span class="n">UseNpgsql</span><span class="p">(</span><span class="n">connectionString</span><span class="p">)</span>
 <span class="w">                   </span><span class="p">.</span><span class="n">UseSnakeCaseNamingConvention</span><span class="p">());</span>
 
 <span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IUnitOfWork</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sp</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">sp</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="o">&lt;</span><span class="n">AppDbContext</span><span class="o">&gt;</span><span class="p">());</span>
@@ -3560,19 +3680,21 @@ dotnet<span class="w"> </span>ef<span class="w"> </span>database<span class="w">
 <span class="w">        </span><span class="c1">// Services externes</span>
 <span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IKeycloakAdminService</span><span class="p">,</span><span class="w"> </span><span class="n">KeycloakAdminService</span><span class="o">&gt;</span><span class="p">();</span>
 
-<span class="w">        </span><span class="c1">// Hangfire</span>
+<span class="w">        </span><span class="c1">// Hangfire — schéma &quot;hangfire&quot; et création des tables : valeurs par défaut du package</span>
 <span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddHangfire</span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">config</span>
-<span class="w">            </span><span class="p">.</span><span class="n">UsePostgreSqlStorage</span><span class="p">(</span><span class="n">configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">),</span>
-<span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">PostgreSqlStorageOptions</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">SchemaName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;HangFire&quot;</span><span class="p">,</span>
-<span class="w">                    </span><span class="n">PrepareSchemaIfNecessary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span>
-<span class="w">                </span><span class="p">}));</span>
+<span class="w">            </span><span class="p">.</span><span class="n">SetDataCompatibilityLevel</span><span class="p">(</span><span class="n">CompatibilityLevel</span><span class="p">.</span><span class="n">Version_180</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">UseSimpleAssemblyNameTypeSerializer</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="n">UseRecommendedSerializerSettings</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="n">UsePostgreSqlStorage</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">options</span><span class="p">.</span><span class="n">UseNpgsqlConnection</span><span class="p">(</span><span class="n">connectionString</span><span class="p">)));</span>
 <span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddHangfireServer</span><span class="p">();</span>
 
+<span class="w">        </span><span class="c1">// Supervision des jobs planifiés</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IJobMonitoringService</span><span class="p">,</span><span class="w"> </span><span class="n">JobMonitoringService</span><span class="o">&gt;</span><span class="p">();</span>
+
 <span class="w">        </span><span class="c1">// Jobs Hangfire</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="o">&lt;</span><span class="n">IOffDumpReader</span><span class="p">,</span><span class="w"> </span><span class="n">OffDumpReader</span><span class="o">&gt;</span><span class="p">();</span>
 <span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IOffImportJob</span><span class="p">,</span><span class="w"> </span><span class="n">OffImportJob</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IRgpdPurgeJob</span><span class="p">,</span><span class="w"> </span><span class="n">RgpdPurgeJob</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IRgpdPurgeJob</span><span class="p">,</span><span class="w"> </span><span class="n">RgpdPurgeJob</span><span class="o">&gt;</span><span class="p">();</span><span class="w">   </span><span class="c1">// ⏳ NTR-56 — pas encore implémenté</span>
 
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">services</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
