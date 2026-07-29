@@ -44,6 +44,7 @@ tout ce qui est **en dessous** est une doublure.
 tests/NutritionApi.Api.Tests/Integration/
 ├── Fixtures/                      ← l'outillage partagé, ne teste rien
 │   ├── ApiFactory.cs              — démarre l'API, substitue les dépendances
+│   ├── ApiCollection.cs           — partage la fabrique entre toutes les classes
 │   └── TestAuthHandler.cs         — fabrique l'identité de l'appelant
 ├── ApiFactoryTest.cs              — vérifie le socle lui-même
 └── <Controller>IntegrationTest.cs — les tests métier (NTR-105 à NTR-111)
@@ -84,20 +85,47 @@ l'application, ce qui permet à la fabrique de retrouver cet assembly puis son p
 ### Tu ne l'instancies jamais — xUnit s'en charge
 
 ```csharp
-public class DietPlansIntegrationTest : IClassFixture<ApiFactory>   // ← tu déclares le besoin
+[Collection(ApiCollection.Name)]            // ← rattache la classe à la collection partagée
+public class DietPlansIntegrationTest
 {
     private readonly ApiFactory _factory;
 
-    public DietPlansIntegrationTest(ApiFactory factory)              // ← xUnit l'injecte
+    public DietPlansIntegrationTest(ApiFactory factory)   // ← xUnit l'injecte
         => _factory = factory;
 }
 ```
 
-xUnit voit `IClassFixture<ApiFactory>`, crée **une seule** instance pour toute la classe de test,
-la passe au constructeur, puis la libère à la fin.
+xUnit voit l'attribut `[Collection]`, retrouve la fabrique associée à cette collection, et la passe
+au constructeur.
 
-**C'est ce qui évite de redémarrer l'API à chaque test.** Sans `IClassFixture`, chaque méthode
-paierait le démarrage.
+### Pourquoi une collection et non `IClassFixture`
+
+`IClassFixture<ApiFactory>` aurait créé **une fabrique par classe de test** — donc un démarrage
+d'API par fichier. Mesuré sur ce projet : environ **38 secondes à chaque fois**. Avec les sept
+fichiers de tests prévus, cela ferait plus de quatre minutes passées à démarrer la même application.
+
+`ICollectionFixture`, déclaré une fois dans `Fixtures/ApiCollection.cs`, ramène ce coût à **un seul
+démarrage pour toute la suite** :
+
+```csharp
+[CollectionDefinition(Name)]
+public sealed class ApiCollection : ICollectionFixture<ApiFactory>
+{
+    public const string Name = "API niveau 2";
+}
+```
+
+Vérifié : 20 tests répartis sur deux classes passent de 76 s à 38 s.
+
+> **Deux conséquences à connaître.**
+>
+> **Les classes d'une même collection ne s'exécutent pas en parallèle.** xUnit les sérialise. C'est
+> ici souhaitable — elles partagent des doublures mutables.
+>
+> **Les doublures sont partagées entre toutes les classes.** Un `Setup` posé par un test survit aux
+> suivants. D'où la règle : **chaque test arme explicitement les doublures qu'il utilise**, sans
+> jamais compter sur l'état laissé par un autre. Un test qui « passe parce qu'un précédent a armé le
+> mock » est un test faux.
 
 ### Les trois choses qu'elle fait
 
@@ -213,7 +241,8 @@ namespace NutritionApi.Api.Tests.Integration;
 using NutritionApi.Api.Tests.Integration.Fixtures;
 using System.Net;
 
-public class DietPlansIntegrationTest : IClassFixture<ApiFactory>
+[Collection(ApiCollection.Name)]
+public class DietPlansIntegrationTest
 {
     private readonly ApiFactory _factory;
 
@@ -288,7 +317,7 @@ dotnet test --filter "FullyQualifiedName~ApiFactoryTest"                  # le s
 | **Ni InMemory ni SQLite** | Ils ignorent `UseSnakeCaseNamingConvention`, les colonnes `text[]` avec `ValueComparer`, et les `ON DELETE CASCADE` dont dépend `RgpdPurgeJob`. Ils donneraient une **fausse** confiance. | EF Core InMemory — déconseillé par l'équipe EF elle-même pour tester. |
 | `TestAuthHandler` | Sans Keycloak, aucun jeton signé n'est productible. | JWT auto-signés + serveur JWKS factice : lourd, et la validation réelle appartient au niveau 3. |
 | La validation JWT n'est **pas** testée ici | Le handler remplace précisément le composant qu'il s'agirait d'éprouver. | La tester quand même : elle ne prouverait rien. → NTR-28. |
-| `IClassFixture` | Une seule instance par classe de test : l'API ne démarre qu'une fois. | Une fabrique par méthode : le démarrage serait payé à chaque test. |
+| `ICollectionFixture` plutôt que `IClassFixture` | Un seul démarrage d'API pour **toute la suite**, au lieu d'un par classe — 38 s économisées par fichier de tests. | `IClassFixture` : plus de quatre minutes de démarrages cumulés avec les sept fichiers prévus. |
 | Dossier `Fixtures/` | L'outillage partagé ne se mêle pas aux cas d'usage. | Tout à plat : dix fichiers de nature différente dans un même dossier. |
 
 ---
