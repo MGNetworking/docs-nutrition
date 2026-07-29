@@ -242,6 +242,20 @@ Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OF
 | IT-EXT-03 | `DietRepository.GetActiveAsync` — diet active | Requête avec filtre statut |
 | IT-EXT-04 | Migration EF Core appliquée sur schéma vierge | Toutes les tables créées sans erreur |
 
+### Traitement des erreurs de persistance — PostgreSQL réel
+
+Transférés depuis NTR-135 : ce sont les deux seuls cas de ce ticket qu'un test de niveau 2 ne peut
+pas couvrir, les doublures y remplaçant précisément le composant à éprouver.
+
+| ID | Scénario | Ce que l'on vérifie |
+|----|----------|---------------------|
+| IT-EXT-13 | Deux `WeightEntry` à la même date pour le même user | **409** et non 500 — `DatabaseExceptionInterceptor` reçoit la `PostgresException` `23505` enveloppée par EF Core dans une `DbUpdateException`, et discrimine sur l'exception interne |
+| IT-EXT-14 | Conteneur PostgreSQL arrêté, puis appel d'un endpoint de lecture | **503** avec `Retry-After` et non 500 — chemin `NpgsqlException` → `ServiceUnavailableException` |
+
+> `DatabaseExceptionInterceptor.Translate` est couvert par 5 tests unitaires. Ce qui reste à
+> éprouver est le **branchement** : qu'EF Core invoque bien l'intercepteur au bon moment. Un
+> `AddInterceptors` est une configuration, et une configuration ne se vérifie que contre une vraie base.
+
 ### Cache Redis réel
 
 | ID | Scénario | Ce que l'on vérifie |
