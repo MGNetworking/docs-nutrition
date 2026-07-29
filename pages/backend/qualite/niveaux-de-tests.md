@@ -100,7 +100,14 @@ Keycloak) sont ceux du `docker-compose.yml` de développement, réutilisés en C
 valider ce que des conteneurs isolés ne peuvent pas : **la configuration Docker, le réseau entre
 composants et la chaîne JWT réelle**. Décision d'architecture actée le 2026-07-21.
 
-**Outil** : `WebApplicationFactory<Program>` + docker-compose · **Cible** : 5 à 10 tests · **Jira** : NTR-28
+**Conditions de démarrage** — après la couche Infrastructure, quand les repositories et le schéma
+DB sont stables. Chaque session de test dispose d'une **base isolée** (`docker-compose.PostgreSql`)
+et d'un **cache isolé** (`docker-compose.Redis`).
+
+**Outil** : `WebApplicationFactory<Program>` + docker-compose · **Cible** : 18 tests · **Jira** : NTR-28
+
+> L'estimation d'origine était de 5 à 10 tests. Elle a été révisée après les transferts de NTR-74
+> (validation JWT) et NTR-135 (branchement de l'intercepteur), et l'ajout des cas de statut Hangfire.
 
 ---
 

@@ -256,8 +256,13 @@ chapeau NTR-29.
 ## Niveau 3 — Tests d'intégration externe
 
 Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
+**18 cas** — IT-EXT-01 à 14 et IT-JOB-01 à 04.
 
 ### Chaîne d'authentification — Keycloak réel
+
+Transférés depuis NTR-74 le 2026-07-27 : au niveau 2, le `TestAuthHandler` remplace le schéma
+d'authentification, donc court-circuite précisément le composant à éprouver. Ces cas ne peuvent
+vivre qu'ici.
 
 | ID | Scénario | Ce que l'on vérifie |
 |----|----------|---------------------|

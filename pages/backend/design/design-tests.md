@@ -339,7 +339,7 @@ Exemple cible :
 
 10 à 20 Tests d'Intégration Interne
 
-5 à 10 Tests d'Intégration Externe
+18 Tests d'Intégration Externe
 
 2 à 5 Smoke Tests Kubernetes
 ```

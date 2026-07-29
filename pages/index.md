@@ -19,4 +19,4 @@ API SaaS de gestion nutritionnelle — backend ASP.NET Core 10, architecture DDD
 ## Liens
 
 - [Repo API](https://github.com/ghalem-maxime/nutrition-api)
-- [Board Jira](https://votre-instance.atlassian.net/jira/software/projects/NUT/boards)
+- [Board Jira](https://maxime-ghalem.atlassian.net/jira/software/c/projects/NTR/boards/212)
