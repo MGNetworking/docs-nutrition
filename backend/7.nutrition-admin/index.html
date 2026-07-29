@@ -2235,43 +2235,43 @@ Dernière mise à jour : 2026-05-02</p>
 <p>Vue consolidée des KPIs de l'application.</p>
 <p><strong>Réponse 200 OK :</strong>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;users&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1240</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;byTier&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;free&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">980</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;pro&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">220</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;business&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;newLast7Days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span>
+<span class="w">  </span><span class="nt">&quot;totalUsers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1240</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;usersByTier&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;free&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">980</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pro&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">220</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;business&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;activity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;activeDiets&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">187</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;mealsLast7Days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4312</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;accountsInGracePeriod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">&quot;newUsersLast7Days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;activeDiets&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">187</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;mealsLast7Days&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4312</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;usersInGracePeriod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <hr />
 <h3 id="get-adminsystemhealth"><code>GET /admin/system/health</code><a class="headerlink" href="#get-adminsystemhealth" title="Permanent link">&para;</a></h3>
 <p>Statut opérationnel des jobs planifiés et du catalogue alimentaire.</p>
 <blockquote>
-<p><strong>Implémentation :</strong> les données <code>lastRunAt</code> et <code>status</code> sont lues depuis les tables Hangfire (<code>[HangFire].[Job]</code>, <code>[HangFire].[State]</code>) — aucune entité domaine nécessaire. Voir <a href="../briques/hangfire/">Hangfire — moteur de jobs récurrents</a>.</p>
+<p><strong>Implémentation :</strong> le statut des jobs est lu depuis la table <code>hangfire.hash</code> (clés <code>recurring-job:&lt;id&gt;</code>) — aucune entité domaine nécessaire. Voir <a href="../briques/hangfire/">Hangfire — moteur de jobs récurrents</a>.</p>
 </blockquote>
 <p><strong>Réponse 200 OK :</strong>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;offImport&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;lastRunAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-02T03:00:00Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;foodItemsCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3247891</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;rgpdPurge&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;lastRunAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-02T03:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;purgedCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">&quot;foodItemsCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3247891</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;lastImportAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-02T03:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;hangfireJobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;jobName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;import-off&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;lastRun&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-02T03:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;nextRun&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-03T03:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Succeeded&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<p><strong>Statuts possibles :</strong> <code>success</code> · <code>failed</code> · <code>never_run</code></p>
+<p><code>hangfireJobs</code> est la <strong>liste des jobs réellement enregistrés</strong> dans Hangfire, pas une structure figée :
+tant que la purge RGPD n'est pas livrée (NTR-56), elle ne contient que <code>import-off</code>.
+<code>lastImportAt</code> est un raccourci de lecture — c'est le <code>lastRun</code> du job <code>import-off</code>, remonté à la racine.</p>
+<p><strong>Statuts possibles :</strong> l'état brut Hangfire du dernier run (<code>Succeeded</code>, <code>Failed</code>, <code>Processing</code>…),
+ou <code>Scheduled</code> si le job est enregistré mais n'a encore jamais tourné.</p>
 <hr />
 <h3 id="contenu-partage-dietplan-templates">Contenu partagé — DietPlan templates<a class="headerlink" href="#contenu-partage-dietplan-templates" title="Permanent link">&para;</a></h3>
 <table>
