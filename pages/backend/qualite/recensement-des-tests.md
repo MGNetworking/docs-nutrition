@@ -33,8 +33,21 @@
 
 ## Niveau 2 — Tests d'intégration interne
 
-Jira : NTR-29 (chapeau) → sous-tâches NTR-105 à NTR-111. Les sections RgpdController et
-NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachées au chapeau NTR-29.
+Jira : NTR-29 (chapeau) → NTR-134 (socle) et sous-tâches NTR-105 à NTR-111. Les sections
+RgpdController et NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachées au
+chapeau NTR-29.
+
+> **État au 2026-07-29 — 100 tests livrés.** Les identifiants au-delà de la nomenclature initiale
+> (IT-ADM-10+, IT-USR-17+, IT-DP-11+, IT-DT-13+, IT-ML-17+) ont été ajoutés **pendant**
+> l'implémentation : ils couvrent des comportements que le recensement initial ne prévoyait pas —
+> ownership, limites de palier, invariants de domaine. Ils sont consignés ici pour que le
+> recensement reste le reflet de ce qui existe.
+>
+> Le socle est décrit dans [Écrire un test de niveau 2](tests-niveau-2.md).
+>
+> **Trois défauts de production ont été découverts par ces tests**, aucun n'étant détectable en test
+> unitaire : toute saisie invalide renvoyait 500 (NTR-135), aucun utilisateur ne pouvait s'inscrire
+> (NTR-142), et vider un repas renvoyait 500. Les trois sont corrigés.
 
 ### Middlewares transverses (NTR-105)
 
@@ -71,7 +84,7 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 |----|----------|------------------|
 | IT-PIPE-01 | Body JSON invalide (model binding failure) | 400 ProblemDetails standard ASP.NET |
 | IT-PIPE-02 | Route inexistante | 404 |
-| IT-PIPE-03 | Paramètre `{id:guid}` avec GUID malformé | 400 |
+| IT-PIPE-03 | Paramètre `{id:guid}` avec GUID malformé | **404** — corrigé après implémentation : la contrainte `:guid` participe à la **sélection** de l'endpoint, une valeur non conforme empêche la route de correspondre. Il n'y a donc aucune action à exécuter, et rien qui puisse produire un 400. |
 
 ---
 
@@ -89,6 +102,9 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 | IT-ADM-07 | `PUT /admin/diet-plans/templates/{id}` | Template inexistant | 404 |
 | IT-ADM-08 | `DELETE /admin/diet-plans/templates/{id}` | Template existant | 204 |
 | IT-ADM-09 | `DELETE /admin/diet-plans/templates/{id}` | Template inexistant | 404 |
+| IT-ADM-10 | `PUT /admin/diet-plans/templates/{id}` | L'identifiant désigne un plan **personnel** | 404 — la route admin ne doit pas révéler l'existence d'un plan qui n'est pas un template |
+| IT-ADM-11 | `POST /admin/diet-plans/templates` | Macros dont la somme n'atteint pas 100 % | 422 — invariant de `MacroDistribution` |
+| IT-ADM-12 | `GET /admin/system/health` | User sans rôle admin | 403 |
 
 ---
 
@@ -113,6 +129,12 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 | IT-USR-14 | `POST /users/me/saved-food-items` | Aliment déjà sauvegardé | 409 |
 | IT-USR-15 | `DELETE /users/me/saved-food-items/{id}` | Favori existant | 204 |
 | IT-USR-16 | `DELETE /users/me/saved-food-items/{id}` | Favori inexistant | 404 |
+| IT-USR-17 | `PUT /users/me` | Date de naissance dans le futur | 422 — invariant de `User` |
+| IT-USR-18 | `PUT /users/me` | Taille négative | 422 — invariant de `User` |
+| IT-USR-19 | `PUT /users/me/weight-entries/{id}` | Pesée appartenant à un autre utilisateur | 404 — et non 403 : révéler son existence serait une fuite d'information |
+| IT-USR-20 | `POST /users/me/saved-food-items` | Limite du palier atteinte (Free : 10) | 403 |
+| IT-USR-21 | `DELETE /users/me/saved-food-items/{id}` | Favori appartenant à un autre utilisateur | 403 |
+| IT-USR-22 | `GET /users/me` | Jeton valide, aucun profil en base | 401 — la dispense `[AllowWithoutProfile]` ne vaut que pour la création |
 
 ---
 
@@ -146,6 +168,9 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 | IT-DP-08 | `DELETE /diet-plans/{id}` | Plan inexistant | 404 |
 | IT-DP-09 | `GET /diet-plans/templates` | User Free | 403 |
 | IT-DP-10 | `GET /diet-plans/templates` | User Pro/Business | 200 liste templates |
+| IT-DP-11 | `POST /diet-plans` | Limite du palier atteinte (Free : 2) | 403 |
+| IT-DP-12 | `POST /diet-plans` | Palier Pro sous sa limite (20) alors que le quota Free serait dépassé | 201 |
+| IT-DP-13 | `POST /diet-plans` | Champ `name` absent du corps JSON | 400 — validation de liaison de modèle, distincte du 422 des invariants |
 
 > Le lancement d'un plan (`POST /diets/{id}/launch`) est porté par `DietsController` — voir la
 > section suivante.
@@ -169,6 +194,8 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 | IT-DT-10 | `POST /diets/{id}/launch` | Diet déjà active (409 métier) | 409 |
 | IT-DT-11 | `POST /diets/{id}/launch` | Plan inexistant | 404 |
 | IT-DT-12 | `POST /diets/{id}/launch` | Données du plan insuffisantes | 422 |
+| IT-DT-13 | `GET /diets/{id}` | Diète appartenant à un autre utilisateur | 403 |
+| IT-DT-14 | `POST /diets/{id}/launch` | Lancement d'un **template** en palier Free | 403 |
 
 ---
 
@@ -219,6 +246,10 @@ NutritionController n'ont pas de sous-tâche dédiée : elles restent rattachée
 | IT-ML-14 | `POST /meals/{id}/items` | Repas inexistant | 404 |
 | IT-ML-15 | `DELETE /meals/{id}/items/{itemId}` | Item existant | 204 |
 | IT-ML-16 | `DELETE /meals/{id}/items/{itemId}` | Item inexistant | 404 |
+| IT-ML-17 | `DELETE /meals/{id}/items/{itemId}` | **Dernier** item du repas | 422 — le domaine interdit de vider un repas ; il faut supprimer le repas lui-même |
+| IT-ML-18 | `POST /meals` | Repas **ponctuel** alors que le quota de repas sauvegardés est dépassé | 201 — la limite ne s'applique qu'aux repas sauvegardés |
+| IT-ML-19 | `POST /meals` | Quantité négative sur un item | 422 — invariant de `MealItem` |
+| IT-ML-20 | `GET /meals/{id}` | Repas appartenant à un autre utilisateur | 403 |
 
 ---
 
