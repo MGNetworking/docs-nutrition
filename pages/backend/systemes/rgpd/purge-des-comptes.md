@@ -35,7 +35,8 @@ Aucun acteur humain — job de fond déclenché par le planificateur (Hangfire).
 > | ✅ | Le job `RgpdPurgeJob` et son enregistrement Hangfire, couverts par 9 tests unitaires |
 > | ✅ | L'accès à Keycloak Admin — `KeycloakAdminService.DeleteUserAsync` (NTR-133) |
 > | ✅ | L'infrastructure Hangfire qui le fait tourner (NTR-55) |
-> | ❌ | Test d'intégration niveau 3 — purge déclenchée manuellement contre un vrai Keycloak et une vraie base (NTR-28, IT-EXT-08) |
+> | ✅ | Test d'intégration niveau 3 — purge déclenchée manuellement contre un vrai Keycloak et une vraie base (NTR-28, IT-EXT-08) |
+> | ⚠️ | Le test a révélé que la purge **ne pouvait fonctionner nulle part** : le client de service `nutrition-api-service` n'existait pas dans le realm, et `AdminBaseUrl`, `Realm` et `ServiceClientSecret` étaient vides dans les trois fichiers de configuration. Corrigé pour le développement le 2026-07-30 — **reste à vérifier que la production injecte bien ces valeurs** |
 > | ❌ | `RgpdService` n'appelle toujours pas `DisableUserAsync` à la demande de suppression : le compte reste actif dans Keycloak pendant la grace period |
 
 ## L'ordre des suppressions — Keycloak d'abord
