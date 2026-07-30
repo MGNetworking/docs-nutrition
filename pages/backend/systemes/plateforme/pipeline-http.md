@@ -157,6 +157,47 @@ Microsoft.
 > La dispense ne vaut **que** pour l'action marquée. Partout ailleurs, un jeton valide sans profil
 > reste refusé — c'est vérifié par un test dédié.
 
+## 4 bis. La validation des jetons est locale — et ce que ça implique
+
+`UseAuthentication` ne contacte **pas** Keycloak à chaque requête. Au premier besoin, l'API récupère
+les clés publiques de signature du realm et les met en cache ; ensuite, chaque signature est vérifiée
+par un calcul local, sans aucun appel réseau.
+
+Deux conséquences opposées, l'une rassurante, l'autre dangereuse.
+
+**Une coupure de Keycloak est invisible pour les utilisateurs déjà connectés.** Les jetons en
+circulation continuent d'être validés. Constaté par IT-EXT-16 : conteneur Keycloak arrêté, jeton
+valide, réponse 200. Ce qui casse, c'est l'**émission** de nouveaux jetons — passé
+`accessTokenLifespan`, plus personne ne peut entrer.
+
+**Une instance démarrée sans Keycloak n'a aucune clé.** Elle accepte le trafic et refuse **tous** les
+jetons, pendant que ses voisines, démarrées plus tôt, fonctionnent normalement. Deux réplicas
+derrière le même service, deux comportements — le pire cas à diagnostiquer.
+
+### Le garde-fou : `KeycloakAvailabilityService`
+
+Un `IHostedService` force la récupération des clés au démarrage, avant que l'application n'accepte
+la moindre requête. S'il n'y parvient pas dans le délai imparti, le démarrage est interrompu.
+
+| Clé | Défaut | Rôle |
+|---|---|---|
+| `Keycloak:StartupTimeoutSeconds` | `60` | délai maximal ; réessai toutes les 3 s |
+
+**L'attente est bornée plutôt qu'immédiate** : dans un cluster, l'API et Keycloak démarrent souvent
+ensemble, et quelques secondes de décalage ne justifient pas un cycle de redémarrage. Passé le délai,
+l'échec est franc — le processus s'arrête, et l'orchestrateur relance le pod (`CrashLoopBackOff`
+sous Kubernetes). Aucun code d'orchestration n'est nécessaire : c'est le comportement natif.
+
+Le service vérifie que des clés ont été **publiées**, pas seulement que le serveur a répondu : un
+realm qui répond sans clé de signature est aussi inutilisable qu'un serveur absent.
+
+> Implémenté en `IHostedService` à dessein — les tests de niveau 2 pointent vers une autorité factice
+> et retirent déjà tous les services hébergés. Ils ne sont donc pas concernés.
+
+Éprouvé par IT-EXT-17 : Keycloak arrêté au démarrage, l'hôte refuse de démarrer.
+
+---
+
 ## 5. Ce qui n'est pas couvert
 
 | Manque | Statut |
@@ -176,6 +217,8 @@ Microsoft.
 | ✅ | Résolution de l'utilisateur — `UserResolutionMiddlewareTest` |
 | ⚠️ | L'**ordre** du pipeline : établi par lecture de `Program.cs` et raisonnement, jamais constaté sur une requête réelle |
 | ❌ | Le comportement CORS de bout en bout — demande un navigateur et une origine tierce |
+| ✅ | Une coupure de Keycloak reste sans effet sur les jetons en cours — IT-EXT-16 |
+| ✅ | L'application refuse de démarrer sans les clés du realm — IT-EXT-17 |
 | ❌ | Le refus du dashboard Hangfire à un non-admin — test de niveau 3 (NTR-28) |
 
 ## 7. Configuration
@@ -184,6 +227,9 @@ Microsoft.
 {
   "Cors": {
     "AllowedOrigins": []
+  },
+  "Keycloak": {
+    "StartupTimeoutSeconds": 60
   }
 }
 ```
@@ -191,6 +237,7 @@ Microsoft.
 | Clé | Rôle |
 |---|---|
 | `Cors:AllowedOrigins` | Tableau des origines acceptées, schéma et port compris (`https://app.exemple.fr`). Vide = tout refusé. |
+| `Keycloak:StartupTimeoutSeconds` | Délai maximal d'attente des clés du realm au démarrage. Surchargeable par `Keycloak__StartupTimeoutSeconds` en variable d'environnement. |
 
 La politique autorise tout en-tête, toute méthode, et les *credentials* — mais uniquement pour ces
 origines. `AllowCredentials()` est d'ailleurs incompatible avec une origine générique : la liste

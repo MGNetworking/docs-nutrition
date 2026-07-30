@@ -170,19 +170,27 @@ Le middleware appartient à la couche **API**. Lui faire attraper `NpgsqlExcepti
 C'est **Infrastructure qui traduit** :
 
 ```
-DatabaseExceptionInterceptor    ──┐
-KeycloakAdminService            ──┼── lèvent ServiceUnavailableException
-                                  │   (ou ConflictException sur violation d'unicité)
-                                  ▼
-                     ExceptionMiddleware → 503 / 409
-                     (ne connaît ni Npgsql ni Redis)
+DatabaseExceptionInterceptor           ──┐
+DatabaseConnectionExceptionInterceptor ──┼── lèvent ServiceUnavailableException
+KeycloakAdminService                   ──┤   (ou ConflictException sur violation d'unicité)
+                                         ▼
+                            ExceptionMiddleware → 503 / 409
+                            (ne connaît ni Npgsql ni Redis)
 ```
 
 | Point de traduction | Ce qu'il attrape | Ce qu'il lève |
 |---|---|---|
 | `Persistence/Interceptors/DatabaseExceptionInterceptor` | `PostgresException` code `23505` | `ConflictException` |
 | | `NpgsqlException`, `SocketException`, `TimeoutException` | `ServiceUnavailableException("PostgreSQL")` |
+| `Persistence/Interceptors/DatabaseConnectionExceptionInterceptor` | les mêmes, mais à l'**ouverture de connexion** | `ServiceUnavailableException("PostgreSQL")` |
 | `ExternalServices/Keycloak/KeycloakAdminService` | `HttpRequestException` **sans statut**, `TaskCanceledException` | `ServiceUnavailableException("Keycloak")` |
+
+**Pourquoi deux intercepteurs de base.** `DatabaseExceptionInterceptor` est un
+`DbCommandInterceptor` : il n'est appelé que sur l'échec d'une **commande**, donc lorsque le serveur
+répond. Serveur arrêté, l'échec survient à l'**ouverture de la connexion** et la commande n'est
+jamais atteinte — rien n'était traduit, la réponse repartait en 500. D'où le second intercepteur,
+un `DbConnectionInterceptor`, qui délègue la traduction au `Translate` du premier : une seule table
+de correspondance, deux points d'accroche.
 
 Deux discriminations méritent l'attention :
 
@@ -212,8 +220,16 @@ Un 503 y serait disproportionné : le service rend le résultat attendu. Mais l'
 | ✅ | Discrimination des échecs PostgreSQL — 5 tests sur `DatabaseExceptionInterceptor.Translate` |
 | ✅ | Keycloak injoignable et délai dépassé — 2 tests |
 | ✅ | Bout en bout via le pipeline réel — `MiddlewaresIntegrationTest` |
-| ⚠️ | Le branchement de l'intercepteur sur EF Core est configuré, **jamais éprouvé contre une vraie base** — niveau 3 (NTR-28) |
-| ❌ | Comportement réel lors d'une coupure PostgreSQL ou Keycloak en cours d'exécution |
+| ✅ | Branchement de l'intercepteur sur EF Core, éprouvé contre une vraie base — IT-EXT-13 (NTR-28) |
+| ✅ | Coupure PostgreSQL en cours d'exécution — IT-EXT-14 arrête le conteneur et vérifie le 503 |
+| ❌ | Coupure Keycloak en cours d'exécution |
+
+> **Deux défauts trouvés par le niveau 3, corrigés.** Le branchement fonctionnait, mais l'exception
+> traduite n'atteignait jamais le middleware : EF Core l'enveloppe, et les `catch` portaient sur le
+> type direct — 500 au lieu de 409. Le middleware déballe désormais la chaîne des exceptions internes.
+> Et une base **arrêtée** n'était pas traduite du tout, l'échec survenant à l'ouverture de connexion —
+> d'où `DatabaseConnectionExceptionInterceptor`. Voir
+> [Écrire un test de niveau 3](../../qualite/tests-niveau-3.md).
 
 ---
 
