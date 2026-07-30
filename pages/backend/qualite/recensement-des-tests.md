@@ -256,7 +256,17 @@ chapeau NTR-29.
 ## Niveau 3 — Tests d'intégration externe
 
 Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-**18 cas** — IT-EXT-01 à 14 et IT-JOB-01 à 04.
+**21 cas** — IT-EXT-01 à 17 et IT-JOB-01 à 04.
+
+> **État : 21 cas implémentés, 21 verts.** Projet `tests/NutritionApi.Integration.Tests`, lancement
+> par `./scripts/test-integration.sh`. Voir [Écrire un test de niveau 3](tests-niveau-3.md) pour le
+> fonctionnement, les quatre défauts trouvés, et l'écart restant — IT-EXT-13 s'appuie sur
+> `saved_food_items` alors que la contrainte d'unicité de `weight_entries` a depuis été ajoutée, le
+> réalignement reste à faire.
+>
+> IT-EXT-15 à 17 ont été ajoutés après coup : ils éprouvent le comportement en **dépendance coupée**,
+> qui n'était pas au recensement initial. Ils coupent réellement un conteneur, d'où une durée de
+> suite passée d'environ 20 secondes à 2 minutes.
 
 ### Chaîne d'authentification — Keycloak réel
 
@@ -268,14 +278,16 @@ vivre qu'ici.
 |----|----------|---------------------|
 | IT-EXT-09 | Token émis par Keycloak → `GET /api/v1/users/me` | Chaîne complète : issuer, audience et signature validés par l'API |
 | IT-EXT-10 | Token sans le rôle `admin` → `GET /api/v1/admin/dashboard` | 403 — mapping `realm_access.roles` → policy AdminOnly |
+| IT-EXT-16 | **Keycloak arrêté**, clés déjà en cache, jeton valide | **200** — la validation étant locale, la coupure est invisible pour les utilisateurs déjà connectés |
+| IT-EXT-17 | **Keycloak arrêté au démarrage** de l'application | L'hôte **refuse de démarrer** — sans clés, l'instance rejetterait tous les jetons |
 
 ### Repositories — PostgreSQL réel
 
 | ID | Scénario | Ce que l'on vérifie |
 |----|----------|---------------------|
 | IT-EXT-01 | `UserRepository.GetByKeycloakIdAsync` — user existant | Lecture EF Core → PostgreSQL correcte |
-| IT-EXT-02 | `DietPlanRepository.GetUserPlansAsync` — plans d'un user | Filtre par UserId en DB |
-| IT-EXT-03 | `DietRepository.GetActiveAsync` — diet active | Requête avec filtre statut |
+| IT-EXT-02 | `DietPlanRepository.GetByUserIdAsync` — plans d'un user | Filtre par UserId en DB |
+| IT-EXT-03 | `DietRepository.GetActiveByUserIdAsync` — diet active | Requête avec filtre statut |
 | IT-EXT-04 | Migration EF Core appliquée sur schéma vierge | Toutes les tables créées sans erreur |
 
 ### Traitement des erreurs de persistance — PostgreSQL réel
@@ -285,7 +297,7 @@ pas couvrir, les doublures y remplaçant précisément le composant à éprouver
 
 | ID | Scénario | Ce que l'on vérifie |
 |----|----------|---------------------|
-| IT-EXT-13 | Deux `WeightEntry` à la même date pour le même user | **409** et non 500 — `DatabaseExceptionInterceptor` reçoit la `PostgresException` `23505` enveloppée par EF Core dans une `DbUpdateException`, et discrimine sur l'exception interne |
+| IT-EXT-13 | Deux `SavedFoodItem` identiques pour le même user — `weight_entries` ne porte pas de contrainte d'unicité, voir [niveau 3](tests-niveau-3.md#7-les-deux-écarts-assumés-au-recensement) | `ConflictException` et non erreur brute — `DatabaseExceptionInterceptor` reçoit la `PostgresException` `23505` enveloppée par EF Core dans une `DbUpdateException`, et discrimine sur l'exception interne |
 | IT-EXT-14 | Conteneur PostgreSQL arrêté, puis appel d'un endpoint de lecture | **503** avec `Retry-After` et non 500 — chemin `NpgsqlException` → `ServiceUnavailableException` |
 
 > `DatabaseExceptionInterceptor.Translate` est couvert par 5 tests unitaires. Ce qui reste à
@@ -300,6 +312,7 @@ pas couvrir, les doublures y remplaçant précisément le composant à éprouver
 | IT-EXT-06 | Expiration TTL Redis | Après expiration, retour en PostgreSQL |
 | IT-EXT-11 | Import OFF ayant importé ≥ 1 produit → cache | Clés `food:search:*` supprimées ; la recherche suivante renvoie les données à jour |
 | IT-EXT-12 | Import OFF n'ayant importé aucun produit | Cache **non** vidé — catalogue inchangé |
+| IT-EXT-15 | **Redis arrêté** → recherche d'aliment | **200** avec les données de PostgreSQL — le repli est une promesse du système, un 503 y serait disproportionné |
 
 ### Jobs Hangfire
 
