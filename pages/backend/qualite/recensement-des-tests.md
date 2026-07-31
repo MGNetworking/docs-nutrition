@@ -259,7 +259,7 @@ chapeau NTR-29.
 Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
 **23 cas** — IT-EXT-01 à 19 et IT-JOB-01 à 04.
 
-> **État : 23 cas implémentés, 23 verts.** Projet `tests/NutritionApi.Integration.Tests`, lancement
+> **État : 23 cas implémentés, 23 verts.** Projet `tests/NutritionApi.ExternalIntegration.Tests`, lancement
 > par `./scripts/test-integration.sh`. Voir [Écrire un test de niveau 3](tests-niveau-3.md) pour le
 > fonctionnement, les quatre défauts trouvés, et l'écart restant — IT-EXT-13 s'appuie sur
 > `saved_food_items` alors que la contrainte d'unicité de `weight_entries` a depuis été ajoutée, le

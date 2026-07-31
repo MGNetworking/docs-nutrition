@@ -11,7 +11,7 @@
 | | |
 |---|---|
 | **Question** | Mon application communique-t-elle correctement avec ses dépendances réelles ? |
-| **Projet** | `tests/NutritionApi.Integration.Tests` |
+| **Projet** | `tests/NutritionApi.ExternalIntegration.Tests` |
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |

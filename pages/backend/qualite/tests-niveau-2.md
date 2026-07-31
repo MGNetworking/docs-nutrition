@@ -41,7 +41,7 @@ tout ce qui est **en dessous** est une doublure.
 ## 2. Qui fait quoi
 
 ```
-tests/NutritionApi.Api.Tests/Integration/
+tests/NutritionApi.Api.Tests/Level2/
 ├── Fixtures/                      ← l'outillage partagé, ne teste rien
 │   ├── ApiFactory.cs              — démarre l'API, substitue les dépendances
 │   ├── ApiCollection.cs           — partage la fabrique entre toutes les classes
@@ -265,9 +265,9 @@ xUnit instancie la classe avant **chaque** méthode : la remise à zéro est don
 ## 6. Écrire un test — le gabarit
 
 ```csharp
-namespace NutritionApi.Api.Tests.Integration;
+namespace NutritionApi.Api.Tests.Level2;
 
-using NutritionApi.Api.Tests.Integration.Fixtures;
+using NutritionApi.Api.Tests.Level2.Fixtures;
 using System.Net;
 
 [Collection(ApiCollection.Name)]
@@ -321,12 +321,16 @@ dotnet test --filter "FullyQualifiedName~Integration"
 
 | Élément | Signification |
 |---|---|
-| `FullyQualifiedName` | Le nom complet du test, **namespace compris** — par exemple `NutritionApi.Api.Tests.Integration.ApiFactoryTest.ProtectedEndpoint_WithoutIdentity_Returns401` |
+| `FullyQualifiedName` | Le nom complet du test, **namespace compris** — par exemple `NutritionApi.Api.Tests.Level2.ApiFactoryTest.ProtectedEndpoint_WithoutIdentity_Returns401` |
 | `~` | « contient » (les autres opérateurs sont `=`, `!=`, `!~`) |
 
-Tous les tests de niveau 2 vivent dans le namespace `NutritionApi.Api.Tests.Integration`, donc leur
-nom complet contient `Integration`. **C'est le namespace, et lui seul, qui rend cette sélection
-possible** — d'où la règle : un test de niveau 2 se place dans `Integration/`, sans exception.
+Tous les tests de niveau 2 vivent dans `Api.Tests/Level2/`, donc dans le namespace
+`NutritionApi.Api.Tests.Level2`.
+
+> **La sélection par namespace n'est plus le mécanisme principal.** Chaque classe porte désormais
+> `[Trait("Level", "2")]`, et c'est ce marqueur qui pilote les filtres CI — `--filter "Level=2"`. Le
+> dossier et le namespace restent la règle de rangement ; le marqueur est ce qui rend la sélection
+> fiable, y compris si un test est mal rangé.
 
 Quelques variantes utiles :
 

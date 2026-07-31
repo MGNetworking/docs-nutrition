@@ -105,7 +105,7 @@ Tout ticket doit avoir **les trois critères** :
 
 Pour les tickets Infrastructure (repositories), ajouter :
 ```markdown
-- [ ] Tests d'intégration externe couverts — projet `NutritionApi.Integration.Tests`, marqueur `[Trait("Level", "3")]`, lancement par `./scripts/test-integration.sh`
+- [ ] Tests d'intégration externe couverts — projet `NutritionApi.ExternalIntegration.Tests`, marqueur `[Trait("Level", "3")]`, lancement par `./scripts/test-integration.sh`
 ```
 
 ---

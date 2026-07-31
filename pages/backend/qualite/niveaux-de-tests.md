@@ -159,7 +159,7 @@ dans git. Provisionnement : NTR-125.
 
 > **Comment les niveaux se distinguent.** Le niveau 3 porte `[Trait("Level", "3")]` ; les deux
 > filtres sont donc disjoints, aucun test n'est joué deux fois ni oublié. Le niveau 2 se reconnaît à
-> son namespace `NutritionApi.Api.Tests.Integration`, convention antérieure au marqueur.
+> son namespace `NutritionApi.Api.Tests.Level2`, convention antérieure au marqueur.
 
 > **État au 2026-07-30** — niveaux 1 et 2 : 700 tests. Niveau 3 : 23 tests, exécutés par
 > `ci-integration.yml`, qui appelle `./scripts/test-integration.sh` sans déclarer de service propre.
