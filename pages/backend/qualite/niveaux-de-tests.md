@@ -161,7 +161,8 @@ dans git. Provisionnement : NTR-125.
 > filtres sont donc disjoints, aucun test n'est joué deux fois ni oublié. Le niveau 2 se reconnaît à
 > son namespace `NutritionApi.Api.Tests.Level2`, convention antérieure au marqueur.
 
-> **État au 2026-07-30** — niveaux 1 et 2 : 700 tests. Niveau 3 : 23 tests, exécutés par
+> **État au 2026-07-31** — 724 tests, aucun ignoré : 592 au niveau 1, 108 au niveau 2, 23 au
+> niveau 3. Ces derniers sont exécutés par
 > `ci-integration.yml`, qui appelle `./scripts/test-integration.sh` sans déclarer de service propre.
 > Niveau 4 : non commencé, dépend de NTR-88 pour les endpoints de santé.
 

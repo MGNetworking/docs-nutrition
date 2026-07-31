@@ -15,7 +15,7 @@
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
-| **Cas** | 23 — IT-EXT-01 à 19 et IT-JOB-01 à 04 |
+| **Cas** | 23 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées |
 | **Durée** | environ 2 minutes — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
@@ -61,14 +61,15 @@ Conséquences :
 - Deux exécutions simultanées ne se marchent pas dessus.
 - Le contexte est construit **comme en production** : convention snake_case et
   `DatabaseExceptionInterceptor` compris. Un contexte de test qui omettrait l'intercepteur ne
-  prouverait rien de IT-EXT-13.
+  prouverait rien du test de violation d unicité.
 
 Côté Redis, l'isolation passe par l'**index de base** (9 par défaut, le développement utilise 0) —
 `defaultDatabase` dans la chaîne de connexion. Pas de seconde instance à monter.
 
-Quatre variables d'environnement permettent de viser une autre infrastructure sans toucher au code :
+Huit variables d'environnement permettent de viser une autre infrastructure sans toucher au code :
 `NUTRITION_TEST_POSTGRES`, `NUTRITION_TEST_REDIS`, `NUTRITION_TEST_REDIS_DB`,
-`NUTRITION_TEST_KEYCLOAK`.
+`NUTRITION_TEST_KEYCLOAK`, `NUTRITION_TEST_KEYCLOAK_URL`, et les trois noms de conteneurs
+`NUTRITION_TEST_PG_CONTAINER`, `NUTRITION_TEST_REDIS_CONTAINER`, `NUTRITION_TEST_KC_CONTAINER`.
 
 ---
 
@@ -76,7 +77,7 @@ Quatre variables d'environnement permettent de viser une autre infrastructure sa
 
 Rien n'est remplacé aux frontières d'Application : ni repository, ni cache, ni service Keycloak. Les
 `IHostedService` sont **conservés** — le serveur Hangfire et l'enregistrement des jobs récurrents
-sont précisément ce que les cas IT-JOB-* éprouvent. C'est l'inverse exact du niveau 2, où
+sont précisément ce que les cas de supervision éprouvent. C'est l'inverse exact du niveau 2, où
 `RemoveAll<IHostedService>()` est indispensable.
 
 **Une seule exception** — `IOffDumpReader`, qui télécharge le dump Open Food Facts. Ce n'est ni
@@ -87,6 +88,56 @@ par lots et l'invalidation du cache.
 La base est créée dans le **constructeur**, pas dans `IAsyncLifetime` : `ConfigureWebHost` lit la
 chaîne de connexion au premier client créé, elle doit donc déjà exister. Et la méthode de libération
 de xUnit entre en conflit avec celle de `WebApplicationFactory`.
+
+---
+
+## 4 bis. Un environnement de configuration à part
+
+Le niveau 3 tourne sous l'environnement **`ExternalIntegration`**, avec son
+`appsettings.ExternalIntegration.json`.
+
+**Il ne peut pas réutiliser `Testing`.** Le niveau 2 s'en sert déjà, et pointe volontairement vers une
+autorité factice injoignable. Un `appsettings.Testing.json` serait chargé par les deux — et
+**gagnerait** sur les `UseSetting` de la fabrique de niveau 2, la configuration applicative étant
+empilée après celle de l'hôte. Les tests de niveau 2 se mettraient à viser le vrai Keycloak.
+
+Le partage se fait donc par nature de valeur :
+
+| Où | Quoi | Pourquoi |
+|---|---|---|
+| `appsettings.ExternalIntegration.json` | journalisation, `RequireHttpsMetadata`, délai de démarrage | propre aux tests, statique |
+| `UseSetting` depuis `RealmExport` | realm, secret du service account, autorité | vient du realm, ne doit exister qu'à un seul endroit |
+| `UseSetting` dynamique | chaîne de connexion, index Redis | change à chaque exécution |
+
+---
+
+## 4 ter. Le realm est la source de vérité
+
+`RealmExport` lit `keycloak/realm-export.json`, copié dans la sortie de compilation. **Aucun compte,
+identifiant, mot de passe ou secret n'est ressaisi dans les fixtures.**
+
+```csharp
+public static string SubjectOf(string username);   // le sub que porteront ses jetons
+public static string PasswordOf(string username);
+public static string SecretOf(string clientId);
+public static string RequireClient(string clientId);
+```
+
+Avant, ces valeurs existaient à trois endroits : l'export du realm, les fixtures, et `seed-dev.sql`.
+Un renommage de compte laissait les tests interroger un identifiant obsolète, sans que rien ne le
+signale avant l'échec. Désormais l'erreur est explicite — « le compte *x* n'existe pas dans
+keycloak/realm-export.json ».
+
+**Trois clients de test** y sont déclarés, en plus de `nutrition-api` et du service account :
+
+| Client | Particularité | Ce qu'il permet d'éprouver |
+|---|---|---|
+| `nutrition-api-tests-shortlived` | `access.token.lifespan` à 1 seconde | le rejet d'un jeton expiré, sans attendre les 1800 s du realm |
+| `nutrition-api-tests-no-audience` | aucun mapper d'audience | le rejet d'un jeton destiné à une autre API |
+
+La tolérance d'horloge JWT — cinq minutes par défaut — est annulée dans la fabrique, **et là
+seulement**. Sans cela, un jeton expiré depuis une seconde resterait accepté. La production conserve
+le comportement par défaut.
 
 ---
 
@@ -119,15 +170,15 @@ rien de ce qu'il vérifiait. Même piège qu'au niveau 2, cause différente : ic
 **La collection partagée.** `ICollectionFixture` : une base, un démarrage d'hôte pour toute la
 suite. Les classes s'exécutent séquentiellement et partagent l'état de la base. Chaque test sème ce
 dont il a besoin et n'attend rien de ce qu'un autre a laissé — d'où les identifiants uniques par
-test (`$"it-ext-01-{Guid.NewGuid()}"`).
+test (`$"{prefixe}-{Guid.NewGuid()}"`).
 
 **La parallélisation est désactivée** pour tout l'assembly, via
-`[assembly: CollectionBehavior(DisableTestParallelization = true)]`. IT-EXT-14 arrête le conteneur
+`[assembly: CollectionBehavior(DisableTestParallelization = true)]`. Un cas arrête le conteneur
 PostgreSQL : une autre collection tournant en parallèle se verrait couper la base sous les pieds.
 
-**Les tests qui touchent à l'infrastructure se remettent en état.** IT-EXT-14, 15, 16 et 17 arrêtent
+**Les tests qui touchent à l'infrastructure se remettent en état.** Les quatre cas de coupure arrêtent
 un conteneur ; tous le redémarrent et attendent qu'il repasse `healthy` avant de rendre la main —
-`DatabaseExceptionTest` purge en plus les pools Npgsql. IT-JOB-01 supprime les définitions de jobs
+`DatabaseExceptionTest` purge en plus les pools Npgsql. Le cas de la liste vide supprime les définitions de jobs
 récurrents, puis les réinscrit. Sans ces remises en état, l'ordre d'exécution deviendrait
 significatif, ce que xUnit ne garantit pas.
 
@@ -152,6 +203,18 @@ sont surchargeables par variable d'environnement — `NUTRITION_TEST_PG_CONTAINE
 > Ce helper appartient au **projet de tests**. Aucune ligne du code de production ne connaît Docker :
 > l'application ne sait pas comment elle est déployée, et n'a pas à le savoir. En production, ce qui
 > arrête et relance un conteneur est l'orchestrateur.
+
+**Un test échappe à la collection partagée.** Celui qui vérifie le statut d'un job terminé démarre
+**sa propre application**, donc son propre serveur Hangfire et sa propre base.
+
+C'est le seul de la suite qui dépende d'un traitement de fond : il déclenche un job et attend qu'un
+serveur le prenne et le mène à son terme. Or après les coupures de conteneurs, le serveur Hangfire de
+l'application partagée ne reprend plus les jobs — l'attente expirait au bout de 60 secondes, alors
+que le test passait en 5 secondes lancé seul.
+
+> La cause exacte de ce blocage n'est pas identifiée. L'isolation traite le symptôme. Si un serveur
+> Hangfire ne se remet réellement pas d'une coupure de base, c'est un défaut du produit qui reste à
+> instruire.
 
 **Le coût est réel.** Un redémarrage de Keycloak prend une quarantaine de secondes — import du realm
 compris. C'est ce qui fait passer la suite de 20 secondes à 2 minutes. À peser avant d'ajouter un
@@ -180,11 +243,16 @@ la contrainte.
 
 > La contrainte manquante a depuis été ajoutée — migration
 > `20260730102708_UniqueWeightEntryPerUserAndDate`. Le cas d'origine est donc
-> redevenu possible ; réaligner IT-EXT-13 sur `weight_entries` reste à faire.
+> redevenu possible ; réaligner ce test sur `weight_entries` reste à faire.
 
-> IT-EXT-08 était marqué `Skip` faute de service account dans le realm. Le client confidentiel
-> `nutrition-api-service` a été ajouté le 2026-07-30 — voir le défaut correspondant en section 7 bis.
-> Le test s'exécute désormais.
+**Le test de purge crée un vrai compte Keycloak.** Il a d'abord semé un identifiant inventé : l'appel
+de suppression répondait alors 404, que `KeycloakAdminService` traite comme « le compte n'existe
+plus » et ignore. Le test passait sans jamais éprouver la suppression, et construisait un état
+impossible en production — `keycloak_id` est par définition le `sub` d'un compte existant.
+
+Il crée désormais un compte jetable via l'API d'administration, vérifie qu'il existe, lance la purge,
+puis vérifie sa disparition **de Keycloak et de la base**. Un `finally` le supprime si le test échoue
+avant la purge.
 
 ---
 
@@ -228,7 +296,7 @@ Le service joint désormais `hangfire.job` sur `LastJobId` pour lire l'état ré
 Défaut invisible en test unitaire : la requête est du SQL brut sur le schéma de Hangfire, une doublure
 n'aurait fait que rejouer l'hypothèse fausse.
 
-**La purge RGPD ne pouvait fonctionner nulle part.** IT-EXT-08 a révélé que le flux
+**La purge RGPD ne pouvait fonctionner nulle part.** Le test de purge a révélé que le flux
 `client_credentials` de `KeycloakAdminService` n'avait aucun client à qui s'adresser : le realm ne
 déclarait que `nutrition-api`, **public** — donc sans secret, donc incapable de s'authentifier ainsi.
 Et `AdminBaseUrl`, `Realm` et `ServiceClientSecret` étaient vides dans les trois fichiers de
@@ -266,8 +334,7 @@ configuration absente. Aucun test unitaire ne l'aurait vu.
 |---|---|
 | Déploiement, ingress, secrets, réseau du cluster | Niveau 4 — NTR-112 |
 | Rejet d'un jeton de **mauvais issuer** | Exigerait un second realm dans l'export, pour un chemin de validation identique à celui de l'audience — écarté (NTR-148) |
-| Contrainte d'unicité sur `weight_entries` | Ajoutée le 2026-07-30 — IT-EXT-13 reste à réaligner |
-| Suppression d'un compte **existant** dans Keycloak | IT-EXT-08 sème un identifiant absent du realm : l'appel répond 404, traité comme succès |
+| Contrainte d'unicité sur `weight_entries` | Ajoutée le 2026-07-30 — le test de violation reste à réaligner |
 | Coupure Redis pendant un import OFF | Non couvert — `InvalidateAllSearchesAsync` n'intercepte pas, l'import doit échouer visiblement |
 | Rafraîchissement des clés du realm pendant une coupure Keycloak | Non couvert — fenêtre étroite, le démarrage bloquant traite le cas principal |
 

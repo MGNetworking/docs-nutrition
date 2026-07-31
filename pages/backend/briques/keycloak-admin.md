@@ -11,7 +11,21 @@
 > | ✅ | `RgpdPurgeJob` consomme `DeleteUserAsync` (NTR-56) |
 > | 🔲 | `RgpdService` n'appelle pas encore `DisableUserAsync` / `EnableUserAsync` — la désactivation au moment de la demande de suppression n'est donc pas effective |
 > | ✅ | Le client de service `nutrition-api-service` est déclaré dans `keycloak/realm-export.json` — créé automatiquement à l'import du realm (2026-07-30) |
-> | ✅ | Le flux complet est éprouvé par IT-EXT-08 : jeton de service obtenu, appel d'administration, suppression en base |
+> | ✅ | Le flux complet est éprouvé au niveau 3 : le test crée un compte jetable, lance la purge, et vérifie sa disparition de Keycloak **et** de la base |
+
+### Les trois autres clients du realm
+
+Outre `nutrition-api-service`, l'export en déclare trois — dont deux ne servent qu'aux tests.
+
+| Client | Type | Rôle |
+|---|---|---|
+| `nutrition-api` | public | celui pour lequel Keycloak émet les jetons utilisateurs ; son mapper d'audience ajoute `nutrition-api` au claim `aud` |
+| `nutrition-api-tests-shortlived` | public | émet des jetons valides **une seconde**, via l'attribut `access.token.lifespan`. Le realm impose 1800 s : sans ce client, éprouver le rejet d'un jeton expiré demanderait d'attendre trente minutes |
+| `nutrition-api-tests-no-audience` | public | **aucun mapper d'audience** : ses jetons ne portent pas `nutrition-api` dans leur `aud`, et l'API doit les refuser. Sans ce contrôle, un jeton obtenu pour une autre API serait accepté |
+
+> Le service account de `nutrition-api-service` sert aussi aux tests : son rôle `manage-users` leur
+> permet de créer puis supprimer un compte jetable, sans toucher aux comptes du realm dont dépendent
+> les autres cas.
 >
 > Référence workflow : `reference/diagrammes/workflow_rgpd.mermaid`
 
