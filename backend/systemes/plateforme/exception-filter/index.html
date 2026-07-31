@@ -1985,6 +1985,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../qualite/tests-niveau-3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -2581,12 +2602,12 @@ base morte déclenchaient la même alerte.</p>
 <p>Le middleware appartient à la couche <strong>API</strong>. Lui faire attraper <code>NpgsqlException</code> ou
 <code>RedisConnectionException</code> l'obligerait à référencer des packages confinés à Infrastructure.</p>
 <p>C'est <strong>Infrastructure qui traduit</strong> :</p>
-<div class="language-text highlight"><pre><span></span><code>DatabaseExceptionInterceptor    ──┐
-KeycloakAdminService            ──┼── lèvent ServiceUnavailableException
-                                  │   (ou ConflictException sur violation d&#39;unicité)
-                                  ▼
-                     ExceptionMiddleware → 503 / 409
-                     (ne connaît ni Npgsql ni Redis)
+<div class="language-text highlight"><pre><span></span><code>DatabaseExceptionInterceptor           ──┐
+DatabaseConnectionExceptionInterceptor ──┼── lèvent ServiceUnavailableException
+KeycloakAdminService                   ──┤   (ou ConflictException sur violation d&#39;unicité)
+                                         ▼
+                            ExceptionMiddleware → 503 / 409
+                            (ne connaît ni Npgsql ni Redis)
 </code></pre></div>
 <table>
 <thead>
@@ -2608,12 +2629,23 @@ KeycloakAdminService            ──┼── lèvent ServiceUnavailableExcept
 <td><code>ServiceUnavailableException("PostgreSQL")</code></td>
 </tr>
 <tr>
+<td><code>Persistence/Interceptors/DatabaseConnectionExceptionInterceptor</code></td>
+<td>les mêmes, mais à l'<strong>ouverture de connexion</strong></td>
+<td><code>ServiceUnavailableException("PostgreSQL")</code></td>
+</tr>
+<tr>
 <td><code>ExternalServices/Keycloak/KeycloakAdminService</code></td>
 <td><code>HttpRequestException</code> <strong>sans statut</strong>, <code>TaskCanceledException</code></td>
 <td><code>ServiceUnavailableException("Keycloak")</code></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Pourquoi deux intercepteurs de base.</strong> <code>DatabaseExceptionInterceptor</code> est un
+<code>DbCommandInterceptor</code> : il n'est appelé que sur l'échec d'une <strong>commande</strong>, donc lorsque le serveur
+répond. Serveur arrêté, l'échec survient à l'<strong>ouverture de la connexion</strong> et la commande n'est
+jamais atteinte — rien n'était traduit, la réponse repartait en 500. D'où le second intercepteur,
+un <code>DbConnectionInterceptor</code>, qui délègue la traduction au <code>Translate</code> du premier : une seule table
+de correspondance, deux points d'accroche.</p>
 <p>Deux discriminations méritent l'attention :</p>
 <p><strong><code>HttpRequestException</code> avec un statut n'est pas une indisponibilité</strong> — elle vient d'une réponse
 HTTP d'erreur de l'API Admin. La confondre masquerait un défaut de configuration en panne passagère.</p>
@@ -2659,15 +2691,27 @@ sur PostgreSQL</strong>. La recherche fonctionne sans cache, plus lentement.</p>
 <td>Bout en bout via le pipeline réel — <code>MiddlewaresIntegrationTest</code></td>
 </tr>
 <tr>
-<td>⚠️</td>
-<td>Le branchement de l'intercepteur sur EF Core est configuré, <strong>jamais éprouvé contre une vraie base</strong> — niveau 3 (NTR-28)</td>
+<td>✅</td>
+<td>Branchement de l'intercepteur sur EF Core, éprouvé contre une vraie base — IT-EXT-13 (NTR-28)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Coupure PostgreSQL en cours d'exécution — IT-EXT-14 arrête le conteneur et vérifie le 503</td>
 </tr>
 <tr>
 <td>❌</td>
-<td>Comportement réel lors d'une coupure PostgreSQL ou Keycloak en cours d'exécution</td>
+<td>Coupure Keycloak en cours d'exécution</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Deux défauts trouvés par le niveau 3, corrigés.</strong> Le branchement fonctionnait, mais l'exception
+traduite n'atteignait jamais le middleware : EF Core l'enveloppe, et les <code>catch</code> portaient sur le
+type direct — 500 au lieu de 409. Le middleware déballe désormais la chaîne des exceptions internes.
+Et une base <strong>arrêtée</strong> n'était pas traduite du tout, l'échec survenant à l'ouverture de connexion —
+d'où <code>DatabaseConnectionExceptionInterceptor</code>. Voir
+<a href="../../../qualite/tests-niveau-3/">Écrire un test de niveau 3</a>.</p>
+</blockquote>
 <hr />
 <h2 id="voir-aussi">Voir aussi<a class="headerlink" href="#voir-aussi" title="Permanent link">&para;</a></h2>
 <ul>

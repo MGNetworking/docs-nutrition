@@ -1937,6 +1937,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../qualite/tests-niveau-3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -2301,9 +2322,13 @@ faudrait en revanche en écrire un.</p>
 </tbody>
 </table>
 <p><code>OpenApiContractTest</code> tourne <strong>sans démarrer l'API</strong> : il parcourt les types de l'assembly par
-réflexion. C'est ce qui lui permet d'exister avant les tests de niveau 3, qui eux exigent
-docker-compose (NTR-28). La contrepartie est qu'il valide les <strong>attributs</strong>, pas le JSON produit :
-un défaut de sérialisation Swashbuckle lui échapperait.</p>
+réflexion. La contrepartie est qu'il valide les <strong>attributs</strong>, pas le JSON produit : un défaut de
+sérialisation Swashbuckle lui échapperait.</p>
+<blockquote>
+<p><strong>Trou de couverture, sans ticket porteur.</strong> La validation du <code>swagger.json</code> réellement généré
+était attendue du niveau 3. NTR-28 est livré et fermé sans l'avoir couverte : aucun test ne démarre
+l'API pour lire le document produit. À recenser si le sujet doit avancer.</p>
+</blockquote>
 <h2 id="etat-de-confiance">État de confiance<a class="headerlink" href="#etat-de-confiance" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

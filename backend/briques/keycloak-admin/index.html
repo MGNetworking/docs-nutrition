@@ -816,6 +816,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../qualite/tests-niveau-3/">
+<span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../qualite/recensement-des-tests/">
 <span class="md-ellipsis">
     Recensement des tests
@@ -1063,8 +1070,12 @@
 <td><code>RgpdService</code> n'appelle pas encore <code>DisableUserAsync</code> / <code>EnableUserAsync</code> — la désactivation au moment de la demande de suppression n'est donc pas effective</td>
 </tr>
 <tr>
-<td>⚠️</td>
-<td>Le client de service <code>nutrition-api-service</code> doit être créé dans le realm — voir « Configuration côté Keycloak »</td>
+<td>✅</td>
+<td>Le client de service <code>nutrition-api-service</code> est déclaré dans <code>keycloak/realm-export.json</code> — créé automatiquement à l'import du realm (2026-07-30)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Le flux complet est éprouvé par IT-EXT-08 : jeton de service obtenu, appel d'administration, suppression en base</td>
 </tr>
 </tbody>
 </table>
@@ -1120,6 +1131,13 @@ API → Keycloak Admin API
 <p>Le service token est obtenu à la demande et mis en cache jusqu'à expiration (TTL Keycloak, typiquement 60–300 secondes).</p>
 <hr/>
 <h2 id="configuration-cote-keycloak">Configuration côté Keycloak<a class="headerlink" href="#configuration-cote-keycloak" title="Permanent link">¶</a></h2>
+<blockquote>
+<p><strong>En développement, rien de tout cela n'est à faire à la main.</strong> Le client, son service account et
+ses rôles sont déclarés dans <code>keycloak/realm-export.json</code> : le realm les crée à l'import, à chaque
+recréation du conteneur. Le secret de développement y figure en clair, ce realm étant jetable.</p>
+<p>Les trois étapes ci-dessous décrivent la création manuelle — utile pour un realm de recette ou de
+production, où le secret ne doit jamais être versionné.</p>
+</blockquote>
 <h3 id="1-creer-un-client-de-service-dans-keycloak">1. Créer un client de service dans Keycloak<a class="headerlink" href="#1-creer-un-client-de-service-dans-keycloak" title="Permanent link">¶</a></h3>
 <p>Dans le realm de l'application :</p>
 <table>

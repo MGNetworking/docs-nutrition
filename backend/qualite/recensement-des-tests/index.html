@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../tests-niveau-2/">
+        <link rel="prev" href="../tests-niveau-3/">
       
       
         <link rel="next" href="../../reference/diagramme-classes/">
@@ -1775,6 +1775,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../tests-niveau-3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2592,7 +2613,7 @@ unitaire : toute saisie invalide renvoyait 500 (NTR-135), aucun utilisateur ne p
 <tr>
 <td>IT-AUTH-02</td>
 <td>Token expiré</td>
-<td>401</td>
+<td>401 — <strong>couvert au niveau 3 par IT-EXT-18</strong> : <code>TestAuthHandler</code> remplace ici le composant qui vérifie l'expiration, le cas n'y est pas testable</td>
 </tr>
 <tr>
 <td>IT-AUTH-03</td>
@@ -2862,6 +2883,12 @@ unitaire : toute saisie invalide renvoyait 500 (NTR-135), aucun utilisateur ne p
 <td><code>DELETE /users/me/saved-food-items/{id}</code></td>
 <td>Favori appartenant à un autre utilisateur</td>
 <td>403</td>
+</tr>
+<tr>
+<td>IT-USR-22</td>
+<td><code>POST /users/me/weight-entries</code></td>
+<td><strong>Sans date fournie</strong>, une pesée existe déjà pour aujourd'hui</td>
+<td>409 — le contrôle doit porter sur la date effective. Son absence laissait créer des doublons silencieux (NTR-145)</td>
 </tr>
 <tr>
 <td>IT-USR-22</td>
@@ -3354,7 +3381,17 @@ section suivante.</p>
 <hr />
 <h2 id="niveau-3-tests-dintegration-externe">Niveau 3 — Tests d'intégration externe<a class="headerlink" href="#niveau-3-tests-dintegration-externe" title="Permanent link">&para;</a></h2>
 <p>Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-<strong>18 cas</strong> — IT-EXT-01 à 14 et IT-JOB-01 à 04.</p>
+<strong>23 cas</strong> — IT-EXT-01 à 19 et IT-JOB-01 à 04.</p>
+<blockquote>
+<p><strong>État : 23 cas implémentés, 23 verts.</strong> Projet <code>tests/NutritionApi.Integration.Tests</code>, lancement
+par <code>./scripts/test-integration.sh</code>. Voir <a href="../tests-niveau-3/">Écrire un test de niveau 3</a> pour le
+fonctionnement, les quatre défauts trouvés, et l'écart restant — IT-EXT-13 s'appuie sur
+<code>saved_food_items</code> alors que la contrainte d'unicité de <code>weight_entries</code> a depuis été ajoutée, le
+réalignement reste à faire.</p>
+<p>IT-EXT-15 à 17 ont été ajoutés après coup : ils éprouvent le comportement en <strong>dépendance coupée</strong>,
+qui n'était pas au recensement initial. Ils coupent réellement un conteneur, d'où une durée de
+suite passée d'environ 20 secondes à 2 minutes.</p>
+</blockquote>
 <h3 id="chaine-dauthentification-keycloak-reel">Chaîne d'authentification — Keycloak réel<a class="headerlink" href="#chaine-dauthentification-keycloak-reel" title="Permanent link">&para;</a></h3>
 <p>Transférés depuis NTR-74 le 2026-07-27 : au niveau 2, le <code>TestAuthHandler</code> remplace le schéma
 d'authentification, donc court-circuite précisément le composant à éprouver. Ces cas ne peuvent
@@ -3378,6 +3415,26 @@ vivre qu'ici.</p>
 <td>Token sans le rôle <code>admin</code> → <code>GET /api/v1/admin/dashboard</code></td>
 <td>403 — mapping <code>realm_access.roles</code> → policy AdminOnly</td>
 </tr>
+<tr>
+<td>IT-EXT-16</td>
+<td><strong>Keycloak arrêté</strong>, clés déjà en cache, jeton valide</td>
+<td><strong>200</strong> — la validation étant locale, la coupure est invisible pour les utilisateurs déjà connectés</td>
+</tr>
+<tr>
+<td>IT-EXT-17</td>
+<td><strong>Keycloak arrêté au démarrage</strong> de l'application</td>
+<td>L'hôte <strong>refuse de démarrer</strong> — sans clés, l'instance rejetterait tous les jetons</td>
+</tr>
+<tr>
+<td>IT-EXT-18</td>
+<td>Jeton réellement émis puis <strong>expiré</strong></td>
+<td>401 — reprend IT-AUTH-02, qui ne pouvait pas exister au niveau 2 : <code>TestAuthHandler</code> y remplace le composant qui vérifie l'expiration</td>
+</tr>
+<tr>
+<td>IT-EXT-19</td>
+<td>Jeton dont l'<code>aud</code> ne contient pas <code>nutrition-api</code></td>
+<td>401 — sans ce contrôle, un jeton obtenu pour une autre API serait accepté</td>
+</tr>
 </tbody>
 </table>
 <h3 id="repositories-postgresql-reel">Repositories — PostgreSQL réel<a class="headerlink" href="#repositories-postgresql-reel" title="Permanent link">&para;</a></h3>
@@ -3397,12 +3454,12 @@ vivre qu'ici.</p>
 </tr>
 <tr>
 <td>IT-EXT-02</td>
-<td><code>DietPlanRepository.GetUserPlansAsync</code> — plans d'un user</td>
+<td><code>DietPlanRepository.GetByUserIdAsync</code> — plans d'un user</td>
 <td>Filtre par UserId en DB</td>
 </tr>
 <tr>
 <td>IT-EXT-03</td>
-<td><code>DietRepository.GetActiveAsync</code> — diet active</td>
+<td><code>DietRepository.GetActiveByUserIdAsync</code> — diet active</td>
 <td>Requête avec filtre statut</td>
 </tr>
 <tr>
@@ -3426,8 +3483,8 @@ pas couvrir, les doublures y remplaçant précisément le composant à éprouver
 <tbody>
 <tr>
 <td>IT-EXT-13</td>
-<td>Deux <code>WeightEntry</code> à la même date pour le même user</td>
-<td><strong>409</strong> et non 500 — <code>DatabaseExceptionInterceptor</code> reçoit la <code>PostgresException</code> <code>23505</code> enveloppée par EF Core dans une <code>DbUpdateException</code>, et discrimine sur l'exception interne</td>
+<td>Deux <code>SavedFoodItem</code> identiques pour le même user — <code>weight_entries</code> ne porte pas de contrainte d'unicité, voir <a href="../tests-niveau-3/#7-les-deux-écarts-assumés-au-recensement">niveau 3</a></td>
+<td><code>ConflictException</code> et non erreur brute — <code>DatabaseExceptionInterceptor</code> reçoit la <code>PostgresException</code> <code>23505</code> enveloppée par EF Core dans une <code>DbUpdateException</code>, et discrimine sur l'exception interne</td>
 </tr>
 <tr>
 <td>IT-EXT-14</td>
@@ -3470,6 +3527,11 @@ pas couvrir, les doublures y remplaçant précisément le composant à éprouver
 <td>IT-EXT-12</td>
 <td>Import OFF n'ayant importé aucun produit</td>
 <td>Cache <strong>non</strong> vidé — catalogue inchangé</td>
+</tr>
+<tr>
+<td>IT-EXT-15</td>
+<td><strong>Redis arrêté</strong> → recherche d'aliment</td>
+<td><strong>200</strong> avec les données de PostgreSQL — le repli est une promesse du système, un 503 y serait disproportionné</td>
 </tr>
 </tbody>
 </table>

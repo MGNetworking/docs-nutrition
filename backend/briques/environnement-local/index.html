@@ -2142,6 +2142,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../qualite/tests-niveau-3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -3082,12 +3103,17 @@ dans <code>ci-deploy.yml</code>, faute de cluster et de registre.</p>
 </blockquote>
 <h3 id="workflows-reellement-presents">Workflows réellement présents<a class="headerlink" href="#workflows-reellement-presents" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code>.github/workflows/
-├── ci-unit.yml         ✅ PR vers dev   — build + tests
-├── ci-release.yml      ✅ PR vers main  — build + tests + couverture + rapport PR
-├── ci-deploy.yml       ⚠️ PR vers prod  — build Release ; déploiement encore commenté
-└── release-please.yml  ✅ push main     — tag vX.Y.Z + CHANGELOG
+├── ci-unit.yml          ✅ PR vers dev   — build + tests de niveaux 1 et 2 (Level!=3)
+├── ci-integration.yml   ✅ PR vers dev   — pile docker-compose + tests de niveau 3 (Level=3)
+├── ci-release.yml       ✅ PR vers main  — build + tests + couverture + rapport PR
+├── ci-deploy.yml        ⚠️ PR vers prod  — build Release ; déploiement encore commenté
+└── release-please.yml   ✅ push main     — tag vX.Y.Z + CHANGELOG
 </code></pre></div>
 <blockquote>
+<p><code>ci-integration.yml</code> n'a <strong>aucune définition de service</strong> propre : il appelle
+<code>./scripts/test-integration.sh</code>, qui monte le <code>docker-compose.yml</code> du projet. C'est délibéré — le
+niveau 3 doit éprouver la configuration Docker du dépôt, pas celle du workflow. Voir
+<a href="../../qualite/tests-niveau-3/">Écrire un test de niveau 3</a>.</p>
 <p>Il n'existe <strong>pas</strong> de <code>deploy.yml</code> : le déploiement est prévu dans <code>ci-deploy.yml</code>, déclenché
 par la transition <code>dev → prod</code> (et non par un push sur <code>main</code>).</p>
 </blockquote>
@@ -3249,10 +3275,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w">
 Fichiers présents dans le repo <code>nutrition-api</code>.</p>
 </blockquote>
 <div class="language-text highlight"><pre><span></span><code>.github/workflows/
-├── ci-unit.yml         PR vers dev
-├── ci-release.yml      PR vers main
-├── ci-deploy.yml       PR vers prod
-└── release-please.yml  push sur main
+├── ci-unit.yml          PR vers dev
+├── ci-integration.yml   PR vers dev
+├── ci-release.yml       PR vers main
+├── ci-deploy.yml        PR vers prod
+└── release-please.yml   push sur main
 </code></pre></div>
 <blockquote>
 <p>⚠️ Le fichier <code>ci.yml</code> ci-dessous est l'<strong>ébauche initiale</strong>, conservée à titre de référence.
@@ -3333,6 +3360,11 @@ branche — voir <code>CONTRIBUTING.md</code>.</p>
 <tr>
 <td>Workflows de tests (<code>ci-unit</code>, <code>ci-release</code>)</td>
 <td>Dès le premier commit sur une branche feature</td>
+<td>✅ en place</td>
+</tr>
+<tr>
+<td>Workflow d'intégration externe (<code>ci-integration</code>)</td>
+<td>Avec les tests de niveau 3 — NTR-28</td>
 <td>✅ en place</td>
 </tr>
 <tr>

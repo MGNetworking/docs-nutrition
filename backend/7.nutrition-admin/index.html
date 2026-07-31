@@ -1905,6 +1905,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../qualite/tests-niveau-3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -2267,11 +2288,20 @@ Dernière mise à jour : 2026-05-02</p>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<p><code>hangfireJobs</code> est la <strong>liste des jobs réellement enregistrés</strong> dans Hangfire, pas une structure figée :
-tant que la purge RGPD n'est pas livrée (NTR-56), elle ne contient que <code>import-off</code>.
+<p><code>hangfireJobs</code> est la <strong>liste des jobs réellement enregistrés</strong> dans Hangfire, pas une structure figée.
+<code>RecurringJobRegistrationService</code> en inscrit <strong>deux</strong> au démarrage : <code>import-off</code> (03h00 UTC) et
+<code>rgpd-purge</code> (03h30 UTC) — vérifié par IT-JOB-02.
 <code>lastImportAt</code> est un raccourci de lecture — c'est le <code>lastRun</code> du job <code>import-off</code>, remonté à la racine.</p>
 <p><strong>Statuts possibles :</strong> l'état brut Hangfire du dernier run (<code>Succeeded</code>, <code>Failed</code>, <code>Processing</code>…),
 ou <code>Scheduled</code> si le job est enregistré mais n'a encore jamais tourné.</p>
+<blockquote>
+<p><strong>D'où vient ce statut.</strong> <code>JobMonitoringService</code> lit <code>hangfire.hash</code> pour les métadonnées du job
+récurrent, puis joint <code>hangfire.job</code> sur <code>LastJobId</code> pour obtenir l'état réel du dernier run.</p>
+<p>La jointure est nécessaire : Hangfire n'écrit <strong>pas</strong> <code>LastJobState</code> lors d'un déclenchement
+manuel. Le service, qui ne lisait que ce champ, affichait alors <code>Scheduled</code> avec un <code>lastRun</code>
+renseigné — deux informations contradictoires. Défaut trouvé par IT-JOB-03, corrigé. Le repli sur
+<code>LastJobState</code> subsiste pour les runs purgés de l'historique Hangfire.</p>
+</blockquote>
 <hr />
 <h3 id="contenu-partage-dietplan-templates">Contenu partagé — DietPlan templates<a class="headerlink" href="#contenu-partage-dietplan-templates" title="Permanent link">&para;</a></h3>
 <table>

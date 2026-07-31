@@ -1559,6 +1559,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-bis-la-validation-des-jetons-est-locale-et-ce-que-ca-implique" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 bis. La validation des jetons est locale — et ce que ça implique
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4 bis. La validation des jetons est locale — et ce que ça implique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-garde-fou-keycloakavailabilityservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le garde-fou : KeycloakAvailabilityService
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#5-ce-qui-nest-pas-couvert" class="md-nav__link">
     <span class="md-ellipsis">
       5. Ce qui n'est pas couvert
@@ -1943,6 +1967,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../qualite/tests-niveau-3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../qualite/recensement-des-tests/" class="md-nav__link">
         
   
@@ -2186,6 +2231,30 @@
   <a href="#la-dispense-allowwithoutprofile" class="md-nav__link">
     <span class="md-ellipsis">
       La dispense [AllowWithoutProfile]
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-bis-la-validation-des-jetons-est-locale-et-ce-que-ca-implique" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 bis. La validation des jetons est locale — et ce que ça implique
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4 bis. La validation des jetons est locale — et ce que ça implique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-garde-fou-keycloakavailabilityservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le garde-fou : KeycloakAvailabilityService
     </span>
   </a>
   
@@ -2459,6 +2528,49 @@ Microsoft.</p>
 <p>La dispense ne vaut <strong>que</strong> pour l'action marquée. Partout ailleurs, un jeton valide sans profil
 reste refusé — c'est vérifié par un test dédié.</p>
 </blockquote>
+<h2 id="4-bis-la-validation-des-jetons-est-locale-et-ce-que-ca-implique">4 bis. La validation des jetons est locale — et ce que ça implique<a class="headerlink" href="#4-bis-la-validation-des-jetons-est-locale-et-ce-que-ca-implique" title="Permanent link">&para;</a></h2>
+<p><code>UseAuthentication</code> ne contacte <strong>pas</strong> Keycloak à chaque requête. Au premier besoin, l'API récupère
+les clés publiques de signature du realm et les met en cache ; ensuite, chaque signature est vérifiée
+par un calcul local, sans aucun appel réseau.</p>
+<p>Deux conséquences opposées, l'une rassurante, l'autre dangereuse.</p>
+<p><strong>Une coupure de Keycloak est invisible pour les utilisateurs déjà connectés.</strong> Les jetons en
+circulation continuent d'être validés. Constaté par IT-EXT-16 : conteneur Keycloak arrêté, jeton
+valide, réponse 200. Ce qui casse, c'est l'<strong>émission</strong> de nouveaux jetons — passé
+<code>accessTokenLifespan</code>, plus personne ne peut entrer.</p>
+<p><strong>Une instance démarrée sans Keycloak n'a aucune clé.</strong> Elle accepte le trafic et refuse <strong>tous</strong> les
+jetons, pendant que ses voisines, démarrées plus tôt, fonctionnent normalement. Deux réplicas
+derrière le même service, deux comportements — le pire cas à diagnostiquer.</p>
+<h3 id="le-garde-fou-keycloakavailabilityservice">Le garde-fou : <code>KeycloakAvailabilityService</code><a class="headerlink" href="#le-garde-fou-keycloakavailabilityservice" title="Permanent link">&para;</a></h3>
+<p>Un <code>IHostedService</code> force la récupération des clés au démarrage, avant que l'application n'accepte
+la moindre requête. S'il n'y parvient pas dans le délai imparti, le démarrage est interrompu.</p>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Défaut</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Keycloak:StartupTimeoutSeconds</code></td>
+<td><code>60</code></td>
+<td>délai maximal ; réessai toutes les 3 s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>L'attente est bornée plutôt qu'immédiate</strong> : dans un cluster, l'API et Keycloak démarrent souvent
+ensemble, et quelques secondes de décalage ne justifient pas un cycle de redémarrage. Passé le délai,
+l'échec est franc — le processus s'arrête, et l'orchestrateur relance le pod (<code>CrashLoopBackOff</code>
+sous Kubernetes). Aucun code d'orchestration n'est nécessaire : c'est le comportement natif.</p>
+<p>Le service vérifie que des clés ont été <strong>publiées</strong>, pas seulement que le serveur a répondu : un
+realm qui répond sans clé de signature est aussi inutilisable qu'un serveur absent.</p>
+<blockquote>
+<p>Implémenté en <code>IHostedService</code> à dessein — les tests de niveau 2 pointent vers une autorité factice
+et retirent déjà tous les services hébergés. Ils ne sont donc pas concernés.</p>
+</blockquote>
+<p>Éprouvé par IT-EXT-17 : Keycloak arrêté au démarrage, l'hôte refuse de démarrer.</p>
+<hr />
 <h2 id="5-ce-qui-nest-pas-couvert">5. Ce qui n'est pas couvert<a class="headerlink" href="#5-ce-qui-nest-pas-couvert" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2520,8 +2632,16 @@ reste refusé — c'est vérifié par un test dédié.</p>
 <td>Le comportement CORS de bout en bout — demande un navigateur et une origine tierce</td>
 </tr>
 <tr>
+<td>✅</td>
+<td>Une coupure de Keycloak reste sans effet sur les jetons en cours — IT-EXT-16</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>L'application refuse de démarrer sans les clés du realm — IT-EXT-17</td>
+</tr>
+<tr>
 <td>❌</td>
-<td>Le refus du dashboard Hangfire à un non-admin — test de niveau 3 (NTR-28)</td>
+<td>Le refus du dashboard Hangfire à un non-admin — <strong>attendu du niveau 3, non couvert</strong>. NTR-28 est fermé sans l'avoir traité : aucun test n'appelle <code>/hangfire</code>. Sans ticket porteur</td>
 </tr>
 </tbody>
 </table>
@@ -2529,6 +2649,9 @@ reste refusé — c'est vérifié par un test dédié.</p>
 <div class="language-json highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;Cors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;AllowedOrigins&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;Keycloak&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;StartupTimeoutSeconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2543,6 +2666,10 @@ reste refusé — c'est vérifié par un test dédié.</p>
 <tr>
 <td><code>Cors:AllowedOrigins</code></td>
 <td>Tableau des origines acceptées, schéma et port compris (<code>https://app.exemple.fr</code>). Vide = tout refusé.</td>
+</tr>
+<tr>
+<td><code>Keycloak:StartupTimeoutSeconds</code></td>
+<td>Délai maximal d'attente des clés du realm au démarrage. Surchargeable par <code>Keycloak__StartupTimeoutSeconds</code> en variable d'environnement.</td>
 </tr>
 </tbody>
 </table>

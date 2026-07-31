@@ -733,6 +733,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../qualite/tests-niveau-3/">
+<span class="md-ellipsis">
+    Écrire un test de niveau 3
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../qualite/recensement-des-tests/">
 <span class="md-ellipsis">
     Recensement des tests
@@ -918,8 +925,12 @@
 <td>L'infrastructure Hangfire qui le fait tourner (NTR-55)</td>
 </tr>
 <tr>
-<td>❌</td>
+<td>✅</td>
 <td>Test d'intégration niveau 3 — purge déclenchée manuellement contre un vrai Keycloak et une vraie base (NTR-28, IT-EXT-08)</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Le test a révélé que la purge <strong>ne pouvait fonctionner nulle part</strong> : le client de service <code>nutrition-api-service</code> n'existait pas dans le realm, et <code>AdminBaseUrl</code>, <code>Realm</code> et <code>ServiceClientSecret</code> étaient vides dans les trois fichiers de configuration. Corrigé pour le développement le 2026-07-30 — <strong>reste à vérifier que la production injecte bien ces valeurs</strong></td>
 </tr>
 <tr>
 <td>❌</td>
