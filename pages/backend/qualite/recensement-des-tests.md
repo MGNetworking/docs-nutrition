@@ -74,7 +74,7 @@ chapeau NTR-29.
 | ID | Scénario | Résultat attendu |
 |----|----------|------------------|
 | IT-AUTH-01 | Token absent sur n'importe quel endpoint `[Authorize]` | 401 |
-| IT-AUTH-02 | Token expiré | 401 |
+| IT-AUTH-02 | Token expiré | 401 — **couvert au niveau 3 par IT-EXT-18** : `TestAuthHandler` remplace ici le composant qui vérifie l'expiration, le cas n'y est pas testable |
 | IT-AUTH-03 | Token valide, rôle insuffisant (`[Authorize(Roles = "admin")]`) | 403 |
 | IT-AUTH-04 | Token valide avec rôle `admin` → endpoint admin | 200/201/204 selon l'endpoint |
 
@@ -134,6 +134,7 @@ chapeau NTR-29.
 | IT-USR-19 | `PUT /users/me/weight-entries/{id}` | Pesée appartenant à un autre utilisateur | 404 — et non 403 : révéler son existence serait une fuite d'information |
 | IT-USR-20 | `POST /users/me/saved-food-items` | Limite du palier atteinte (Free : 10) | 403 |
 | IT-USR-21 | `DELETE /users/me/saved-food-items/{id}` | Favori appartenant à un autre utilisateur | 403 |
+| IT-USR-22 | `POST /users/me/weight-entries` | **Sans date fournie**, une pesée existe déjà pour aujourd'hui | 409 — le contrôle doit porter sur la date effective. Son absence laissait créer des doublons silencieux (NTR-145) |
 | IT-USR-22 | `GET /users/me` | Jeton valide, aucun profil en base | 401 — la dispense `[AllowWithoutProfile]` ne vaut que pour la création |
 
 ---
@@ -256,9 +257,9 @@ chapeau NTR-29.
 ## Niveau 3 — Tests d'intégration externe
 
 Jira : NTR-28 → sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-**21 cas** — IT-EXT-01 à 17 et IT-JOB-01 à 04.
+**23 cas** — IT-EXT-01 à 19 et IT-JOB-01 à 04.
 
-> **État : 21 cas implémentés, 21 verts.** Projet `tests/NutritionApi.Integration.Tests`, lancement
+> **État : 23 cas implémentés, 23 verts.** Projet `tests/NutritionApi.Integration.Tests`, lancement
 > par `./scripts/test-integration.sh`. Voir [Écrire un test de niveau 3](tests-niveau-3.md) pour le
 > fonctionnement, les quatre défauts trouvés, et l'écart restant — IT-EXT-13 s'appuie sur
 > `saved_food_items` alors que la contrainte d'unicité de `weight_entries` a depuis été ajoutée, le
@@ -280,6 +281,8 @@ vivre qu'ici.
 | IT-EXT-10 | Token sans le rôle `admin` → `GET /api/v1/admin/dashboard` | 403 — mapping `realm_access.roles` → policy AdminOnly |
 | IT-EXT-16 | **Keycloak arrêté**, clés déjà en cache, jeton valide | **200** — la validation étant locale, la coupure est invisible pour les utilisateurs déjà connectés |
 | IT-EXT-17 | **Keycloak arrêté au démarrage** de l'application | L'hôte **refuse de démarrer** — sans clés, l'instance rejetterait tous les jetons |
+| IT-EXT-18 | Jeton réellement émis puis **expiré** | 401 — reprend IT-AUTH-02, qui ne pouvait pas exister au niveau 2 : `TestAuthHandler` y remplace le composant qui vérifie l'expiration |
+| IT-EXT-19 | Jeton dont l'`aud` ne contient pas `nutrition-api` | 401 — sans ce contrôle, un jeton obtenu pour une autre API serait accepté |
 
 ### Repositories — PostgreSQL réel
 

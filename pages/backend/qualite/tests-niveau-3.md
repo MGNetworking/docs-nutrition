@@ -15,7 +15,7 @@
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
-| **Cas** | 21 — IT-EXT-01 à 17 et IT-JOB-01 à 04 |
+| **Cas** | 23 — IT-EXT-01 à 19 et IT-JOB-01 à 04 |
 | **Durée** | environ 2 minutes — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
@@ -265,7 +265,7 @@ configuration absente. Aucun test unitaire ne l'aurait vu.
 | Manque | Statut |
 |---|---|
 | Déploiement, ingress, secrets, réseau du cluster | Niveau 4 — NTR-112 |
-| Rejet des jetons expirés, mauvais issuer, mauvaise audience | Décrit dans NTR-28, non recensé — pas d'identifiant attribué |
+| Rejet d'un jeton de **mauvais issuer** | Exigerait un second realm dans l'export, pour un chemin de validation identique à celui de l'audience — écarté (NTR-148) |
 | Contrainte d'unicité sur `weight_entries` | Ajoutée le 2026-07-30 — IT-EXT-13 reste à réaligner |
 | Suppression d'un compte **existant** dans Keycloak | IT-EXT-08 sème un identifiant absent du realm : l'appel répond 404, traité comme succès |
 | Coupure Redis pendant un import OFF | Non couvert — `InvalidateAllSearchesAsync` n'intercepte pas, l'import doit échouer visiblement |
@@ -275,6 +275,5 @@ configuration absente. Aucun test unitaire ne l'aurait vu.
 
 ## 10. État
 
-**21 tests, tous verts, aucun ignoré.** Vérifié le 2026-07-30 : `Réussi! - échec : 0, réussite : 21,
-ignorée(s) : 0, total : 21` en 2 min 02. Les niveaux 1 et 2 restent verts après les correctifs de
-production — 699 tests.
+**23 tests, tous verts, aucun ignoré.** Vérifié le 2026-07-30 : `Réussi! - échec : 0, réussite : 23,
+ignorée(s) : 0, total : 23` en 1 min 34. Les niveaux 1 et 2 restent verts — 700 tests.
