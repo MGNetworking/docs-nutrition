@@ -4,7 +4,7 @@
 
 > Ce document explique **comment fonctionne le socle** des tests de niveau 2 et comment s'en servir.
 > Pour savoir *ce que* chaque niveau doit couvrir, lire [Niveaux de tests](niveaux-de-tests.md) ;
-> pour la liste des tests à écrire, [Recensement des tests](recensement-des-tests.md).
+> pour les autres niveaux, [niveau 1](tests-niveau-1.md) et [niveau 3](tests-niveau-3.md).
 
 ---
 
@@ -387,6 +387,6 @@ pour l'ensemble de la suite, au prix d'un état partagé entre classes.
 ## 11. Où creuser
 
 - [Niveaux de tests](niveaux-de-tests.md) — ce que chaque niveau doit couvrir
-- [Recensement des tests](recensement-des-tests.md) — la liste des cas à écrire
+- [Écrire un test de niveau 1](tests-niveau-1.md) — les tests unitaires
 - [Pipeline HTTP](../systemes/plateforme/pipeline-http.md) — l'ordre des middlewares traversés
 - [Hangfire](../briques/hangfire.md) — pourquoi l'enregistrement des jobs est un hosted service

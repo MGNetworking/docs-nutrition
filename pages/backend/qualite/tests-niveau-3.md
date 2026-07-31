@@ -168,9 +168,9 @@ cinquième cas de coupure.
 
 ---
 
-## 7. Les écarts assumés au recensement
+## 7. Les écarts assumés
 
-**IT-EXT-13 ne porte pas sur `weight_entries`.** Le recensement décrit deux `WeightEntry` à la même
+**Le test de violation d unicité ne porte pas sur `weight_entries`.** Le cas visait deux `WeightEntry` à la même
 date. À l'écriture du test, `weight_entries` ne portait **aucune contrainte d'unicité** sur
 `(user_id, measured_at)` : le doublon aurait été accepté, aucun code `23505` levé, le test n'aurait
 rien prouvé. Il s'appuie donc sur `saved_food_items (user_id, food_item_id)`, qui exprime le même
@@ -179,7 +179,7 @@ invariant. L'assertion porte sur la `DbUpdateException` et son exception interne
 la contrainte.
 
 > La contrainte manquante a depuis été ajoutée — migration
-> `20260730102708_UniqueWeightEntryPerUserAndDate`. Le cas d'origine du recensement est donc
+> `20260730102708_UniqueWeightEntryPerUserAndDate`. Le cas d'origine est donc
 > redevenu possible ; réaligner IT-EXT-13 sur `weight_entries` reste à faire.
 
 > IT-EXT-08 était marqué `Skip` faute de service account dans le realm. Le client confidentiel

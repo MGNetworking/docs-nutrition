@@ -5,7 +5,7 @@
 
 > **Portée de ce document : ce qu'est chaque niveau de test, et où s'arrête son périmètre.**
 > Il ne recense aucun test précis — pour la liste des tests à écrire et leur avancement, voir
-> [Recensement des tests](recensement-des-tests.md)](recensement-des-tests.md).
+> les fiches par niveau : [niveau 1](tests-niveau-1.md), [niveau 2](tests-niveau-2.md), [niveau 3](tests-niveau-3.md).
 
 ---
 
@@ -171,6 +171,6 @@ dans git. Provisionnement : NTR-125.
 
 | Sujet | Document |
 |---|---|
-| La liste des tests à écrire et leur avancement | [Recensement des tests](recensement-des-tests.md)](recensement-des-tests.md) |
+| Écrire un test de niveau 1 | [Tests unitaires](tests-niveau-1.md) |
 | La stratégie de référence (source de vérité) | [Stratégie de Tests du Projet](../design/design-tests.md)](../design/design-tests.md) |
 | Le workflow Git et les branches | `CONTRIBUTING.md` du dépôt `nutrition-api` |

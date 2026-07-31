@@ -54,7 +54,6 @@ plugins:
         backend/features/interne/openapi.md: backend/systemes/plateforme/openapi.md
         backend/features/interne/exception-filter.md: backend/systemes/plateforme/exception-filter.md
         backend/features/interne/niveaux-de-tests.md: backend/qualite/niveaux-de-tests.md
-        backend/features/interne/recensement-des-tests.md: backend/qualite/recensement-des-tests.md
         backend/annexes/workflow-cache-recherche-aliments.md: backend/systemes/aliments/workflow-cache-recherche.md
         backend/annexes/workflow-import-aliments.md: backend/systemes/aliments/workflow-import.md
         backend/annexes/infrastructure-import-off.md: backend/systemes/aliments/source-open-food-facts.md
@@ -146,9 +145,9 @@ nav:
 
   - Qualité:
     - Niveaux de tests: backend/qualite/niveaux-de-tests.md
+    - Écrire un test de niveau 1: backend/qualite/tests-niveau-1.md
     - Écrire un test de niveau 2: backend/qualite/tests-niveau-2.md
     - Écrire un test de niveau 3: backend/qualite/tests-niveau-3.md
-    - Recensement des tests: backend/qualite/recensement-des-tests.md
 
   - Référence:
     - Diagramme de classes: backend/reference/diagramme-classes.md
