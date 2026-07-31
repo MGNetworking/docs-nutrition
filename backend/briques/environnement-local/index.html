@@ -1634,6 +1634,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Fichiers réels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#libsh-ce-que-les-scripts-partagent" class="md-nav__link">
+    <span class="md-ellipsis">
+      lib.sh — ce que les scripts partagent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2367,6 +2382,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Fichiers réels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#libsh-ce-que-les-scripts-partagent" class="md-nav__link">
+    <span class="md-ellipsis">
+      lib.sh — ce que les scripts partagent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2714,11 +2744,12 @@ réimporté à chaque recréation du conteneur, ce qui garantit un environnement
 ├── keycloak/
 │   └── realm-export.json         ← realm, client, rôles, comptes de test
 ├── scripts/
-│   ├── lib.sh                    ← fonctions partagées (attente healthcheck…)
+│   ├── lib.sh                    ← fonctions partagées, sourcé par les autres
 │   ├── dev-up.sh                 ← démarre les services, migre, seede
 │   ├── dev-down.sh               ← arrête (conserve les données)
 │   ├── dev-reset.sh              ← remet à zéro (supprime les volumes)
-│   └── docker-up.sh              ← stack complète, API conteneurisée
+│   ├── docker-up.sh              ← stack complète, API conteneurisée
+│   └── test-integration.sh       ← même pile + tests de niveau 3
 └── src/NutritionApi.Api/
     └── Dockerfile                ← image de l&#39;API
 </code></pre></div>
@@ -2727,6 +2758,40 @@ réimporté à chaque recréation du conteneur, ce qui garantit un environnement
 directement dans <code>docker-compose.yml</code> (elles ne sont pas des secrets) et la configuration de
 l'API vit dans <code>appsettings.Development.json</code> / <code>appsettings.Docker.json</code>.</p>
 </blockquote>
+<h4 id="libsh-ce-que-les-scripts-partagent"><code>lib.sh</code> — ce que les scripts partagent<a class="headerlink" href="#libsh-ce-que-les-scripts-partagent" title="Permanent link">&para;</a></h4>
+<p><code>lib.sh</code> n'est jamais exécuté directement : les autres scripts le <strong>sourcent</strong> en première ligne.
+C'est ce qui explique qu'ils se ressemblent autant, et pourquoi ils échouent tous de la même façon.</p>
+<table>
+<thead>
+<tr>
+<th>Fonction</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>require_docker</code></td>
+<td>vérifie que le démon répond, avec un message explicite plutôt qu'une erreur brute</td>
+</tr>
+<tr>
+<td><code>require_dotnet_ef</code></td>
+<td>vérifie la présence de l'outil EF Core, et rappelle la commande d'installation</td>
+</tr>
+<tr>
+<td><code>wait_healthy &lt;conteneur&gt; &lt;timeout&gt;</code></td>
+<td>attend le passage à <code>healthy</code>, échoue en nommant la commande de diagnostic</td>
+</tr>
+<tr>
+<td><code>info</code> <code>success</code> <code>warn</code> <code>fail</code></td>
+<td>sortie uniforme, <strong>couleurs désactivées</strong> quand la sortie n'est pas un terminal — les journaux CI restent lisibles</td>
+</tr>
+</tbody>
+</table>
+<p>Il pose aussi <code>set -euo pipefail</code> et calcule <code>REPO_ROOT</code>, ce qui rend les scripts appelables depuis
+n'importe quel répertoire.</p>
+<p><code>wait_healthy</code> mérite l'attention : c'est elle qui rend les scripts fiables. Sans elle, <code>dev-up.sh</code>
+appliquerait les migrations avant que PostgreSQL n'accepte les connexions. Les tests de niveau 3
+reprennent la même logique côté C#, dans <code>DockerContainer.WaitHealthyAsync</code>.</p>
 <h3 id="demarrage-la-voie-normale">Démarrage — la voie normale<a class="headerlink" href="#demarrage-la-voie-normale" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code>./scripts/dev-up.sh
 </code></pre></div>

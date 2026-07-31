@@ -2461,7 +2461,7 @@ s'exécute ; seules les dépendances externes sont remplacées.</p>
 tout ce qui est <strong>en dessous</strong> est une doublure.</p>
 <hr />
 <h2 id="2-qui-fait-quoi">2. Qui fait quoi<a class="headerlink" href="#2-qui-fait-quoi" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code>tests/NutritionApi.Api.Tests/Integration/
+<div class="language-text highlight"><pre><span></span><code>tests/NutritionApi.Api.Tests/Level2/
 ├── Fixtures/                      ← l&#39;outillage partagé, ne teste rien
 │   ├── ApiFactory.cs              — démarre l&#39;API, substitue les dépendances
 │   ├── ApiCollection.cs           — partage la fabrique entre toutes les classes
@@ -2675,9 +2675,9 @@ plus insidieux de ce socle : il produit des faux négatifs, pas des faux positif
 </blockquote>
 <hr />
 <h2 id="6-ecrire-un-test-le-gabarit">6. Écrire un test — le gabarit<a class="headerlink" href="#6-ecrire-un-test-le-gabarit" title="Permanent link">&para;</a></h2>
-<div class="language-csharp highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">NutritionApi.Api.Tests.Integration</span><span class="p">;</span>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">NutritionApi.Api.Tests.Level2</span><span class="p">;</span>
 
-<span class="k">using</span><span class="w"> </span><span class="nn">NutritionApi.Api.Tests.Integration.Fixtures</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">NutritionApi.Api.Tests.Level2.Fixtures</span><span class="p">;</span>
 <span class="k">using</span><span class="w"> </span><span class="nn">System.Net</span><span class="p">;</span>
 
 <span class="na">[Collection(ApiCollection.Name)]</span>
@@ -2728,7 +2728,7 @@ plus insidieux de ce socle : il produit des faux négatifs, pas des faux positif
 <tbody>
 <tr>
 <td><code>FullyQualifiedName</code></td>
-<td>Le nom complet du test, <strong>namespace compris</strong> — par exemple <code>NutritionApi.Api.Tests.Integration.ApiFactoryTest.ProtectedEndpoint_WithoutIdentity_Returns401</code></td>
+<td>Le nom complet du test, <strong>namespace compris</strong> — par exemple <code>NutritionApi.Api.Tests.Level2.ApiFactoryTest.ProtectedEndpoint_WithoutIdentity_Returns401</code></td>
 </tr>
 <tr>
 <td><code>~</code></td>
@@ -2736,9 +2736,14 @@ plus insidieux de ce socle : il produit des faux négatifs, pas des faux positif
 </tr>
 </tbody>
 </table>
-<p>Tous les tests de niveau 2 vivent dans le namespace <code>NutritionApi.Api.Tests.Integration</code>, donc leur
-nom complet contient <code>Integration</code>. <strong>C'est le namespace, et lui seul, qui rend cette sélection
-possible</strong> — d'où la règle : un test de niveau 2 se place dans <code>Integration/</code>, sans exception.</p>
+<p>Tous les tests de niveau 2 vivent dans <code>Api.Tests/Level2/</code>, donc dans le namespace
+<code>NutritionApi.Api.Tests.Level2</code>.</p>
+<blockquote>
+<p><strong>La sélection par namespace n'est plus le mécanisme principal.</strong> Chaque classe porte désormais
+<code>[Trait("Level", "2")]</code>, et c'est ce marqueur qui pilote les filtres CI — <code>--filter "Level=2"</code>. Le
+dossier et le namespace restent la règle de rangement ; le marqueur est ce qui rend la sélection
+fiable, y compris si un test est mal rangé.</p>
+</blockquote>
 <p>Quelques variantes utiles :</p>
 <div class="language-bash highlight"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;FullyQualifiedName!~Integration&quot;</span><span class="w">                    </span><span class="c1"># tout sauf le niveau 2</span>
 dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;FullyQualifiedName~Integration.DietPlans&quot;</span><span class="w">           </span><span class="c1"># un seul fichier</span>
