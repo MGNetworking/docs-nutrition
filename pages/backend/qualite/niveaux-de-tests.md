@@ -100,11 +100,11 @@ Keycloak) sont ceux du `docker-compose.yml` de développement, réutilisés en C
 valider ce que des conteneurs isolés ne peuvent pas : **la configuration Docker, le réseau entre
 composants et la chaîne JWT réelle**. Décision d'architecture actée le 2026-07-21.
 
-**Conditions de démarrage** — après la couche Infrastructure, quand les repositories et le schéma
-DB sont stables. Chaque session de test dispose d'une **base isolée** (`docker-compose.PostgreSql`)
-et d'un **cache isolé** (`docker-compose.Redis`).
+**Isolation par exécution** — une base `nutrition_test_<horodatage>` est créée sur le conteneur
+PostgreSQL de développement, migrée, puis supprimée en sortie ; le cache utilise un **index Redis
+dédié**. Aucun second fichier compose : un seul environnement à connaître, du poste à la CI.
 
-**Outil** : `WebApplicationFactory<Program>` + docker-compose · **Cible** : 18 tests · **Jira** : NTR-28
+**Outil** : `WebApplicationFactory<Program>` + docker-compose · **Cible** : 23 tests · **Jira** : NTR-28
 
 > L'estimation d'origine était de 5 à 10 tests. Elle a été révisée après les transferts de NTR-74
 > (validation JWT) et NTR-135 (branchement de l'intercepteur), et l'ajout des cas de statut Hangfire.
@@ -152,13 +152,18 @@ dans git. Provisionnement : NTR-125.
 
 | Transition | Workflow CI | Ce qui tourne |
 |---|---|---|
-| `feature/*` → `dev` | `ci-unit.yml` | Build + `dotnet test` |
+| `feature/*` → `dev` | `ci-unit.yml` | Build + niveaux 1 et 2 — `--filter "Level!=3"` |
+| `feature/*` → `dev` | `ci-integration.yml` | Pile docker-compose + niveau 3 — `--filter "Level=3"` |
 | `dev` → `main` | `ci-release.yml` | Build + tests + couverture + rapport PR |
 | `dev` → `prod` | `ci-deploy.yml` | Build Release + déploiement VPS |
 
-> **État réel** — `dotnet test` s'exécute **sans filtre**, mais les tests des niveaux 2 à 4 sont
-> encore des stubs `Skip` : seul le niveau 1 tourne effectivement. L'intégration des niveaux
-> supérieurs au CI est prévue par NTR-83 et NTR-92.
+> **Comment les niveaux se distinguent.** Le niveau 3 porte `[Trait("Level", "3")]` ; les deux
+> filtres sont donc disjoints, aucun test n'est joué deux fois ni oublié. Le niveau 2 se reconnaît à
+> son namespace `NutritionApi.Api.Tests.Integration`, convention antérieure au marqueur.
+
+> **État au 2026-07-30** — niveaux 1 et 2 : 700 tests. Niveau 3 : 23 tests, exécutés par
+> `ci-integration.yml`, qui appelle `./scripts/test-integration.sh` sans déclarer de service propre.
+> Niveau 4 : non commencé, dépend de NTR-88 pour les endpoints de santé.
 
 ---
 

@@ -50,9 +50,12 @@ Le contrat est verrouillé à deux niveaux, et un seul est automatisé.
 | `swagger.json` généré valide et importable (Postman, NSwag/Kiota) | Lancement réel de l'API | ⚠️ manuel |
 
 `OpenApiContractTest` tourne **sans démarrer l'API** : il parcourt les types de l'assembly par
-réflexion. C'est ce qui lui permet d'exister avant les tests de niveau 3, qui eux exigent
-docker-compose (NTR-28). La contrepartie est qu'il valide les **attributs**, pas le JSON produit :
-un défaut de sérialisation Swashbuckle lui échapperait.
+réflexion. La contrepartie est qu'il valide les **attributs**, pas le JSON produit : un défaut de
+sérialisation Swashbuckle lui échapperait.
+
+> **Trou de couverture, sans ticket porteur.** La validation du `swagger.json` réellement généré
+> était attendue du niveau 3. NTR-28 est livré et fermé sans l'avoir couverte : aucun test ne démarre
+> l'API pour lire le document produit. À recenser si le sujet doit avancer.
 
 ## État de confiance
 

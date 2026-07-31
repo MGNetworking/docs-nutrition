@@ -219,7 +219,7 @@ realm qui répond sans clé de signature est aussi inutilisable qu'un serveur ab
 | ❌ | Le comportement CORS de bout en bout — demande un navigateur et une origine tierce |
 | ✅ | Une coupure de Keycloak reste sans effet sur les jetons en cours — IT-EXT-16 |
 | ✅ | L'application refuse de démarrer sans les clés du realm — IT-EXT-17 |
-| ❌ | Le refus du dashboard Hangfire à un non-admin — test de niveau 3 (NTR-28) |
+| ❌ | Le refus du dashboard Hangfire à un non-admin — **attendu du niveau 3, non couvert**. NTR-28 est fermé sans l'avoir traité : aucun test n'appelle `/hangfire`. Sans ticket porteur |
 
 ## 7. Configuration
 
