@@ -622,6 +622,13 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#les-trois-autres-clients-du-realm">
+<span class="md-ellipsis">
+      Les trois autres clients du realm
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#pourquoi-lapi-doit-parler-a-keycloak-admin">
 <span class="md-ellipsis">
       Pourquoi l'API doit parler à Keycloak Admin
@@ -809,6 +816,13 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../qualite/tests-niveau-1/">
+<span class="md-ellipsis">
+    Écrire un test de niveau 1
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../qualite/tests-niveau-2/">
 <span class="md-ellipsis">
     Écrire un test de niveau 2
@@ -819,13 +833,6 @@
 <a class="md-nav__link" href="../../qualite/tests-niveau-3/">
 <span class="md-ellipsis">
     Écrire un test de niveau 3
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../qualite/recensement-des-tests/">
-<span class="md-ellipsis">
-    Recensement des tests
   </span>
 </a>
 </li>
@@ -891,6 +898,13 @@
       Table des matières
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#les-trois-autres-clients-du-realm">
+<span class="md-ellipsis">
+      Les trois autres clients du realm
+    </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#pourquoi-lapi-doit-parler-a-keycloak-admin">
 <span class="md-ellipsis">
@@ -1075,10 +1089,43 @@
 </tr>
 <tr>
 <td>✅</td>
-<td>Le flux complet est éprouvé par IT-EXT-08 : jeton de service obtenu, appel d'administration, suppression en base</td>
+<td>Le flux complet est éprouvé au niveau 3 : le test crée un compte jetable, lance la purge, et vérifie sa disparition de Keycloak <strong>et</strong> de la base</td>
 </tr>
 </tbody>
 </table>
+</blockquote>
+<h3 id="les-trois-autres-clients-du-realm">Les trois autres clients du realm<a class="headerlink" href="#les-trois-autres-clients-du-realm" title="Permanent link">¶</a></h3>
+<p>Outre <code>nutrition-api-service</code>, l'export en déclare trois — dont deux ne servent qu'aux tests.</p>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Type</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nutrition-api</code></td>
+<td>public</td>
+<td>celui pour lequel Keycloak émet les jetons utilisateurs ; son mapper d'audience ajoute <code>nutrition-api</code> au claim <code>aud</code></td>
+</tr>
+<tr>
+<td><code>nutrition-api-tests-shortlived</code></td>
+<td>public</td>
+<td>émet des jetons valides <strong>une seconde</strong>, via l'attribut <code>access.token.lifespan</code>. Le realm impose 1800 s : sans ce client, éprouver le rejet d'un jeton expiré demanderait d'attendre trente minutes</td>
+</tr>
+<tr>
+<td><code>nutrition-api-tests-no-audience</code></td>
+<td>public</td>
+<td><strong>aucun mapper d'audience</strong> : ses jetons ne portent pas <code>nutrition-api</code> dans leur <code>aud</code>, et l'API doit les refuser. Sans ce contrôle, un jeton obtenu pour une autre API serait accepté</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Le service account de <code>nutrition-api-service</code> sert aussi aux tests : son rôle <code>manage-users</code> leur
+permet de créer puis supprimer un compte jetable, sans toucher aux comptes du realm dont dépendent
+les autres cas.</p>
 <p>Référence workflow : <code>reference/diagrammes/workflow_rgpd.mermaid</code></p>
 </blockquote>
 <hr/>

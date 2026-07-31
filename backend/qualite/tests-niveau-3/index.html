@@ -16,7 +16,7 @@
         <link rel="prev" href="../tests-niveau-2/">
       
       
-        <link rel="next" href="../recensement-des-tests/">
+        <link rel="next" href="../../reference/diagramme-classes/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -1757,6 +1757,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../tests-niveau-1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Écrire un test de niveau 1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tests-niveau-2/" class="md-nav__link">
         
   
@@ -1860,6 +1881,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-bis-un-environnement-de-configuration-a-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 bis. Un environnement de configuration à part
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ter-le-realm-est-la-source-de-verite" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 ter. Le realm est la source de vérité
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#5-les-jetons-keycloaktokens" class="md-nav__link">
     <span class="md-ellipsis">
       5. Les jetons — KeycloakTokens
@@ -1887,9 +1926,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-les-ecarts-assumes-au-recensement" class="md-nav__link">
+  <a href="#7-les-ecarts-assumes" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Les écarts assumés au recensement
+      7. Les écarts assumés
     </span>
   </a>
   
@@ -1935,27 +1974,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../recensement-des-tests/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Recensement des tests
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -2162,6 +2180,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-bis-un-environnement-de-configuration-a-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 bis. Un environnement de configuration à part
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ter-le-realm-est-la-source-de-verite" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 ter. Le realm est la source de vérité
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#5-les-jetons-keycloaktokens" class="md-nav__link">
     <span class="md-ellipsis">
       5. Les jetons — KeycloakTokens
@@ -2189,9 +2225,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-les-ecarts-assumes-au-recensement" class="md-nav__link">
+  <a href="#7-les-ecarts-assumes" class="md-nav__link">
     <span class="md-ellipsis">
-      7. Les écarts assumés au recensement
+      7. Les écarts assumés
     </span>
   </a>
   
@@ -2286,7 +2322,7 @@ Dernière mise à jour : 2026-07-29</p>
 </tr>
 <tr>
 <td><strong>Cas</strong></td>
-<td>23 — IT-EXT-01 à 19 et IT-JOB-01 à 04</td>
+<td>23 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées</td>
 </tr>
 <tr>
 <td><strong>Durée</strong></td>
@@ -2342,18 +2378,19 @@ sortie — connexions coupées d'abord, PostgreSQL refusant de supprimer une bas
 <li>Deux exécutions simultanées ne se marchent pas dessus.</li>
 <li>Le contexte est construit <strong>comme en production</strong> : convention snake_case et
   <code>DatabaseExceptionInterceptor</code> compris. Un contexte de test qui omettrait l'intercepteur ne
-  prouverait rien de IT-EXT-13.</li>
+  prouverait rien du test de violation d unicité.</li>
 </ul>
 <p>Côté Redis, l'isolation passe par l'<strong>index de base</strong> (9 par défaut, le développement utilise 0) —
 <code>defaultDatabase</code> dans la chaîne de connexion. Pas de seconde instance à monter.</p>
-<p>Quatre variables d'environnement permettent de viser une autre infrastructure sans toucher au code :
+<p>Huit variables d'environnement permettent de viser une autre infrastructure sans toucher au code :
 <code>NUTRITION_TEST_POSTGRES</code>, <code>NUTRITION_TEST_REDIS</code>, <code>NUTRITION_TEST_REDIS_DB</code>,
-<code>NUTRITION_TEST_KEYCLOAK</code>.</p>
+<code>NUTRITION_TEST_KEYCLOAK</code>, <code>NUTRITION_TEST_KEYCLOAK_URL</code>, et les trois noms de conteneurs
+<code>NUTRITION_TEST_PG_CONTAINER</code>, <code>NUTRITION_TEST_REDIS_CONTAINER</code>, <code>NUTRITION_TEST_KC_CONTAINER</code>.</p>
 <hr />
 <h2 id="4-integrationfactory-lapplication-sans-doublure">4. <code>IntegrationFactory</code> — l'application sans doublure<a class="headerlink" href="#4-integrationfactory-lapplication-sans-doublure" title="Permanent link">&para;</a></h2>
 <p>Rien n'est remplacé aux frontières d'Application : ni repository, ni cache, ni service Keycloak. Les
 <code>IHostedService</code> sont <strong>conservés</strong> — le serveur Hangfire et l'enregistrement des jobs récurrents
-sont précisément ce que les cas IT-JOB-* éprouvent. C'est l'inverse exact du niveau 2, où
+sont précisément ce que les cas de supervision éprouvent. C'est l'inverse exact du niveau 2, où
 <code>RemoveAll&lt;IHostedService&gt;()</code> est indispensable.</p>
 <p><strong>Une seule exception</strong> — <code>IOffDumpReader</code>, qui télécharge le dump Open Food Facts. Ce n'est ni
 PostgreSQL, ni Redis, ni Keycloak : c'est un tiers de plusieurs gigaoctets. Il est remplacé par une
@@ -2362,6 +2399,79 @@ par lots et l'invalidation du cache.</p>
 <p>La base est créée dans le <strong>constructeur</strong>, pas dans <code>IAsyncLifetime</code> : <code>ConfigureWebHost</code> lit la
 chaîne de connexion au premier client créé, elle doit donc déjà exister. Et la méthode de libération
 de xUnit entre en conflit avec celle de <code>WebApplicationFactory</code>.</p>
+<hr />
+<h2 id="4-bis-un-environnement-de-configuration-a-part">4 bis. Un environnement de configuration à part<a class="headerlink" href="#4-bis-un-environnement-de-configuration-a-part" title="Permanent link">&para;</a></h2>
+<p>Le niveau 3 tourne sous l'environnement <strong><code>ExternalIntegration</code></strong>, avec son
+<code>appsettings.ExternalIntegration.json</code>.</p>
+<p><strong>Il ne peut pas réutiliser <code>Testing</code>.</strong> Le niveau 2 s'en sert déjà, et pointe volontairement vers une
+autorité factice injoignable. Un <code>appsettings.Testing.json</code> serait chargé par les deux — et
+<strong>gagnerait</strong> sur les <code>UseSetting</code> de la fabrique de niveau 2, la configuration applicative étant
+empilée après celle de l'hôte. Les tests de niveau 2 se mettraient à viser le vrai Keycloak.</p>
+<p>Le partage se fait donc par nature de valeur :</p>
+<table>
+<thead>
+<tr>
+<th>Où</th>
+<th>Quoi</th>
+<th>Pourquoi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appsettings.ExternalIntegration.json</code></td>
+<td>journalisation, <code>RequireHttpsMetadata</code>, délai de démarrage</td>
+<td>propre aux tests, statique</td>
+</tr>
+<tr>
+<td><code>UseSetting</code> depuis <code>RealmExport</code></td>
+<td>realm, secret du service account, autorité</td>
+<td>vient du realm, ne doit exister qu'à un seul endroit</td>
+</tr>
+<tr>
+<td><code>UseSetting</code> dynamique</td>
+<td>chaîne de connexion, index Redis</td>
+<td>change à chaque exécution</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-ter-le-realm-est-la-source-de-verite">4 ter. Le realm est la source de vérité<a class="headerlink" href="#4-ter-le-realm-est-la-source-de-verite" title="Permanent link">&para;</a></h2>
+<p><code>RealmExport</code> lit <code>keycloak/realm-export.json</code>, copié dans la sortie de compilation. <strong>Aucun compte,
+identifiant, mot de passe ou secret n'est ressaisi dans les fixtures.</strong></p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">SubjectOf</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">username</span><span class="p">);</span><span class="w">   </span><span class="c1">// le sub que porteront ses jetons</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">PasswordOf</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">username</span><span class="p">);</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">SecretOf</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">clientId</span><span class="p">);</span>
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">RequireClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">clientId</span><span class="p">);</span>
+</code></pre></div>
+<p>Avant, ces valeurs existaient à trois endroits : l'export du realm, les fixtures, et <code>seed-dev.sql</code>.
+Un renommage de compte laissait les tests interroger un identifiant obsolète, sans que rien ne le
+signale avant l'échec. Désormais l'erreur est explicite — « le compte <em>x</em> n'existe pas dans
+keycloak/realm-export.json ».</p>
+<p><strong>Trois clients de test</strong> y sont déclarés, en plus de <code>nutrition-api</code> et du service account :</p>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Particularité</th>
+<th>Ce qu'il permet d'éprouver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nutrition-api-tests-shortlived</code></td>
+<td><code>access.token.lifespan</code> à 1 seconde</td>
+<td>le rejet d'un jeton expiré, sans attendre les 1800 s du realm</td>
+</tr>
+<tr>
+<td><code>nutrition-api-tests-no-audience</code></td>
+<td>aucun mapper d'audience</td>
+<td>le rejet d'un jeton destiné à une autre API</td>
+</tr>
+</tbody>
+</table>
+<p>La tolérance d'horloge JWT — cinq minutes par défaut — est annulée dans la fabrique, <strong>et là
+seulement</strong>. Sans cela, un jeton expiré depuis une seconde resterait accepté. La production conserve
+le comportement par défaut.</p>
 <hr />
 <h2 id="5-les-jetons-keycloaktokens">5. Les jetons — <code>KeycloakTokens</code><a class="headerlink" href="#5-les-jetons-keycloaktokens" title="Permanent link">&para;</a></h2>
 <p>Le client <code>nutrition-api</code> du realm est public et autorise le <em>direct access grant</em> : un mot de passe
@@ -2404,13 +2514,13 @@ rien de ce qu'il vérifiait. Même piège qu'au niveau 2, cause différente : ic
 <p><strong>La collection partagée.</strong> <code>ICollectionFixture</code> : une base, un démarrage d'hôte pour toute la
 suite. Les classes s'exécutent séquentiellement et partagent l'état de la base. Chaque test sème ce
 dont il a besoin et n'attend rien de ce qu'un autre a laissé — d'où les identifiants uniques par
-test (<code>$"it-ext-01-{Guid.NewGuid()}"</code>).</p>
+test (<code>$"{prefixe}-{Guid.NewGuid()}"</code>).</p>
 <p><strong>La parallélisation est désactivée</strong> pour tout l'assembly, via
-<code>[assembly: CollectionBehavior(DisableTestParallelization = true)]</code>. IT-EXT-14 arrête le conteneur
+<code>[assembly: CollectionBehavior(DisableTestParallelization = true)]</code>. Un cas arrête le conteneur
 PostgreSQL : une autre collection tournant en parallèle se verrait couper la base sous les pieds.</p>
-<p><strong>Les tests qui touchent à l'infrastructure se remettent en état.</strong> IT-EXT-14, 15, 16 et 17 arrêtent
+<p><strong>Les tests qui touchent à l'infrastructure se remettent en état.</strong> Les quatre cas de coupure arrêtent
 un conteneur ; tous le redémarrent et attendent qu'il repasse <code>healthy</code> avant de rendre la main —
-<code>DatabaseExceptionTest</code> purge en plus les pools Npgsql. IT-JOB-01 supprime les définitions de jobs
+<code>DatabaseExceptionTest</code> purge en plus les pools Npgsql. Le cas de la liste vide supprime les définitions de jobs
 récurrents, puis les réinscrit. Sans ces remises en état, l'ordre d'exécution deviendrait
 significatif, ce que xUnit ne garantit pas.</p>
 <hr />
@@ -2429,6 +2539,17 @@ sont surchargeables par variable d'environnement — <code>NUTRITION_TEST_PG_CON
 <p>Ce helper appartient au <strong>projet de tests</strong>. Aucune ligne du code de production ne connaît Docker :
 l'application ne sait pas comment elle est déployée, et n'a pas à le savoir. En production, ce qui
 arrête et relance un conteneur est l'orchestrateur.</p>
+</blockquote>
+<p><strong>Un test échappe à la collection partagée.</strong> Celui qui vérifie le statut d'un job terminé démarre
+<strong>sa propre application</strong>, donc son propre serveur Hangfire et sa propre base.</p>
+<p>C'est le seul de la suite qui dépende d'un traitement de fond : il déclenche un job et attend qu'un
+serveur le prenne et le mène à son terme. Or après les coupures de conteneurs, le serveur Hangfire de
+l'application partagée ne reprend plus les jobs — l'attente expirait au bout de 60 secondes, alors
+que le test passait en 5 secondes lancé seul.</p>
+<blockquote>
+<p>La cause exacte de ce blocage n'est pas identifiée. L'isolation traite le symptôme. Si un serveur
+Hangfire ne se remet réellement pas d'une coupure de base, c'est un défaut du produit qui reste à
+instruire.</p>
 </blockquote>
 <p><strong>Le coût est réel.</strong> Un redémarrage de Keycloak prend une quarantaine de secondes — import du realm
 compris. C'est ce qui fait passer la suite de 20 secondes à 2 minutes. À peser avant d'ajouter un
@@ -2466,8 +2587,8 @@ cinquième cas de coupure.</p>
 </tbody>
 </table>
 <hr />
-<h2 id="7-les-ecarts-assumes-au-recensement">7. Les écarts assumés au recensement<a class="headerlink" href="#7-les-ecarts-assumes-au-recensement" title="Permanent link">&para;</a></h2>
-<p><strong>IT-EXT-13 ne porte pas sur <code>weight_entries</code>.</strong> Le recensement décrit deux <code>WeightEntry</code> à la même
+<h2 id="7-les-ecarts-assumes">7. Les écarts assumés<a class="headerlink" href="#7-les-ecarts-assumes" title="Permanent link">&para;</a></h2>
+<p><strong>Le test de violation d unicité ne porte pas sur <code>weight_entries</code>.</strong> Le cas visait deux <code>WeightEntry</code> à la même
 date. À l'écriture du test, <code>weight_entries</code> ne portait <strong>aucune contrainte d'unicité</strong> sur
 <code>(user_id, measured_at)</code> : le doublon aurait été accepté, aucun code <code>23505</code> levé, le test n'aurait
 rien prouvé. Il s'appuie donc sur <code>saved_food_items (user_id, food_item_id)</code>, qui exprime le même
@@ -2476,12 +2597,16 @@ invariant. L'assertion porte sur la <code>DbUpdateException</code> et son except
 la contrainte.</p>
 <blockquote>
 <p>La contrainte manquante a depuis été ajoutée — migration
-<code>20260730102708_UniqueWeightEntryPerUserAndDate</code>. Le cas d'origine du recensement est donc
-redevenu possible ; réaligner IT-EXT-13 sur <code>weight_entries</code> reste à faire.</p>
-<p>IT-EXT-08 était marqué <code>Skip</code> faute de service account dans le realm. Le client confidentiel
-<code>nutrition-api-service</code> a été ajouté le 2026-07-30 — voir le défaut correspondant en section 7 bis.
-Le test s'exécute désormais.</p>
+<code>20260730102708_UniqueWeightEntryPerUserAndDate</code>. Le cas d'origine est donc
+redevenu possible ; réaligner ce test sur <code>weight_entries</code> reste à faire.</p>
 </blockquote>
+<p><strong>Le test de purge crée un vrai compte Keycloak.</strong> Il a d'abord semé un identifiant inventé : l'appel
+de suppression répondait alors 404, que <code>KeycloakAdminService</code> traite comme « le compte n'existe
+plus » et ignore. Le test passait sans jamais éprouver la suppression, et construisait un état
+impossible en production — <code>keycloak_id</code> est par définition le <code>sub</code> d'un compte existant.</p>
+<p>Il crée désormais un compte jetable via l'API d'administration, vérifie qu'il existe, lance la purge,
+puis vérifie sa disparition <strong>de Keycloak et de la base</strong>. Un <code>finally</code> le supprime si le test échoue
+avant la purge.</p>
 <hr />
 <h2 id="7-bis-les-quatre-defauts-que-ce-niveau-a-trouves">7 bis. Les quatre défauts que ce niveau a trouvés<a class="headerlink" href="#7-bis-les-quatre-defauts-que-ce-niveau-a-trouves" title="Permanent link">&para;</a></h2>
 <p>Tous corrigés. Et c'est l'illustration de ce que ce niveau apporte : <code>AddInterceptors</code> est une
@@ -2513,7 +2638,7 @@ exécuté ». Or Hangfire ne l'écrit <strong>pas</strong> sur un déclenchement
 <code>LastJobState</code> quand la ligne a été purgée de l'historique.</p>
 <p>Défaut invisible en test unitaire : la requête est du SQL brut sur le schéma de Hangfire, une doublure
 n'aurait fait que rejouer l'hypothèse fausse.</p>
-<p><strong>La purge RGPD ne pouvait fonctionner nulle part.</strong> IT-EXT-08 a révélé que le flux
+<p><strong>La purge RGPD ne pouvait fonctionner nulle part.</strong> Le test de purge a révélé que le flux
 <code>client_credentials</code> de <code>KeycloakAdminService</code> n'avait aucun client à qui s'adresser : le realm ne
 déclarait que <code>nutrition-api</code>, <strong>public</strong> — donc sans secret, donc incapable de s'authentifier ainsi.
 Et <code>AdminBaseUrl</code>, <code>Realm</code> et <code>ServiceClientSecret</code> étaient vides dans les trois fichiers de
@@ -2593,11 +2718,7 @@ configuration absente. Aucun test unitaire ne l'aurait vu.</p>
 </tr>
 <tr>
 <td>Contrainte d'unicité sur <code>weight_entries</code></td>
-<td>Ajoutée le 2026-07-30 — IT-EXT-13 reste à réaligner</td>
-</tr>
-<tr>
-<td>Suppression d'un compte <strong>existant</strong> dans Keycloak</td>
-<td>IT-EXT-08 sème un identifiant absent du realm : l'appel répond 404, traité comme succès</td>
+<td>Ajoutée le 2026-07-30 — le test de violation reste à réaligner</td>
 </tr>
 <tr>
 <td>Coupure Redis pendant un import OFF</td>
