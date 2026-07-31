@@ -41,11 +41,12 @@ nutrition-api/
 ├── keycloak/
 │   └── realm-export.json         ← realm, client, rôles, comptes de test
 ├── scripts/
-│   ├── lib.sh                    ← fonctions partagées (attente healthcheck…)
+│   ├── lib.sh                    ← fonctions partagées, sourcé par les autres
 │   ├── dev-up.sh                 ← démarre les services, migre, seede
 │   ├── dev-down.sh               ← arrête (conserve les données)
 │   ├── dev-reset.sh              ← remet à zéro (supprime les volumes)
-│   └── docker-up.sh              ← stack complète, API conteneurisée
+│   ├── docker-up.sh              ← stack complète, API conteneurisée
+│   └── test-integration.sh       ← même pile + tests de niveau 3
 └── src/NutritionApi.Api/
     └── Dockerfile                ← image de l'API
 ```
@@ -53,6 +54,25 @@ nutrition-api/
 > Il n'y a **ni fichier `.env`, ni dossier `infra/`** : les valeurs de développement sont écrites
 > directement dans `docker-compose.yml` (elles ne sont pas des secrets) et la configuration de
 > l'API vit dans `appsettings.Development.json` / `appsettings.Docker.json`.
+
+#### `lib.sh` — ce que les scripts partagent
+
+`lib.sh` n'est jamais exécuté directement : les autres scripts le **sourcent** en première ligne.
+C'est ce qui explique qu'ils se ressemblent autant, et pourquoi ils échouent tous de la même façon.
+
+| Fonction | Rôle |
+|---|---|
+| `require_docker` | vérifie que le démon répond, avec un message explicite plutôt qu'une erreur brute |
+| `require_dotnet_ef` | vérifie la présence de l'outil EF Core, et rappelle la commande d'installation |
+| `wait_healthy <conteneur> <timeout>` | attend le passage à `healthy`, échoue en nommant la commande de diagnostic |
+| `info` `success` `warn` `fail` | sortie uniforme, **couleurs désactivées** quand la sortie n'est pas un terminal — les journaux CI restent lisibles |
+
+Il pose aussi `set -euo pipefail` et calcule `REPO_ROOT`, ce qui rend les scripts appelables depuis
+n'importe quel répertoire.
+
+`wait_healthy` mérite l'attention : c'est elle qui rend les scripts fiables. Sans elle, `dev-up.sh`
+appliquerait les migrations avant que PostgreSQL n'accepte les connexions. Les tests de niveau 3
+reprennent la même logique côté C#, dans `DockerContainer.WaitHealthyAsync`.
 
 ### Démarrage — la voie normale
 
