@@ -14,7 +14,7 @@
 | **Outils** | xUnit + Moq |
 | **Marqueur** | `[Trait("Level", "1")]` |
 | **Lancement** | `dotnet test --filter "Level=1"` |
-| **Volume** | environ 590 tests |
+| **Volume** | environ 600 tests |
 | **Durée** | moins d'une seconde par projet |
 
 Aucun conteneur, aucune base, aucun réseau. C'est ce qui permet de les lancer à chaque sauvegarde.
@@ -31,7 +31,7 @@ trajet d'une requête HTTP à travers l'application.
 | Entité, value object, invariant métier | `NutritionApi.Domain.Tests` |
 | Service applicatif, stratégie de calcul, garde d'abonnement | `NutritionApi.Application.Tests` |
 | Code **pur** d'Infrastructure — traduction de données, mapping | `NutritionApi.Infrastructure.Tests` |
-| Controller isolé, middleware isolé | `NutritionApi.Api.Tests/Level1/` |
+| Controller isolé, middleware isolé, service de démarrage (`IHostedService`) | `NutritionApi.Api.Tests/Level1/` |
 
 **Le piège d'`Infrastructure.Tests`** — ce projet ne contient que du code qui ne parle **ni à une
 base, ni au réseau**. Le mapping Open Food Facts y a sa place ; un repository, non. Repositories,
@@ -101,6 +101,13 @@ Keycloak, JWT réel, PostgreSQL, Redis, Docker, Kubernetes, réseau, configurati
 
 **La règle de tri** : si le test échoue, qu'est-ce que ça t'apprend ? Si la réponse est « une
 dépendance externe ne répond pas comme prévu », le test n'est pas au bon niveau.
+
+**Le cas limite : valider une configuration.** `KeycloakAdminConfigurationValidator` interrompt le
+démarrage quand un paramètre Keycloak est vide, et ses tests sont bien de niveau 1 — la classe reçoit
+un `KeycloakAdminOptions` construit à la main, ne lit aucun fichier et ne joint personne. La règle de
+tri tranche : son échec apprend « le contrôle laisse passer une clé vide », pas « Keycloak est
+tombé ». Ce qui relèverait d'un autre niveau, c'est de vérifier qu'un environnement donné fournit
+réellement ces valeurs.
 
 ---
 

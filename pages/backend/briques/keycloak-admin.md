@@ -12,6 +12,7 @@
 > | 🔲 | `RgpdService` n'appelle pas encore `DisableUserAsync` / `EnableUserAsync` — la désactivation au moment de la demande de suppression n'est donc pas effective |
 > | ✅ | Le client de service `nutrition-api-service` est déclaré dans `keycloak/realm-export.json` — créé automatiquement à l'import du realm (2026-07-30) |
 > | ✅ | Le flux complet est éprouvé au niveau 3 : le test crée un compte jetable, lance la purge, et vérifie sa disparition de Keycloak **et** de la base |
+> | ✅ | L'application refuse de démarrer si l'un des quatre paramètres d'administration est vide — `KeycloakAdminConfigurationValidator` (NTR-149, 2026-07-31) |
 
 ### Les trois autres clients du realm
 
@@ -129,6 +130,71 @@ qui porte sa valeur par défaut `nutrition-api-service`.
 > La section `Keycloak` est **partagée** avec la validation des jetons entrants (`Authority`,
 > `Audience`, `RequireHttpsMetadata`, lues dans `Program.cs`). `KeycloakAdminOptions` ne lie que les
 > quatre clés d'administration ; les deux usages cohabitent sans se gêner.
+
+### Le garde-fou au démarrage — `KeycloakAdminConfigurationValidator` (NTR-149)
+
+Ces quatre clés étant vides dans `appsettings.json` par conception, rien ne garantissait qu'un
+environnement les fournisse réellement. **L'omission ne se voyait pas au démarrage : elle se payait à
+la purge de la nuit suivante**, et en silence — `RgpdPurgeJob` intercepte toute exception, la
+journalise et poursuit. Une production déployée sans secret aurait produit une purge qui échoue
+chaque nuit, sans autre trace que les journaux, pendant que des comptes dont le délai de grâce est
+expiré restaient dans le realm.
+
+`NutritionApi.Api/Startup/KeycloakAdminConfigurationValidator.cs` refuse le démarrage si l'une des
+quatre est absente ou vide, et **nomme toutes les manquantes d'un coup** :
+
+```
+Configuration Keycloak Admin incomplète — clés absentes ou vides : Keycloak:Realm,
+Keycloak:ServiceClientSecret. La purge RGPD ne pourrait pas supprimer les comptes du realm,
+et son échec serait silencieux : démarrage interrompu.
+```
+
+Les nommer toutes évite de corriger un déploiement par redémarrages successifs, une clé à la fois.
+Une variable d'environnement définie mais vide arrive comme une suite d'espaces : le contrôle utilise
+`IsNullOrWhiteSpace`, pas `IsNullOrEmpty`.
+
+#### Pourquoi un `IHostedService` et non `ValidateOnStart()`
+
+Le mécanisme natif des options aurait fait le même travail, mais il s'exécute **toujours** : depuis
+.NET 8 la validation est déclenchée par `Host.StartAsync` via `IStartupValidator`, hors de la liste
+des services hébergés. Or les tests de niveau 2 substituent `IKeycloakAdminService` et ne renseignent
+aucune de ces clés — ils n'en ont pas besoin. Ils ne s'en sortent que parce que `ApiFactory` fait
+`services.RemoveAll<IHostedService>()`, ce qui n'atteint pas un validateur d'options.
+
+En `IHostedService`, le contrôle disparaît avec cette ligne, exactement comme
+`KeycloakAvailabilityService`. Aucune fixture à modifier.
+
+#### Les deux vérifications Keycloak au démarrage
+
+| Service | Ce qu'il vérifie | Réseau |
+|---|---|---|
+| `KeycloakAdminConfigurationValidator` | les quatre paramètres d'administration sont renseignés | non — quatre chaînes en mémoire |
+| `KeycloakAvailabilityService` (NTR-147) | le realm répond et publie ses clés de signature | oui — attente bornée à 60 s |
+
+Le premier détecte un **oubli de déploiement**, le second une **panne**. Le validateur est enregistré
+en premier dans `Program.cs` : si les deux doivent échouer, autant échouer sur celui qui répond
+immédiatement plutôt qu'après l'attente réseau.
+
+#### Ce que chaque niveau de test établit
+
+Les deux niveaux sont nécessaires, et aucun ne remplace l'autre.
+
+| Niveau | Fichier | Ce qu'il prouve |
+|---|---|---|
+| 1 | `Api.Tests/Level1/KeycloakAdminConfigurationValidatorTest.cs` | la classe lève quand une clé est vide — les quatre clés, l'espace assimilé au vide, le message qui les nomme toutes |
+| 3 | `ExternalIntegration.Tests/Startup/KeycloakAdminConfigurationTest.cs` | **l'application** refuse de démarrer — donc que la classe est bien enregistrée dans `Program.cs` et que son exception remonte jusqu'à l'hôte |
+
+Le niveau 1 ne dit rien du branchement : la classe pourrait n'être appelée nulle part et ses sept
+tests resteraient verts. Vérification faite en débranchant la ligne de `Program.cs` — le cas de
+niveau 3 échoue alors sur `No exception was thrown`, l'API démarrant avec un secret vide.
+
+Le cas de niveau 3 ne coupe aucun conteneur : il vide une clé par `WithWebHostBuilder`, dont le
+délégué s'applique après le `ConfigureWebHost` de la fabrique. `CreateClient()` déclenche le
+démarrage de l'hôte, et c'est là que l'échec se produit.
+
+> La fabrique de niveau 3 injecte par ailleurs `AdminBaseUrl`, `Realm` et `ServiceClientSecret`
+> depuis `keycloak/realm-export.json`, et `ServiceClientId` porte sa valeur par défaut
+> d'`appsettings.json` : les 23 autres cas du niveau démarrent donc normalement.
 
 ### Le contrat — `IKeycloakAdminService`
 

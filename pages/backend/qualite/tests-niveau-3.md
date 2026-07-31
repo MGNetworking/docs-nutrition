@@ -2,7 +2,7 @@
 
 > Tests d'intégration externe — PostgreSQL, Redis et Keycloak réels.
 > Jira : NTR-28 · Sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-> Dernière mise à jour : 2026-07-29
+> Dernière mise à jour : 2026-07-31
 
 ---
 
@@ -15,7 +15,7 @@
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
-| **Cas** | 23 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées |
+| **Cas** | 25 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage |
 | **Durée** | environ 2 minutes — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
@@ -229,6 +229,42 @@ cinquième cas de coupure.
 | Keycloak, clés en cache | **200** | la validation est locale, aucun appel n'est nécessaire |
 | Keycloak, au démarrage | **l'hôte ne démarre pas** | sans clés, l'instance rejetterait tous les jetons |
 
+Un cinquième cas relève du même refus de démarrer sans être une coupure : un paramètre
+d'administration Keycloak vide — voir la section 6 ter.
+
+---
+
+## 6 ter. Éprouver un garde-fou de démarrage
+
+Deux cas vérifient que l'application **refuse de démarrer** — l'un quand le serveur d'identité est
+injoignable (`KeycloakOutageTest`), l'autre quand un paramètre d'administration Keycloak est vide
+(`KeycloakAdminConfigurationTest`, NTR-149). Le motif est le même :
+
+```csharp
+using var sansSecret = factory.WithWebHostBuilder(
+    builder => builder.UseSetting("Keycloak:ServiceClientSecret", string.Empty));
+
+var echec = Assert.ThrowsAny<Exception>(() => sansSecret.CreateClient());
+
+Assert.Contains("Keycloak:ServiceClientSecret", ExceptionChain.DeroulerLesCauses(echec), StringComparison.Ordinal);
+```
+
+Trois points qui ne vont pas de soi :
+
+- **`CreateClient()` est le déclencheur**, pas le constructeur de la fabrique. C'est lui qui construit
+  l'hôte et exécute les services hébergés.
+- **Le délégué de `WithWebHostBuilder` s'applique après `ConfigureWebHost`**, ce qui permet d'écraser
+  une valeur que la fabrique a déjà posée. Un cas de garde-fou n'a donc pas toujours besoin d'arrêter
+  un conteneur : vider une clé suffit quand c'est la configuration qu'on éprouve.
+- **L'hôte enveloppe l'exception du service qui a levé.** Le message d'origine n'est pas celui de
+  l'exception de premier niveau, d'où `Fixtures/ExceptionChain.DeroulerLesCauses`, qui concatène la
+  chaîne des causes avant d'y chercher le texte attendu.
+
+**Ces cas doivent être vérifiés à l'envers.** Un test de garde-fou reste vert si le garde-fou n'est
+branché nulle part — c'est même précisément ce qu'il est censé détecter. La vérification consiste à
+retirer l'enregistrement de `Program.cs` et à constater le rouge : pour NTR-149,
+`Assert.ThrowsAny() Failure: No exception was thrown`, l'API démarrant alors avec un secret vide.
+
 ---
 
 ## 7. Les écarts assumés
@@ -342,5 +378,5 @@ configuration absente. Aucun test unitaire ne l'aurait vu.
 
 ## 10. État
 
-**23 tests, tous verts, aucun ignoré.** Vérifié le 2026-07-30 : `Réussi! - échec : 0, réussite : 23,
-ignorée(s) : 0, total : 23` en 1 min 34. Les niveaux 1 et 2 restent verts — 700 tests.
+**25 tests, tous verts, aucun ignoré.** Vérifié le 2026-07-31 : `Réussi! - échec : 0, réussite : 25,
+ignorée(s) : 0, total : 25` en 1 min 54. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
