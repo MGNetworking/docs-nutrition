@@ -40,30 +40,44 @@ faudrait en revanche en écrire un.
 
 ## Validation du contrat
 
-Le contrat est verrouillé à deux niveaux, et un seul est automatisé.
+Le contrat est verrouillé à deux niveaux, tous deux automatisés.
 
-| Vérification | Comment | Statut |
+| Vérification | Comment | Niveau |
 |---|---|---|
-| Chaque action déclare Summary et Description | `OpenApiContractTest` — réflexion sur `[SwaggerOperation]` | ✅ automatisé |
-| Chaque action déclare un code de succès | `OpenApiContractTest` — `[ProducesResponseType]` 2xx | ✅ automatisé |
-| Chaque action protégée déclare son 401 | `OpenApiContractTest` — croise `[Authorize]` et `[ProducesResponseType]` | ✅ automatisé |
-| `swagger.json` généré valide et importable (Postman, NSwag/Kiota) | Lancement réel de l'API | ⚠️ manuel |
+| Chaque action déclare Summary et Description | `OpenApiContractTest` — réflexion sur `[SwaggerOperation]` | 1 |
+| Chaque action déclare un code de succès | `OpenApiContractTest` — `[ProducesResponseType]` 2xx | 1 |
+| Chaque action protégée déclare son 401 | `OpenApiContractTest` — croise `[Authorize]` et `[ProducesResponseType]` | 1 |
+| Le document est servi, en `application/json` | `OpenApiDocumentTest` — appel réel à `/swagger/v1/swagger.json` | 3 |
+| Le document est lu sans erreur par un parseur OpenAPI | `OpenApiDocumentTest` — `OpenApiStringReader`, diagnostic vide | 3 |
+| Chaque action exposée figure dans le document | `OpenApiDocumentTest` — croise les `ApiDescription` réelles avec les chemins du document | 3 |
+| Le schéma de sécurité Bearer est déclaré | `OpenApiDocumentTest` — `Components.SecuritySchemes` | 3 |
+| `/hangfire` est absent du document | `OpenApiDocumentTest` | 3 |
 
-`OpenApiContractTest` tourne **sans démarrer l'API** : il parcourt les types de l'assembly par
-réflexion. La contrepartie est qu'il valide les **attributs**, pas le JSON produit : un défaut de
-sérialisation Swashbuckle lui échapperait.
+**Les deux niveaux ne prouvent pas la même chose.** `OpenApiContractTest` tourne sans démarrer l'API :
+il parcourt les types de l'assembly par réflexion, et valide donc les **attributs**, pas le JSON
+produit — un défaut de sérialisation Swashbuckle lui échapperait. `OpenApiDocumentTest` démarre
+l'application réelle et lit le document tel qu'il sort.
 
-> **Trou de couverture, sans ticket porteur.** La validation du `swagger.json` réellement généré
-> était attendue du niveau 3. NTR-28 est livré et fermé sans l'avoir couverte : aucun test ne démarre
-> l'API pour lire le document produit. À recenser si le sujet doit avancer.
+**Sur « importable ».** Un test ne peut pas lancer Postman ni Kiota. Ce qu'il fait à la place : faire
+lire le document par `OpenApiStringReader`, le parseur de `Microsoft.OpenApi`, et exiger un
+diagnostic sans erreur. Un document que ce parseur accepte est celui que les générateurs de clients
+savent consommer. C'est la garantie la plus proche qu'un test automatisé puisse offrir.
+
+**La liste des endpoints attendus n'est écrite nulle part.** Le test croise les chemins du document
+avec les `ApiDescription` que le routage MVC produit réellement, résolues depuis le conteneur. Une
+action ajoutée est donc attendue dans le document dès le run suivant, sans qu'aucune liste ne soit à
+tenir à jour.
+
+Couvert par NTR-155.
 
 ## État de confiance
 
 | Marque | Élément |
 |---|---|
 | ✅ | Summary, Description, codes de réponse et 401 sur toutes les actions — vérifié par test |
-| ⚠️ | Absence de `/hangfire` dans la spec — établi par le fonctionnement de Swashbuckle, non constaté sur un `swagger.json` réel |
-| ❌ | Validité et exploitabilité du `swagger.json` généré (import Postman, génération de client) |
+| ✅ | Absence de `/hangfire` dans la spec — désormais constatée sur le `swagger.json` réel, et non plus seulement déduite du fonctionnement de Swashbuckle |
+| ✅ | Validité du `swagger.json` généré — lu sans erreur par un parseur OpenAPI, endpoints et schéma de sécurité vérifiés |
+| ⚠️ | Génération effective d'un client (NSwag, Kiota) et import Postman — non exécutés par un test, aucun outil externe n'est lancé |
 
 ## Ce qu'elle ne fait pas
 

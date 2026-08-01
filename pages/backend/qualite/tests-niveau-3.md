@@ -3,6 +3,7 @@
 > Tests d'intégration externe — PostgreSQL, Redis et Keycloak réels.
 > Jira : NTR-28 · Sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
 > NTR-156 — cause du blocage du serveur Hangfire en cours de suite.
+> NTR-155 — validation du document OpenAPI réellement généré.
 > Dernière mise à jour : 2026-08-01
 
 ---
@@ -16,7 +17,7 @@
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
-| **Cas** | 27 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard |
+| **Cas** | 32 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard, contrat OpenAPI |
 | **Durée** | environ 1 min 40 s — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
@@ -315,6 +316,18 @@ Il crée désormais un compte jetable via l'API d'administration, vérifie qu'il
 puis vérifie sa disparition **de Keycloak et de la base**. Un `finally` le supprime si le test échoue
 avant la purge.
 
+**Le contrat OpenAPI est vérifié sans lancer d'outil externe.** `OpenApiDocumentTest`, dans
+`Contract/`, demande `/swagger/v1/swagger.json` à l'API démarrée et fait lire le document par
+`OpenApiStringReader`. Un test ne peut pas lancer Postman ni Kiota : ce qu'il exige à la place est un
+diagnostic de lecture sans erreur, ce qu'un générateur de client demande lui aussi avant de produire
+quoi que ce soit.
+
+La liste des endpoints attendus n'est écrite nulle part. Le test croise les chemins du document avec
+les `ApiDescription` que produit réellement le routage MVC, résolues depuis le conteneur — une action
+ajoutée est donc attendue dès le run suivant. Seule concession, les contraintes de route sont
+retirées des deux côtés avant comparaison : `{id:guid}` d'un côté, `{id}` de l'autre, une différence
+de notation sans rapport avec ce que le test vérifie.
+
 ---
 
 ## 7 bis. Les cinq défauts que ce niveau a trouvés
@@ -421,5 +434,5 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 
 ## 10. État
 
-**27 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 27,
-ignorée(s) : 0, total : 27` en 1 min 36. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
+**32 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 32,
+ignorée(s) : 0, total : 32` en 1 min 38. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
