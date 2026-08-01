@@ -2428,6 +2428,8 @@ dossier par job. La purge RGPD (NTR-56) aura donc son propre <code>Jobs/RgpdPurg
 <li><strong>Bilan</strong> — en fin de parcours, journalisation : <em>« X produits importés, Y ignorés »</em>.</li>
 <li><strong>Invalidation du cache</strong> — si au moins un produit a été importé, toutes les recherches en
    cache sont supprimées (<code>InvalidateAllSearchesAsync</code>) : elles portaient sur l'ancien catalogue.
+   Si Redis est injoignable à cet instant, l'échec est journalisé en avertissement et <strong>l'import se
+   déclare réussi</strong> : les aliments sont en base, seul le nettoyage manque.
    Voir <a href="../workflow-cache-recherche/">Workflow — Cache des recherches d'aliments</a>.</li>
 </ol>
 <h3 id="ce-qui-fait-rejeter-un-produit">Ce qui fait rejeter un produit<a class="headerlink" href="#ce-qui-fait-rejeter-un-produit" title="Permanent link">&para;</a></h3>
@@ -2463,7 +2465,9 @@ dossier par job. La purge RGPD (NTR-56) aura donc son propre <code>Jobs/RgpdPurg
 </table>
 <blockquote>
 <p>Principe directeur : <strong>une ligne défectueuse ne doit jamais interrompre un import de 3 millions
-de produits.</strong> Seule une panne réseau propage une exception — et déclenche alors le retry Hangfire.</p>
+de produits.</strong> Ce qui fait échouer l'import, et déclenche alors la relance Hangfire, est une panne
+pendant le téléchargement ou l'écriture en base — pas une panne du cache en fin de parcours, qui
+est journalisée sans faire échouer quoi que ce soit.</p>
 </blockquote>
 <hr />
 <h2 id="4-le-parcours-de-la-supervision-de-lexecution-a-lapi">4. Le parcours de la supervision — de l'exécution à l'API<a class="headerlink" href="#4-le-parcours-de-la-supervision-de-lexecution-a-lapi" title="Permanent link">&para;</a></h2>

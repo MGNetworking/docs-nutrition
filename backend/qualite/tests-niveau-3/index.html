@@ -1959,9 +1959,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
+  <a href="#7-bis-les-six-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
     <span class="md-ellipsis">
-      7 bis. Les cinq défauts que ce niveau a trouvés
+      7 bis. Les six défauts que ce niveau a trouvés
     </span>
   </a>
   
@@ -2282,9 +2282,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
+  <a href="#7-bis-les-six-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
     <span class="md-ellipsis">
-      7 bis. Les cinq défauts que ce niveau a trouvés
+      7 bis. Les six défauts que ce niveau a trouvés
     </span>
   </a>
   
@@ -2372,7 +2372,7 @@ Dernière mise à jour : 2026-08-01</p>
 </tr>
 <tr>
 <td><strong>Cas</strong></td>
-<td>32 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard, contrat OpenAPI</td>
+<td>33 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard, contrat OpenAPI</td>
 </tr>
 <tr>
 <td><strong>Durée</strong></td>
@@ -2717,11 +2717,19 @@ ajoutée est donc attendue dès le run suivant. Seule concession, les contrainte
 retirées des deux côtés avant comparaison : <code>{id:guid}</code> d'un côté, <code>{id}</code> de l'autre, une différence
 de notation sans rapport avec ce que le test vérifie.</p>
 <hr />
-<h2 id="7-bis-les-cinq-defauts-que-ce-niveau-a-trouves">7 bis. Les cinq défauts que ce niveau a trouvés<a class="headerlink" href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" title="Permanent link">&para;</a></h2>
+<h2 id="7-bis-les-six-defauts-que-ce-niveau-a-trouves">7 bis. Les six défauts que ce niveau a trouvés<a class="headerlink" href="#7-bis-les-six-defauts-que-ce-niveau-a-trouves" title="Permanent link">&para;</a></h2>
 <p>Tous corrigés. Et c'est l'illustration de ce que ce niveau apporte : <code>AddInterceptors</code> est une
 configuration, une requête SQL brute est un contrat avec un schéma externe, un flux
 <code>client_credentials</code> suppose un client qui existe — rien de tout cela ne se vérifie sans les vrais
 composants.</p>
+<p><strong>Le filet posé sur le nettoyage du cache ne rattrapait pas la bonne erreur.</strong> NTR-150 demandait
+qu'une panne de Redis en fin d'import cesse de faire échouer l'import. Le correctif interceptait les
+exceptions Redis — et le test de niveau 3 a échoué quand même : un Redis réellement arrêté ne fait
+pas échouer le parcours des clés sur une erreur Redis, il le fait <strong>expirer</strong>, et le dépassement de
+délai appartient à une autre famille d'exceptions. Le filet passait à côté du seul cas qu'il devait
+attraper.</p>
+<p>Le test unitaire qui accompagnait le correctif, lui, passait — il levait l'exception qu'il avait
+lui-même fabriquée. C'est exactement la limite annoncée par ce niveau, prise en flagrant délit.</p>
 <p><strong>L'exception traduite n'atteignait jamais le middleware.</strong> L'intercepteur était bien invoqué par EF
 Core — le branchement fonctionnait. Mais EF Core <strong>encapsule</strong> les échecs de commande : l'exception
 traduite remontait dans l'<code>InnerException</code> d'une <code>DbUpdateException</code>, jamais nue. Or
@@ -2845,7 +2853,7 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 </tr>
 <tr>
 <td>Coupure Redis pendant un import OFF</td>
-<td>Non couvert — <code>InvalidateAllSearchesAsync</code> n'intercepte pas, l'import doit échouer visiblement</td>
+<td>Couvert — Redis arrêté au nettoyage, l'import se termine quand même (NTR-150)</td>
 </tr>
 <tr>
 <td>Rafraîchissement des clés du realm pendant une coupure Keycloak</td>
@@ -2859,8 +2867,8 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 </table>
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
-<p><strong>32 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-01 : <code>Réussi! - échec : 0, réussite : 32,
-ignorée(s) : 0, total : 32</code> en 1 min 38. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).</p>
+<p><strong>33 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-01 : <code>Réussi! - échec : 0, réussite : 33,
+ignorée(s) : 0, total : 33</code> en 1 min 51. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).</p>
 
 
 

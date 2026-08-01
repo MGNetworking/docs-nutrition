@@ -2589,8 +2589,12 @@ sa disparition doit coûter de la performance, pas de la disponibilité.</p>
 <td>Ignore l'échec : le résultat a déjà été retourné à l'utilisateur</td>
 </tr>
 <tr>
-<td><code>InvalidateAsync</code> / <code>InvalidateAllSearchesAsync</code></td>
-<td><strong>Non protégées</strong> — voir ci-dessous</td>
+<td><code>InvalidateAllSearchesAsync</code></td>
+<td>Ignore l'échec : l'import qui vient de l'appeler ne doit pas échouer pour autant — voir ci-dessous</td>
+</tr>
+<tr>
+<td><code>InvalidateAsync</code></td>
+<td><strong>Non protégée</strong> — invalidation d'un seul mot-clé, sans appelant aujourd'hui</td>
 </tr>
 </tbody>
 </table>
@@ -2601,9 +2605,21 @@ sa disparition doit coûter de la performance, pas de la disponibilité.</p>
 <li><strong>Journalisation en avertissement.</strong> Une dégradation silencieuse ne se manifesterait que par une
   lenteur inexpliquée.</li>
 </ul>
-<p><strong>L'invalidation reste bloquante, elle.</strong> Si <code>InvalidateAllSearchesAsync</code> échouait en silence, un
-import réussi laisserait servir un catalogue périmé jusqu'à 24 h. L'exception remonte donc à
-Hangfire, qui marque le job en échec — visible et retentable.</p>
+<p><strong>L'invalidation a longtemps été bloquante — elle ne l'est plus.</strong> L'exception remontait à Hangfire,
+qui marquait le job en échec et le relançait. Chaque relance <strong>retéléchargeait le dump et retraitait
+plusieurs millions de lignes</strong>, alors que les aliments étaient déjà en base et que seul le nettoyage
+du cache manquait. Disproportionné par rapport au geste qui avait échoué.</p>
+<p>L'échec est donc désormais journalisé en avertissement, et l'import se déclare réussi.</p>
+<p><strong>Ce que ça coûte, assumé.</strong> Les recherches mémorisées portent sur l'ancien catalogue jusqu'à
+l'expiration de leurs entrées — 24 h par défaut — ou jusqu'au prochain import qui réussira son
+nettoyage. Une panne de Redis relève de l'exploitation du système, pas de l'import : l'application
+la traverse déjà sans dégrader le service, et le client Redis se reconnecte seul dès que l'instance
+revient.</p>
+<blockquote>
+<p><strong>Ce qui manque encore.</strong> Rien ne signale qu'une panne de cache a eu lieu, sinon un avertissement
+dans les journaux. La route de santé de l'administration n'expose l'état ni de Redis, ni de
+PostgreSQL, ni du serveur d'identité. Sujet à instruire du côté de l'observabilité.</p>
+</blockquote>
 <p><strong>Ce qui n'a pas été retenu</strong> : un disjoncteur (<em>circuit breaker</em>, type Polly). Sans lui, chaque
 requête attend l'expiration du délai Redis avant de basculer sur la base. Cela ne vaut le coût
 d'une dépendance supplémentaire que si des pannes durables se manifestent.</p>
@@ -2664,8 +2680,8 @@ première recherche suivante, sur des données à jour.</p>
 <td>✅ testée unitairement (motif toutes versions, suppression de chaque clé)</td>
 </tr>
 <tr>
-<td>Échec de l'invalidation qui doit rester bloquant</td>
-<td>✅ test unitaire — l'exception remonte bien</td>
+<td>Échec de l'invalidation qui ne doit pas faire échouer l'import</td>
+<td>✅ test unitaire — avertissement journalisé, aucune exception ; et cas de niveau 3 avec Redis réellement arrêté</td>
 </tr>
 <tr>
 <td>Comportement contre un <strong>Redis réel</strong> (<code>SCAN</code>, sérialisation de bout en bout)</td>

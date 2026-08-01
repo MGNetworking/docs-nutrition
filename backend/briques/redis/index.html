@@ -2640,9 +2640,12 @@ attend l'expiration du délai avant de basculer.</p>
 <p>Aucun disjoncteur n'est en place : c'est un choix, réversible si des pannes durables se
 manifestent. Les délais se règlent dans la chaîne de connexion
 (<code>connectTimeout</code>, <code>syncTimeout</code>) sans toucher au code.</p>
-<p><strong>L'invalidation, elle, n'est pas protégée</strong> — un échec de <code>InvalidateAllSearchesAsync</code> fait
-échouer le job d'import, volontairement : mieux vaut un job en erreur qu'un catalogue périmé servi
-en silence pendant 24 h.</p>
+<p><strong>L'invalidation globale est protégée elle aussi.</strong> Un échec de <code>InvalidateAllSearchesAsync</code> est
+journalisé en avertissement et l'import se déclare réussi. Il faisait auparavant échouer le job, ce
+qui déclenchait une relance complète — retéléchargement du dump et retraitement de plusieurs
+millions de lignes — pour un nettoyage de cache raté, alors que les aliments étaient déjà en base.</p>
+<p>Le prix assumé : les recherches mémorisées restent sur l'ancien catalogue jusqu'à l'expiration de
+leurs entrées, ou jusqu'au prochain import qui réussira son nettoyage.</p>
 <h3 id="la-version-de-schema-doit-etre-incrementee-a-la-main">⚠️ La version de schéma doit être incrémentée à la main<a class="headerlink" href="#la-version-de-schema-doit-etre-incrementee-a-la-main" title="Permanent link">&para;</a></h3>
 <p>Les entrées stockent du JSON de <code>FoodItemSearchResponse</code> et la clé porte une version (<code>v1</code>).
 <strong>Tout changement de forme du DTO impose de passer <code>SchemaVersion</code> à <code>v2</code></strong> — sans quoi les
