@@ -236,9 +236,13 @@ Aucun disjoncteur n'est en place : c'est un choix, réversible si des pannes dur
 manifestent. Les délais se règlent dans la chaîne de connexion
 (`connectTimeout`, `syncTimeout`) sans toucher au code.
 
-**L'invalidation, elle, n'est pas protégée** — un échec de `InvalidateAllSearchesAsync` fait
-échouer le job d'import, volontairement : mieux vaut un job en erreur qu'un catalogue périmé servi
-en silence pendant 24 h.
+**L'invalidation globale est protégée elle aussi.** Un échec de `InvalidateAllSearchesAsync` est
+journalisé en avertissement et l'import se déclare réussi. Il faisait auparavant échouer le job, ce
+qui déclenchait une relance complète — retéléchargement du dump et retraitement de plusieurs
+millions de lignes — pour un nettoyage de cache raté, alors que les aliments étaient déjà en base.
+
+Le prix assumé : les recherches mémorisées restent sur l'ancien catalogue jusqu'à l'expiration de
+leurs entrées, ou jusqu'au prochain import qui réussira son nettoyage.
 
 ### ⚠️ La version de schéma doit être incrémentée à la main
 

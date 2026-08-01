@@ -17,7 +17,7 @@
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
-| **Cas** | 32 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard, contrat OpenAPI |
+| **Cas** | 33 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard, contrat OpenAPI |
 | **Durée** | environ 1 min 40 s — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
@@ -330,12 +330,22 @@ de notation sans rapport avec ce que le test vérifie.
 
 ---
 
-## 7 bis. Les cinq défauts que ce niveau a trouvés
+## 7 bis. Les six défauts que ce niveau a trouvés
 
 Tous corrigés. Et c'est l'illustration de ce que ce niveau apporte : `AddInterceptors` est une
 configuration, une requête SQL brute est un contrat avec un schéma externe, un flux
 `client_credentials` suppose un client qui existe — rien de tout cela ne se vérifie sans les vrais
 composants.
+
+**Le filet posé sur le nettoyage du cache ne rattrapait pas la bonne erreur.** NTR-150 demandait
+qu'une panne de Redis en fin d'import cesse de faire échouer l'import. Le correctif interceptait les
+exceptions Redis — et le test de niveau 3 a échoué quand même : un Redis réellement arrêté ne fait
+pas échouer le parcours des clés sur une erreur Redis, il le fait **expirer**, et le dépassement de
+délai appartient à une autre famille d'exceptions. Le filet passait à côté du seul cas qu'il devait
+attraper.
+
+Le test unitaire qui accompagnait le correctif, lui, passait — il levait l'exception qu'il avait
+lui-même fabriquée. C'est exactement la limite annoncée par ce niveau, prise en flagrant délit.
 
 **L'exception traduite n'atteignait jamais le middleware.** L'intercepteur était bien invoqué par EF
 Core — le branchement fonctionnait. Mais EF Core **encapsule** les échecs de commande : l'exception
@@ -426,7 +436,7 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 | Déploiement, ingress, secrets, réseau du cluster | Niveau 4 — NTR-112 |
 | Rejet d'un jeton de **mauvais issuer** | Exigerait un second realm dans l'export, pour un chemin de validation identique à celui de l'audience — écarté (NTR-148) |
 | Contrainte d'unicité sur `weight_entries` | Ajoutée le 2026-07-30 — le test de violation reste à réaligner |
-| Coupure Redis pendant un import OFF | Non couvert — `InvalidateAllSearchesAsync` n'intercepte pas, l'import doit échouer visiblement |
+| Coupure Redis pendant un import OFF | Couvert — Redis arrêté au nettoyage, l'import se termine quand même (NTR-150) |
 | Rafraîchissement des clés du realm pendant une coupure Keycloak | Non couvert — fenêtre étroite, le démarrage bloquant traite le cas principal |
 | Job enterré par une exception entre le dépilage et sa reprise | Non couvert — propriété de `Hangfire.PostgreSql`, pas du code applicatif : le job reste invisible trente minutes, sans état d'échec |
 
@@ -434,5 +444,5 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 
 ## 10. État
 
-**32 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 32,
-ignorée(s) : 0, total : 32` en 1 min 38. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
+**33 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 33,
+ignorée(s) : 0, total : 33` en 1 min 51. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).

@@ -162,7 +162,8 @@ sa disparition doit coûter de la performance, pas de la disponibilité.
 |---|---|
 | `GetAsync` | Retourne `null` — la valeur qui signifie déjà « pas de cache », donc **aucune modification de `FoodItemService`** |
 | `SetAsync` | Ignore l'échec : le résultat a déjà été retourné à l'utilisateur |
-| `InvalidateAsync` / `InvalidateAllSearchesAsync` | **Non protégées** — voir ci-dessous |
+| `InvalidateAllSearchesAsync` | Ignore l'échec : l'import qui vient de l'appeler ne doit pas échouer pour autant — voir ci-dessous |
+| `InvalidateAsync` | **Non protégée** — invalidation d'un seul mot-clé, sans appelant aujourd'hui |
 
 Deux points volontaires :
 
@@ -171,9 +172,22 @@ Deux points volontaires :
 - **Journalisation en avertissement.** Une dégradation silencieuse ne se manifesterait que par une
   lenteur inexpliquée.
 
-**L'invalidation reste bloquante, elle.** Si `InvalidateAllSearchesAsync` échouait en silence, un
-import réussi laisserait servir un catalogue périmé jusqu'à 24 h. L'exception remonte donc à
-Hangfire, qui marque le job en échec — visible et retentable.
+**L'invalidation a longtemps été bloquante — elle ne l'est plus.** L'exception remontait à Hangfire,
+qui marquait le job en échec et le relançait. Chaque relance **retéléchargeait le dump et retraitait
+plusieurs millions de lignes**, alors que les aliments étaient déjà en base et que seul le nettoyage
+du cache manquait. Disproportionné par rapport au geste qui avait échoué.
+
+L'échec est donc désormais journalisé en avertissement, et l'import se déclare réussi.
+
+**Ce que ça coûte, assumé.** Les recherches mémorisées portent sur l'ancien catalogue jusqu'à
+l'expiration de leurs entrées — 24 h par défaut — ou jusqu'au prochain import qui réussira son
+nettoyage. Une panne de Redis relève de l'exploitation du système, pas de l'import : l'application
+la traverse déjà sans dégrader le service, et le client Redis se reconnecte seul dès que l'instance
+revient.
+
+> **Ce qui manque encore.** Rien ne signale qu'une panne de cache a eu lieu, sinon un avertissement
+> dans les journaux. La route de santé de l'administration n'expose l'état ni de Redis, ni de
+> PostgreSQL, ni du serveur d'identité. Sujet à instruire du côté de l'observabilité.
 
 **Ce qui n'a pas été retenu** : un disjoncteur (*circuit breaker*, type Polly). Sans lui, chaque
 requête attend l'expiration du délai Redis avant de basculer sur la base. Cela ne vaut le coût
@@ -227,7 +241,7 @@ première recherche suivante, sur des données à jour.
 | `RedisFoodCacheService` — clé versionnée, normalisation, durée de vie | ✅ 12 tests unitaires Infrastructure (mocks Moq) |
 | Repli quand Redis est indisponible | ✅ tests unitaires — `GetAsync` retourne `null`, `SetAsync` n'échoue pas, avertissement journalisé dans les deux cas |
 | Invalidation après import | ✅ testée unitairement (motif toutes versions, suppression de chaque clé) |
-| Échec de l'invalidation qui doit rester bloquant | ✅ test unitaire — l'exception remonte bien |
+| Échec de l'invalidation qui ne doit pas faire échouer l'import | ✅ test unitaire — avertissement journalisé, aucune exception ; et cas de niveau 3 avec Redis réellement arrêté |
 | Comportement contre un **Redis réel** (`SCAN`, sérialisation de bout en bout) | ⚠️ jamais exécuté — couverture prévue par **NTR-73** (niveau 3) |
 | Topologie multi-endpoints ou avec réplicas | ❌ non vérifié — voir [Redis](../../briques/redis.md) |
 

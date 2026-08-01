@@ -106,6 +106,8 @@ OffDumpReader  ──►  OffProductMapper  ──►  OffProduct  ──►  Of
 6. **Bilan** — en fin de parcours, journalisation : *« X produits importés, Y ignorés »*.
 7. **Invalidation du cache** — si au moins un produit a été importé, toutes les recherches en
    cache sont supprimées (`InvalidateAllSearchesAsync`) : elles portaient sur l'ancien catalogue.
+   Si Redis est injoignable à cet instant, l'échec est journalisé en avertissement et **l'import se
+   déclare réussi** : les aliments sont en base, seul le nettoyage manque.
    Voir [Workflow — Cache des recherches d'aliments](workflow-cache-recherche.md).
 
 ### Ce qui fait rejeter un produit
@@ -119,7 +121,9 @@ OffDumpReader  ──►  OffProductMapper  ──►  OffProduct  ──►  Of
 | Allergène inconnu du référentiel | **accepté**, l'allergène seul est ignoré |
 
 > Principe directeur : **une ligne défectueuse ne doit jamais interrompre un import de 3 millions
-> de produits.** Seule une panne réseau propage une exception — et déclenche alors le retry Hangfire.
+> de produits.** Ce qui fait échouer l'import, et déclenche alors la relance Hangfire, est une panne
+> pendant le téléchargement ou l'écriture en base — pas une panne du cache en fin de parcours, qui
+> est journalisée sans faire échouer quoi que ce soit.
 
 ---
 
