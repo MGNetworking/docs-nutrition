@@ -375,22 +375,70 @@ qui ne donne ni la prochaine exécution ni la liste des jobs planifiés.
 `JobMonitoringService` interroge donc `hangfire.hash` directement (via Npgsql) :
 
 ```sql
+with recurring as (
+    select
+        substring(key from 'recurring-job:(.*)')          as job_name,
+        max(value) filter (where field = 'LastExecution') as last_run,
+        max(value) filter (where field = 'NextExecution') as next_run,
+        max(value) filter (where field = 'LastJobState')  as last_job_state,
+        max(value) filter (where field = 'LastJobId')     as last_job_id
+    from hangfire.hash
+    where key like 'recurring-job:%'
+    group by key
+)
 select
-    substring(key from 'recurring-job:(.*)')          as job_name,
-    max(value) filter (where field = 'LastExecution') as last_run,
-    max(value) filter (where field = 'NextExecution') as next_run,
-    max(value) filter (where field = 'LastJobState')  as status
-from hangfire.hash
-where key like 'recurring-job:%'
-group by key
-order by job_name;
+    r.job_name,
+    r.last_run,
+    r.next_run,
+    coalesce(j.statename, r.last_job_state) as status
+from recurring r
+left join hangfire.job j
+       on j.id = nullif(r.last_job_id, '')::bigint
+order by r.job_name;
 ```
+
+**La jointure sur `hangfire.job` n'est pas décorative.** Hangfire n'écrit **pas** `LastJobState` lors
+d'un déclenchement manuel, alors que la ligne de job porte l'état réel. Le service, qui ne lisait que
+ce champ, exposait `Scheduled` avec un `lastRun` renseigné — deux informations contradictoires.
+Défaut trouvé par IT-JOB-03, corrigé par NTR-144. Le repli sur `LastJobState` subsiste pour les runs
+purgés de l'historique.
 
 **Format des dates** : `LastExecution` et `NextExecution` sont stockées en **millisecondes Unix**
 (ex : `1784862000000`), pas en ISO 8601 — à convertir via `DateTimeOffset.FromUnixTimeMilliseconds`.
 
 **Statut retourné** (`status`) : l'état brut Hangfire du dernier run (`Succeeded`, `Failed`…),
-ou `Scheduled` si le job est enregistré mais n'a encore jamais tourné (`LastJobState` absent).
+ou `Scheduled` si le job est enregistré mais n'a encore jamais tourné.
+
+### Pourquoi cette requête reste en C# et non dans une vue — NTR-151
+
+L'idée a été instruite : déplacer ces vingt lignes dans une vue `hangfire.job_status`, que le code se
+contenterait d'interroger. **Écartée.**
+
+**L'obstacle est un ordre de création.** Le schéma `hangfire` et ses tables sont créés par Hangfire
+lui-même au démarrage de l'API — `PrepareSchemaIfNecessary`, valeur par défaut. Or les migrations EF
+Core s'appliquent **avant** que l'API ne démarre, dans les trois environnements :
+
+| Environnement | Enchaînement |
+|---|---|
+| Dev local | `dev-up.sh` applique les migrations, puis l'API démarre |
+| Docker | conteneur one-shot `nutrition-migrations`, puis `api` |
+| Tests niveau 3 | `TestDatabase` migre une base neuve, puis l'hôte démarre |
+
+Au moment où la migration s'exécute, `hangfire.hash` et `hangfire.job` n'existent pas. Une migration
+créant une vue sur ces tables échouerait sur toute base neuve, et ferait échouer le montage de
+l'environnement entier.
+
+Il resterait à créer la vue depuis un service hébergé ordonné après l'initialisation de Hangfire.
+C'est plus de pièces mobiles que les vingt lignes qu'on cherche à déplacer, et une dépendance d'ordre
+supplémentaire — du type exact de celle qui a coûté NTR-156.
+
+**Le couplage changerait aussi de nature.** En C#, une évolution des tables Hangfire casse un test de
+niveau 3, qui interroge le vrai stockage. En vue, elle casse un objet en base : découvert au premier
+appel de `GET /admin/system/health` en production, pas en CI.
+
+Enfin, l'argument « traiter les évolutions du schéma en un seul endroit » ne joue pas : une seule
+requête est concernée, il y a déjà un seul endroit. La question mériterait d'être rouverte si
+d'autres requêtes brutes apparaissaient — l'obstacle d'ordonnancement, lui, resterait vrai.
 
 ---
 
