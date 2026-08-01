@@ -157,13 +157,29 @@ Les trois appels qui précèdent `UsePostgreSqlStorage` concernent la **sériali
 
 ```csharp
 // Dashboard Hangfire — restreint au rôle admin par HangfireAdminAuthorizationFilter.
-// Placé après UseAuthorization (le filtre lit User) et avant UserResolutionMiddleware
-// (le dashboard n'a pas besoin de la résolution keycloakId → User interne).
+// Placé après UseAuthorization : le filtre lit HttpContext.User, peuplé par UseAuthentication.
 app.MapHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = [new HangfireAdminAuthorizationFilter()]
-});
+}).WithMetadata(new AllowWithoutProfileAttribute());
 ```
+
+### La dispense de profil — NTR-154
+
+`.WithMetadata(...)` n'est pas décoratif. Sans lui, un administrateur reçoit **401** sur `/hangfire`
+tant qu'il n'a pas de ligne dans la table `users`, quel que soit son rôle Keycloak.
+
+La raison tient à une confusion facile : `MapHangfireDashboard` est écrit avant
+`UserResolutionMiddleware` dans `Program.cs`, ce qui donne à croire que le dashboard répond sans
+l'atteindre. C'est faux. Un `Map*` **déclare** un endpoint ; son exécution a lieu en fin de pipeline,
+après tous les middlewares. La résolution de profil s'appliquait donc bel et bien.
+
+Or `users` porte un profil nutritionnel — date de naissance, taille, allergies — dont un
+administrateur n'a que faire : administrer l'application et en être client sont deux choses
+distinctes. `AdminController` porte la même dispense, au niveau de la classe.
+
+Ce défaut a vécu jusqu'au premier test appelant la route. Voir
+[Pipeline HTTP](../systemes/plateforme/pipeline-http.md) pour le mécanisme complet.
 
 ### Filtre d'autorisation dashboard
 
@@ -185,6 +201,14 @@ public sealed class HangfireAdminAuthorizationFilter : IDashboardAuthorizationFi
 > `KeycloakClaimsTransformation` (enregistré dans `Program.cs`) a déjà converti ces rôles en `ClaimTypes.Role`
 > standards. Le filtre s'appuie donc sur le mécanisme natif ASP.NET, exactement comme la policy `AdminOnly`
 > des endpoints `/api/v1/admin`.
+
+**Le statut du refus est choisi par Hangfire, pas par le filtre** — celui-ci ne rend qu'un booléen.
+Hangfire répond **403** quand l'identité est connue mais non autorisée, **401** quand elle est
+inconnue. Sur cette route, un 401 pour un porteur de jeton valide signale donc que la requête n'a
+jamais atteint le filtre.
+
+Deux cas de niveau 3 l'éprouvent depuis NTR-154 — `HangfireDashboardAccessTest` : un jeton `test-user`
+reçoit 403, un jeton `test-admin` **sans profil applicatif** reçoit 200.
 
 ---
 

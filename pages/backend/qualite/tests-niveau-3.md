@@ -15,7 +15,7 @@
 | **Outil** | `WebApplicationFactory<Program>` + `docker-compose.yml` |
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
-| **Cas** | 25 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage |
+| **Cas** | 27 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard |
 | **Durée** | environ 2 minutes — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
@@ -292,7 +292,7 @@ avant la purge.
 
 ---
 
-## 7 bis. Les quatre défauts que ce niveau a trouvés
+## 7 bis. Les cinq défauts que ce niveau a trouvés
 
 Tous corrigés. Et c'est l'illustration de ce que ce niveau apporte : `AddInterceptors` est une
 configuration, une requête SQL brute est un contrat avec un schéma externe, un flux
@@ -348,6 +348,23 @@ transformerait une fuite du secret en compromission complète du realm.
 Ce défaut ne pouvait être trouvé qu'ici : il ne s'agissait pas d'un bug de code, mais d'une
 configuration absente. Aucun test unitaire ne l'aurait vu.
 
+**Toute la surface d'administration exigeait un profil client.** `MapHangfireDashboard` est écrit
+avant `UserResolutionMiddleware` dans `Program.cs`, et la documentation en concluait que `/hangfire`
+répondait sans l'atteindre. Un `Map*` ne fait que **déclarer** un endpoint : son exécution a lieu en
+fin de pipeline, après tous les middlewares. La résolution de profil s'appliquait donc, et un
+administrateur recevait 401 tant qu'il n'avait pas de ligne dans `users` — une table qui porte un
+profil nutritionnel dont il n'a que faire. `AdminController` était touché de la même façon.
+
+Le premier test à appeler la route l'a montré (NTR-154). Il avait d'ailleurs commencé par passer pour
+la mauvaise raison : le cas « non-admin refusé » recevait bien un 401, mais émis par
+`UserResolutionMiddleware`, sans que le filtre Hangfire soit jamais consulté. Une fois la dispense
+posée, le refus légitime se lit **403** — Hangfire distingue l'identité inconnue de l'identité non
+autorisée.
+
+Ce défaut est le seul des cinq à porter sur l'**ordre du pipeline**, ce que le §6 de la fiche du
+pipeline HTTP signalait comme non constaté. Aucun test unitaire ne peut l'atteindre : l'ordre
+d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
+
 ---
 
 ## 8. Décisions et leurs raisons
@@ -378,5 +395,5 @@ configuration absente. Aucun test unitaire ne l'aurait vu.
 
 ## 10. État
 
-**25 tests, tous verts, aucun ignoré.** Vérifié le 2026-07-31 : `Réussi! - échec : 0, réussite : 25,
-ignorée(s) : 0, total : 25` en 1 min 54. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
+**27 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 27,
+ignorée(s) : 0, total : 27` en 1 min 51. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
