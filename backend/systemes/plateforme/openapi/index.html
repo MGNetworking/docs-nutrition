@@ -2289,46 +2289,71 @@ action : il ne produit aucune <code>ApiDescription</code> et reste donc invisibl
 <p>Aucun <code>DocumentFilter</code> n'est nécessaire. Le jour où l'on voudrait exclure une route MVC réelle, il
 faudrait en revanche en écrire un.</p>
 <h2 id="validation-du-contrat">Validation du contrat<a class="headerlink" href="#validation-du-contrat" title="Permanent link">&para;</a></h2>
-<p>Le contrat est verrouillé à deux niveaux, et un seul est automatisé.</p>
+<p>Le contrat est verrouillé à deux niveaux, tous deux automatisés.</p>
 <table>
 <thead>
 <tr>
 <th>Vérification</th>
 <th>Comment</th>
-<th>Statut</th>
+<th>Niveau</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Chaque action déclare Summary et Description</td>
 <td><code>OpenApiContractTest</code> — réflexion sur <code>[SwaggerOperation]</code></td>
-<td>✅ automatisé</td>
+<td>1</td>
 </tr>
 <tr>
 <td>Chaque action déclare un code de succès</td>
 <td><code>OpenApiContractTest</code> — <code>[ProducesResponseType]</code> 2xx</td>
-<td>✅ automatisé</td>
+<td>1</td>
 </tr>
 <tr>
 <td>Chaque action protégée déclare son 401</td>
 <td><code>OpenApiContractTest</code> — croise <code>[Authorize]</code> et <code>[ProducesResponseType]</code></td>
-<td>✅ automatisé</td>
+<td>1</td>
 </tr>
 <tr>
-<td><code>swagger.json</code> généré valide et importable (Postman, NSwag/Kiota)</td>
-<td>Lancement réel de l'API</td>
-<td>⚠️ manuel</td>
+<td>Le document est servi, en <code>application/json</code></td>
+<td><code>OpenApiDocumentTest</code> — appel réel à <code>/swagger/v1/swagger.json</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>Le document est lu sans erreur par un parseur OpenAPI</td>
+<td><code>OpenApiDocumentTest</code> — <code>OpenApiStringReader</code>, diagnostic vide</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Chaque action exposée figure dans le document</td>
+<td><code>OpenApiDocumentTest</code> — croise les <code>ApiDescription</code> réelles avec les chemins du document</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Le schéma de sécurité Bearer est déclaré</td>
+<td><code>OpenApiDocumentTest</code> — <code>Components.SecuritySchemes</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>/hangfire</code> est absent du document</td>
+<td><code>OpenApiDocumentTest</code></td>
+<td>3</td>
 </tr>
 </tbody>
 </table>
-<p><code>OpenApiContractTest</code> tourne <strong>sans démarrer l'API</strong> : il parcourt les types de l'assembly par
-réflexion. La contrepartie est qu'il valide les <strong>attributs</strong>, pas le JSON produit : un défaut de
-sérialisation Swashbuckle lui échapperait.</p>
-<blockquote>
-<p><strong>Trou de couverture, sans ticket porteur.</strong> La validation du <code>swagger.json</code> réellement généré
-était attendue du niveau 3. NTR-28 est livré et fermé sans l'avoir couverte : aucun test ne démarre
-l'API pour lire le document produit. À recenser si le sujet doit avancer.</p>
-</blockquote>
+<p><strong>Les deux niveaux ne prouvent pas la même chose.</strong> <code>OpenApiContractTest</code> tourne sans démarrer l'API :
+il parcourt les types de l'assembly par réflexion, et valide donc les <strong>attributs</strong>, pas le JSON
+produit — un défaut de sérialisation Swashbuckle lui échapperait. <code>OpenApiDocumentTest</code> démarre
+l'application réelle et lit le document tel qu'il sort.</p>
+<p><strong>Sur « importable ».</strong> Un test ne peut pas lancer Postman ni Kiota. Ce qu'il fait à la place : faire
+lire le document par <code>OpenApiStringReader</code>, le parseur de <code>Microsoft.OpenApi</code>, et exiger un
+diagnostic sans erreur. Un document que ce parseur accepte est celui que les générateurs de clients
+savent consommer. C'est la garantie la plus proche qu'un test automatisé puisse offrir.</p>
+<p><strong>La liste des endpoints attendus n'est écrite nulle part.</strong> Le test croise les chemins du document
+avec les <code>ApiDescription</code> que le routage MVC produit réellement, résolues depuis le conteneur. Une
+action ajoutée est donc attendue dans le document dès le run suivant, sans qu'aucune liste ne soit à
+tenir à jour.</p>
+<p>Couvert par NTR-155.</p>
 <h2 id="etat-de-confiance">État de confiance<a class="headerlink" href="#etat-de-confiance" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2343,12 +2368,16 @@ l'API pour lire le document produit. À recenser si le sujet doit avancer.</p>
 <td>Summary, Description, codes de réponse et 401 sur toutes les actions — vérifié par test</td>
 </tr>
 <tr>
-<td>⚠️</td>
-<td>Absence de <code>/hangfire</code> dans la spec — établi par le fonctionnement de Swashbuckle, non constaté sur un <code>swagger.json</code> réel</td>
+<td>✅</td>
+<td>Absence de <code>/hangfire</code> dans la spec — désormais constatée sur le <code>swagger.json</code> réel, et non plus seulement déduite du fonctionnement de Swashbuckle</td>
 </tr>
 <tr>
-<td>❌</td>
-<td>Validité et exploitabilité du <code>swagger.json</code> généré (import Postman, génération de client)</td>
+<td>✅</td>
+<td>Validité du <code>swagger.json</code> généré — lu sans erreur par un parseur OpenAPI, endpoints et schéma de sécurité vérifiés</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Génération effective d'un client (NSwag, Kiota) et import Postman — non exécutés par un test, aucun outil externe n'est lancé</td>
 </tr>
 </tbody>
 </table>

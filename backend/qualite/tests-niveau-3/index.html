@@ -1878,6 +1878,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. IntegrationFactory — l'application sans doublure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendre-a-hangfire-ses-references-de-processus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rendre à Hangfire ses références de processus
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2186,6 +2201,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. IntegrationFactory — l'application sans doublure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendre-a-hangfire-ses-references-de-processus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rendre à Hangfire ses références de processus
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2306,7 +2336,9 @@
 <blockquote>
 <p>Tests d'intégration externe — PostgreSQL, Redis et Keycloak réels.
 Jira : NTR-28 · Sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-Dernière mise à jour : 2026-07-31</p>
+NTR-156 — cause du blocage du serveur Hangfire en cours de suite.
+NTR-155 — validation du document OpenAPI réellement généré.
+Dernière mise à jour : 2026-08-01</p>
 </blockquote>
 <hr />
 <h2 id="1-vue-densemble">1. Vue d'ensemble<a class="headerlink" href="#1-vue-densemble" title="Permanent link">&para;</a></h2>
@@ -2340,11 +2372,11 @@ Dernière mise à jour : 2026-07-31</p>
 </tr>
 <tr>
 <td><strong>Cas</strong></td>
-<td>27 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard</td>
+<td>32 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard, contrat OpenAPI</td>
 </tr>
 <tr>
 <td><strong>Durée</strong></td>
-<td>environ 2 minutes — les cas de coupure redémarrent des conteneurs</td>
+<td>environ 1 min 40 s — les cas de coupure redémarrent des conteneurs</td>
 </tr>
 </tbody>
 </table>
@@ -2417,6 +2449,24 @@ par lots et l'invalidation du cache.</p>
 <p>La base est créée dans le <strong>constructeur</strong>, pas dans <code>IAsyncLifetime</code> : <code>ConfigureWebHost</code> lit la
 chaîne de connexion au premier client créé, elle doit donc déjà exister. Et la méthode de libération
 de xUnit entre en conflit avec celle de <code>WebApplicationFactory</code>.</p>
+<h3 id="rendre-a-hangfire-ses-references-de-processus">Rendre à Hangfire ses références de processus<a class="headerlink" href="#rendre-a-hangfire-ses-references-de-processus" title="Permanent link">&para;</a></h3>
+<p>Certains cas construisent une <strong>seconde</strong> fabrique, le temps d'un test — un démarrage à froid, une
+configuration incomplète. Elle vit quelques secondes, puis sa base est supprimée et son hôte libéré.</p>
+<p>Le problème est que Hangfire tient deux références <strong>globales au processus</strong>, réécrites par chaque
+hôte construit : <code>JobStorage.Current</code> et le fournisseur de journaux de <code>LogProvider</code>. La fabrique
+secondaire les fait basculer sur les siennes ; sa libération laisse Hangfire tenir un
+<code>ILoggerFactory</code> disposé et un storage dont la base n'existe plus.</p>
+<p><code>IntegrationFactory.DisposeAsync</code> les repointe donc sur la fabrique partagée — la première construite
+dans le processus — dès qu'une fabrique secondaire disparaît.</p>
+<blockquote>
+<p><strong>Ce que ça coûtait.</strong> Le serveur Hangfire partagé dépilait un job — transaction validée,
+<code>fetchedat</code> écrit — puis échouait sur <code>ObjectDisposedException</code> en construisant le job dépilé, qui
+demande un logger. Plus aucun objet pour remettre le job en file : il restait invisible trente
+minutes, sans état <code>Processing</code>, sans échec, pendant que le serveur battait normalement. Voir
+<a href="../../briques/hangfire/">Hangfire — moteur de jobs récurrents</a>.</p>
+<p><strong>La production n'est pas concernée</strong> : un processus n'y héberge qu'une application, dont le
+<code>ILoggerFactory</code> vit aussi longtemps qu'elle.</p>
+</blockquote>
 <hr />
 <h2 id="4-bis-un-environnement-de-configuration-a-part">4 bis. Un environnement de configuration à part<a class="headerlink" href="#4-bis-un-environnement-de-configuration-a-part" title="Permanent link">&para;</a></h2>
 <p>Le niveau 3 tourne sous l'environnement <strong><code>ExternalIntegration</code></strong>, avec son
@@ -2558,20 +2608,22 @@ sont surchargeables par variable d'environnement — <code>NUTRITION_TEST_PG_CON
 l'application ne sait pas comment elle est déployée, et n'a pas à le savoir. En production, ce qui
 arrête et relance un conteneur est l'orchestrateur.</p>
 </blockquote>
-<p><strong>Un test échappe à la collection partagée.</strong> Celui qui vérifie le statut d'un job terminé démarre
-<strong>sa propre application</strong>, donc son propre serveur Hangfire et sa propre base.</p>
-<p>C'est le seul de la suite qui dépende d'un traitement de fond : il déclenche un job et attend qu'un
-serveur le prenne et le mène à son terme. Or après les coupures de conteneurs, le serveur Hangfire de
-l'application partagée ne reprend plus les jobs — l'attente expirait au bout de 60 secondes, alors
-que le test passait en 5 secondes lancé seul.</p>
+<p><strong>Un cas dépend d'un traitement de fond</strong> — celui qui vérifie le statut d'un job terminé. Il
+déclenche un job et attend qu'un serveur le prenne et le mène à son terme. Lancé seul il passait en
+5 secondes ; dans la suite complète, l'attente expirait au bout de 60.</p>
+<p>Ce n'étaient pas les coupures. La cause, instruite par NTR-156, est la libération d'une seconde
+fabrique en cours de suite, qui laissait Hangfire tenir un <code>ILoggerFactory</code> disposé — voir
+<a href="#rendre-a-hangfire-ses-references-de-processus">« Rendre à Hangfire ses références de processus »</a>.
+Le cas s'exécutait entretemps sur une application dédiée ; le correctif l'a ramené sur la collection
+partagée, et lui a rendu ses 5 secondes.</p>
 <blockquote>
-<p>La cause exacte de ce blocage n'est pas identifiée. L'isolation traite le symptôme. Si un serveur
-Hangfire ne se remet réellement pas d'une coupure de base, c'est un défaut du produit qui reste à
-instruire.</p>
+<p><strong>Ce que le détour a appris.</strong> Un serveur Hangfire encaisse bien une coupure de sa base : le worker
+passe en <code>Failed</code>, retente sous quatre secondes, et reprend. C'est visible dans les journaux dès que
+la catégorie <code>Hangfire</code> est en <code>Debug</code>.</p>
 </blockquote>
-<p><strong>Le coût est réel.</strong> Un redémarrage de Keycloak prend une quarantaine de secondes — import du realm
-compris. C'est ce qui fait passer la suite de 20 secondes à 2 minutes. À peser avant d'ajouter un
-cinquième cas de coupure.</p>
+<p><strong>Le coût des coupures est réel.</strong> Un redémarrage de Keycloak prend une quarantaine de secondes —
+import du realm compris. C'est l'essentiel des 1 min 40 s de la suite, qui tiendrait sinon en une
+vingtaine de secondes. À peser avant d'ajouter un cinquième cas de coupure.</p>
 <p><strong>Trois comportements attendus différents, à ne pas confondre :</strong></p>
 <table>
 <thead>
@@ -2654,6 +2706,16 @@ impossible en production — <code>keycloak_id</code> est par définition le <co
 <p>Il crée désormais un compte jetable via l'API d'administration, vérifie qu'il existe, lance la purge,
 puis vérifie sa disparition <strong>de Keycloak et de la base</strong>. Un <code>finally</code> le supprime si le test échoue
 avant la purge.</p>
+<p><strong>Le contrat OpenAPI est vérifié sans lancer d'outil externe.</strong> <code>OpenApiDocumentTest</code>, dans
+<code>Contract/</code>, demande <code>/swagger/v1/swagger.json</code> à l'API démarrée et fait lire le document par
+<code>OpenApiStringReader</code>. Un test ne peut pas lancer Postman ni Kiota : ce qu'il exige à la place est un
+diagnostic de lecture sans erreur, ce qu'un générateur de client demande lui aussi avant de produire
+quoi que ce soit.</p>
+<p>La liste des endpoints attendus n'est écrite nulle part. Le test croise les chemins du document avec
+les <code>ApiDescription</code> que produit réellement le routage MVC, résolues depuis le conteneur — une action
+ajoutée est donc attendue dès le run suivant. Seule concession, les contraintes de route sont
+retirées des deux côtés avant comparaison : <code>{id:guid}</code> d'un côté, <code>{id}</code> de l'autre, une différence
+de notation sans rapport avec ce que le test vérifie.</p>
 <hr />
 <h2 id="7-bis-les-cinq-defauts-que-ce-niveau-a-trouves">7 bis. Les cinq défauts que ce niveau a trouvés<a class="headerlink" href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" title="Permanent link">&para;</a></h2>
 <p>Tous corrigés. Et c'est l'illustration de ce que ce niveau apporte : <code>AddInterceptors</code> est une
@@ -2789,12 +2851,16 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 <td>Rafraîchissement des clés du realm pendant une coupure Keycloak</td>
 <td>Non couvert — fenêtre étroite, le démarrage bloquant traite le cas principal</td>
 </tr>
+<tr>
+<td>Job enterré par une exception entre le dépilage et sa reprise</td>
+<td>Non couvert — propriété de <code>Hangfire.PostgreSql</code>, pas du code applicatif : le job reste invisible trente minutes, sans état d'échec</td>
+</tr>
 </tbody>
 </table>
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
-<p><strong>27 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-01 : <code>Réussi! - échec : 0, réussite : 27,
-ignorée(s) : 0, total : 27</code> en 1 min 51. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).</p>
+<p><strong>32 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-01 : <code>Réussi! - échec : 0, réussite : 32,
+ignorée(s) : 0, total : 32</code> en 1 min 38. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).</p>
 
 
 

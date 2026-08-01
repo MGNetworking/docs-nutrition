@@ -1697,6 +1697,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#un-job-depile-disparait-trente-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Un job dépilé disparaît trente minutes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deux-references-globales-au-processus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deux références globales au processus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#le-stockage-postgresql-un-schema-a-part" class="md-nav__link">
     <span class="md-ellipsis">
       Le stockage PostgreSQL — un schéma à part
@@ -1854,6 +1872,21 @@
       Lecture de l'état des jobs pour GET /admin/system/health
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Lecture de l'état des jobs pour GET /admin/system/health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-cette-requete-reste-en-c-et-non-dans-une-vue-ntr-151" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi cette requête reste en C# et non dans une vue — NTR-151
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2289,6 +2322,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#un-job-depile-disparait-trente-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Un job dépilé disparaît trente minutes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deux-references-globales-au-processus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deux références globales au processus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#le-stockage-postgresql-un-schema-a-part" class="md-nav__link">
     <span class="md-ellipsis">
       Le stockage PostgreSQL — un schéma à part
@@ -2447,6 +2498,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Lecture de l'état des jobs pour GET /admin/system/health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-cette-requete-reste-en-c-et-non-dans-une-vue-ntr-151" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi cette requête reste en C# et non dans une vue — NTR-151
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2581,6 +2647,76 @@ stockage, dashboard, supervision.</p>
    ├─ Dashboard /hangfire  → affiche l&#39;historique et permet de relancer
    └─ GET /admin/system/health → lit hangfire.hash pour le statut
 </code></pre></div>
+<h3 id="un-job-depile-disparait-trente-minutes">Un job dépilé disparaît trente minutes<a class="headerlink" href="#un-job-depile-disparait-trente-minutes" title="Permanent link">&para;</a></h3>
+<p>Entre l'étape 2 et l'étape 3, il y a un geste que le schéma ci-dessus ne montre pas : le worker
+<strong>dépile</strong> le job avant de l'exécuter. La transaction qui écrit <code>fetchedat</code> dans <code>hangfire.jobqueue</code>
+est validée à ce moment-là, avant que quoi que ce soit ne s'exécute.</p>
+<p>À partir de là, le job est <strong>invisible</strong> pour tous les autres workers, pendant le délai
+d'invisibilité — 30 minutes, et le mode glissant est désactivé :</p>
+<div class="language-text highlight"><pre><span></span><code>Invisibility timeout: 00:30:00
+Use sliding invisibility timeout: False
+</code></pre></div>
+<p>Le mécanisme est sain tant que le worker mène le job à son terme, ou meurt franchement : la reprise
+se fait à l'expiration du délai. Mais si une exception survient <strong>entre le dépilage et la reprise du
+job</strong>, personne ne récupère rien pendant une demi-heure — et l'état observable ne dit rien :</p>
+<table>
+<thead>
+<tr>
+<th>Ce qu'on voit</th>
+<th>Ce que ça semble dire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hangfire.job</code> en <code>Enqueued</code></td>
+<td>le job attend son tour</td>
+</tr>
+<tr>
+<td><code>hangfire.jobqueue</code> avec <code>fetchedat</code> renseigné</td>
+<td>un worker l'a pourtant pris</td>
+</tr>
+<tr>
+<td>aucun état <code>Processing</code>, aucun <code>Failed</code></td>
+<td>rien n'a échoué</td>
+</tr>
+<tr>
+<td><code>hangfire.server</code> avec un battement à jour</td>
+<td>le serveur va très bien</td>
+</tr>
+</tbody>
+</table>
+<p>Sur <code>GET /admin/system/health</code>, le job apparaît alors <code>Scheduled</code> — indistinguable d'un job qui
+attend simplement son heure. <strong>Un job qui ne tourne pas ne produit aucun signal d'alarme.</strong></p>
+<p>Ce cas s'est produit, dans les tests de niveau 3 seulement, pour une raison décrite juste en dessous.</p>
+<h3 id="deux-references-globales-au-processus">Deux références globales au processus<a class="headerlink" href="#deux-references-globales-au-processus" title="Permanent link">&para;</a></h3>
+<p>Hangfire tient deux références <strong>statiques</strong>, réécrites par chaque hôte construit dans le processus :</p>
+<table>
+<thead>
+<tr>
+<th>Référence</th>
+<th>Ce qu'elle sert</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>JobStorage.Current</code></td>
+<td>le storage par défaut des composants qui n'en reçoivent pas explicitement</td>
+</tr>
+<tr>
+<td>le fournisseur de <code>LogProvider</code></td>
+<td><code>AspNetCoreLogProvider</code>, qui retient le <code>ILoggerFactory</code> de l'hôte</td>
+</tr>
+</tbody>
+</table>
+<p><strong>En production, c'est sans conséquence</strong> : un processus héberge une application, ces références sont
+écrites une fois et vivent aussi longtemps qu'elle.</p>
+<p>Ça cesse d'être vrai dès que plusieurs hôtes cohabitent, ce qui est le cas des tests d'intégration
+externe : un second hôte construit puis libéré laisse Hangfire tenir un <code>ILoggerFactory</code> <strong>disposé</strong>.
+Le worker du serveur partagé dépile alors un job, puis échoue sur <code>ObjectDisposedException</code> en
+construisant le job dépilé — dont le constructeur demande un logger. Le job est enterré pour trente
+minutes, selon le mécanisme ci-dessus.</p>
+<p>C'était NTR-156 en entier. Le correctif vit dans la fabrique de test, pas ici — voir
+<a href="../../qualite/tests-niveau-3/">Écrire un test de niveau 3</a>.</p>
 <h3 id="le-stockage-postgresql-un-schema-a-part">Le stockage PostgreSQL — un schéma à part<a class="headerlink" href="#le-stockage-postgresql-un-schema-a-part" title="Permanent link">&para;</a></h3>
 <p><strong>Hangfire crée lui-même ses tables au premier démarrage</strong>, dans le schéma <code>hangfire</code>. Aucune migration EF Core à écrire pour ces tables — elles ne font pas partie du modèle du domaine.</p>
 <p>Ces deux comportements sont les <strong>valeurs par défaut</strong> de <code>Hangfire.PostgreSql</code> : le code ne passe donc ni <code>SchemaName</code> ni <code>PrepareSchemaIfNecessary</code>, il se contente de fournir la chaîne de connexion.</p>
@@ -2806,20 +2942,76 @@ exécution et l'état de son dernier run. Ces informations vivent dans la table 
 sous la clé <code>recurring-job:&lt;id&gt;</code> — <strong>et non</strong> dans l'historique brut (<code>hangfire.job</code> / <code>hangfire.state</code>),
 qui ne donne ni la prochaine exécution ni la liste des jobs planifiés.</p>
 <p><code>JobMonitoringService</code> interroge donc <code>hangfire.hash</code> directement (via Npgsql) :</p>
-<div class="language-sql highlight"><pre><span></span><code><span class="k">select</span>
-<span class="w">    </span><span class="k">substring</span><span class="p">(</span><span class="k">key</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="s1">&#39;recurring-job:(.*)&#39;</span><span class="p">)</span><span class="w">          </span><span class="k">as</span><span class="w"> </span><span class="n">job_name</span><span class="p">,</span>
-<span class="w">    </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;LastExecution&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">last_run</span><span class="p">,</span>
-<span class="w">    </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;NextExecution&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">next_run</span><span class="p">,</span>
-<span class="w">    </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;LastJobState&#39;</span><span class="p">)</span><span class="w">  </span><span class="k">as</span><span class="w"> </span><span class="n">status</span>
-<span class="k">from</span><span class="w"> </span><span class="n">hangfire</span><span class="p">.</span><span class="n">hash</span>
-<span class="k">where</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">like</span><span class="w"> </span><span class="s1">&#39;recurring-job:%&#39;</span>
-<span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="k">key</span>
-<span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">job_name</span><span class="p">;</span>
+<div class="language-sql highlight"><pre><span></span><code><span class="k">with</span><span class="w"> </span><span class="n">recurring</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">select</span>
+<span class="w">        </span><span class="k">substring</span><span class="p">(</span><span class="k">key</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="s1">&#39;recurring-job:(.*)&#39;</span><span class="p">)</span><span class="w">          </span><span class="k">as</span><span class="w"> </span><span class="n">job_name</span><span class="p">,</span>
+<span class="w">        </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;LastExecution&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">last_run</span><span class="p">,</span>
+<span class="w">        </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;NextExecution&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">next_run</span><span class="p">,</span>
+<span class="w">        </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;LastJobState&#39;</span><span class="p">)</span><span class="w">  </span><span class="k">as</span><span class="w"> </span><span class="n">last_job_state</span><span class="p">,</span>
+<span class="w">        </span><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="k">where</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;LastJobId&#39;</span><span class="p">)</span><span class="w">     </span><span class="k">as</span><span class="w"> </span><span class="n">last_job_id</span>
+<span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">hangfire</span><span class="p">.</span><span class="n">hash</span>
+<span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">like</span><span class="w"> </span><span class="s1">&#39;recurring-job:%&#39;</span>
+<span class="w">    </span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="k">key</span>
+<span class="p">)</span>
+<span class="k">select</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">job_name</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">last_run</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">next_run</span><span class="p">,</span>
+<span class="w">    </span><span class="k">coalesce</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">statename</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">last_job_state</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">status</span>
+<span class="k">from</span><span class="w"> </span><span class="n">recurring</span><span class="w"> </span><span class="n">r</span>
+<span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">hangfire</span><span class="p">.</span><span class="n">job</span><span class="w"> </span><span class="n">j</span>
+<span class="w">       </span><span class="k">on</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullif</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">last_job_id</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)::</span><span class="nb">bigint</span>
+<span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">job_name</span><span class="p">;</span>
 </code></pre></div>
+<p><strong>La jointure sur <code>hangfire.job</code> n'est pas décorative.</strong> Hangfire n'écrit <strong>pas</strong> <code>LastJobState</code> lors
+d'un déclenchement manuel, alors que la ligne de job porte l'état réel. Le service, qui ne lisait que
+ce champ, exposait <code>Scheduled</code> avec un <code>lastRun</code> renseigné — deux informations contradictoires.
+Défaut trouvé par IT-JOB-03, corrigé par NTR-144. Le repli sur <code>LastJobState</code> subsiste pour les runs
+purgés de l'historique.</p>
 <p><strong>Format des dates</strong> : <code>LastExecution</code> et <code>NextExecution</code> sont stockées en <strong>millisecondes Unix</strong>
 (ex : <code>1784862000000</code>), pas en ISO 8601 — à convertir via <code>DateTimeOffset.FromUnixTimeMilliseconds</code>.</p>
 <p><strong>Statut retourné</strong> (<code>status</code>) : l'état brut Hangfire du dernier run (<code>Succeeded</code>, <code>Failed</code>…),
-ou <code>Scheduled</code> si le job est enregistré mais n'a encore jamais tourné (<code>LastJobState</code> absent).</p>
+ou <code>Scheduled</code> si le job est enregistré mais n'a encore jamais tourné.</p>
+<h3 id="pourquoi-cette-requete-reste-en-c-et-non-dans-une-vue-ntr-151">Pourquoi cette requête reste en C# et non dans une vue — NTR-151<a class="headerlink" href="#pourquoi-cette-requete-reste-en-c-et-non-dans-une-vue-ntr-151" title="Permanent link">&para;</a></h3>
+<p>L'idée a été instruite : déplacer ces vingt lignes dans une vue <code>hangfire.job_status</code>, que le code se
+contenterait d'interroger. <strong>Écartée.</strong></p>
+<p><strong>L'obstacle est un ordre de création.</strong> Le schéma <code>hangfire</code> et ses tables sont créés par Hangfire
+lui-même au démarrage de l'API — <code>PrepareSchemaIfNecessary</code>, valeur par défaut. Or les migrations EF
+Core s'appliquent <strong>avant</strong> que l'API ne démarre, dans les trois environnements :</p>
+<table>
+<thead>
+<tr>
+<th>Environnement</th>
+<th>Enchaînement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dev local</td>
+<td><code>dev-up.sh</code> applique les migrations, puis l'API démarre</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>conteneur one-shot <code>nutrition-migrations</code>, puis <code>api</code></td>
+</tr>
+<tr>
+<td>Tests niveau 3</td>
+<td><code>TestDatabase</code> migre une base neuve, puis l'hôte démarre</td>
+</tr>
+</tbody>
+</table>
+<p>Au moment où la migration s'exécute, <code>hangfire.hash</code> et <code>hangfire.job</code> n'existent pas. Une migration
+créant une vue sur ces tables échouerait sur toute base neuve, et ferait échouer le montage de
+l'environnement entier.</p>
+<p>Il resterait à créer la vue depuis un service hébergé ordonné après l'initialisation de Hangfire.
+C'est plus de pièces mobiles que les vingt lignes qu'on cherche à déplacer, et une dépendance d'ordre
+supplémentaire — du type exact de celle qui a coûté NTR-156.</p>
+<p><strong>Le couplage changerait aussi de nature.</strong> En C#, une évolution des tables Hangfire casse un test de
+niveau 3, qui interroge le vrai stockage. En vue, elle casse un objet en base : découvert au premier
+appel de <code>GET /admin/system/health</code> en production, pas en CI.</p>
+<p>Enfin, l'argument « traiter les évolutions du schéma en un seul endroit » ne joue pas : une seule
+requête est concernée, il y a déjà un seul endroit. La question mériterait d'être rouverte si
+d'autres requêtes brutes apparaissaient — l'obstacle d'ordonnancement, lui, resterait vrai.</p>
 <hr />
 <h2 id="tables-hangfire-creees-automatiquement">Tables Hangfire (créées automatiquement)<a class="headerlink" href="#tables-hangfire-creees-automatiquement" title="Permanent link">&para;</a></h2>
 <p>Hangfire crée ses tables au démarrage si elles n'existent pas — comportement par défaut, aucune option
