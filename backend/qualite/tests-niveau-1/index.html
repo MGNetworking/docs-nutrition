@@ -2213,7 +2213,7 @@ Dernière mise à jour : 2026-07-31</p>
 </tr>
 <tr>
 <td><strong>Volume</strong></td>
-<td>environ 590 tests</td>
+<td>environ 600 tests</td>
 </tr>
 <tr>
 <td><strong>Durée</strong></td>
@@ -2247,7 +2247,7 @@ trajet d'une requête HTTP à travers l'application.</p>
 <td><code>NutritionApi.Infrastructure.Tests</code></td>
 </tr>
 <tr>
-<td>Controller isolé, middleware isolé</td>
+<td>Controller isolé, middleware isolé, service de démarrage (<code>IHostedService</code>)</td>
 <td><code>NutritionApi.Api.Tests/Level1/</code></td>
 </tr>
 </tbody>
@@ -2298,6 +2298,12 @@ correctement routé et protégé relève du niveau 2.</p>
 <p>Keycloak, JWT réel, PostgreSQL, Redis, Docker, Kubernetes, réseau, configuration système.</p>
 <p><strong>La règle de tri</strong> : si le test échoue, qu'est-ce que ça t'apprend ? Si la réponse est « une
 dépendance externe ne répond pas comme prévu », le test n'est pas au bon niveau.</p>
+<p><strong>Le cas limite : valider une configuration.</strong> <code>KeycloakAdminConfigurationValidator</code> interrompt le
+démarrage quand un paramètre Keycloak est vide, et ses tests sont bien de niveau 1 — la classe reçoit
+un <code>KeycloakAdminOptions</code> construit à la main, ne lit aucun fichier et ne joint personne. La règle de
+tri tranche : son échec apprend « le contrôle laisse passer une clé vide », pas « Keycloak est
+tombé ». Ce qui relèverait d'un autre niveau, c'est de vérifier qu'un environnement donné fournit
+réellement ces valeurs.</p>
 <hr />
 <h2 id="7-la-limite-structurelle">7. La limite structurelle<a class="headerlink" href="#7-la-limite-structurelle" title="Permanent link">&para;</a></h2>
 <p>Un test unitaire ne prouve que ce que la doublure lui laisse prouver.</p>

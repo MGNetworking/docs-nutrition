@@ -701,6 +701,38 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#le-garde-fou-au-demarrage-keycloakadminconfigurationvalidator-ntr-149">
+<span class="md-ellipsis">
+      Le garde-fou au démarrage — KeycloakAdminConfigurationValidator (NTR-149)
+    </span>
+</a>
+<nav aria-label="Le garde-fou au démarrage — KeycloakAdminConfigurationValidator (NTR-149)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pourquoi-un-ihostedservice-et-non-validateonstart">
+<span class="md-ellipsis">
+      Pourquoi un IHostedService et non ValidateOnStart()
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#les-deux-verifications-keycloak-au-demarrage">
+<span class="md-ellipsis">
+      Les deux vérifications Keycloak au démarrage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ce-que-chaque-niveau-de-test-etablit">
+<span class="md-ellipsis">
+      Ce que chaque niveau de test établit
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#le-contrat-ikeycloakadminservice">
 <span class="md-ellipsis">
       Le contrat — IKeycloakAdminService
@@ -978,6 +1010,38 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#le-garde-fou-au-demarrage-keycloakadminconfigurationvalidator-ntr-149">
+<span class="md-ellipsis">
+      Le garde-fou au démarrage — KeycloakAdminConfigurationValidator (NTR-149)
+    </span>
+</a>
+<nav aria-label="Le garde-fou au démarrage — KeycloakAdminConfigurationValidator (NTR-149)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pourquoi-un-ihostedservice-et-non-validateonstart">
+<span class="md-ellipsis">
+      Pourquoi un IHostedService et non ValidateOnStart()
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#les-deux-verifications-keycloak-au-demarrage">
+<span class="md-ellipsis">
+      Les deux vérifications Keycloak au démarrage
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ce-que-chaque-niveau-de-test-etablit">
+<span class="md-ellipsis">
+      Ce que chaque niveau de test établit
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#le-contrat-ikeycloakadminservice">
 <span class="md-ellipsis">
       Le contrat — IKeycloakAdminService
@@ -1090,6 +1154,10 @@
 <tr>
 <td>✅</td>
 <td>Le flux complet est éprouvé au niveau 3 : le test crée un compte jetable, lance la purge, et vérifie sa disparition de Keycloak <strong>et</strong> de la base</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>L'application refuse de démarrer si l'un des quatre paramètres d'administration est vide — <code>KeycloakAdminConfigurationValidator</code> (NTR-149, 2026-07-31)</td>
 </tr>
 </tbody>
 </table>
@@ -1243,6 +1311,89 @@ qui porte sa valeur par défaut <code>nutrition-api-service</code>.</p>
 <p>La section <code>Keycloak</code> est <strong>partagée</strong> avec la validation des jetons entrants (<code>Authority</code>,
 <code>Audience</code>, <code>RequireHttpsMetadata</code>, lues dans <code>Program.cs</code>). <code>KeycloakAdminOptions</code> ne lie que les
 quatre clés d'administration ; les deux usages cohabitent sans se gêner.</p>
+</blockquote>
+<h3 id="le-garde-fou-au-demarrage-keycloakadminconfigurationvalidator-ntr-149">Le garde-fou au démarrage — <code>KeycloakAdminConfigurationValidator</code> (NTR-149)<a class="headerlink" href="#le-garde-fou-au-demarrage-keycloakadminconfigurationvalidator-ntr-149" title="Permanent link">¶</a></h3>
+<p>Ces quatre clés étant vides dans <code>appsettings.json</code> par conception, rien ne garantissait qu'un
+environnement les fournisse réellement. <strong>L'omission ne se voyait pas au démarrage : elle se payait à
+la purge de la nuit suivante</strong>, et en silence — <code>RgpdPurgeJob</code> intercepte toute exception, la
+journalise et poursuit. Une production déployée sans secret aurait produit une purge qui échoue
+chaque nuit, sans autre trace que les journaux, pendant que des comptes dont le délai de grâce est
+expiré restaient dans le realm.</p>
+<p><code>NutritionApi.Api/Startup/KeycloakAdminConfigurationValidator.cs</code> refuse le démarrage si l'une des
+quatre est absente ou vide, et <strong>nomme toutes les manquantes d'un coup</strong> :</p>
+<div class="language-text highlight"><pre><span></span><code>Configuration Keycloak Admin incomplète — clés absentes ou vides : Keycloak:Realm,
+Keycloak:ServiceClientSecret. La purge RGPD ne pourrait pas supprimer les comptes du realm,
+et son échec serait silencieux : démarrage interrompu.
+</code></pre></div>
+<p>Les nommer toutes évite de corriger un déploiement par redémarrages successifs, une clé à la fois.
+Une variable d'environnement définie mais vide arrive comme une suite d'espaces : le contrôle utilise
+<code>IsNullOrWhiteSpace</code>, pas <code>IsNullOrEmpty</code>.</p>
+<h4 id="pourquoi-un-ihostedservice-et-non-validateonstart">Pourquoi un <code>IHostedService</code> et non <code>ValidateOnStart()</code><a class="headerlink" href="#pourquoi-un-ihostedservice-et-non-validateonstart" title="Permanent link">¶</a></h4>
+<p>Le mécanisme natif des options aurait fait le même travail, mais il s'exécute <strong>toujours</strong> : depuis
+.NET 8 la validation est déclenchée par <code>Host.StartAsync</code> via <code>IStartupValidator</code>, hors de la liste
+des services hébergés. Or les tests de niveau 2 substituent <code>IKeycloakAdminService</code> et ne renseignent
+aucune de ces clés — ils n'en ont pas besoin. Ils ne s'en sortent que parce que <code>ApiFactory</code> fait
+<code>services.RemoveAll&lt;IHostedService&gt;()</code>, ce qui n'atteint pas un validateur d'options.</p>
+<p>En <code>IHostedService</code>, le contrôle disparaît avec cette ligne, exactement comme
+<code>KeycloakAvailabilityService</code>. Aucune fixture à modifier.</p>
+<h4 id="les-deux-verifications-keycloak-au-demarrage">Les deux vérifications Keycloak au démarrage<a class="headerlink" href="#les-deux-verifications-keycloak-au-demarrage" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Ce qu'il vérifie</th>
+<th>Réseau</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KeycloakAdminConfigurationValidator</code></td>
+<td>les quatre paramètres d'administration sont renseignés</td>
+<td>non — quatre chaînes en mémoire</td>
+</tr>
+<tr>
+<td><code>KeycloakAvailabilityService</code> (NTR-147)</td>
+<td>le realm répond et publie ses clés de signature</td>
+<td>oui — attente bornée à 60 s</td>
+</tr>
+</tbody>
+</table>
+<p>Le premier détecte un <strong>oubli de déploiement</strong>, le second une <strong>panne</strong>. Le validateur est enregistré
+en premier dans <code>Program.cs</code> : si les deux doivent échouer, autant échouer sur celui qui répond
+immédiatement plutôt qu'après l'attente réseau.</p>
+<h4 id="ce-que-chaque-niveau-de-test-etablit">Ce que chaque niveau de test établit<a class="headerlink" href="#ce-que-chaque-niveau-de-test-etablit" title="Permanent link">¶</a></h4>
+<p>Les deux niveaux sont nécessaires, et aucun ne remplace l'autre.</p>
+<table>
+<thead>
+<tr>
+<th>Niveau</th>
+<th>Fichier</th>
+<th>Ce qu'il prouve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>Api.Tests/Level1/KeycloakAdminConfigurationValidatorTest.cs</code></td>
+<td>la classe lève quand une clé est vide — les quatre clés, l'espace assimilé au vide, le message qui les nomme toutes</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>ExternalIntegration.Tests/Startup/KeycloakAdminConfigurationTest.cs</code></td>
+<td><strong>l'application</strong> refuse de démarrer — donc que la classe est bien enregistrée dans <code>Program.cs</code> et que son exception remonte jusqu'à l'hôte</td>
+</tr>
+</tbody>
+</table>
+<p>Le niveau 1 ne dit rien du branchement : la classe pourrait n'être appelée nulle part et ses sept
+tests resteraient verts. Vérification faite en débranchant la ligne de <code>Program.cs</code> — le cas de
+niveau 3 échoue alors sur <code>No exception was thrown</code>, l'API démarrant avec un secret vide.</p>
+<p>Le cas de niveau 3 ne coupe aucun conteneur : il vide une clé par <code>WithWebHostBuilder</code>, dont le
+délégué s'applique après le <code>ConfigureWebHost</code> de la fabrique. <code>CreateClient()</code> déclenche le
+démarrage de l'hôte, et c'est là que l'échec se produit.</p>
+<blockquote>
+<p>La fabrique de niveau 3 injecte par ailleurs <code>AdminBaseUrl</code>, <code>Realm</code> et <code>ServiceClientSecret</code>
+depuis <code>keycloak/realm-export.json</code>, et <code>ServiceClientId</code> porte sa valeur par défaut
+d'<code>appsettings.json</code> : les 23 autres cas du niveau démarrent donc normalement.</p>
 </blockquote>
 <h3 id="le-contrat-ikeycloakadminservice">Le contrat — <code>IKeycloakAdminService</code><a class="headerlink" href="#le-contrat-ikeycloakadminservice" title="Permanent link">¶</a></h3>
 <p>L'interface vit dans la couche <strong>Application</strong> (<code>Application/Interfaces/ExternalServices/</code>) : c'est

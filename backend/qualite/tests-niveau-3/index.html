@@ -1926,6 +1926,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-ter-eprouver-un-garde-fou-de-demarrage" class="md-nav__link">
+    <span class="md-ellipsis">
+      6 ter. Éprouver un garde-fou de démarrage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#7-les-ecarts-assumes" class="md-nav__link">
     <span class="md-ellipsis">
       7. Les écarts assumés
@@ -1935,9 +1944,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-bis-les-quatre-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
+  <a href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
     <span class="md-ellipsis">
-      7 bis. Les quatre défauts que ce niveau a trouvés
+      7 bis. Les cinq défauts que ce niveau a trouvés
     </span>
   </a>
   
@@ -2225,6 +2234,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#6-ter-eprouver-un-garde-fou-de-demarrage" class="md-nav__link">
+    <span class="md-ellipsis">
+      6 ter. Éprouver un garde-fou de démarrage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#7-les-ecarts-assumes" class="md-nav__link">
     <span class="md-ellipsis">
       7. Les écarts assumés
@@ -2234,9 +2252,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7-bis-les-quatre-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
+  <a href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" class="md-nav__link">
     <span class="md-ellipsis">
-      7 bis. Les quatre défauts que ce niveau a trouvés
+      7 bis. Les cinq défauts que ce niveau a trouvés
     </span>
   </a>
   
@@ -2288,7 +2306,7 @@
 <blockquote>
 <p>Tests d'intégration externe — PostgreSQL, Redis et Keycloak réels.
 Jira : NTR-28 · Sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-Dernière mise à jour : 2026-07-29</p>
+Dernière mise à jour : 2026-07-31</p>
 </blockquote>
 <hr />
 <h2 id="1-vue-densemble">1. Vue d'ensemble<a class="headerlink" href="#1-vue-densemble" title="Permanent link">&para;</a></h2>
@@ -2322,7 +2340,7 @@ Dernière mise à jour : 2026-07-29</p>
 </tr>
 <tr>
 <td><strong>Cas</strong></td>
-<td>23 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées</td>
+<td>27 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard</td>
 </tr>
 <tr>
 <td><strong>Durée</strong></td>
@@ -2586,6 +2604,35 @@ cinquième cas de coupure.</p>
 </tr>
 </tbody>
 </table>
+<p>Un cinquième cas relève du même refus de démarrer sans être une coupure : un paramètre
+d'administration Keycloak vide — voir la section 6 ter.</p>
+<hr />
+<h2 id="6-ter-eprouver-un-garde-fou-de-demarrage">6 ter. Éprouver un garde-fou de démarrage<a class="headerlink" href="#6-ter-eprouver-un-garde-fou-de-demarrage" title="Permanent link">&para;</a></h2>
+<p>Deux cas vérifient que l'application <strong>refuse de démarrer</strong> — l'un quand le serveur d'identité est
+injoignable (<code>KeycloakOutageTest</code>), l'autre quand un paramètre d'administration Keycloak est vide
+(<code>KeycloakAdminConfigurationTest</code>, NTR-149). Le motif est le même :</p>
+<div class="language-csharp highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">sansSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="n">WithWebHostBuilder</span><span class="p">(</span>
+<span class="w">    </span><span class="n">builder</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">UseSetting</span><span class="p">(</span><span class="s">&quot;Keycloak:ServiceClientSecret&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">));</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">echec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Assert</span><span class="p">.</span><span class="n">ThrowsAny</span><span class="o">&lt;</span><span class="n">Exception</span><span class="o">&gt;</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">sansSecret</span><span class="p">.</span><span class="n">CreateClient</span><span class="p">());</span>
+
+<span class="n">Assert</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;Keycloak:ServiceClientSecret&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ExceptionChain</span><span class="p">.</span><span class="n">DeroulerLesCauses</span><span class="p">(</span><span class="n">echec</span><span class="p">),</span><span class="w"> </span><span class="n">StringComparison</span><span class="p">.</span><span class="n">Ordinal</span><span class="p">);</span>
+</code></pre></div>
+<p>Trois points qui ne vont pas de soi :</p>
+<ul>
+<li><strong><code>CreateClient()</code> est le déclencheur</strong>, pas le constructeur de la fabrique. C'est lui qui construit
+  l'hôte et exécute les services hébergés.</li>
+<li><strong>Le délégué de <code>WithWebHostBuilder</code> s'applique après <code>ConfigureWebHost</code></strong>, ce qui permet d'écraser
+  une valeur que la fabrique a déjà posée. Un cas de garde-fou n'a donc pas toujours besoin d'arrêter
+  un conteneur : vider une clé suffit quand c'est la configuration qu'on éprouve.</li>
+<li><strong>L'hôte enveloppe l'exception du service qui a levé.</strong> Le message d'origine n'est pas celui de
+  l'exception de premier niveau, d'où <code>Fixtures/ExceptionChain.DeroulerLesCauses</code>, qui concatène la
+  chaîne des causes avant d'y chercher le texte attendu.</li>
+</ul>
+<p><strong>Ces cas doivent être vérifiés à l'envers.</strong> Un test de garde-fou reste vert si le garde-fou n'est
+branché nulle part — c'est même précisément ce qu'il est censé détecter. La vérification consiste à
+retirer l'enregistrement de <code>Program.cs</code> et à constater le rouge : pour NTR-149,
+<code>Assert.ThrowsAny() Failure: No exception was thrown</code>, l'API démarrant alors avec un secret vide.</p>
 <hr />
 <h2 id="7-les-ecarts-assumes">7. Les écarts assumés<a class="headerlink" href="#7-les-ecarts-assumes" title="Permanent link">&para;</a></h2>
 <p><strong>Le test de violation d unicité ne porte pas sur <code>weight_entries</code>.</strong> Le cas visait deux <code>WeightEntry</code> à la même
@@ -2608,7 +2655,7 @@ impossible en production — <code>keycloak_id</code> est par définition le <co
 puis vérifie sa disparition <strong>de Keycloak et de la base</strong>. Un <code>finally</code> le supprime si le test échoue
 avant la purge.</p>
 <hr />
-<h2 id="7-bis-les-quatre-defauts-que-ce-niveau-a-trouves">7 bis. Les quatre défauts que ce niveau a trouvés<a class="headerlink" href="#7-bis-les-quatre-defauts-que-ce-niveau-a-trouves" title="Permanent link">&para;</a></h2>
+<h2 id="7-bis-les-cinq-defauts-que-ce-niveau-a-trouves">7 bis. Les cinq défauts que ce niveau a trouvés<a class="headerlink" href="#7-bis-les-cinq-defauts-que-ce-niveau-a-trouves" title="Permanent link">&para;</a></h2>
 <p>Tous corrigés. Et c'est l'illustration de ce que ce niveau apporte : <code>AddInterceptors</code> est une
 configuration, une requête SQL brute est un contrat avec un schéma externe, un flux
 <code>client_credentials</code> suppose un client qui existe — rien de tout cela ne se vérifie sans les vrais
@@ -2650,6 +2697,20 @@ rôles <code>view-users</code> et <code>manage-users</code> de <code>realm-manag
 transformerait une fuite du secret en compromission complète du realm.</p>
 <p>Ce défaut ne pouvait être trouvé qu'ici : il ne s'agissait pas d'un bug de code, mais d'une
 configuration absente. Aucun test unitaire ne l'aurait vu.</p>
+<p><strong>Toute la surface d'administration exigeait un profil client.</strong> <code>MapHangfireDashboard</code> est écrit
+avant <code>UserResolutionMiddleware</code> dans <code>Program.cs</code>, et la documentation en concluait que <code>/hangfire</code>
+répondait sans l'atteindre. Un <code>Map*</code> ne fait que <strong>déclarer</strong> un endpoint : son exécution a lieu en
+fin de pipeline, après tous les middlewares. La résolution de profil s'appliquait donc, et un
+administrateur recevait 401 tant qu'il n'avait pas de ligne dans <code>users</code> — une table qui porte un
+profil nutritionnel dont il n'a que faire. <code>AdminController</code> était touché de la même façon.</p>
+<p>Le premier test à appeler la route l'a montré (NTR-154). Il avait d'ailleurs commencé par passer pour
+la mauvaise raison : le cas « non-admin refusé » recevait bien un 401, mais émis par
+<code>UserResolutionMiddleware</code>, sans que le filtre Hangfire soit jamais consulté. Une fois la dispense
+posée, le refus légitime se lit <strong>403</strong> — Hangfire distingue l'identité inconnue de l'identité non
+autorisée.</p>
+<p>Ce défaut est le seul des cinq à porter sur l'<strong>ordre du pipeline</strong>, ce que le §6 de la fiche du
+pipeline HTTP signalait comme non constaté. Aucun test unitaire ne peut l'atteindre : l'ordre
+d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</p>
 <hr />
 <h2 id="8-decisions-et-leurs-raisons">8. Décisions et leurs raisons<a class="headerlink" href="#8-decisions-et-leurs-raisons" title="Permanent link">&para;</a></h2>
 <table>
@@ -2732,8 +2793,8 @@ configuration absente. Aucun test unitaire ne l'aurait vu.</p>
 </table>
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
-<p><strong>23 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-07-30 : <code>Réussi! - échec : 0, réussite : 23,
-ignorée(s) : 0, total : 23</code> en 1 min 34. Les niveaux 1 et 2 restent verts — 700 tests.</p>
+<p><strong>27 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-01 : <code>Réussi! - échec : 0, réussite : 27,
+ignorée(s) : 0, total : 27</code> en 1 min 51. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).</p>
 
 
 

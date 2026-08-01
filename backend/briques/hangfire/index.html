@@ -1775,6 +1775,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#la-dispense-de-profil-ntr-154" class="md-nav__link">
+    <span class="md-ellipsis">
+      La dispense de profil — NTR-154
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#filtre-dautorisation-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       Filtre d'autorisation dashboard
@@ -2358,6 +2367,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#la-dispense-de-profil-ntr-154" class="md-nav__link">
+    <span class="md-ellipsis">
+      La dispense de profil — NTR-154
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#filtre-dautorisation-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       Filtre d'autorisation dashboard
@@ -2644,13 +2662,24 @@ stockage, dashboard, supervision.</p>
 <p>Les trois appels qui précèdent <code>UsePostgreSqlStorage</code> concernent la <strong>sérialisation des jobs</strong> dans le storage : ils fixent le format d'écriture à celui recommandé pour Hangfire 1.8. Sans eux, Hangfire démarre sur un format hérité et l'affiche en avertissement au lancement.</p>
 <h2 id="dashboard-nutritionapiapiprogramcs">Dashboard — <code>NutritionApi.Api/Program.cs</code><a class="headerlink" href="#dashboard-nutritionapiapiprogramcs" title="Permanent link">&para;</a></h2>
 <div class="language-csharp highlight"><pre><span></span><code><span class="c1">// Dashboard Hangfire — restreint au rôle admin par HangfireAdminAuthorizationFilter.</span>
-<span class="c1">// Placé après UseAuthorization (le filtre lit User) et avant UserResolutionMiddleware</span>
-<span class="c1">// (le dashboard n&#39;a pas besoin de la résolution keycloakId → User interne).</span>
+<span class="c1">// Placé après UseAuthorization : le filtre lit HttpContext.User, peuplé par UseAuthentication.</span>
 <span class="n">app</span><span class="p">.</span><span class="n">MapHangfireDashboard</span><span class="p">(</span><span class="s">&quot;/hangfire&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DashboardOptions</span>
 <span class="p">{</span>
 <span class="w">    </span><span class="n">Authorization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="k">new</span><span class="w"> </span><span class="n">HangfireAdminAuthorizationFilter</span><span class="p">()]</span>
-<span class="p">});</span>
+<span class="p">}).</span><span class="n">WithMetadata</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AllowWithoutProfileAttribute</span><span class="p">());</span>
 </code></pre></div>
+<h3 id="la-dispense-de-profil-ntr-154">La dispense de profil — NTR-154<a class="headerlink" href="#la-dispense-de-profil-ntr-154" title="Permanent link">&para;</a></h3>
+<p><code>.WithMetadata(...)</code> n'est pas décoratif. Sans lui, un administrateur reçoit <strong>401</strong> sur <code>/hangfire</code>
+tant qu'il n'a pas de ligne dans la table <code>users</code>, quel que soit son rôle Keycloak.</p>
+<p>La raison tient à une confusion facile : <code>MapHangfireDashboard</code> est écrit avant
+<code>UserResolutionMiddleware</code> dans <code>Program.cs</code>, ce qui donne à croire que le dashboard répond sans
+l'atteindre. C'est faux. Un <code>Map*</code> <strong>déclare</strong> un endpoint ; son exécution a lieu en fin de pipeline,
+après tous les middlewares. La résolution de profil s'appliquait donc bel et bien.</p>
+<p>Or <code>users</code> porte un profil nutritionnel — date de naissance, taille, allergies — dont un
+administrateur n'a que faire : administrer l'application et en être client sont deux choses
+distinctes. <code>AdminController</code> porte la même dispense, au niveau de la classe.</p>
+<p>Ce défaut a vécu jusqu'au premier test appelant la route. Voir
+<a href="../../systemes/plateforme/pipeline-http/">Pipeline HTTP</a> pour le mécanisme complet.</p>
 <h3 id="filtre-dautorisation-dashboard">Filtre d'autorisation dashboard<a class="headerlink" href="#filtre-dautorisation-dashboard" title="Permanent link">&para;</a></h3>
 <p><code>IDashboardAuthorizationFilter</code> est une interface <strong>du package Hangfire</strong> (namespace <code>Hangfire.Dashboard</code>) : inutile de la chercher dans le code du projet. Ce que le projet écrit, c'est son implémentation, dans <code>NutritionApi.Infrastructure/Scheduling/HangfireAdminAuthorizationFilter.cs</code> :</p>
 <div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">HangfireAdminAuthorizationFilter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDashboardAuthorizationFilter</span>
@@ -2669,6 +2698,12 @@ stockage, dashboard, supervision.</p>
 standards. Le filtre s'appuie donc sur le mécanisme natif ASP.NET, exactement comme la policy <code>AdminOnly</code>
 des endpoints <code>/api/v1/admin</code>.</p>
 </blockquote>
+<p><strong>Le statut du refus est choisi par Hangfire, pas par le filtre</strong> — celui-ci ne rend qu'un booléen.
+Hangfire répond <strong>403</strong> quand l'identité est connue mais non autorisée, <strong>401</strong> quand elle est
+inconnue. Sur cette route, un 401 pour un porteur de jeton valide signale donc que la requête n'a
+jamais atteint le filtre.</p>
+<p>Deux cas de niveau 3 l'éprouvent depuis NTR-154 — <code>HangfireDashboardAccessTest</code> : un jeton <code>test-user</code>
+reçoit 403, un jeton <code>test-admin</code> <strong>sans profil applicatif</strong> reçoit 200.</p>
 <hr />
 <h2 id="enregistrement-des-jobs-recurrents">Enregistrement des jobs récurrents<a class="headerlink" href="#enregistrement-des-jobs-recurrents" title="Permanent link">&para;</a></h2>
 <p>Dans <code>NutritionApi.Infrastructure/Scheduling/RecurringJobRegistrationService.cs</code>, un <code>IHostedService</code>

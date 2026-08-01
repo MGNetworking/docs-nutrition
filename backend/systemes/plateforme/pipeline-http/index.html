@@ -1551,6 +1551,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="La dispense [AllowWithoutProfile]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#les-trois-porteurs-de-la-dispense" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les trois porteurs de la dispense
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2234,6 +2249,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="La dispense [AllowWithoutProfile]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#les-trois-porteurs-de-la-dispense" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les trois porteurs de la dispense
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2351,10 +2381,18 @@ aussi deux comportements observés :</p>
 <ul>
 <li><strong>Un GUID malformé donne 404, pas 400.</strong> La contrainte <code>{id:guid}</code> participe à la sélection :
   aucune action ne correspond, il n'y a rien à exécuter.</li>
-<li><strong><code>/hangfire</code> ne traverse pas les middlewares suivants.</strong> C'est un endpoint sélectionné en phase 1,
-  qui répond avant d'atteindre <code>UserResolutionMiddleware</code>.</li>
+<li><strong>Un endpoint est <em>sélectionné</em> en phase 1, mais <em>exécuté</em> en phase 2</strong> — c'est-à-dire en fin de
+  pipeline, après tous les middlewares déclarés. La position d'un <code>Map*</code> dans <code>Program.cs</code> ne change
+  rien à ce moment d'exécution ; elle n'ordonne que la sélection.</li>
 </ul>
 <p>Si un middleware interrompt entre les deux phases, <strong>le controller n'est jamais instancié</strong>.</p>
+<blockquote>
+<p><strong>Correction du 2026-08-01.</strong> Ce document affirmait que <code>/hangfire</code> « ne traverse pas les
+middlewares suivants » et « répond avant d'atteindre <code>UserResolutionMiddleware</code> », parce que
+<code>MapHangfireDashboard</code> est écrit avant lui. C'était faux, et jamais constaté sur une requête réelle
+— le §6 le signalait. Le premier test à appeler cette route (NTR-154) a montré qu'un administrateur
+y recevait 401 tant qu'il n'avait pas de profil applicatif en base.</p>
+</blockquote>
 <h3 id="le-pipeline">Le pipeline<a class="headerlink" href="#le-pipeline" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code>                    ┌─────────────────────────────────────────────┐
    requête HTTP ───►│ RequestLoggingMiddleware                    │  chronomètre démarré
@@ -2371,15 +2409,17 @@ aussi deux comportements observés :</p>
                     ├─────────────────────────────────────────────┤
                     │ UseAuthorization                            │  policies, rôles
                     ├─────────────────────────────────────────────┤
-                    │ MapHangfireDashboard(&quot;/hangfire&quot;)           │  ─┐ sortie possible
-                    ├─────────────────────────────────────────────┤   │
-                    │ UserResolutionMiddleware                    │   │ keycloakId → User.Id
-                    ├─────────────────────────────────────────────┤   │
-                    │ MapControllers                              │   │
-                    └─────────────────────────────────────────────┘  ─┘
+                    │ UserResolutionMiddleware                    │  keycloakId → User.Id
+                    ├─────────────────────────────────────────────┤
+                    │ exécution de l&#39;endpoint sélectionné :       │
+                    │   /hangfire  ou  une action de controller   │
+                    └─────────────────────────────────────────────┘
                             │
    réponse HTTP ◄───────────┘  chronomètre arrêté, une ligne de log émise
 </code></pre></div>
+<p><code>MapHangfireDashboard</code> et <code>MapControllers</code> <strong>déclarent</strong> des endpoints, ils n'occupent pas une place
+dans la chaîne des middlewares. Tout ce qui est déclaré par <code>app.UseMiddleware&lt;&gt;()</code> s'exécute avant
+eux, <code>UserResolutionMiddleware</code> compris — d'où la dispense décrite plus bas.</p>
 <h2 id="2-qui-fait-quoi">2. Qui fait quoi<a class="headerlink" href="#2-qui-fait-quoi" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code>NutritionApi.Api/
 ├── Program.cs                        — compose le pipeline, dans cet ordre
@@ -2421,12 +2461,12 @@ aussi deux comportements observés :</p>
 <td>Appliquer les policies (<code>AdminOnly</code>) et les rôles</td>
 </tr>
 <tr>
-<td><code>MapHangfireDashboard</code></td>
-<td>Servir <code>/hangfire</code>, protégé par <code>HangfireAdminAuthorizationFilter</code></td>
+<td><code>UserResolutionMiddleware</code></td>
+<td>Traduire le <code>sub</code> du token en <code>User.Id</code> interne, déposé dans <code>HttpContext.Items</code> — <strong>et refuser</strong> la requête si aucun profil ne correspond, sauf sur les endpoints marqués <code>[AllowWithoutProfile]</code></td>
 </tr>
 <tr>
-<td><code>UserResolutionMiddleware</code></td>
-<td>Traduire le <code>sub</code> du token en <code>User.Id</code> interne, déposé dans <code>HttpContext.Items</code> — <strong>et refuser</strong> la requête si aucun profil ne correspond, sauf sur les actions marquées <code>[AllowWithoutProfile]</code></td>
+<td><code>MapHangfireDashboard</code></td>
+<td>Déclarer <code>/hangfire</code>, protégé par <code>HangfireAdminAuthorizationFilter</code> et dispensé de profil</td>
 </tr>
 <tr>
 <td><code>MapControllers</code></td>
@@ -2446,11 +2486,11 @@ aussi deux comportements observés :</p>
 <li><strong>Authentification.</strong> Le JWT est validé contre la clé publique Keycloak ; <code>KeycloakClaimsTransformation</code>
    convertit <code>realm_access.roles</code> en <code>ClaimTypes.Role</code> standards.</li>
 <li><strong>Autorisation.</strong> Les policies s'appliquent. Un refus produit un 401 ou un 403.</li>
-<li><strong><code>/hangfire</code> sort du pipeline</strong> si la route correspond : le dashboard répond directement.</li>
 <li><strong>Résolution de l'utilisateur.</strong> <code>UserResolutionMiddleware</code> échange le <code>sub</code> contre le <code>User.Id</code>
-   interne. Un compte absent en base donne un 401, même avec un token valide — <strong>sauf</strong> si l'action
-   porte <code>[AllowWithoutProfile]</code>.</li>
-<li><strong>L'action s'exécute</strong>, la réponse remonte.</li>
+   interne. Un compte absent en base donne un 401, même avec un token valide — <strong>sauf</strong> si l'endpoint
+   porte <code>[AllowWithoutProfile]</code>. Cette étape s'applique aussi à <code>/hangfire</code>, qui n'est pas une action
+   de controller mais reste un endpoint comme un autre.</li>
+<li><strong>L'endpoint s'exécute</strong> — action de controller ou dashboard Hangfire — et la réponse remonte.</li>
 <li><strong>Le chronomètre s'arrête.</strong> Le <code>finally</code> de <code>RequestLoggingMiddleware</code> lit le statut réellement
     écrit et émet la ligne de journal.</li>
 </ol>
@@ -2495,13 +2535,13 @@ aussi deux comportements observés :</p>
 <td>Avant : le filtre verrait un utilisateur vide et refuserait tout le monde.</td>
 </tr>
 <tr>
-<td>…et <strong>avant</strong> <code>UserResolutionMiddleware</code></td>
-<td>Le dashboard n'a pas besoin de la correspondance <code>keycloakId</code> → <code>User</code> interne.</td>
-<td>Après : un administrateur sans profil applicatif en base serait refusé.</td>
+<td>L'administration est <strong>dispensée de profil</strong> — <code>/hangfire</code> et <code>AdminController</code></td>
+<td>Administrer l'application et en être client sont deux choses distinctes : la table <code>users</code> porte un profil nutritionnel dont un administrateur n'a que faire. Son rôle Keycloak suffit à l'autoriser.</td>
+<td>Compter sur la position de <code>MapHangfireDashboard</code> dans <code>Program.cs</code> : c'était la conception d'origine, et elle ne produisait aucun effet (NTR-154).</td>
 </tr>
 <tr>
 <td>La dispense de profil est un <strong>attribut</strong>, pas une liste de chemins</td>
-<td><code>[AllowWithoutProfile]</code> vit sur l'action qu'il concerne et la suit si sa route change.</td>
+<td><code>[AllowWithoutProfile]</code> vit sur l'endpoint qu'il concerne et le suit si sa route change.</td>
 <td>Comparer <code>Request.Path</code> dans le middleware : plus court, mais renommer la route romprait la dispense <strong>silencieusement</strong> — et le blocage reviendrait à l'identique (NTR-142).</td>
 </tr>
 </tbody>
@@ -2525,8 +2565,45 @@ sont indissociables — l'attribut seul est inerte, la lecture seule ne trouve r
 <p><code>[Authorize]</code> fonctionne exactement ainsi : la seule différence est que son lecteur est fourni par
 Microsoft.</p>
 <blockquote>
-<p>La dispense ne vaut <strong>que</strong> pour l'action marquée. Partout ailleurs, un jeton valide sans profil
+<p>La dispense ne vaut <strong>que</strong> pour l'endpoint marqué. Partout ailleurs, un jeton valide sans profil
 reste refusé — c'est vérifié par un test dédié.</p>
+</blockquote>
+<h4 id="les-trois-porteurs-de-la-dispense">Les trois porteurs de la dispense<a class="headerlink" href="#les-trois-porteurs-de-la-dispense" title="Permanent link">&para;</a></h4>
+<p>Le mécanisme lisant les <strong>métadonnées de l'endpoint</strong>, il ne se limite pas aux actions :</p>
+<table>
+<thead>
+<tr>
+<th>Porteur</th>
+<th>Où</th>
+<th>Pourquoi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /users/me</code></td>
+<td>attribut sur l'action</td>
+<td>il faudrait déjà un profil pour en créer un (NTR-142)</td>
+</tr>
+<tr>
+<td><code>AdminController</code></td>
+<td>attribut sur la <strong>classe</strong> — <code>AttributeTargets.Class</code> est autorisé</td>
+<td>administrer n'est pas être client ; le rôle Keycloak suffit</td>
+</tr>
+<tr>
+<td><code>/hangfire</code></td>
+<td><code>.WithMetadata(new AllowWithoutProfileAttribute())</code> sur le <code>Map*</code></td>
+<td>ce n'est pas une action de controller : aucun attribut ne peut s'y poser</td>
+</tr>
+</tbody>
+</table>
+<p>Les deux derniers datent de NTR-154. Avant, toute la surface d'administration exigeait un profil
+nutritionnel : un administrateur qui n'était pas client de l'application recevait 401 sur <code>/hangfire</code>
+comme sur <code>/api/v1/admin/*</code>, avec un statut qui suggérait un problème de jeton alors que le sien était
+valide.</p>
+<blockquote>
+<p>Sur <code>/hangfire</code>, le refus légitime se lit désormais <strong>403</strong> et non 401 : Hangfire répond 401 quand
+l'identité est inconnue, 403 quand elle est connue mais non autorisée. Un 401 sur cette route
+signalerait que la requête n'a pas atteint le filtre.</p>
 </blockquote>
 <h2 id="4-bis-la-validation-des-jetons-est-locale-et-ce-que-ca-implique">4 bis. La validation des jetons est locale — et ce que ça implique<a class="headerlink" href="#4-bis-la-validation-des-jetons-est-locale-et-ce-que-ca-implique" title="Permanent link">&para;</a></h2>
 <p><code>UseAuthentication</code> ne contacte <strong>pas</strong> Keycloak à chaque requête. Au premier besoin, l'API récupère
@@ -2625,7 +2702,7 @@ et retirent déjà tous les services hébergés. Ils ne sont donc pas concernés
 </tr>
 <tr>
 <td>⚠️</td>
-<td>L'<strong>ordre</strong> du pipeline : établi par lecture de <code>Program.cs</code> et raisonnement, jamais constaté sur une requête réelle</td>
+<td>L'<strong>ordre</strong> du pipeline : établi par lecture de <code>Program.cs</code> et raisonnement. La première requête réelle à l'éprouver (NTR-154) a <strong>contredit</strong> ce raisonnement sur <code>/hangfire</code> — le reste de l'ordre demeure non constaté</td>
 </tr>
 <tr>
 <td>❌</td>
@@ -2640,8 +2717,8 @@ et retirent déjà tous les services hébergés. Ils ne sont donc pas concernés
 <td>L'application refuse de démarrer sans les clés du realm — IT-EXT-17</td>
 </tr>
 <tr>
-<td>❌</td>
-<td>Le refus du dashboard Hangfire à un non-admin — <strong>attendu du niveau 3, non couvert</strong>. NTR-28 est fermé sans l'avoir traité : aucun test n'appelle <code>/hangfire</code>. Sans ticket porteur</td>
+<td>✅</td>
+<td>Le refus du dashboard Hangfire à un non-admin (403) et son accès à un administrateur <strong>sans profil</strong> (200) — deux cas de niveau 3, NTR-154</td>
 </tr>
 </tbody>
 </table>
