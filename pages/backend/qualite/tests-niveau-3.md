@@ -2,7 +2,8 @@
 
 > Tests d'intégration externe — PostgreSQL, Redis et Keycloak réels.
 > Jira : NTR-28 · Sous-tâches NTR-72 (repositories), NTR-73 (Redis et import OFF).
-> Dernière mise à jour : 2026-07-31
+> NTR-156 — cause du blocage du serveur Hangfire en cours de suite.
+> Dernière mise à jour : 2026-08-01
 
 ---
 
@@ -16,7 +17,7 @@
 | **Marqueur** | `[Trait("Level", "3")]` — c'est lui qui pilote les filtres CI |
 | **Lancement** | `./scripts/test-integration.sh` |
 | **Cas** | 27 — chaîne d'authentification, repositories, cache, jobs, dépendances coupées, garde-fous de démarrage, accès au dashboard |
-| **Durée** | environ 2 minutes — les cas de coupure redémarrent des conteneurs |
+| **Durée** | environ 1 min 40 s — les cas de coupure redémarrent des conteneurs |
 
 Ce niveau existe pour une seule raison : au niveau 2, les doublures remplacent précisément les
 composants qu'il faudrait éprouver. `TestAuthHandler` remplace la validation JWT, les mocks de
@@ -88,6 +89,28 @@ par lots et l'invalidation du cache.
 La base est créée dans le **constructeur**, pas dans `IAsyncLifetime` : `ConfigureWebHost` lit la
 chaîne de connexion au premier client créé, elle doit donc déjà exister. Et la méthode de libération
 de xUnit entre en conflit avec celle de `WebApplicationFactory`.
+
+### Rendre à Hangfire ses références de processus
+
+Certains cas construisent une **seconde** fabrique, le temps d'un test — un démarrage à froid, une
+configuration incomplète. Elle vit quelques secondes, puis sa base est supprimée et son hôte libéré.
+
+Le problème est que Hangfire tient deux références **globales au processus**, réécrites par chaque
+hôte construit : `JobStorage.Current` et le fournisseur de journaux de `LogProvider`. La fabrique
+secondaire les fait basculer sur les siennes ; sa libération laisse Hangfire tenir un
+`ILoggerFactory` disposé et un storage dont la base n'existe plus.
+
+`IntegrationFactory.DisposeAsync` les repointe donc sur la fabrique partagée — la première construite
+dans le processus — dès qu'une fabrique secondaire disparaît.
+
+> **Ce que ça coûtait.** Le serveur Hangfire partagé dépilait un job — transaction validée,
+> `fetchedat` écrit — puis échouait sur `ObjectDisposedException` en construisant le job dépilé, qui
+> demande un logger. Plus aucun objet pour remettre le job en file : il restait invisible trente
+> minutes, sans état `Processing`, sans échec, pendant que le serveur battait normalement. Voir
+> [Hangfire — moteur de jobs récurrents](../briques/hangfire.md).
+>
+> **La production n'est pas concernée** : un processus n'y héberge qu'une application, dont le
+> `ILoggerFactory` vit aussi longtemps qu'elle.
 
 ---
 
@@ -204,21 +227,23 @@ sont surchargeables par variable d'environnement — `NUTRITION_TEST_PG_CONTAINE
 > l'application ne sait pas comment elle est déployée, et n'a pas à le savoir. En production, ce qui
 > arrête et relance un conteneur est l'orchestrateur.
 
-**Un test échappe à la collection partagée.** Celui qui vérifie le statut d'un job terminé démarre
-**sa propre application**, donc son propre serveur Hangfire et sa propre base.
+**Un cas dépend d'un traitement de fond** — celui qui vérifie le statut d'un job terminé. Il
+déclenche un job et attend qu'un serveur le prenne et le mène à son terme. Lancé seul il passait en
+5 secondes ; dans la suite complète, l'attente expirait au bout de 60.
 
-C'est le seul de la suite qui dépende d'un traitement de fond : il déclenche un job et attend qu'un
-serveur le prenne et le mène à son terme. Or après les coupures de conteneurs, le serveur Hangfire de
-l'application partagée ne reprend plus les jobs — l'attente expirait au bout de 60 secondes, alors
-que le test passait en 5 secondes lancé seul.
+Ce n'étaient pas les coupures. La cause, instruite par NTR-156, est la libération d'une seconde
+fabrique en cours de suite, qui laissait Hangfire tenir un `ILoggerFactory` disposé — voir
+[« Rendre à Hangfire ses références de processus »](#rendre-a-hangfire-ses-references-de-processus).
+Le cas s'exécutait entretemps sur une application dédiée ; le correctif l'a ramené sur la collection
+partagée, et lui a rendu ses 5 secondes.
 
-> La cause exacte de ce blocage n'est pas identifiée. L'isolation traite le symptôme. Si un serveur
-> Hangfire ne se remet réellement pas d'une coupure de base, c'est un défaut du produit qui reste à
-> instruire.
+> **Ce que le détour a appris.** Un serveur Hangfire encaisse bien une coupure de sa base : le worker
+> passe en `Failed`, retente sous quatre secondes, et reprend. C'est visible dans les journaux dès que
+> la catégorie `Hangfire` est en `Debug`.
 
-**Le coût est réel.** Un redémarrage de Keycloak prend une quarantaine de secondes — import du realm
-compris. C'est ce qui fait passer la suite de 20 secondes à 2 minutes. À peser avant d'ajouter un
-cinquième cas de coupure.
+**Le coût des coupures est réel.** Un redémarrage de Keycloak prend une quarantaine de secondes —
+import du realm compris. C'est l'essentiel des 1 min 40 s de la suite, qui tiendrait sinon en une
+vingtaine de secondes. À peser avant d'ajouter un cinquième cas de coupure.
 
 **Trois comportements attendus différents, à ne pas confondre :**
 
@@ -390,10 +415,11 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 | Contrainte d'unicité sur `weight_entries` | Ajoutée le 2026-07-30 — le test de violation reste à réaligner |
 | Coupure Redis pendant un import OFF | Non couvert — `InvalidateAllSearchesAsync` n'intercepte pas, l'import doit échouer visiblement |
 | Rafraîchissement des clés du realm pendant une coupure Keycloak | Non couvert — fenêtre étroite, le démarrage bloquant traite le cas principal |
+| Job enterré par une exception entre le dépilage et sa reprise | Non couvert — propriété de `Hangfire.PostgreSql`, pas du code applicatif : le job reste invisible trente minutes, sans état d'échec |
 
 ---
 
 ## 10. État
 
 **27 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 27,
-ignorée(s) : 0, total : 27` en 1 min 51. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).
+ignorée(s) : 0, total : 27` en 1 min 36. Les niveaux 1 et 2 restent verts — 708 tests (599 et 109).

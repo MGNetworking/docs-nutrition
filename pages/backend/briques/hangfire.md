@@ -73,6 +73,57 @@ Le point clé : **le Client et le Server ne se parlent jamais directement.** Tou
    └─ GET /admin/system/health → lit hangfire.hash pour le statut
 ```
 
+### Un job dépilé disparaît trente minutes
+
+Entre l'étape 2 et l'étape 3, il y a un geste que le schéma ci-dessus ne montre pas : le worker
+**dépile** le job avant de l'exécuter. La transaction qui écrit `fetchedat` dans `hangfire.jobqueue`
+est validée à ce moment-là, avant que quoi que ce soit ne s'exécute.
+
+À partir de là, le job est **invisible** pour tous les autres workers, pendant le délai
+d'invisibilité — 30 minutes, et le mode glissant est désactivé :
+
+```
+Invisibility timeout: 00:30:00
+Use sliding invisibility timeout: False
+```
+
+Le mécanisme est sain tant que le worker mène le job à son terme, ou meurt franchement : la reprise
+se fait à l'expiration du délai. Mais si une exception survient **entre le dépilage et la reprise du
+job**, personne ne récupère rien pendant une demi-heure — et l'état observable ne dit rien :
+
+| Ce qu'on voit | Ce que ça semble dire |
+|---|---|
+| `hangfire.job` en `Enqueued` | le job attend son tour |
+| `hangfire.jobqueue` avec `fetchedat` renseigné | un worker l'a pourtant pris |
+| aucun état `Processing`, aucun `Failed` | rien n'a échoué |
+| `hangfire.server` avec un battement à jour | le serveur va très bien |
+
+Sur `GET /admin/system/health`, le job apparaît alors `Scheduled` — indistinguable d'un job qui
+attend simplement son heure. **Un job qui ne tourne pas ne produit aucun signal d'alarme.**
+
+Ce cas s'est produit, dans les tests de niveau 3 seulement, pour une raison décrite juste en dessous.
+
+### Deux références globales au processus
+
+Hangfire tient deux références **statiques**, réécrites par chaque hôte construit dans le processus :
+
+| Référence | Ce qu'elle sert |
+|---|---|
+| `JobStorage.Current` | le storage par défaut des composants qui n'en reçoivent pas explicitement |
+| le fournisseur de `LogProvider` | `AspNetCoreLogProvider`, qui retient le `ILoggerFactory` de l'hôte |
+
+**En production, c'est sans conséquence** : un processus héberge une application, ces références sont
+écrites une fois et vivent aussi longtemps qu'elle.
+
+Ça cesse d'être vrai dès que plusieurs hôtes cohabitent, ce qui est le cas des tests d'intégration
+externe : un second hôte construit puis libéré laisse Hangfire tenir un `ILoggerFactory` **disposé**.
+Le worker du serveur partagé dépile alors un job, puis échoue sur `ObjectDisposedException` en
+construisant le job dépilé — dont le constructeur demande un logger. Le job est enterré pour trente
+minutes, selon le mécanisme ci-dessus.
+
+C'était NTR-156 en entier. Le correctif vit dans la fabrique de test, pas ici — voir
+[Écrire un test de niveau 3](../qualite/tests-niveau-3.md).
+
 ### Le stockage PostgreSQL — un schéma à part
 
 **Hangfire crée lui-même ses tables au premier démarrage**, dans le schéma `hangfire`. Aucune migration EF Core à écrire pour ces tables — elles ne font pas partie du modèle du domaine.
