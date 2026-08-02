@@ -1803,6 +1803,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../briques/serilog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serilog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../briques/keycloak-admin/" class="md-nav__link">
         
   
@@ -2400,6 +2421,43 @@ envoyée nulle part tant que le §5 n'est pas tranché.</p>
 </tr>
 </tbody>
 </table>
+<p><strong>Ce volet a été scindé.</strong> Tout ce qui ne dépend pas du backend est livré ; l'acheminement vers un
+collecteur est reporté au déploiement, et inscrit dans la story « Services externes sur K3s »
+(NTR-163) — c'est là que le collecteur sera déployé.</p>
+<table>
+<thead>
+<tr>
+<th>Livré</th>
+<th>Reporté</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON en production, texte lisible en développement</td>
+<td>L'acheminement vers un collecteur</td>
+</tr>
+<tr>
+<td>Identifiant de trace et identifiant utilisateur sur les entrées</td>
+<td>La conservation après redémarrage d'un pod</td>
+</tr>
+<tr>
+<td>Niveaux par catégorie, EF Core rabaissé</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Serilog</strong> a été retenu comme fournisseur, en remplacement de ceux d'ASP.NET Core. Le code
+applicatif n'en sait rien : il écrit toujours par <code>ILogger</code>. Ce choix laisse la porte ouverte à Seq,
+candidat du §5, écrit par l'auteur de Serilog — le retenir n'entraînerait aucune réécriture.</p>
+<p>➜ Le détail — les trois étages, la configuration, ce que porte chaque entrée — est dans
+<a href="../../../briques/serilog/">Serilog</a>.</p>
+<p><strong>Un trou d'instrumentation, découvert en chemin.</strong> L'import Open Food Facts comptait ses lignes
+rejetées sans dire pourquoi elles l'étaient. Sur plusieurs millions de lignes, un dump corrompu et
+un mapping devenu trop strict se ressemblaient. Chaque rejet nomme désormais son motif — JSON
+invalide, ligne vide, identité absente, valeur aberrante —, et le bilan de fin les ventile. Les deux
+sondes de santé journalisent également leurs verdicts d'échec : l'orchestrateur enregistre bien
+qu'une sonde a échoué, mais ni sa cause — il ne lit que le code HTTP — ni au-delà d'une heure, durée
+de vie de ses événements.</p>
 <h3 id="volet-2-metriques-applicatives-ntr-138">Volet 2 — Métriques applicatives (NTR-138)<a class="headerlink" href="#volet-2-metriques-applicatives-ntr-138" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2530,8 +2588,7 @@ personne ne les écoutait.</p>
 distinguera une mesure de production d'une mesure de recette une fois collectées côte à côte.</p>
 <p>Deux choix méritent d'être connus. Les <strong>sondes de santé sont exclues des traces</strong> — le kubelet les
 interroge en continu et noierait tout le reste sous leur volume. Les <strong>journaux n'ont pas de sortie
-console</strong> : le logger d'ASP.NET Core écrit déjà là, les doubler rendrait la console illisible ; leur
-format et leur enrichissement relèvent de NTR-137.</p>
+console par ce chemin</strong> : c'est Serilog qui écrit là, les doubler rendrait la console illisible.</p>
 <h3 id="volet-5-observabilite-de-la-base-de-donnees-ntr-141">Volet 5 — Observabilité de la base de données (NTR-141)<a class="headerlink" href="#volet-5-observabilite-de-la-base-de-donnees-ntr-141" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2606,6 +2663,30 @@ format et leur enrichissement relèvent de NTR-137.</p>
 </table>
 <p><strong>Critères pour trancher :</strong> volume de journaux attendu, temps d'exploitation acceptable sur le VPS,
 et sensibilité des données qui transiteraient par un tiers.</p>
+<p><strong>Deux des trois critères supposent une production qui tourne</strong>, laquelle dépend d'un VPS non encore
+loué. Attendre cette décision pour avancer revenait donc à attendre le VPS : c'est la raison pour
+laquelle le volet 1 a été scindé plutôt que suspendu.</p>
+<p><strong>Ce que les choix déjà faits impliquent pour cette décision :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Conséquence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Les mesures sortent en <strong>OTLP</strong>, protocole standard</td>
+<td>les trois candidats le consomment indifféremment — aucun n'est favorisé</td>
+</tr>
+<tr>
+<td>Les journaux passent par <strong>Serilog</strong></td>
+<td>retenir Seq n'entraînerait aucune réécriture : les deux ont le même auteur, et le sink s'ajoute par configuration</td>
+</tr>
+</tbody>
+</table>
+<p>Autrement dit, Seq est devenu un peu moins coûteux que les deux autres, sans que la décision soit
+prise pour autant.</p>
 <blockquote>
 <p>Une fois la décision prise, l'inscrire dans le tableau des décisions d'architecture de
 <code>CLAUDE.md</code>, au même titre que docker-compose ou K3s.</p>
@@ -2659,12 +2740,28 @@ et sensibilité des données qui transiteraient par un tiers.</p>
 <td>L'arbre d'une requête réelle et la jonction par le <code>traceId</code> — deux cas de niveau 3 contre PostgreSQL et Redis (NTR-139)</td>
 </tr>
 <tr>
+<td>✅</td>
+<td>Serilog est le fournisseur actif et ses entrées portent l'identifiant de trace — deux cas de niveau 2 (NTR-137)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Le motif de chaque rejet de l'import Open Food Facts — cinq cas de niveau 1 (NTR-137)</td>
+</tr>
+<tr>
 <td>⚠️</td>
 <td>Le <strong>filtre Hangfire</strong> n'est éprouvé qu'indirectement : aucun test ne fait exécuter un vrai job pour vérifier qu'il mesure</td>
 </tr>
 <tr>
 <td>⚠️</td>
+<td>La portée <code>UserId</code> des journaux <strong>n'est pas éprouvée</strong> : aucun code en aval du middleware ne journalise, il n'y a donc aucune entrée sur laquelle la vérifier</td>
+</tr>
+<tr>
+<td>⚠️</td>
 <td>Les <strong>métriques</strong> n'ont été constatées qu'à la source : aucune n'a encore atteint un collecteur</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>La journalisation des sondes de santé n'est <strong>pas couverte par un test</strong></td>
 </tr>
 <tr>
 <td>⚠️</td>

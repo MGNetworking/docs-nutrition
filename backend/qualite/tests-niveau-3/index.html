@@ -1621,6 +1621,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../briques/serilog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serilog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../briques/keycloak-admin/" class="md-nav__link">
         
   
@@ -2917,10 +2938,11 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
 <p><strong>39 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-02 : <code>Réussi! - échec : 0, réussite : 39,
-ignorée(s) : 0, total : 39</code> en 3 min 04. Les niveaux 1 et 2 restent verts — <strong>734 tests</strong> (621 et 113),
+ignorée(s) : 0, total : 39</code> en 3 min 04. Les niveaux 1 et 2 restent verts — <strong>741 tests</strong> (626 et 115),
 les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, les
-quatre suivants le socle OpenTelemetry (NTR-140), les neuf derniers les métriques du cache et des
-jobs (NTR-138), et le dernier le repli du <code>traceId</code> (NTR-139).</p>
+quatre suivants le socle OpenTelemetry (NTR-140), les neuf suivants les métriques du cache et des
+jobs (NTR-138), un le repli du <code>traceId</code> (NTR-139), et les sept derniers les motifs de rejet de
+l'import et le branchement de Serilog (NTR-137).</p>
 <p>Les <strong>deux tests ajoutés à ce niveau</strong> viennent de <code>Observability/TraceCorrelationTest.cs</code>
 (NTR-139) : une requête réelle produit un arbre dont toutes les étapes partagent un identifiant, et
 l'identifiant publié dans une réponse d'erreur est celui de la trace correspondante. Ce niveau est

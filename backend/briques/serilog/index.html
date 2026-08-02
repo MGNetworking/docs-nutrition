@@ -13,25 +13,25 @@
       
       
       
-        <link rel="prev" href="../workflow-import/">
+        <link rel="prev" href="../hangfire/">
       
       
-        <link rel="next" href="../../bilan-nutritionnel/">
+        <link rel="next" href="../keycloak-admin/">
       
       
-      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
-        <title>Source Open Food Facts - Nutrition API — Documentation</title>
+        <title>Serilog - Nutrition API — Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -50,7 +50,7 @@
       
     
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#source-open-food-facts-import-du-catalogue" class="md-skip">
+        <a href="#serilog-journalisation-structuree" class="md-skip">
           Aller au contenu
         </a>
       
@@ -90,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="En-tête">
-    <a href="../../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-header__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Source Open Food Facts
+              Serilog
             
           </span>
         </div>
@@ -205,7 +205,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
     
@@ -224,7 +224,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../1.nutrition-introduction/" class="md-tabs__link">
+        <a href="../../1.nutrition-introduction/" class="md-tabs__link">
           
   
   Spécifications
@@ -242,10 +242,28 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../design/design-domain/" class="md-tabs__link">
+        <a href="../../design/design-domain/" class="md-tabs__link">
           
   
   Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../systemes/" class="md-tabs__link">
+          
+  
+  Systèmes
 
         </a>
       </li>
@@ -262,25 +280,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
-          
-  
-  Systèmes
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../../briques/environnement-local/" class="md-tabs__link">
+        <a href="../environnement-local/" class="md-tabs__link">
           
   
   Briques techniques
@@ -298,7 +298,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../qualite/niveaux-de-tests/" class="md-tabs__link">
+        <a href="../../qualite/niveaux-de-tests/" class="md-tabs__link">
           
   
   Qualité
@@ -316,7 +316,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../reference/diagramme-classes/" class="md-tabs__link">
+        <a href="../../reference/diagramme-classes/" class="md-tabs__link">
           
   
   Référence
@@ -349,7 +349,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
+    <a href="../../.." title="Nutrition API — Documentation" class="md-nav__button md-logo" aria-label="Nutrition API — Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -367,7 +367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -427,7 +427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../1.nutrition-introduction/" class="md-nav__link">
+      <a href="../../1.nutrition-introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -448,7 +448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../2.nutrition-cas-usage/" class="md-nav__link">
+      <a href="../../2.nutrition-cas-usage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -469,7 +469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
+      <a href="../../3.nutrition-specifications-fonctionnelles/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -490,7 +490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../4.nutrition-specifications-techniques/" class="md-nav__link">
+      <a href="../../4.nutrition-specifications-techniques/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -511,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../5.nutrition-contraintes/" class="md-nav__link">
+      <a href="../../5.nutrition-contraintes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -532,7 +532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../6.nutrition-abonnements/" class="md-nav__link">
+      <a href="../../6.nutrition-abonnements/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -553,7 +553,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../7.nutrition-admin/" class="md-nav__link">
+      <a href="../../7.nutrition-admin/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -621,7 +621,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/design-domain/" class="md-nav__link">
+      <a href="../../design/design-domain/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -642,7 +642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/Regles-metier/" class="md-nav__link">
+      <a href="../../design/Regles-metier/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -663,7 +663,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/regles-metier-consolidees/" class="md-nav__link">
+      <a href="../../design/regles-metier-consolidees/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -684,7 +684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/design-application/" class="md-nav__link">
+      <a href="../../design/design-application/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -705,7 +705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/design-infrastructure/" class="md-nav__link">
+      <a href="../../design/design-infrastructure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -726,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/design-api/" class="md-nav__link">
+      <a href="../../design/design-api/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -747,7 +747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/design-api-infrastructure/" class="md-nav__link">
+      <a href="../../design/design-api-infrastructure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -768,7 +768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../design/design-tests/" class="md-nav__link">
+      <a href="../../design/design-tests/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -793,30 +793,25 @@
       
   
   
-    
   
   
-  
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -827,7 +822,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Systèmes
@@ -841,7 +836,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../../systemes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -862,7 +857,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authentification/" class="md-nav__link">
+      <a href="../../systemes/authentification/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -883,7 +878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../profil-utilisateur/" class="md-nav__link">
+      <a href="../../systemes/profil-utilisateur/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -904,7 +899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../diet-plan/" class="md-nav__link">
+      <a href="../../systemes/diet-plan/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -925,7 +920,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../diet/" class="md-nav__link">
+      <a href="../../systemes/diet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -946,7 +941,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../repas/" class="md-nav__link">
+      <a href="../../systemes/repas/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -967,7 +962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../suivi-poids/" class="md-nav__link">
+      <a href="../../systemes/suivi-poids/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -985,30 +980,25 @@
                 
   
   
-    
   
   
-  
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1019,7 +1009,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
             Aliments
@@ -1033,7 +1023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../systemes/aliments/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1054,7 +1044,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cache-recherche/" class="md-nav__link">
+      <a href="../../systemes/aliments/cache-recherche/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1075,7 +1065,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workflow-cache-recherche/" class="md-nav__link">
+      <a href="../../systemes/aliments/workflow-cache-recherche/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1096,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mise-a-disposition/" class="md-nav__link">
+      <a href="../../systemes/aliments/mise-a-disposition/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1117,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../workflow-import/" class="md-nav__link">
+      <a href="../../systemes/aliments/workflow-import/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1135,30 +1125,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Source Open Food Facts
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../systemes/aliments/source-open-food-facts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1167,104 +1137,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table des matières
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#contexte" class="md-nav__link">
-    <span class="md-ellipsis">
-      Contexte
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mecanisme" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mécanisme
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Mécanisme">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#job-planifie-couche-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Job planifié (couche Infrastructure)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#frequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Fréquence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#donnees-importees" class="md-nav__link">
-    <span class="md-ellipsis">
-      Données importées
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#produits-introuvables-lors-dune-recherche" class="md-nav__link">
-    <span class="md-ellipsis">
-      Produits introuvables lors d'une recherche
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#impact-sur-larchitecture-de-recherche" class="md-nav__link">
-    <span class="md-ellipsis">
-      Impact sur l'architecture de recherche
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#considerations-techniques-tranchees-a-limplementation-ntr-55" class="md-nav__link">
-    <span class="md-ellipsis">
-      Considérations techniques — tranchées à l'implémentation (NTR-55)
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1290,20 +1162,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
         
           
-          <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1328,7 +1197,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../bilan-nutritionnel/" class="md-nav__link">
+      <a href="../../systemes/bilan-nutritionnel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1349,7 +1218,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../bilan-nutritionnel/moteur-de-calcul/" class="md-nav__link">
+      <a href="../../systemes/bilan-nutritionnel/moteur-de-calcul/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1378,7 +1247,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../abonnements/" class="md-nav__link">
+      <a href="../../systemes/abonnements/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1404,20 +1273,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
         
           
-          <label class="md-nav__link" for="__nav_4_11" id="__nav_4_11_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_11" id="__nav_4_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1442,7 +1308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rgpd/" class="md-nav__link">
+      <a href="../../systemes/rgpd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1463,7 +1329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rgpd/purge-des-comptes/" class="md-nav__link">
+      <a href="../../systemes/rgpd/purge-des-comptes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1492,7 +1358,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../administration/" class="md-nav__link">
+      <a href="../../systemes/administration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1518,20 +1384,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_13" >
         
           
-          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1556,7 +1419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plateforme/pipeline-http/" class="md-nav__link">
+      <a href="../../systemes/plateforme/pipeline-http/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1577,7 +1440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plateforme/openapi/" class="md-nav__link">
+      <a href="../../systemes/plateforme/openapi/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1598,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plateforme/exception-filter/" class="md-nav__link">
+      <a href="../../systemes/plateforme/exception-filter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1619,7 +1482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../plateforme/observabilite/" class="md-nav__link">
+      <a href="../../systemes/plateforme/observabilite/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1652,25 +1515,30 @@
       
   
   
+    
   
   
+  
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1681,7 +1549,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Briques techniques
@@ -1695,7 +1563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../briques/environnement-local/" class="md-nav__link">
+      <a href="../environnement-local/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1716,7 +1584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../briques/redis/" class="md-nav__link">
+      <a href="../redis/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1737,7 +1605,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../briques/hangfire/" class="md-nav__link">
+      <a href="../hangfire/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1755,10 +1623,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../briques/serilog/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Serilog
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1767,6 +1655,89 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-le-modele-mental-trois-etages" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Le modèle mental — trois étages
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-pourquoi-serilog-et-ce-qui-a-ete-ecarte" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Pourquoi Serilog, et ce qui a été écarté
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ce-que-porte-chaque-entree" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Ce que porte chaque entrée
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ce-qui-nest-pas-fait" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Ce qui n'est pas fait
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-voir-aussi" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Voir aussi
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1779,7 +1750,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../briques/keycloak-admin/" class="md-nav__link">
+      <a href="../keycloak-admin/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1800,7 +1771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../briques/stripe/" class="md-nav__link">
+      <a href="../stripe/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1821,7 +1792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../briques/publication-docs/" class="md-nav__link">
+      <a href="../publication-docs/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1889,7 +1860,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../qualite/niveaux-de-tests/" class="md-nav__link">
+      <a href="../../qualite/niveaux-de-tests/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1910,7 +1881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../qualite/tests-niveau-1/" class="md-nav__link">
+      <a href="../../qualite/tests-niveau-1/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1931,7 +1902,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../qualite/tests-niveau-2/" class="md-nav__link">
+      <a href="../../qualite/tests-niveau-2/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1952,7 +1923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../qualite/tests-niveau-3/" class="md-nav__link">
+      <a href="../../qualite/tests-niveau-3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2020,7 +1991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/diagramme-classes/" class="md-nav__link">
+      <a href="../../reference/diagramme-classes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2041,7 +2012,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/flux-metier/" class="md-nav__link">
+      <a href="../../reference/flux-metier/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2062,7 +2033,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/concept-moteur/" class="md-nav__link">
+      <a href="../../reference/concept-moteur/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2083,7 +2054,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/regles-tickets/" class="md-nav__link">
+      <a href="../../reference/regles-tickets/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2131,78 +2102,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#contexte" class="md-nav__link">
+  <a href="#1-le-modele-mental-trois-etages" class="md-nav__link">
     <span class="md-ellipsis">
-      Contexte
+      1. Le modèle mental — trois étages
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#mecanisme" class="md-nav__link">
+  <a href="#2-pourquoi-serilog-et-ce-qui-a-ete-ecarte" class="md-nav__link">
     <span class="md-ellipsis">
-      Mécanisme
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Mécanisme">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#job-planifie-couche-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Job planifié (couche Infrastructure)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#frequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Fréquence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#donnees-importees" class="md-nav__link">
-    <span class="md-ellipsis">
-      Données importées
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#produits-introuvables-lors-dune-recherche" class="md-nav__link">
-    <span class="md-ellipsis">
-      Produits introuvables lors d'une recherche
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#impact-sur-larchitecture-de-recherche" class="md-nav__link">
-    <span class="md-ellipsis">
-      Impact sur l'architecture de recherche
+      2. Pourquoi Serilog, et ce qui a été écarté
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#considerations-techniques-tranchees-a-limplementation-ntr-55" class="md-nav__link">
+  <a href="#3-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Considérations techniques — tranchées à l'implémentation (NTR-55)
+      3. Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ce-que-porte-chaque-entree" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Ce que porte chaque entrée
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ce-qui-nest-pas-fait" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Ce qui n'est pas fait
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etat-de-confiance" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. État de confiance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-voir-aussi" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Voir aussi
     </span>
   </a>
   
@@ -2223,158 +2179,196 @@
                   
 
 
-<h1 id="source-open-food-facts-import-du-catalogue">Source Open Food Facts — import du catalogue<a class="headerlink" href="#source-open-food-facts-import-du-catalogue" title="Permanent link">&para;</a></h1>
+<h1 id="serilog-journalisation-structuree">Serilog — journalisation structurée<a class="headerlink" href="#serilog-journalisation-structuree" title="Permanent link">&para;</a></h1>
+<p><strong>Ajouté le :</strong> 2026-08-02
+<strong>Type :</strong> Interne
+<strong>Ticket :</strong> NTR-137</p>
 <blockquote>
-<p><strong>Portée de ce document : la source de données — le <em>quoi</em> et le <em>pourquoi</em>.</strong>
-Pourquoi importer un dump plutôt qu'appeler l'API OFF, quelles données sont reprises,
-à quelle fréquence. Il ne décrit <strong>pas</strong> l'implémentation.</p>
-<p>➜ Pour comprendre <strong>comment l'import fonctionne</strong> (classes, traitement par lots, supervision),
-lire <a href="../workflow-import/">Workflow — Mise à disposition des aliments</a>.</p>
+<p><strong>Portée de ce document : Serilog, et lui seul.</strong>
+➜ Pour ce que l'observabilité cherche à obtenir dans son ensemble — journaux, métriques et
+traces —, lire <a href="../../systemes/plateforme/observabilite/">Observabilité</a>.</p>
 </blockquote>
 <hr />
-<h2 id="contexte">Contexte<a class="headerlink" href="#contexte" title="Permanent link">&para;</a></h2>
-<p>Open Food Facts est une base de données alimentaire open-source (licence ODbL) contenant 3M+ produits.
-Ils publient des exports complets de leur base (dump) mis à jour quotidiennement, téléchargeables librement.</p>
-<p><strong>Pourquoi un import de dump et non des appels API à la demande ?</strong></p>
+<h2 id="1-le-modele-mental-trois-etages">1. Le modèle mental — trois étages<a class="headerlink" href="#1-le-modele-mental-trois-etages" title="Permanent link">&para;</a></h2>
+<p>Sans cette distinction, le choix « ASP.NET Core ou Serilog » paraît être une alternative. Ce n'en
+est pas une : les deux occupent des étages différents.</p>
 <table>
 <thead>
 <tr>
-<th>Approche</th>
-<th>Problème</th>
+<th>Étage</th>
+<th>Rôle</th>
+<th>Ce qui l'occupe ici</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Appel API OFF à chaque recherche utilisateur</td>
-<td>Dépendance forte à un service externe, latence, risque de blocage</td>
+<td><strong>Abstraction</strong></td>
+<td><code>_logger.LogWarning(…)</code> dans le code. Ne fait rien, transmet.</td>
+<td><code>ILogger</code> d'ASP.NET Core — <strong>inchangé</strong></td>
 </tr>
 <tr>
-<td>Appel API OFF automatisé en masse</td>
-<td>Usage abusif de leur API — contre leurs conditions d'utilisation</td>
+<td><strong>Fournisseur</strong></td>
+<td>Reçoit le message, le met en forme, l'écrit.</td>
+<td><strong>Serilog</strong>, en remplacement de ceux d'ASP.NET Core</td>
 </tr>
 <tr>
-<td><strong>Import du dump officiel</strong></td>
-<td>Légal, complet, indépendant des utilisateurs, recommandé par OFF</td>
+<td><strong>Destination</strong></td>
+<td>Où le texte atterrit. Serilog les appelle des <em>sinks</em>.</td>
+<td>la console, et rien d'autre pour l'instant</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="mecanisme">Mécanisme<a class="headerlink" href="#mecanisme" title="Permanent link">&para;</a></h2>
-<h3 id="job-planifie-couche-infrastructure">Job planifié (couche Infrastructure)<a class="headerlink" href="#job-planifie-couche-infrastructure" title="Permanent link">&para;</a></h3>
-<p>Un job de fond s'exécute quotidiennement pour maintenir la table <code>FoodItem</code> à jour :</p>
-<ol>
-<li>Téléchargement du dump OFF (format JSONL ou CSV)</li>
-<li>Pour chaque produit du dump :</li>
-<li>Si <code>OffId</code> absent en base → <code>INSERT FoodItem</code></li>
-<li>Si <code>OffId</code> présent en base → <code>UPDATE FoodItem</code> (valeurs nutritionnelles, allergènes)</li>
-<li>Mise à jour du champ <code>CachedAt</code> à la date d'import</li>
-</ol>
-<h3 id="frequence">Fréquence<a class="headerlink" href="#frequence" title="Permanent link">&para;</a></h3>
+<p><strong>Conséquence pratique : aucun code applicatif ne connaît Serilog.</strong> Les 19 appels de
+journalisation du projet passent par <code>ILogger</code> et ne changeraient pas si Serilog était retiré.</p>
+<h2 id="2-pourquoi-serilog-et-ce-qui-a-ete-ecarte">2. Pourquoi Serilog, et ce qui a été écarté<a class="headerlink" href="#2-pourquoi-serilog-et-ce-qui-a-ete-ecarte" title="Permanent link">&para;</a></h2>
+<p>Le mécanisme d'ASP.NET Core sait produire du JSON en une ligne de configuration. Il aurait suffi.</p>
 <table>
 <thead>
 <tr>
-<th>Fréquence</th>
-<th>Justification</th>
+<th>Ce qui a fait pencher pour Serilog</th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Quotidienne</strong></td>
-<td>OFF met à jour son dump chaque jour — synchronisation au plus proche</td>
+<td>Les <em>sinks</em></td>
+<td>ASP.NET Core n'écrit que sur la console et le débogueur. Serilog atteint fichier, Seq, Elasticsearch, base de données.</td>
+</tr>
+<tr>
+<td>L'affinité avec Seq</td>
+<td>Seq, l'un des trois candidats du §5 de l'epic, est écrit par l'auteur de Serilog. Retenir Seq n'entraînerait aucune réécriture.</td>
+</tr>
+<tr>
+<td>La configuration par fichier</td>
+<td>Niveaux, filtres et destinations se règlent dans <code>appsettings.json</code>, sans recompiler.</td>
+</tr>
+<tr>
+<td>L'usage</td>
+<td>C'est la bibliothèque de journalisation tierce dominante dans l'écosystème .NET d'entreprise.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="donnees-importees">Données importées<a class="headerlink" href="#donnees-importees" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Champ OFF</th>
-<th>Champ FoodItem</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>code</code> (code-barres)</td>
-<td><code>OffId</code></td>
-</tr>
-<tr>
-<td><code>product_name</code></td>
-<td><code>Name</code></td>
-</tr>
-<tr>
-<td><code>energy-kcal_100g</code></td>
-<td><code>CaloriesPer100g</code></td>
-</tr>
-<tr>
-<td><code>proteins_100g</code></td>
-<td><code>ProteinsPer100g</code></td>
-</tr>
-<tr>
-<td><code>carbohydrates_100g</code></td>
-<td><code>CarbsPer100g</code></td>
-</tr>
-<tr>
-<td><code>fat_100g</code></td>
-<td><code>FatsPer100g</code></td>
-</tr>
-<tr>
-<td><code>allergens_tags</code></td>
-<td><code>AllergensTags</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="produits-introuvables-lors-dune-recherche">Produits introuvables lors d'une recherche<a class="headerlink" href="#produits-introuvables-lors-dune-recherche" title="Permanent link">&para;</a></h3>
-<p>Si un utilisateur cherche un produit absent de la base locale, le système retourne une liste vide.
-Le produit sera disponible après le prochain import quotidien.</p>
 <blockquote>
-<p>Les produits ajoutés à OFF dans les dernières 24h ne sont pas disponibles immédiatement — cas marginal, accepté.</p>
+<p><strong>Seq n'est pas une obligation.</strong> C'est un sink parmi des dizaines. Serilog sans backend écrit sur
+la console, exactement comme le ferait le mécanisme intégré.</p>
 </blockquote>
-<hr />
-<h2 id="impact-sur-larchitecture-de-recherche">Impact sur l'architecture de recherche<a class="headerlink" href="#impact-sur-larchitecture-de-recherche" title="Permanent link">&para;</a></h2>
-<p>La recherche utilisateur n'appelle <strong>jamais</strong> l'API OFF directement. Elle opère sur 2 niveaux :</p>
-<div class="language-text highlight"><pre><span></span><code>Recherche utilisateur
-├── Niveau 1 — Cache Redis   → réponse immédiate si mot-clé récent
-└── Niveau 2 — PostgreSQL    → lecture FoodItem + alimentation cache
-    └── Introuvable           → liste vide (pas d&#39;appel OFF)
-
-Job Infrastructure (indépendant)
-└── Import dump OFF quotidien → alimente PostgreSQL FoodItem
-</code></pre></div>
-<hr />
-<h2 id="considerations-techniques-tranchees-a-limplementation-ntr-55">Considérations techniques — tranchées à l'implémentation (NTR-55)<a class="headerlink" href="#considerations-techniques-tranchees-a-limplementation-ntr-55" title="Permanent link">&para;</a></h2>
+<p><strong>Ce qui a été écarté :</strong> le sink fichier avec rotation quotidienne. Il survivrait au redémarrage
+d'un pod, ce qui répond en partie au problème central du §2 de l'epic. Mais écrire les journaux
+dans un fichier à l'intérieur d'un pod va contre la pratique établie sous Kubernetes — sortie
+standard, puis collecteur —, oblige à gérer un volume, une rotation et un nettoyage, et ne rend pas
+les journaux requêtables pour autant.</p>
+<h2 id="3-configuration">3. Configuration<a class="headerlink" href="#3-configuration" title="Permanent link">&para;</a></h2>
+<p>Tout est dans la section <code>Serilog</code>. <strong>La section <code>Logging</code> n'est plus lue</strong> : elle a été supprimée
+pour qu'aucun réglage n'y soit fait sans effet.</p>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MinimumLevel:Default</code></td>
+<td>Niveau plancher — <code>Information</code></td>
+</tr>
+<tr>
+<td><code>MinimumLevel:Override</code></td>
+<td>Niveau par catégorie. <code>Microsoft.EntityFrameworkCore.Database.Command</code> est rabaissé à <code>Warning</code> : en <code>Information</code>, EF Core journalise <strong>chaque requête SQL</strong> — verbeux et coûteux.</td>
+</tr>
+<tr>
+<td><code>WriteTo</code></td>
+<td>Les destinations. Une seule : la console.</td>
+</tr>
+<tr>
+<td><code>Enrich</code></td>
+<td><code>FromLogContext</code>, qui fait remonter les propriétés attachées par les portées.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Production</strong> — <code>CompactJsonFormatter</code> : une ligne JSON par entrée, requêtable.
+<strong>Développement</strong> — un gabarit texte lisible, avec l'heure, le niveau, la catégorie et les propriétés.</p>
+<h2 id="4-ce-que-porte-chaque-entree">4. Ce que porte chaque entrée<a class="headerlink" href="#4-ce-que-porte-chaque-entree" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Propriété</th>
+<th>Origine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@tr</code> — identifiant de trace</td>
+<td>Serilog le capture <strong>de lui-même</strong> depuis l'activité en cours. C'est le même que celui des traces OpenTelemetry et que le <code>traceId</code> publié au client en cas d'erreur.</td>
+</tr>
+<tr>
+<td><code>@sp</code> — identifiant d'étape</td>
+<td>idem</td>
+</tr>
+<tr>
+<td><code>UserId</code></td>
+<td>Ouvert en portée par <code>UserResolutionMiddleware</code>, seul endroit du pipeline à connaître l'identifiant applicatif</td>
+</tr>
+<tr>
+<td><code>SourceContext</code></td>
+<td>La classe qui a écrit l'entrée</td>
+</tr>
+</tbody>
+</table>
+<p>Les entrées écrites hors d'une requête HTTP — démarrage, services de fond — n'ont pas
+d'identifiant de trace : elles n'appartiennent à aucune requête.</p>
+<h2 id="5-ce-qui-nest-pas-fait">5. Ce qui n'est pas fait<a class="headerlink" href="#5-ce-qui-nest-pas-fait" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Sujet</th>
-<th>Décision retenue</th>
+<th>Statut</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Taille du dump</strong></td>
-<td>Lecture en streaming + persistance par lots de 1 000 produits</td>
+<td>Destination de collecte</td>
+<td><strong>Non branchée</strong> — le backend n'est pas arrêté, voir le §5 de l'epic</td>
 </tr>
 <tr>
-<td><strong>Outil de planification</strong></td>
-<td>Hangfire (voir <a href="../../../briques/hangfire/">Hangfire — moteur de jobs récurrents</a>) — quotidien à 03h00 UTC</td>
+<td>Conservation après redémarrage d'un pod</td>
+<td>Non résolue — la console disparaît avec le conteneur</td>
 </tr>
 <tr>
-<td><strong>Format</strong></td>
-<td>JSONL compressé (<code>.jsonl.gz</code>), une ligne = un produit</td>
-</tr>
-<tr>
-<td><strong>Première installation</strong></td>
-<td>Import initial complet à prévoir avant la mise en production — <strong>non réalisé à ce jour</strong></td>
-</tr>
-<tr>
-<td><strong>Licence</strong></td>
-<td>Données sous ODbL — mention obligatoire dans les CGU de l'application</td>
+<td>Portée <code>UserId</code> sur les requêtes anonymes</td>
+<td>Sans objet — il n'y a pas d'utilisateur à nommer</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>Le détail de ces choix et leurs raisons figurent dans <a href="../workflow-import/">Workflow — Mise à disposition des aliments</a> §5.</p>
-</blockquote>
+<h2 id="6-etat-de-confiance">6. État de confiance<a class="headerlink" href="#6-etat-de-confiance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Marque</th>
+<th>Élément</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Serilog est bien le fournisseur actif, et ses entrées portent l'identifiant de trace — deux cas de niveau 2</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>La portée <code>UserId</code> <strong>n'est pas éprouvée</strong> : aucun code en aval du middleware ne journalise aujourd'hui, il n'y a donc aucune entrée sur laquelle la vérifier</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Le format JSON de production n'a pas été observé — le développement et les tests utilisent l'autre sortie</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-voir-aussi">7. Voir aussi<a class="headerlink" href="#7-voir-aussi" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../systemes/plateforme/observabilite/">Observabilité</a> — l'ensemble : journaux, métriques, traces</li>
+<li><a href="../../systemes/plateforme/exception-filter/">Exception Filter</a> — le <code>traceId</code> publié au client</li>
+<li><a href="../../systemes/plateforme/pipeline-http/">Pipeline HTTP</a> — <code>RequestLoggingMiddleware</code> et l'ordre des middlewares</li>
+</ul>
 
 
 
@@ -2427,10 +2421,10 @@ Job Infrastructure (indépendant)
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
     
   </body>
