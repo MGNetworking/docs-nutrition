@@ -2329,9 +2329,9 @@ journaliser.</p>
 <td>aucune corrélation entre l'erreur vue par l'utilisateur et la trace serveur</td>
 </tr>
 <tr>
-<td><code>traceId</code> (NTR-135)</td>
-<td>identifiant par requête dans les <code>ProblemDetails</code></td>
-<td>rien pour l'exploiter</td>
+<td><code>traceId</code> (NTR-135, NTR-139)</td>
+<td>l'identifiant de trace W3C dans les <code>ProblemDetails</code></td>
+<td>un collecteur où aller le chercher</td>
 </tr>
 <tr>
 <td><code>JobMonitoringService</code></td>
@@ -2349,9 +2349,9 @@ journaliser.</p>
 <td>le seuil de lenteur et sa journalisation dédiée</td>
 </tr>
 <tr>
-<td>Métriques (NTR-140)</td>
-<td>durées et taux d'erreur HTTP, entrants et sortants</td>
-<td>cache, jobs et pool de connexions</td>
+<td>Métriques (NTR-140, NTR-138)</td>
+<td>durées et taux d'erreur HTTP, cache, jobs et pool de connexions</td>
+<td>rien — il manque une destination</td>
 </tr>
 <tr>
 <td>Traces (NTR-140)</td>
@@ -2405,30 +2405,64 @@ envoyée nulle part tant que le §5 n'est pas tranché.</p>
 <thead>
 <tr>
 <th>Indicateur</th>
-<th>Source</th>
+<th>Instrument</th>
 <th>Pourquoi</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Durée et taux d'erreur par endpoint</td>
-<td><code>RequestLoggingMiddleware</code> mesure déjà la durée</td>
+<td><code>http.server.request.duration</code>, publié par ASP.NET Core</td>
 <td>détecter une dégradation avant les utilisateurs</td>
 </tr>
 <tr>
+<td>Saturation du pool PostgreSQL</td>
+<td>publié par Npgsql</td>
+<td>cause classique de latence en production</td>
+</tr>
+<tr>
 <td>Taux de succès du cache Redis</td>
-<td><code>RedisFoodCacheService</code></td>
+<td><code>nutrition.cache.lookups</code></td>
 <td>un cache qui ne sert plus est un cache inutile — et coûteux</td>
 </tr>
 <tr>
 <td>Durée et issue des jobs Hangfire</td>
-<td>tables <code>hangfire</code></td>
+<td><code>nutrition.job.duration</code></td>
 <td>un job qui échoue chaque nuit doit se voir</td>
 </tr>
+</tbody>
+</table>
+<p><strong>Les deux premiers n'ont demandé aucun code</strong> : les bibliothèques les publient, il suffisait de les
+écouter. La durée par endpoint est d'ailleurs mesurée deux fois — <code>RequestLoggingMiddleware</code> la
+journalise pour l'œil humain, ASP.NET Core la compte pour l'outil. Les deux subsistent : elles ne
+répondent pas à la même question.</p>
+<p><strong>Les deux derniers naissent d'une décision prise dans le code</strong>, et n'existaient donc nulle part.
+Ils vivent en couche Infrastructure, là où l'événement se produit : un taux de succès de cache n'est
+pas une préoccupation d'API, et le faire transiter par une interface d'Application aurait ajouté une
+abstraction pour un usage unique.</p>
+<table>
+<thead>
 <tr>
-<td>Saturation du pool PostgreSQL</td>
-<td>Npgsql</td>
-<td>cause classique de latence en production</td>
+<th>Choix</th>
+<th>Ce qu'il évite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Une seule série <code>nutrition.cache.lookups</code>, étiquetée <code>hit</code>, <code>miss</code> ou <code>failure</code></td>
+<td>trois compteurs à tenir accordés ; le taux se calcule à la lecture</td>
+</tr>
+<tr>
+<td><strong><code>failure</code> distingué de <code>miss</code></strong></td>
+<td>un cache injoignable se présenterait sinon comme un cache qui ne sert jamais — deux pannes qui n'appellent pas la même intervention</td>
+</tr>
+<tr>
+<td>Un <strong>filtre serveur Hangfire</strong>, plutôt qu'une mesure écrite dans chaque job</td>
+<td>l'import OFF, la purge RGPD et tout job futur sont couverts sans y toucher</td>
+</tr>
+<tr>
+<td>La durée des jobs en <strong>secondes</strong></td>
+<td>un seuil faux d'un facteur mille, sans que rien ne le signale</td>
 </tr>
 </tbody>
 </table>
@@ -2444,6 +2478,19 @@ le temps est passé.</p>
 cause.</p>
 <p>Le <code>traceId</code> livré par NTR-135 dans les <code>ProblemDetails</code> devient ici le <strong>point de jonction</strong> : un
 utilisateur signale une erreur, l'identifiant mène directement à la trace complète.</p>
+<p><strong>Ce qui a été fait, et ce qui l'était déjà.</strong> L'arbre lui-même venait du volet 4 : la propagation
+du contexte et l'instrumentation des appels sortants sont des conséquences de l'instrumentation
+automatique, non un travail propre à ce volet.</p>
+<p>Restait le point de jonction — et il ne fonctionnait pas. Le champ <code>traceId</code> portait
+<code>HttpContext.TraceIdentifier</code>, l'identifiant de requête de <strong>Kestrel</strong>, propre à la connexion et
+absent de toute trace. L'utilisateur signalait un jeton qui ne menait nulle part. Il porte désormais
+l'identifiant de trace W3C, avec repli sur l'identifiant Kestrel quand aucune trace n'est en cours.</p>
+<p>Deux cas de niveau 3 l'éprouvent contre PostgreSQL et Redis réels : une requête produit bien un
+arbre dont toutes les étapes partagent un identifiant, et l'identifiant publié dans une réponse
+d'erreur est celui de la trace correspondante. Ce niveau est le seul où la question se pose —
+ailleurs, les dépendances sont doublées et l'arbre serait vide.</p>
+<p>➜ Voir <a href="../exception-filter/">Exception Filter</a> pour la forme du champ et ce que son changement
+implique pour un client.</p>
 <h3 id="volet-4-socle-opentelemetry-ntr-140">Volet 4 — Socle OpenTelemetry (NTR-140)<a class="headerlink" href="#volet-4-socle-opentelemetry-ntr-140" title="Permanent link">&para;</a></h3>
 <p><strong>Pourquoi OpenTelemetry plutôt qu'une bibliothèque par signal :</strong></p>
 <ul>
@@ -2604,8 +2651,20 @@ et sensibilité des données qui transiteraient par un tiers.</p>
 <td>Le socle OpenTelemetry est enregistré et porte l'identité du service — quatre cas de niveau 2 (NTR-140)</td>
 </tr>
 <tr>
+<td>✅</td>
+<td>Le compteur du cache distingue succès, défaut et panne, et la durée des jobs est enregistrée en secondes avec son issue — neuf cas de niveau 1 (NTR-138)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>L'arbre d'une requête réelle et la jonction par le <code>traceId</code> — deux cas de niveau 3 contre PostgreSQL et Redis (NTR-139)</td>
+</tr>
+<tr>
 <td>⚠️</td>
-<td>Les instrumentations HTTP, SQL et Redis sont branchées, mais <strong>aucune trace ni métrique n'a été constatée de bout en bout</strong> : rien ne les reçoit encore</td>
+<td>Le <strong>filtre Hangfire</strong> n'est éprouvé qu'indirectement : aucun test ne fait exécuter un vrai job pour vérifier qu'il mesure</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Les <strong>métriques</strong> n'ont été constatées qu'à la source : aucune n'a encore atteint un collecteur</td>
 </tr>
 <tr>
 <td>⚠️</td>
@@ -2613,7 +2672,7 @@ et sensibilité des données qui transiteraient par un tiers.</p>
 </tr>
 <tr>
 <td>❌</td>
-<td>Journaux structurés, métriques métier, supervision de la base</td>
+<td>Journaux structurés, supervision de la base</td>
 </tr>
 <tr>
 <td>❌</td>

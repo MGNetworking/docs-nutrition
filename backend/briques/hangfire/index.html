@@ -1759,6 +1759,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#la-mesure-des-executions-ntr-138" class="md-nav__link">
+    <span class="md-ellipsis">
+      La mesure des exécutions — NTR-138
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2384,6 +2393,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#la-mesure-des-executions-ntr-138" class="md-nav__link">
+    <span class="md-ellipsis">
+      La mesure des exécutions — NTR-138
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2773,6 +2791,17 @@ minutes, selon le mécanisme ci-dessus.</p>
 <blockquote>
 <p>C'est ce chaînage — <em>le Server écrit → la supervision relit</em> — qui explique pourquoi aucune entité <code>JobExecution</code> maison n'est nécessaire : l'historique <strong>est</strong> la source de vérité, et il est tenu par Hangfire.</p>
 </blockquote>
+<h3 id="la-mesure-des-executions-ntr-138">La mesure des exécutions — NTR-138<a class="headerlink" href="#la-mesure-des-executions-ntr-138" title="Permanent link">&para;</a></h3>
+<p>La supervision ci-dessus ne répond qu'à la demande, sur appel de la route d'administration. Elle ne
+dit rien d'une tendance : un job qui met deux fois plus de temps qu'il y a un mois ne se voit pas.</p>
+<p><code>JobMetricsFilter</code>, un filtre serveur enregistré dans la configuration Hangfire, enregistre la durée
+de chaque exécution sous <code>nutrition.job.duration</code>, étiquetée par job et par issue (<code>success</code> ou
+<code>failure</code>). Il lit l'exception portée par le contexte d'exécution : il n'intercepte rien et ne
+masque donc aucun échec.</p>
+<p>Un filtre plutôt qu'une mesure écrite dans chaque job — l'import Open Food Facts, la purge RGPD et
+tout job ajouté plus tard sont couverts sans y toucher. C'est aussi ce qui impose la surcharge de
+<code>AddHangfire</code> qui reçoit le fournisseur de services : le filtre a une dépendance, qu'une
+configuration statique ne saurait pas résoudre.</p>
 <hr />
 <h2 id="packages-nuget">Packages NuGet<a class="headerlink" href="#packages-nuget" title="Permanent link">&para;</a></h2>
 <p>Déclarés dans <code>NutritionApi.Infrastructure.csproj</code> — c'est la couche Infrastructure, et elle seule, qui référence Hangfire :</p>

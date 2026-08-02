@@ -1741,6 +1741,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#le-taux-de-succes-est-desormais-mesure-ntr-138" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le taux de succès est désormais mesuré — NTR-138
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2297,6 +2306,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#le-taux-de-succes-est-desormais-mesure-ntr-138" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le taux de succès est désormais mesuré — NTR-138
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2630,6 +2648,37 @@ journalisation SQL d'EF Core, appeler la recherche deux fois de suite, et consta
 <code>SELECT</code> n'apparaît qu'au premier appel.</p>
 <p>Le mot-clé doit être écrit <strong>tel qu'il est normalisé</strong> : <code>« Poulet »</code> et <code>« poulet »</code> partagent
 l'entrée <code>food:search:poulet</code>.</p>
+<h3 id="le-taux-de-succes-est-desormais-mesure-ntr-138">Le taux de succès est désormais mesuré — NTR-138<a class="headerlink" href="#le-taux-de-succes-est-desormais-mesure-ntr-138" title="Permanent link">&para;</a></h3>
+<p><code>RedisFoodCacheService</code> compte chaque recherche présentée au cache sous l'instrument
+<code>nutrition.cache.lookups</code>, étiqueté par issue :</p>
+<table>
+<thead>
+<tr>
+<th>Étiquette</th>
+<th>Ce qui s'est passé</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hit</code></td>
+<td>le cache a répondu, la base n'a pas été interrogée</td>
+</tr>
+<tr>
+<td><code>miss</code></td>
+<td>l'entrée était absente ou expirée</td>
+</tr>
+<tr>
+<td><code>failure</code></td>
+<td><strong>Redis était injoignable</strong></td>
+</tr>
+</tbody>
+</table>
+<p>La troisième vaut d'être connue. L'appelant reçoit <code>null</code> dans les deux derniers cas et repart en
+base : rien ne les distingue de l'extérieur. Les confondre dans la mesure ferait passer un cache en
+panne pour un cache qui ne sert jamais — un cache inutile appelle une révision de sa durée de vie,
+un cache injoignable appelle une intervention.</p>
+<p>Rien de tout cela n'est visible tant qu'aucun collecteur ne reçoit les mesures : voir
+<a href="../../systemes/plateforme/observabilite/">Observabilité</a>.</p>
 <hr />
 <h2 id="points-de-vigilance">Points de vigilance<a class="headerlink" href="#points-de-vigilance" title="Permanent link">&para;</a></h2>
 <h3 id="une-panne-prolongee-coute-de-la-latence">⚠️ Une panne prolongée coûte de la latence<a class="headerlink" href="#une-panne-prolongee-coute-de-la-latence" title="Permanent link">&para;</a></h3>

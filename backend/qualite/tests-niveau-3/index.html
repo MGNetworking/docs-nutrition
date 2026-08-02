@@ -2916,10 +2916,16 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 </table>
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
-<p><strong>37 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-02 : <code>Réussi! - échec : 0, réussite : 37,
-ignorée(s) : 0, total : 37</code> en 2 min 13. Les niveaux 1 et 2 restent verts — <strong>724 tests</strong> (611 et 113),
-les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, et les
-quatre suivants le socle OpenTelemetry (NTR-140).</p>
+<p><strong>39 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-02 : <code>Réussi! - échec : 0, réussite : 39,
+ignorée(s) : 0, total : 39</code> en 3 min 04. Les niveaux 1 et 2 restent verts — <strong>734 tests</strong> (621 et 113),
+les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, les
+quatre suivants le socle OpenTelemetry (NTR-140), les neuf derniers les métriques du cache et des
+jobs (NTR-138), et le dernier le repli du <code>traceId</code> (NTR-139).</p>
+<p>Les <strong>deux tests ajoutés à ce niveau</strong> viennent de <code>Observability/TraceCorrelationTest.cs</code>
+(NTR-139) : une requête réelle produit un arbre dont toutes les étapes partagent un identifiant, et
+l'identifiant publié dans une réponse d'erreur est celui de la trace correspondante. Ce niveau est
+le seul où la question se pose — ailleurs, PostgreSQL et Redis sont doublés, aucune commande réelle
+n'est émise et l'arbre serait vide.</p>
 <p>Les quatre derniers viennent de <code>Startup/HealthProbeTest.cs</code> (NTR-174) : pile complète, sondes
 anonymes, serveur d'identité coupé alors que les clés sont en cache, cache coupé. Le cinquième cas
 des sondes — démarrage à froid sans serveur d'identité — reste dans <code>KeycloakOutageTest</code>, qui possède

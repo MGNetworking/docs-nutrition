@@ -1613,6 +1613,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ce-quil-contient-a-change-ntr-139" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qu'il contient a changé — NTR-139
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2272,6 +2281,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ce-quil-contient-a-change-ntr-139" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qu'il contient a changé — NTR-139
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2502,7 +2520,7 @@ serveur », qui en est un et reste en 500.</p>
 <span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ressource introuvable&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DietPlan not found.&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;traceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0HN7GK2M4V9PL:00000003&quot;</span>
+<span class="w">  </span><span class="nt">&quot;traceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4bf92f3577b34da6a3ce929d0e0e4736&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 <table>
@@ -2527,7 +2545,7 @@ serveur », qui en est un et reste en 500.</p>
 </tr>
 <tr>
 <td><code>traceId</code></td>
-<td><code>HttpContext.TraceIdentifier</code></td>
+<td>L'identifiant de <strong>trace</strong> W3C — trente-deux caractères hexadécimaux</td>
 </tr>
 </tbody>
 </table>
@@ -2535,6 +2553,20 @@ serveur », qui en est un et reste en 500.</p>
 <p>Sans lui, un utilisateur signalant « j'ai eu une erreur » ne laisse <strong>aucun moyen</strong> de retrouver
 l'entrée de journal correspondante. Le réflexe devient alors de rendre les messages plus bavards —
 c'est-à-dire exactement ce qu'il faut éviter.</p>
+<h3 id="ce-quil-contient-a-change-ntr-139">Ce qu'il contient a changé — NTR-139<a class="headerlink" href="#ce-quil-contient-a-change-ntr-139" title="Permanent link">&para;</a></h3>
+<p>Jusqu'à NTR-139, ce champ portait <code>HttpContext.TraceIdentifier</code>, de la forme
+<code>0HN7GK2M4V9PL:00000003</code>. C'est l'identifiant de requête de <strong>Kestrel</strong> : il est propre à la
+connexion et n'apparaît dans aucune trace. Un utilisateur qui le signalait ne menait donc nulle
+part, alors que le volet 3 de l'<a href="../observabilite/">Observabilité</a> en fait le point de jonction entre
+l'erreur vue par l'utilisateur et la trace serveur.</p>
+<p>Le champ porte désormais l'identifiant de trace W3C, celui-là même qui figure dans les traces
+envoyées au collecteur. <strong>Le repli reste l'identifiant Kestrel</strong> lorsqu'aucune trace n'est en cours
+— observabilité désactivée, ou appel hors pipeline HTTP : mieux vaut un identifiant qui ne mène
+qu'aux journaux que pas d'identifiant du tout.</p>
+<blockquote>
+<p>Un client qui analyserait la forme de ce champ est concerné. Rien dans l'API ne le documentait
+comme stable, et il reste opaque — mais il a changé de longueur et d'alphabet.</p>
+</blockquote>
 <p>L'identifiant est opaque : il n'a aucune valeur pour un attaquant, et c'est lui qui <strong>permet</strong> de
 garder les messages muets.</p>
 <hr />
@@ -2673,6 +2705,10 @@ sur PostgreSQL</strong>. La recherche fonctionne sans cache, plus lentement.</p>
 <tr>
 <td>✅</td>
 <td><code>traceId</code>, <code>title</code> et <code>type</code> présents dans toute réponse d'erreur</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Le <code>traceId</code> publié est celui de la trace, et non l'identifiant Kestrel — un cas de niveau 1 pour chaque branche, et un cas de niveau 3 qui compare l'identifiant publié à la trace réellement produite (NTR-139)</td>
 </tr>
 <tr>
 <td>✅</td>
