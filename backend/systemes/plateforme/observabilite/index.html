@@ -2344,19 +2344,19 @@ journaliser.</p>
 <td><strong>en K3s, tout disparaît au redémarrage d'un pod</strong></td>
 </tr>
 <tr>
-<td>Requêtes SQL</td>
-<td>rien</td>
-<td>une requête lente est indétectable</td>
+<td>Requêtes SQL (NTR-140)</td>
+<td>chaque commande, avec sa durée, dans la trace</td>
+<td>le seuil de lenteur et sa journalisation dédiée</td>
 </tr>
 <tr>
-<td>Métriques</td>
-<td>rien</td>
-<td>—</td>
+<td>Métriques (NTR-140)</td>
+<td>durées et taux d'erreur HTTP, entrants et sortants</td>
+<td>cache, jobs et pool de connexions</td>
 </tr>
 <tr>
-<td>Traces</td>
-<td>rien</td>
-<td>—</td>
+<td>Traces (NTR-140)</td>
+<td>l'arbre complet d'une requête, API comprise</td>
+<td>rien à instrumenter — il manque une destination</td>
 </tr>
 </tbody>
 </table>
@@ -2364,6 +2364,8 @@ journaliser.</p>
 <p><strong>Le point le plus dur est la dernière ligne du haut.</strong> Sans collecteur, un incident passé est
 irrécupérable : le pod redémarre, les journaux sont perdus. Toute la valeur de l'epic tient à
 cette bascule.</p>
+<p>Les trois dernières lignes ont changé avec NTR-140 : la donnée existe désormais, mais elle n'est
+envoyée nulle part tant que le §5 n'est pas tranché.</p>
 </blockquote>
 <h2 id="3-les-cinq-volets">3. Les cinq volets<a class="headerlink" href="#3-les-cinq-volets" title="Permanent link">&para;</a></h2>
 <h3 id="volet-1-journaux-structures-et-collecte-ntr-137">Volet 1 — Journaux structurés et collecte (NTR-137)<a class="headerlink" href="#volet-1-journaux-structures-et-collecte-ntr-137" title="Permanent link">&para;</a></h3>
@@ -2451,6 +2453,38 @@ utilisateur signale une erreur, l'identifiant mène directement à la trace comp
 </ul>
 <p>Ce dernier point est décisif tant que la décision du §5 reste ouverte : le volet 4 peut être livré
 <strong>avant</strong> que le backend soit choisi.</p>
+<p><strong>Ce qui est en place.</strong> <code>AddObservability</code>, appelé depuis <code>Program.cs</code> après <code>AddInfrastructure</code>,
+enregistre le fournisseur, l'identité du service et les instrumentations. Rien n'est mesuré à la
+main : ASP.NET Core, <code>HttpClient</code>, Npgsql et StackExchange.Redis émettaient déjà ces événements,
+personne ne les écoutait.</p>
+<table>
+<thead>
+<tr>
+<th>Réglage</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OpenTelemetry:ServiceName</code></td>
+<td>Nom porté par chaque mesure — sans lui, un collecteur recevant plusieurs applications ne sait pas laquelle a émis</td>
+</tr>
+<tr>
+<td><code>OpenTelemetry:OtlpEndpoint</code></td>
+<td>Adresse du collecteur. <strong>Vide</strong> : les mesures sont produites puis abandonnées, sans erreur</td>
+</tr>
+<tr>
+<td><code>OpenTelemetry:ConsoleExporter</code></td>
+<td>Sortie console, activée en développement uniquement</td>
+</tr>
+</tbody>
+</table>
+<p>L'attribut <code>deployment.environment</code> vient de l'hôte, non d'une valeur écrite en dur : c'est lui qui
+distinguera une mesure de production d'une mesure de recette une fois collectées côte à côte.</p>
+<p>Deux choix méritent d'être connus. Les <strong>sondes de santé sont exclues des traces</strong> — le kubelet les
+interroge en continu et noierait tout le reste sous leur volume. Les <strong>journaux n'ont pas de sortie
+console</strong> : le logger d'ASP.NET Core écrit déjà là, les doubler rendrait la console illisible ; leur
+format et leur enrichissement relèvent de NTR-137.</p>
 <h3 id="volet-5-observabilite-de-la-base-de-donnees-ntr-141">Volet 5 — Observabilité de la base de données (NTR-141)<a class="headerlink" href="#volet-5-observabilite-de-la-base-de-donnees-ntr-141" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2566,12 +2600,20 @@ et sensibilité des données qui transiteraient par un tiers.</p>
 </thead>
 <tbody>
 <tr>
+<td>✅</td>
+<td>Le socle OpenTelemetry est enregistré et porte l'identité du service — quatre cas de niveau 2 (NTR-140)</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Les instrumentations HTTP, SQL et Redis sont branchées, mais <strong>aucune trace ni métrique n'a été constatée de bout en bout</strong> : rien ne les reçoit encore</td>
+</tr>
+<tr>
 <td>⚠️</td>
 <td><code>RequestLoggingMiddleware</code> et <code>JobMonitoringService</code> produisent de la donnée exploitable — vérifié par tests, mais rien ne la collecte</td>
 </tr>
 <tr>
 <td>❌</td>
-<td>Journaux structurés, métriques, traces, instrumentation OpenTelemetry, supervision de la base</td>
+<td>Journaux structurés, métriques métier, supervision de la base</td>
 </tr>
 <tr>
 <td>❌</td>
