@@ -467,10 +467,11 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 ## 10. État
 
 **39 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-02 : `Réussi! - échec : 0, réussite : 39,
-ignorée(s) : 0, total : 39` en 3 min 04. Les niveaux 1 et 2 restent verts — **734 tests** (621 et 113),
+ignorée(s) : 0, total : 39` en 3 min 04. Les niveaux 1 et 2 restent verts — **741 tests** (626 et 115),
 les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, les
-quatre suivants le socle OpenTelemetry (NTR-140), les neuf derniers les métriques du cache et des
-jobs (NTR-138), et le dernier le repli du `traceId` (NTR-139).
+quatre suivants le socle OpenTelemetry (NTR-140), les neuf suivants les métriques du cache et des
+jobs (NTR-138), un le repli du `traceId` (NTR-139), et les sept derniers les motifs de rejet de
+l'import et le branchement de Serilog (NTR-137).
 
 Les **deux tests ajoutés à ce niveau** viennent de `Observability/TraceCorrelationTest.cs`
 (NTR-139) : une requête réelle produit un arbre dont toutes les étapes partagent un identifiant, et

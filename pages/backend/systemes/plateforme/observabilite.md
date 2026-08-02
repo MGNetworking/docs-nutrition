@@ -55,6 +55,31 @@ Passer d'une sortie console non structurée à des journaux exploitables et cons
 | Acheminement | Dépend du backend retenu — voir §5 |
 | Données personnelles | **Ne jamais journaliser** le corps des requêtes ni les jetons. Le RGPD s'applique aussi aux journaux. |
 
+**Ce volet a été scindé.** Tout ce qui ne dépend pas du backend est livré ; l'acheminement vers un
+collecteur est reporté au déploiement, et inscrit dans la story « Services externes sur K3s »
+(NTR-163) — c'est là que le collecteur sera déployé.
+
+| Livré | Reporté |
+|---|---|
+| JSON en production, texte lisible en développement | L'acheminement vers un collecteur |
+| Identifiant de trace et identifiant utilisateur sur les entrées | La conservation après redémarrage d'un pod |
+| Niveaux par catégorie, EF Core rabaissé | |
+
+**Serilog** a été retenu comme fournisseur, en remplacement de ceux d'ASP.NET Core. Le code
+applicatif n'en sait rien : il écrit toujours par `ILogger`. Ce choix laisse la porte ouverte à Seq,
+candidat du §5, écrit par l'auteur de Serilog — le retenir n'entraînerait aucune réécriture.
+
+➜ Le détail — les trois étages, la configuration, ce que porte chaque entrée — est dans
+[Serilog](../../briques/serilog.md).
+
+**Un trou d'instrumentation, découvert en chemin.** L'import Open Food Facts comptait ses lignes
+rejetées sans dire pourquoi elles l'étaient. Sur plusieurs millions de lignes, un dump corrompu et
+un mapping devenu trop strict se ressemblaient. Chaque rejet nomme désormais son motif — JSON
+invalide, ligne vide, identité absente, valeur aberrante —, et le bilan de fin les ventile. Les deux
+sondes de santé journalisent également leurs verdicts d'échec : l'orchestrateur enregistre bien
+qu'une sonde a échoué, mais ni sa cause — il ne lit que le code HTTP — ni au-delà d'une heure, durée
+de vie de ses événements.
+
 ### Volet 2 — Métriques applicatives (NTR-138)
 
 | Indicateur | Instrument | Pourquoi |
@@ -143,8 +168,7 @@ distinguera une mesure de production d'une mesure de recette une fois collectée
 
 Deux choix méritent d'être connus. Les **sondes de santé sont exclues des traces** — le kubelet les
 interroge en continu et noierait tout le reste sous leur volume. Les **journaux n'ont pas de sortie
-console** : le logger d'ASP.NET Core écrit déjà là, les doubler rendrait la console illisible ; leur
-format et leur enrichissement relèvent de NTR-137.
+console par ce chemin** : c'est Serilog qui écrit là, les doubler rendrait la console illisible.
 
 ### Volet 5 — Observabilité de la base de données (NTR-141)
 
@@ -178,6 +202,20 @@ NTR-135 est autonome : il ne dépend pas de cet epic et ne doit pas l'attendre.
 **Critères pour trancher :** volume de journaux attendu, temps d'exploitation acceptable sur le VPS,
 et sensibilité des données qui transiteraient par un tiers.
 
+**Deux des trois critères supposent une production qui tourne**, laquelle dépend d'un VPS non encore
+loué. Attendre cette décision pour avancer revenait donc à attendre le VPS : c'est la raison pour
+laquelle le volet 1 a été scindé plutôt que suspendu.
+
+**Ce que les choix déjà faits impliquent pour cette décision :**
+
+| Signal | Conséquence |
+|---|---|
+| Les mesures sortent en **OTLP**, protocole standard | les trois candidats le consomment indifféremment — aucun n'est favorisé |
+| Les journaux passent par **Serilog** | retenir Seq n'entraînerait aucune réécriture : les deux ont le même auteur, et le sink s'ajoute par configuration |
+
+Autrement dit, Seq est devenu un peu moins coûteux que les deux autres, sans que la décision soit
+prise pour autant.
+
 > Une fois la décision prise, l'inscrire dans le tableau des décisions d'architecture de
 > `CLAUDE.md`, au même titre que docker-compose ou K3s.
 
@@ -197,8 +235,12 @@ et sensibilité des données qui transiteraient par un tiers.
 | ✅ | Le socle OpenTelemetry est enregistré et porte l'identité du service — quatre cas de niveau 2 (NTR-140) |
 | ✅ | Le compteur du cache distingue succès, défaut et panne, et la durée des jobs est enregistrée en secondes avec son issue — neuf cas de niveau 1 (NTR-138) |
 | ✅ | L'arbre d'une requête réelle et la jonction par le `traceId` — deux cas de niveau 3 contre PostgreSQL et Redis (NTR-139) |
+| ✅ | Serilog est le fournisseur actif et ses entrées portent l'identifiant de trace — deux cas de niveau 2 (NTR-137) |
+| ✅ | Le motif de chaque rejet de l'import Open Food Facts — cinq cas de niveau 1 (NTR-137) |
 | ⚠️ | Le **filtre Hangfire** n'est éprouvé qu'indirectement : aucun test ne fait exécuter un vrai job pour vérifier qu'il mesure |
+| ⚠️ | La portée `UserId` des journaux **n'est pas éprouvée** : aucun code en aval du middleware ne journalise, il n'y a donc aucune entrée sur laquelle la vérifier |
 | ⚠️ | Les **métriques** n'ont été constatées qu'à la source : aucune n'a encore atteint un collecteur |
+| ⚠️ | La journalisation des sondes de santé n'est **pas couverte par un test** |
 | ⚠️ | `RequestLoggingMiddleware` et `JobMonitoringService` produisent de la donnée exploitable — vérifié par tests, mais rien ne la collecte |
 | ❌ | Journaux structurés, supervision de la base |
 | ❌ | Conservation des journaux après redémarrage d'un pod |

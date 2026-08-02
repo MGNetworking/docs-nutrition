@@ -139,6 +139,7 @@ nav:
     - Environnement local: backend/briques/environnement-local.md
     - Redis: backend/briques/redis.md
     - Hangfire: backend/briques/hangfire.md
+    - Serilog: backend/briques/serilog.md
     - Keycloak Admin: backend/briques/keycloak-admin.md
     - Stripe: backend/briques/stripe.md
     - Publication de la documentation: backend/briques/publication-docs.md
