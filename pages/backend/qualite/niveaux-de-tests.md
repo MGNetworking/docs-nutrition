@@ -173,7 +173,8 @@ dans git. Provisionnement : NTR-125.
 > **État au 2026-07-31** — 724 tests, aucun ignoré : 592 au niveau 1, 108 au niveau 2, 23 au
 > niveau 3. Le niveau 3 est exécuté par `./scripts/test-integration.sh`, appelé par la CI sans
 > qu'elle déclare de service propre.
-> Niveau 4 : non commencé, dépend de NTR-88 pour les endpoints de santé.
+> Niveau 4 : non commencé. Son blocage historique est levé — les endpoints de santé existent depuis
+> le 2026-08-02 (NTR-88) — il n'attend plus qu'un environnement déployé.
 
 ---
 

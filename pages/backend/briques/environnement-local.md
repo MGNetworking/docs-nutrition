@@ -340,12 +340,20 @@ spec:
             periodSeconds: 10
 ```
 
-> ⚠️ **Dépend de NTR-88** — `/health` et `/health/ready` **n'existent pas encore**. Tant qu'ils ne
-> sont pas implémentés, ce `readinessProbe` échouera : le pod ne sera jamais déclaré prêt et ne
-> recevra donc **aucun trafic**. Retirer la sonde ou livrer NTR-88 avant le premier déploiement.
+> ✅ **Livré le 2026-08-02 — NTR-88.** Les deux points de terminaison existent, le `readinessProbe`
+> ci-dessus est donc opérant.
 >
-> Le chemin est `/health/ready` (état des dépendances : PostgreSQL, Redis) et non `/health`
-> (l'application répond), conformément au découpage prévu par NTR-88.
+> Le chemin de la readiness est bien `/health/ready` (état des dépendances) et non `/health`
+> (l'application répond).
+>
+> ⚠️ **Ne jamais brancher la `livenessProbe` sur `/health/ready`.** Une instance qui attend ses clés
+> de signature serait tuée au lieu de patienter, et l'on retrouverait la boucle de redémarrage que le
+> découpage en deux sondes supprime précisément. La vivacité vise `/health`, qui ne consulte rien.
+>
+> Prévoir en plus un `startupProbe` sur `/health` : il couvre le démarrage à froid sans gonfler
+> l'`initialDelaySeconds` de la vivacité, qui s'appliquerait sinon toute la vie du pod. Budget mesuré
+> lors d'un essai : **175 secondes** pour qu'une instance démarrée sans Keycloak redevienne prête
+> après le retour de celui-ci, l'essentiel étant l'import du realm.
 
 ---
 

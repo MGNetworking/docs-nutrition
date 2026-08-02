@@ -276,9 +276,12 @@ GET /health
 200 OK
 ```
 
-> ⚠️ **Non implémenté à ce jour — ticket NTR-88.** `/health` (l'application répond) et
-> `/health/ready` (PostgreSQL et Redis joignables, 503 sinon) restent à créer. Ne pas confondre
-> avec `/admin/system/health`, qui existe mais est métier et réservé au rôle admin.
+> ✅ **Livré le 2026-08-02 — NTR-88.** `/health` répond 200 dès que l'application répond, sans
+> consulter aucune dépendance. `/health/ready` répond 200 ou 503 selon PostgreSQL et la disponibilité
+> des clés de signature ; Redis y est signalé sans faire échouer le verdict.
+>
+> Ne pas confondre avec `/admin/system/health`, qui existe aussi mais est métier et réservé au rôle
+> admin.
 
 ### Endpoint authentifié
 
