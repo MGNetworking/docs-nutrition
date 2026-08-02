@@ -467,9 +467,10 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 ## 10. État
 
 **37 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-02 : `Réussi! - échec : 0, réussite : 37,
-ignorée(s) : 0, total : 37` en 2 min 13. Les niveaux 1 et 2 restent verts — **724 tests** (611 et 113),
-les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, et les
-quatre suivants le socle OpenTelemetry (NTR-140).
+ignorée(s) : 0, total : 37` en 2 min 13. Les niveaux 1 et 2 restent verts — **733 tests** (620 et 113),
+les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, les
+quatre suivants le socle OpenTelemetry (NTR-140) et les neuf derniers les métriques du cache et des
+jobs (NTR-138).
 
 Les quatre derniers viennent de `Startup/HealthProbeTest.cs` (NTR-174) : pile complète, sondes
 anonymes, serveur d'identité coupé alors que les clés sont en cache, cache coupé. Le cinquième cas

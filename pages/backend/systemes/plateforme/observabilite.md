@@ -31,7 +31,7 @@ Plusieurs briques produisent déjà de la donnée d'observabilité, sans qu'elle
 | `JobMonitoringService` | dernière exécution, prochaine, état des jobs | lisible seulement via `GET /admin/system/health` |
 | Sortie des journaux | console | **en K3s, tout disparaît au redémarrage d'un pod** |
 | Requêtes SQL (NTR-140) | chaque commande, avec sa durée, dans la trace | le seuil de lenteur et sa journalisation dédiée |
-| Métriques (NTR-140) | durées et taux d'erreur HTTP, entrants et sortants | cache, jobs et pool de connexions |
+| Métriques (NTR-140, NTR-138) | durées et taux d'erreur HTTP, cache, jobs et pool de connexions | rien — il manque une destination |
 | Traces (NTR-140) | l'arbre complet d'une requête, API comprise | rien à instrumenter — il manque une destination |
 
 > **Le point le plus dur est la dernière ligne du haut.** Sans collecteur, un incident passé est
@@ -57,12 +57,29 @@ Passer d'une sortie console non structurée à des journaux exploitables et cons
 
 ### Volet 2 — Métriques applicatives (NTR-138)
 
-| Indicateur | Source | Pourquoi |
+| Indicateur | Instrument | Pourquoi |
 |---|---|---|
-| Durée et taux d'erreur par endpoint | `RequestLoggingMiddleware` mesure déjà la durée | détecter une dégradation avant les utilisateurs |
-| Taux de succès du cache Redis | `RedisFoodCacheService` | un cache qui ne sert plus est un cache inutile — et coûteux |
-| Durée et issue des jobs Hangfire | tables `hangfire` | un job qui échoue chaque nuit doit se voir |
-| Saturation du pool PostgreSQL | Npgsql | cause classique de latence en production |
+| Durée et taux d'erreur par endpoint | `http.server.request.duration`, publié par ASP.NET Core | détecter une dégradation avant les utilisateurs |
+| Saturation du pool PostgreSQL | publié par Npgsql | cause classique de latence en production |
+| Taux de succès du cache Redis | `nutrition.cache.lookups` | un cache qui ne sert plus est un cache inutile — et coûteux |
+| Durée et issue des jobs Hangfire | `nutrition.job.duration` | un job qui échoue chaque nuit doit se voir |
+
+**Les deux premiers n'ont demandé aucun code** : les bibliothèques les publient, il suffisait de les
+écouter. La durée par endpoint est d'ailleurs mesurée deux fois — `RequestLoggingMiddleware` la
+journalise pour l'œil humain, ASP.NET Core la compte pour l'outil. Les deux subsistent : elles ne
+répondent pas à la même question.
+
+**Les deux derniers naissent d'une décision prise dans le code**, et n'existaient donc nulle part.
+Ils vivent en couche Infrastructure, là où l'événement se produit : un taux de succès de cache n'est
+pas une préoccupation d'API, et le faire transiter par une interface d'Application aurait ajouté une
+abstraction pour un usage unique.
+
+| Choix | Ce qu'il évite |
+|---|---|
+| Une seule série `nutrition.cache.lookups`, étiquetée `hit`, `miss` ou `failure` | trois compteurs à tenir accordés ; le taux se calcule à la lecture |
+| **`failure` distingué de `miss`** | un cache injoignable se présenterait sinon comme un cache qui ne sert jamais — deux pannes qui n'appellent pas la même intervention |
+| Un **filtre serveur Hangfire**, plutôt qu'une mesure écrite dans chaque job | l'import OFF, la purge RGPD et tout job futur sont couverts sans y toucher |
+| La durée des jobs en **secondes** | un seuil faux d'un facteur mille, sans que rien ne le signale |
 
 ### Volet 3 — Traces distribuées (NTR-139)
 
@@ -161,9 +178,11 @@ et sensibilité des données qui transiteraient par un tiers.
 | Marque | Élément |
 |---|---|
 | ✅ | Le socle OpenTelemetry est enregistré et porte l'identité du service — quatre cas de niveau 2 (NTR-140) |
+| ✅ | Le compteur du cache distingue succès, défaut et panne, et la durée des jobs est enregistrée en secondes avec son issue — neuf cas de niveau 1 (NTR-138) |
+| ⚠️ | Le **filtre Hangfire** n'est éprouvé qu'indirectement : aucun test ne fait exécuter un vrai job pour vérifier qu'il mesure |
 | ⚠️ | Les instrumentations HTTP, SQL et Redis sont branchées, mais **aucune trace ni métrique n'a été constatée de bout en bout** : rien ne les reçoit encore |
 | ⚠️ | `RequestLoggingMiddleware` et `JobMonitoringService` produisent de la donnée exploitable — vérifié par tests, mais rien ne la collecte |
-| ❌ | Journaux structurés, métriques métier, supervision de la base |
+| ❌ | Journaux structurés, supervision de la base |
 | ❌ | Conservation des journaux après redémarrage d'un pod |
 
 ## 8. Où creuser

@@ -170,6 +170,21 @@ Le volet supervision ne fait **que lire** ce que le Server a déjà écrit. `GET
 
 > C'est ce chaînage — *le Server écrit → la supervision relit* — qui explique pourquoi aucune entité `JobExecution` maison n'est nécessaire : l'historique **est** la source de vérité, et il est tenu par Hangfire.
 
+### La mesure des exécutions — NTR-138
+
+La supervision ci-dessus ne répond qu'à la demande, sur appel de la route d'administration. Elle ne
+dit rien d'une tendance : un job qui met deux fois plus de temps qu'il y a un mois ne se voit pas.
+
+`JobMetricsFilter`, un filtre serveur enregistré dans la configuration Hangfire, enregistre la durée
+de chaque exécution sous `nutrition.job.duration`, étiquetée par job et par issue (`success` ou
+`failure`). Il lit l'exception portée par le contexte d'exécution : il n'intercepte rien et ne
+masque donc aucun échec.
+
+Un filtre plutôt qu'une mesure écrite dans chaque job — l'import Open Food Facts, la purge RGPD et
+tout job ajouté plus tard sont couverts sans y toucher. C'est aussi ce qui impose la surcharge de
+`AddHangfire` qui reçoit le fournisseur de services : le filtre a une dépendance, qu'une
+configuration statique ne saurait pas résoudre.
+
 ---
 
 ## Packages NuGet

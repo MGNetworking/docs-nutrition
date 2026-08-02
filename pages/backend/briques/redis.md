@@ -221,6 +221,25 @@ journalisation SQL d'EF Core, appeler la recherche deux fois de suite, et consta
 Le mot-clé doit être écrit **tel qu'il est normalisé** : `« Poulet »` et `« poulet »` partagent
 l'entrée `food:search:poulet`.
 
+### Le taux de succès est désormais mesuré — NTR-138
+
+`RedisFoodCacheService` compte chaque recherche présentée au cache sous l'instrument
+`nutrition.cache.lookups`, étiqueté par issue :
+
+| Étiquette | Ce qui s'est passé |
+|---|---|
+| `hit` | le cache a répondu, la base n'a pas été interrogée |
+| `miss` | l'entrée était absente ou expirée |
+| `failure` | **Redis était injoignable** |
+
+La troisième vaut d'être connue. L'appelant reçoit `null` dans les deux derniers cas et repart en
+base : rien ne les distingue de l'extérieur. Les confondre dans la mesure ferait passer un cache en
+panne pour un cache qui ne sert jamais — un cache inutile appelle une révision de sa durée de vie,
+un cache injoignable appelle une intervention.
+
+Rien de tout cela n'est visible tant qu'aucun collecteur ne reçoit les mesures : voir
+[Observabilité](../systemes/plateforme/observabilite.md).
+
 ---
 
 ## Points de vigilance
