@@ -2917,7 +2917,8 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
 <p><strong>37 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-02 : <code>Réussi! - échec : 0, réussite : 37,
-ignorée(s) : 0, total : 37</code> en 2 min 13. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).</p>
+ignorée(s) : 0, total : 37</code> en 2 min 13. Les niveaux 1 et 2 restent verts — <strong>720 tests</strong> (611 et 109),
+les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02.</p>
 <p>Les quatre derniers viennent de <code>Startup/HealthProbeTest.cs</code> (NTR-174) : pile complète, sondes
 anonymes, serveur d'identité coupé alors que les clés sont en cache, cache coupé. Le cinquième cas
 des sondes — démarrage à froid sans serveur d'identité — reste dans <code>KeycloakOutageTest</code>, qui possède

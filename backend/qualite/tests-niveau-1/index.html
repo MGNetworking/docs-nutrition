@@ -2247,7 +2247,7 @@ trajet d'une requête HTTP à travers l'application.</p>
 <td><code>NutritionApi.Infrastructure.Tests</code></td>
 </tr>
 <tr>
-<td>Controller isolé, middleware isolé, service de démarrage (<code>IHostedService</code>)</td>
+<td>Controller isolé, middleware isolé, service de démarrage (<code>IHostedService</code>), sonde de santé</td>
 <td><code>NutritionApi.Api.Tests/Level1/</code></td>
 </tr>
 </tbody>
@@ -2255,6 +2255,17 @@ trajet d'une requête HTTP à travers l'application.</p>
 <p><strong>Le piège d'<code>Infrastructure.Tests</code></strong> — ce projet ne contient que du code qui ne parle <strong>ni à une
 base, ni au réseau</strong>. Le mapping Open Food Facts y a sa place ; un repository, non. Repositories,
 cache, jobs et lecteurs de flux relèvent du niveau 3, contre les vrais composants.</p>
+<p><strong>Le cas des sondes de santé</strong> — elles interrogent PostgreSQL, Redis et le serveur d'identité, ce qui
+les ferait volontiers ranger au niveau 3. C'est vrai de leur chemin nominal, éprouvé là-bas contre les
+vrais composants. Mais leurs <strong>branches d'échec</strong> — gestionnaire OIDC absent, realm sans clé publiée,
+délai dépassé, multiplexeur qui lève — ne se produisent pas en arrêtant un conteneur : il faudrait
+casser chaque dépendance d'une façon différente à chaque fois. Une doublure les atteint en quelques
+millisecondes, et de façon déterministe.</p>
+<blockquote>
+<p>Ce partage a une conséquence pratique : le délai de renoncement des sondes est un paramètre
+optionnel du constructeur, laissé vide en production. Sans lui, chaque exécution de la suite
+attendrait cinq secondes pour éprouver une seule branche.</p>
+</blockquote>
 <hr />
 <h2 id="3-le-nommage">3. Le nommage<a class="headerlink" href="#3-le-nommage" title="Permanent link">&para;</a></h2>
 <p>Une seule convention pour tout le projet : <strong><code>Méthode_Résultat_Condition</code></strong>, en anglais.</p>
