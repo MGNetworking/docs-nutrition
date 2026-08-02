@@ -426,17 +426,23 @@ Ce déploiement initial est manuel. À partir du suivant, GitHub Actions prend l
 
 ```
 .github/workflows/
-├── ci-unit.yml          ✅ PR vers dev   — build + tests de niveaux 1 et 2 (Level!=3)
-├── ci-integration.yml   ✅ PR vers dev   — pile docker-compose + tests de niveau 3 (Level=3)
+├── ci-pr.yml            ✅ PR vers dev   — 3 jobs : niveaux 1-2, niveau 3, couverture fusionnée
 ├── ci-release.yml       ✅ PR vers main  — build + tests + couverture + rapport PR
 ├── ci-deploy.yml        ⚠️ PR vers prod  — build Release ; déploiement encore commenté
 └── release-please.yml   ✅ push main     — tag vX.Y.Z + CHANGELOG
 ```
 
-> `ci-integration.yml` n'a **aucune définition de service** propre : il appelle
+> `ci-pr.yml` n'a **aucune définition de service** propre : son job `integration-tests` appelle
 > `./scripts/test-integration.sh`, qui monte le `docker-compose.yml` du projet. C'est délibéré — le
 > niveau 3 doit éprouver la configuration Docker du dépôt, pas celle du workflow. Voir
 > [Écrire un test de niveau 3](../qualite/tests-niveau-3.md).
+
+> Son troisième job, `coverage`, attend les deux autres, fusionne leurs rapports et exécute
+> `./scripts/check-coverage.sh`. C'est ce contrôle qui fait échouer la pull request sur la
+> couverture ; les seuils sont déclarés dans `tests/coverage.runsettings`, seule source.
+> `ci-unit.yml` et `ci-integration.yml` ont été réunis dans ce fichier le 2026-08-02 (NTR-168) :
+> deux workflows sur le même événement ne pouvaient pas s'attendre, donc aucun ne pouvait produire
+> un chiffre de couverture unique.
 
 > Il n'existe **pas** de `deploy.yml` : le déploiement est prévu dans `ci-deploy.yml`, déclenché
 > par la transition `dev → prod` (et non par un push sur `main`).
@@ -614,8 +620,7 @@ jobs:
 
 ```
 .github/workflows/
-├── ci-unit.yml          PR vers dev
-├── ci-integration.yml   PR vers dev
+├── ci-pr.yml            PR vers dev
 ├── ci-release.yml       PR vers main
 ├── ci-deploy.yml        PR vers prod
 └── release-please.yml   push sur main
@@ -693,8 +698,8 @@ jobs:
 
 | Étape | Quand | État |
 |---|---|---|
-| Workflows de tests (`ci-unit`, `ci-release`) | Dès le premier commit sur une branche feature | ✅ en place |
-| Workflow d'intégration externe (`ci-integration`) | Avec les tests de niveau 3 — NTR-28 | ✅ en place |
+| Workflows de tests (`ci-pr`, `ci-release`) | Dès le premier commit sur une branche feature | ✅ en place |
+| Intégration externe et couverture fusionnée (jobs de `ci-pr`) | Avec les tests de niveau 3 — NTR-28, puis NTR-168 | ✅ en place |
 | `Dockerfile` de l'API et des migrations | Après que l'API tourne localement | ✅ en place |
 | Manifests K8s (`infra/k8s/`) | Avant le premier déploiement | 🔲 à créer |
 | Section 2 — premier déploiement manuel | Après les manifests, pour vérifier qu'ils sont corrects | 🔲 |

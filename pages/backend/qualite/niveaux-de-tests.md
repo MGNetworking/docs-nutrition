@@ -152,8 +152,9 @@ dans git. Provisionnement : NTR-125.
 
 | Transition | Workflow CI | Ce qui tourne |
 |---|---|---|
-| `feature/*` → `dev` | `ci-unit.yml` | Build + niveaux 1 et 2 — `--filter "Level!=3"` |
-| `feature/*` → `dev` | `ci-integration.yml` | Pile docker-compose + niveau 3 — `--filter "Level=3"` |
+| `feature/*` → `dev` | `ci-pr.yml`, job `unit-tests` | Build + niveaux 1 et 2 — `--filter "Level!=3"` |
+| `feature/*` → `dev` | `ci-pr.yml`, job `integration-tests` | Pile docker-compose + niveau 3 — `--filter "Level=3"` |
+| `feature/*` → `dev` | `ci-pr.yml`, job `coverage` | Fusion des deux rapports + contrôle des seuils |
 | `dev` → `main` | `ci-release.yml` | Build + tests + couverture + rapport PR |
 | `dev` → `prod` | `ci-deploy.yml` | Build Release + déploiement VPS |
 
@@ -161,9 +162,17 @@ dans git. Provisionnement : NTR-125.
 > filtres sont donc disjoints, aucun test n'est joué deux fois ni oublié. Le niveau 2 se reconnaît à
 > son namespace `NutritionApi.Api.Tests.Level2`, convention antérieure au marqueur.
 
+> **Pourquoi les trois jobs vivent dans un seul fichier (2026-08-02, NTR-168).** Les niveaux 1-2 et
+> le niveau 3 étaient auparavant portés par deux workflows distincts, `ci-unit.yml` et
+> `ci-integration.yml`. Deux workflows déclenchés par le même événement ne peuvent pas s'attendre :
+> aucun des deux ne voyait le rapport de l'autre, et la couverture publiée ne décrivait que les
+> niveaux 1 et 2. La couche Infrastructure y tombait à 7,9 %, non par manque de tests mais parce
+> que ceux qui la traversent — dépôts EF Core, cache Redis — sont précisément de niveau 3. Le job
+> `coverage` dépend des deux autres, ce qui donne un chiffre unique.
+
 > **État au 2026-07-31** — 724 tests, aucun ignoré : 592 au niveau 1, 108 au niveau 2, 23 au
-> niveau 3. Ces derniers sont exécutés par
-> `ci-integration.yml`, qui appelle `./scripts/test-integration.sh` sans déclarer de service propre.
+> niveau 3. Le niveau 3 est exécuté par `./scripts/test-integration.sh`, appelé par la CI sans
+> qu'elle déclare de service propre.
 > Niveau 4 : non commencé, dépend de NTR-88 pour les endpoints de santé.
 
 ---
