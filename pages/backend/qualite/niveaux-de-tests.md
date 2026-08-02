@@ -170,11 +170,20 @@ dans git. Provisionnement : NTR-125.
 > que ceux qui la traversent — dépôts EF Core, cache Redis — sont précisément de niveau 3. Le job
 > `coverage` dépend des deux autres, ce qui donne un chiffre unique.
 
-> **État au 2026-07-31** — 724 tests, aucun ignoré : 592 au niveau 1, 108 au niveau 2, 23 au
+> **État au 2026-08-02** — 757 tests, aucun ignoré : 611 au niveau 1, 109 au niveau 2, 37 au
 > niveau 3. Le niveau 3 est exécuté par `./scripts/test-integration.sh`, appelé par la CI sans
 > qu'elle déclare de service propre.
 > Niveau 4 : non commencé. Son blocage historique est levé — les endpoints de santé existent depuis
 > le 2026-08-02 (NTR-88) — il n'attend plus qu'un environnement déployé.
+
+> **Lancer les trois niveaux d'un coup** : `./scripts/test-all.sh`, qui rejoue l'enchaînement de
+> `ci-pr.yml` — les deux suites, la fusion des rapports et le contrôle des seuils. Les résultats
+> atterrissent en `.trx` dans `tests/<Projet>/TestResults/` et le rapport fusionné dans
+> `coverage/report/index.html`.
+>
+> Il compile tout en **Release**, niveau 3 compris. Mesurer une moitié en Debug et l'autre en Release
+> produit un rapport fusionné qui ne décrit aucun binaire réel — et qui passe pourtant le contrôle
+> des seuils. Le défaut a été constaté puis corrigé le 2026-08-02.
 
 ---
 

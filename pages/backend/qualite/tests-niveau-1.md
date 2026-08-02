@@ -31,11 +31,22 @@ trajet d'une requête HTTP à travers l'application.
 | Entité, value object, invariant métier | `NutritionApi.Domain.Tests` |
 | Service applicatif, stratégie de calcul, garde d'abonnement | `NutritionApi.Application.Tests` |
 | Code **pur** d'Infrastructure — traduction de données, mapping | `NutritionApi.Infrastructure.Tests` |
-| Controller isolé, middleware isolé, service de démarrage (`IHostedService`) | `NutritionApi.Api.Tests/Level1/` |
+| Controller isolé, middleware isolé, service de démarrage (`IHostedService`), sonde de santé | `NutritionApi.Api.Tests/Level1/` |
 
 **Le piège d'`Infrastructure.Tests`** — ce projet ne contient que du code qui ne parle **ni à une
 base, ni au réseau**. Le mapping Open Food Facts y a sa place ; un repository, non. Repositories,
 cache, jobs et lecteurs de flux relèvent du niveau 3, contre les vrais composants.
+
+**Le cas des sondes de santé** — elles interrogent PostgreSQL, Redis et le serveur d'identité, ce qui
+les ferait volontiers ranger au niveau 3. C'est vrai de leur chemin nominal, éprouvé là-bas contre les
+vrais composants. Mais leurs **branches d'échec** — gestionnaire OIDC absent, realm sans clé publiée,
+délai dépassé, multiplexeur qui lève — ne se produisent pas en arrêtant un conteneur : il faudrait
+casser chaque dépendance d'une façon différente à chaque fois. Une doublure les atteint en quelques
+millisecondes, et de façon déterministe.
+
+> Ce partage a une conséquence pratique : le délai de renoncement des sondes est un paramètre
+> optionnel du constructeur, laissé vide en production. Sans lui, chaque exécution de la suite
+> attendrait cinq secondes pour éprouver une seule branche.
 
 ---
 
