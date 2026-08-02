@@ -262,9 +262,8 @@ d'administration Keycloak vide — voir la section 6 ter.
 
 ## 6 ter. Éprouver un garde-fou de démarrage
 
-Deux cas vérifient que l'application **refuse de démarrer** — l'un quand le serveur d'identité est
-injoignable (`KeycloakOutageTest`), l'autre quand un paramètre d'administration Keycloak est vide
-(`KeycloakAdminConfigurationTest`, NTR-149). Le motif est le même :
+Un cas vérifie que l'application **refuse de démarrer** : quand un paramètre d'administration
+Keycloak est vide (`KeycloakAdminConfigurationTest`, NTR-149). Le motif :
 
 ```csharp
 using var sansSecret = factory.WithWebHostBuilder(
@@ -290,6 +289,29 @@ Trois points qui ne vont pas de soi :
 branché nulle part — c'est même précisément ce qu'il est censé détecter. La vérification consiste à
 retirer l'enregistrement de `Program.cs` et à constater le rouge : pour NTR-149,
 `Assert.ThrowsAny() Failure: No exception was thrown`, l'API démarrant alors avec un secret vide.
+
+### Le garde-fou qui n'en est plus un
+
+`KeycloakOutageTest` comptait un second cas de ce genre : l'application refusait de démarrer quand le
+serveur d'identité était injoignable. **Ce n'est plus vrai depuis le 2026-08-02** (NTR-173), et le cas
+a été réécrit en `Host_ShouldStartNotReady_...`.
+
+La raison tient à l'orchestrateur. Un conteneur qui sort en erreur est relancé, et les échecs répétés
+mènent à un `CrashLoopBackOff` dont le délai double jusqu'à cinq minutes : un serveur d'identité en
+retard de quatre minutes rendait l'API indisponible bien plus longtemps que lui. Répondre 503 sur
+`/health/ready` obtient le même résultat — aucun trafic — sans redémarrage, et l'instance rejoint le
+service d'elle-même dès qu'elle obtient ses clés.
+
+Le cas vérifie donc désormais l'inverse : l'hôte démarre, `/health` répond 200, `/health/ready`
+répond 503 en nommant `cles-de-signature`. Il conserve la fabrique éphémère, avec
+`IntegrationFactory.AvecPrechargementCourt(2)` : sans elle, il attendrait les 60 secondes que le
+préchargement accorde avant de renoncer.
+
+> **Deux contraintes de xUnit sur les fixtures de collection**, découvertes en ajoutant ce paramètre :
+> elles n'acceptent **qu'un seul constructeur public**, et il doit être **sans paramètre** — même
+> optionnel, xUnit ne résout aucun argument. Les deux erreurs se manifestent de la même façon : les
+> 37 tests échouent en une centaine de millisecondes, sur un message de fixture. D'où la méthode
+> statique `AvecPrechargementCourt`, qui appelle un constructeur privé.
 
 ---
 
@@ -444,5 +466,11 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 
 ## 10. État
 
-**33 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-01 : `Réussi! - échec : 0, réussite : 33,
-ignorée(s) : 0, total : 33` en 1 min 51. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).
+**37 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-02 : `Réussi! - échec : 0, réussite : 37,
+ignorée(s) : 0, total : 37` en 2 min 13. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).
+
+Les quatre derniers viennent de `Startup/HealthProbeTest.cs` (NTR-174) : pile complète, sondes
+anonymes, serveur d'identité coupé alors que les clés sont en cache, cache coupé. Le cinquième cas
+des sondes — démarrage à froid sans serveur d'identité — reste dans `KeycloakOutageTest`, qui possède
+déjà la fabrique éphémère nécessaire ; le dupliquer aurait coûté un second cycle d'arrêt et de
+redémarrage de Keycloak pour la même preuve.
