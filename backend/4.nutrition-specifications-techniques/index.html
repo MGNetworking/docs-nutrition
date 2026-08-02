@@ -1754,7 +1754,13 @@ dotnet<span class="w"> </span>tool<span class="w"> </span>install<span class="w"
 <span class="c1"># Générer le rapport</span>
 reportgenerator<span class="w"> </span>-reports:<span class="s2">"coverage/**/coverage.cobertura.xml"</span><span class="w"> </span>-targetdir:<span class="s2">"coverage/report"</span><span class="w"> </span>-reporttypes:Html
 </code></pre></div>
-<p>Le fichier <code>tests/coverage.runsettings</code> est à la racine du dossier <code>tests/</code> — il configure le format Cobertura et exclut les projets de tests eux-mêmes de la mesure.</p>
+<p>Le fichier <code>tests/coverage.runsettings</code> est à la racine du dossier <code>tests/</code> — il configure le format Cobertura, exclut les projets de tests eux-mêmes de la mesure, et <strong>déclare les seuils par couche du tableau ci-dessus</strong>. C'est leur source unique.</p>
+<p>Le contrôle de ces seuils est assuré par <code>scripts/check-coverage.sh</code>, exécuté par le job <code>coverage</code> de <code>ci-pr.yml</code> sur le rapport <strong>fusionné</strong> — niveaux 1, 2 et 3 réunis :</p>
+<div class="language-bash highlight"><pre><span></span><code>./scripts/check-coverage.sh<span class="w"> </span>coverage/report/Cobertura.xml
+</code></pre></div>
+<blockquote>
+<p>⚠️ <strong>Corrigé le 2026-08-02 (NTR-132).</strong> Ces seuils n'étaient appliqués par rien. <code>coverlet.collector</code> ne lit pas le bloc <code>&lt;Thresholds&gt;</code> d'un runsettings — seule l'intégration MSBuild de Coverlet gère les seuils — et l'action de commentaire de pull request laisse <code>fail_below_threshold</code> à <code>false</code> par défaut. Le tableau décrivait donc une politique que la CI n'appliquait pas.</p>
+</blockquote>
 <hr/>
 <h3 id="35-technologies-utilisees">3.5 Technologies utilisées<a class="headerlink" href="#35-technologies-utilisees" title="Permanent link">¶</a></h3>
 <h4 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">¶</a></h4>
@@ -1895,7 +1901,7 @@ au rôle admin</strong> (état des jobs planifiés, taille du catalogue).</p>
 </tr>
 <tr>
 <td><strong>coverlet.collector</strong></td>
-<td>Couverture de code (seuils par couche)</td>
+<td>Mesure de la couverture — les seuils par couche sont contrôlés à part, par <code>scripts/check-coverage.sh</code></td>
 <td>✅</td>
 </tr>
 <tr>

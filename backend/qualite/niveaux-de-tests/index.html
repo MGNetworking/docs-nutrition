@@ -2362,13 +2362,18 @@ le « niveau 3 » ci-dessus.</p>
 <tbody>
 <tr>
 <td><code>feature/*</code> → <code>dev</code></td>
-<td><code>ci-unit.yml</code></td>
+<td><code>ci-pr.yml</code>, job <code>unit-tests</code></td>
 <td>Build + niveaux 1 et 2 — <code>--filter "Level!=3"</code></td>
 </tr>
 <tr>
 <td><code>feature/*</code> → <code>dev</code></td>
-<td><code>ci-integration.yml</code></td>
+<td><code>ci-pr.yml</code>, job <code>integration-tests</code></td>
 <td>Pile docker-compose + niveau 3 — <code>--filter "Level=3"</code></td>
+</tr>
+<tr>
+<td><code>feature/*</code> → <code>dev</code></td>
+<td><code>ci-pr.yml</code>, job <code>coverage</code></td>
+<td>Fusion des deux rapports + contrôle des seuils</td>
 </tr>
 <tr>
 <td><code>dev</code> → <code>main</code></td>
@@ -2386,9 +2391,16 @@ le « niveau 3 » ci-dessus.</p>
 <p><strong>Comment les niveaux se distinguent.</strong> Le niveau 3 porte <code>[Trait("Level", "3")]</code> ; les deux
 filtres sont donc disjoints, aucun test n'est joué deux fois ni oublié. Le niveau 2 se reconnaît à
 son namespace <code>NutritionApi.Api.Tests.Level2</code>, convention antérieure au marqueur.</p>
+<p><strong>Pourquoi les trois jobs vivent dans un seul fichier (2026-08-02, NTR-168).</strong> Les niveaux 1-2 et
+le niveau 3 étaient auparavant portés par deux workflows distincts, <code>ci-unit.yml</code> et
+<code>ci-integration.yml</code>. Deux workflows déclenchés par le même événement ne peuvent pas s'attendre :
+aucun des deux ne voyait le rapport de l'autre, et la couverture publiée ne décrivait que les
+niveaux 1 et 2. La couche Infrastructure y tombait à 7,9 %, non par manque de tests mais parce
+que ceux qui la traversent — dépôts EF Core, cache Redis — sont précisément de niveau 3. Le job
+<code>coverage</code> dépend des deux autres, ce qui donne un chiffre unique.</p>
 <p><strong>État au 2026-07-31</strong> — 724 tests, aucun ignoré : 592 au niveau 1, 108 au niveau 2, 23 au
-niveau 3. Ces derniers sont exécutés par
-<code>ci-integration.yml</code>, qui appelle <code>./scripts/test-integration.sh</code> sans déclarer de service propre.
+niveau 3. Le niveau 3 est exécuté par <code>./scripts/test-integration.sh</code>, appelé par la CI sans
+qu'elle déclare de service propre.
 Niveau 4 : non commencé, dépend de NTR-88 pour les endpoints de santé.</p>
 </blockquote>
 <hr />
