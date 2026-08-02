@@ -3099,11 +3099,17 @@ la valeur est <code>null</code> et l'API échoue au démarrage sur <code>Configu
 <span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </code></pre></div>
 <blockquote>
-<p>⚠️ <strong>Dépend de NTR-88</strong> — <code>/health</code> et <code>/health/ready</code> <strong>n'existent pas encore</strong>. Tant qu'ils ne
-sont pas implémentés, ce <code>readinessProbe</code> échouera : le pod ne sera jamais déclaré prêt et ne
-recevra donc <strong>aucun trafic</strong>. Retirer la sonde ou livrer NTR-88 avant le premier déploiement.</p>
-<p>Le chemin est <code>/health/ready</code> (état des dépendances : PostgreSQL, Redis) et non <code>/health</code>
-(l'application répond), conformément au découpage prévu par NTR-88.</p>
+<p>✅ <strong>Livré le 2026-08-02 — NTR-88.</strong> Les deux points de terminaison existent, le <code>readinessProbe</code>
+ci-dessus est donc opérant.</p>
+<p>Le chemin de la readiness est bien <code>/health/ready</code> (état des dépendances) et non <code>/health</code>
+(l'application répond).</p>
+<p>⚠️ <strong>Ne jamais brancher la <code>livenessProbe</code> sur <code>/health/ready</code>.</strong> Une instance qui attend ses clés
+de signature serait tuée au lieu de patienter, et l'on retrouverait la boucle de redémarrage que le
+découpage en deux sondes supprime précisément. La vivacité vise <code>/health</code>, qui ne consulte rien.</p>
+<p>Prévoir en plus un <code>startupProbe</code> sur <code>/health</code> : il couvre le démarrage à froid sans gonfler
+l'<code>initialDelaySeconds</code> de la vivacité, qui s'appliquerait sinon toute la vie du pod. Budget mesuré
+lors d'un essai : <strong>175 secondes</strong> pour qu'une instance démarrée sans Keycloak redevienne prête
+après le retour de celui-ci, l'essentiel étant l'import du realm.</p>
 </blockquote>
 <hr />
 <h3 id="infrak8sserviceyaml"><code>infra/k8s/service.yaml</code><a class="headerlink" href="#infrak8sserviceyaml" title="Permanent link">&para;</a></h3>

@@ -1846,9 +1846,9 @@ reportgenerator<span class="w"> </span>-reports:<span class="s2">"coverage/**/co
 </tr>
 <tr>
 <td><strong>ASP.NET Core Health Checks</strong></td>
-<td>—</td>
-<td>Endpoints de monitoring (<code>/health</code>, <code>/health/ready</code>)</td>
-<td>🔲 prévu — <strong>NTR-88</strong></td>
+<td>10</td>
+<td>Sondes de santé (<code>/health</code>, <code>/health/ready</code>)</td>
+<td>✅</td>
 </tr>
 <tr>
 <td><strong>OpenTelemetry</strong></td>
@@ -1871,13 +1871,17 @@ reportgenerator<span class="w"> </span>-reports:<span class="s2">"coverage/**/co
 </tbody>
 </table>
 <blockquote>
-<p>⚠️ <strong><code>/health</code> n'existe pas à ce jour</strong> — il fait l'objet du ticket <strong>NTR-88</strong> (<code>GET /health</code>
-→ 200 si l'application répond ; <code>GET /health/ready</code> → 200 si PostgreSQL et Redis sont
-connectés, 503 sinon).</p>
-<p>Ne pas le confondre avec <code>/admin/system/health</code>, qui existe déjà mais est <strong>métier et réservé
+<p>✅ <strong>Livré le 2026-08-02 — NTR-88.</strong> <code>GET /health</code> répond 200 dès que l'application répond, sans
+consulter aucune dépendance. <code>GET /health/ready</code> répond 200 ou 503 : PostgreSQL et les clés de
+signature pèsent dans le verdict, Redis y est signalé sans le faire échouer. Les deux sont anonymes
+et détaillent chaque dépendance dans leur corps de réponse.</p>
+<p><strong>La sonde d'aptitude demande « ai-je des clés de signature ? », et non « Keycloak répond-il ? ».</strong>
+La validation des jetons est locale, à partir des clés publiques mises en cache : une instance qui
+les a obtenues continue de servir pendant une coupure du serveur d'identité. Le prédicat inverse
+aurait retiré du service une flotte entière le jour d'un redémarrage de Keycloak — une panne totale
+causée par la sonde censée l'éviter.</p>
+<p>Ne pas le confondre avec <code>/admin/system/health</code>, qui existe aussi mais est <strong>métier et réservé
 au rôle admin</strong> (état des jobs planifiés, taille du catalogue).</p>
-<p>Conséquence : le premier palier de smoke tests
-<strong>dépend de NTR-88</strong>.</p>
 </blockquote>
 <h4 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">¶</a></h4>
 <table>

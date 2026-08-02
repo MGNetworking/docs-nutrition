@@ -2259,9 +2259,11 @@ PostgreSQL
 200 OK
 </code></pre></div>
 <blockquote>
-<p>⚠️ <strong>Non implémenté à ce jour — ticket NTR-88.</strong> <code>/health</code> (l'application répond) et
-<code>/health/ready</code> (PostgreSQL et Redis joignables, 503 sinon) restent à créer. Ne pas confondre
-avec <code>/admin/system/health</code>, qui existe mais est métier et réservé au rôle admin.</p>
+<p>✅ <strong>Livré le 2026-08-02 — NTR-88.</strong> <code>/health</code> répond 200 dès que l'application répond, sans
+consulter aucune dépendance. <code>/health/ready</code> répond 200 ou 503 selon PostgreSQL et la disponibilité
+des clés de signature ; Redis y est signalé sans faire échouer le verdict.</p>
+<p>Ne pas confondre avec <code>/admin/system/health</code>, qui existe aussi mais est métier et réservé au rôle
+admin.</p>
 </blockquote>
 <h3 id="endpoint-authentifie">Endpoint authentifié<a class="headerlink" href="#endpoint-authentifie" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code>JWT valide

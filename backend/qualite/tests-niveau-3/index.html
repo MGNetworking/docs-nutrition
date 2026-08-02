@@ -1947,6 +1947,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="6 ter. Éprouver un garde-fou de démarrage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-garde-fou-qui-nen-est-plus-un" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le garde-fou qui n'en est plus un
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2269,6 +2284,21 @@
       6 ter. Éprouver un garde-fou de démarrage
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="6 ter. Éprouver un garde-fou de démarrage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#le-garde-fou-qui-nen-est-plus-un" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le garde-fou qui n'en est plus un
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2660,9 +2690,8 @@ vingtaine de secondes. À peser avant d'ajouter un cinquième cas de coupure.</p
 d'administration Keycloak vide — voir la section 6 ter.</p>
 <hr />
 <h2 id="6-ter-eprouver-un-garde-fou-de-demarrage">6 ter. Éprouver un garde-fou de démarrage<a class="headerlink" href="#6-ter-eprouver-un-garde-fou-de-demarrage" title="Permanent link">&para;</a></h2>
-<p>Deux cas vérifient que l'application <strong>refuse de démarrer</strong> — l'un quand le serveur d'identité est
-injoignable (<code>KeycloakOutageTest</code>), l'autre quand un paramètre d'administration Keycloak est vide
-(<code>KeycloakAdminConfigurationTest</code>, NTR-149). Le motif est le même :</p>
+<p>Un cas vérifie que l'application <strong>refuse de démarrer</strong> : quand un paramètre d'administration
+Keycloak est vide (<code>KeycloakAdminConfigurationTest</code>, NTR-149). Le motif :</p>
 <div class="language-csharp highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">sansSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="n">WithWebHostBuilder</span><span class="p">(</span>
 <span class="w">    </span><span class="n">builder</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">UseSetting</span><span class="p">(</span><span class="s">&quot;Keycloak:ServiceClientSecret&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">));</span>
 
@@ -2685,6 +2714,26 @@ injoignable (<code>KeycloakOutageTest</code>), l'autre quand un paramètre d'adm
 branché nulle part — c'est même précisément ce qu'il est censé détecter. La vérification consiste à
 retirer l'enregistrement de <code>Program.cs</code> et à constater le rouge : pour NTR-149,
 <code>Assert.ThrowsAny() Failure: No exception was thrown</code>, l'API démarrant alors avec un secret vide.</p>
+<h3 id="le-garde-fou-qui-nen-est-plus-un">Le garde-fou qui n'en est plus un<a class="headerlink" href="#le-garde-fou-qui-nen-est-plus-un" title="Permanent link">&para;</a></h3>
+<p><code>KeycloakOutageTest</code> comptait un second cas de ce genre : l'application refusait de démarrer quand le
+serveur d'identité était injoignable. <strong>Ce n'est plus vrai depuis le 2026-08-02</strong> (NTR-173), et le cas
+a été réécrit en <code>Host_ShouldStartNotReady_...</code>.</p>
+<p>La raison tient à l'orchestrateur. Un conteneur qui sort en erreur est relancé, et les échecs répétés
+mènent à un <code>CrashLoopBackOff</code> dont le délai double jusqu'à cinq minutes : un serveur d'identité en
+retard de quatre minutes rendait l'API indisponible bien plus longtemps que lui. Répondre 503 sur
+<code>/health/ready</code> obtient le même résultat — aucun trafic — sans redémarrage, et l'instance rejoint le
+service d'elle-même dès qu'elle obtient ses clés.</p>
+<p>Le cas vérifie donc désormais l'inverse : l'hôte démarre, <code>/health</code> répond 200, <code>/health/ready</code>
+répond 503 en nommant <code>cles-de-signature</code>. Il conserve la fabrique éphémère, avec
+<code>IntegrationFactory.AvecPrechargementCourt(2)</code> : sans elle, il attendrait les 60 secondes que le
+préchargement accorde avant de renoncer.</p>
+<blockquote>
+<p><strong>Deux contraintes de xUnit sur les fixtures de collection</strong>, découvertes en ajoutant ce paramètre :
+elles n'acceptent <strong>qu'un seul constructeur public</strong>, et il doit être <strong>sans paramètre</strong> — même
+optionnel, xUnit ne résout aucun argument. Les deux erreurs se manifestent de la même façon : les
+37 tests échouent en une centaine de millisecondes, sur un message de fixture. D'où la méthode
+statique <code>AvecPrechargementCourt</code>, qui appelle un constructeur privé.</p>
+</blockquote>
 <hr />
 <h2 id="7-les-ecarts-assumes">7. Les écarts assumés<a class="headerlink" href="#7-les-ecarts-assumes" title="Permanent link">&para;</a></h2>
 <p><strong>Le test de violation d unicité ne porte pas sur <code>weight_entries</code>.</strong> Le cas visait deux <code>WeightEntry</code> à la même
@@ -2867,8 +2916,13 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.</
 </table>
 <hr />
 <h2 id="10-etat">10. État<a class="headerlink" href="#10-etat" title="Permanent link">&para;</a></h2>
-<p><strong>33 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-01 : <code>Réussi! - échec : 0, réussite : 33,
-ignorée(s) : 0, total : 33</code> en 1 min 51. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).</p>
+<p><strong>37 tests, tous verts, aucun ignoré.</strong> Vérifié le 2026-08-02 : <code>Réussi! - échec : 0, réussite : 37,
+ignorée(s) : 0, total : 37</code> en 2 min 13. Les niveaux 1 et 2 restent verts — 709 tests (600 et 109).</p>
+<p>Les quatre derniers viennent de <code>Startup/HealthProbeTest.cs</code> (NTR-174) : pile complète, sondes
+anonymes, serveur d'identité coupé alors que les clés sont en cache, cache coupé. Le cinquième cas
+des sondes — démarrage à froid sans serveur d'identité — reste dans <code>KeycloakOutageTest</code>, qui possède
+déjà la fabrique éphémère nécessaire ; le dupliquer aurait coûté un second cycle d'arrêt et de
+redémarrage de Keycloak pour la même preuve.</p>
 
 
 
