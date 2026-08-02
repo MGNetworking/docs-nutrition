@@ -30,13 +30,16 @@ Plusieurs briques produisent déjà de la donnée d'observabilité, sans qu'elle
 | `traceId` (NTR-135) | identifiant par requête dans les `ProblemDetails` | rien pour l'exploiter |
 | `JobMonitoringService` | dernière exécution, prochaine, état des jobs | lisible seulement via `GET /admin/system/health` |
 | Sortie des journaux | console | **en K3s, tout disparaît au redémarrage d'un pod** |
-| Requêtes SQL | rien | une requête lente est indétectable |
-| Métriques | rien | — |
-| Traces | rien | — |
+| Requêtes SQL (NTR-140) | chaque commande, avec sa durée, dans la trace | le seuil de lenteur et sa journalisation dédiée |
+| Métriques (NTR-140) | durées et taux d'erreur HTTP, entrants et sortants | cache, jobs et pool de connexions |
+| Traces (NTR-140) | l'arbre complet d'une requête, API comprise | rien à instrumenter — il manque une destination |
 
 > **Le point le plus dur est la dernière ligne du haut.** Sans collecteur, un incident passé est
 > irrécupérable : le pod redémarre, les journaux sont perdus. Toute la valeur de l'epic tient à
 > cette bascule.
+>
+> Les trois dernières lignes ont changé avec NTR-140 : la donnée existe désormais, mais elle n'est
+> envoyée nulle part tant que le §5 n'est pas tranché.
 
 ## 3. Les cinq volets
 
@@ -90,6 +93,25 @@ utilisateur signale une erreur, l'identifiant mène directement à la trace comp
 Ce dernier point est décisif tant que la décision du §5 reste ouverte : le volet 4 peut être livré
 **avant** que le backend soit choisi.
 
+**Ce qui est en place.** `AddObservability`, appelé depuis `Program.cs` après `AddInfrastructure`,
+enregistre le fournisseur, l'identité du service et les instrumentations. Rien n'est mesuré à la
+main : ASP.NET Core, `HttpClient`, Npgsql et StackExchange.Redis émettaient déjà ces événements,
+personne ne les écoutait.
+
+| Réglage | Rôle |
+|---|---|
+| `OpenTelemetry:ServiceName` | Nom porté par chaque mesure — sans lui, un collecteur recevant plusieurs applications ne sait pas laquelle a émis |
+| `OpenTelemetry:OtlpEndpoint` | Adresse du collecteur. **Vide** : les mesures sont produites puis abandonnées, sans erreur |
+| `OpenTelemetry:ConsoleExporter` | Sortie console, activée en développement uniquement |
+
+L'attribut `deployment.environment` vient de l'hôte, non d'une valeur écrite en dur : c'est lui qui
+distinguera une mesure de production d'une mesure de recette une fois collectées côte à côte.
+
+Deux choix méritent d'être connus. Les **sondes de santé sont exclues des traces** — le kubelet les
+interroge en continu et noierait tout le reste sous leur volume. Les **journaux n'ont pas de sortie
+console** : le logger d'ASP.NET Core écrit déjà là, les doubler rendrait la console illisible ; leur
+format et leur enrichissement relèvent de NTR-137.
+
 ### Volet 5 — Observabilité de la base de données (NTR-141)
 
 | Sujet | Détail |
@@ -138,8 +160,10 @@ et sensibilité des données qui transiteraient par un tiers.
 
 | Marque | Élément |
 |---|---|
+| ✅ | Le socle OpenTelemetry est enregistré et porte l'identité du service — quatre cas de niveau 2 (NTR-140) |
+| ⚠️ | Les instrumentations HTTP, SQL et Redis sont branchées, mais **aucune trace ni métrique n'a été constatée de bout en bout** : rien ne les reçoit encore |
 | ⚠️ | `RequestLoggingMiddleware` et `JobMonitoringService` produisent de la donnée exploitable — vérifié par tests, mais rien ne la collecte |
-| ❌ | Journaux structurés, métriques, traces, instrumentation OpenTelemetry, supervision de la base |
+| ❌ | Journaux structurés, métriques métier, supervision de la base |
 | ❌ | Conservation des journaux après redémarrage d'un pod |
 
 ## 8. Où creuser

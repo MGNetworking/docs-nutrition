@@ -170,7 +170,7 @@ dans git. Provisionnement : NTR-125.
 > que ceux qui la traversent — dépôts EF Core, cache Redis — sont précisément de niveau 3. Le job
 > `coverage` dépend des deux autres, ce qui donne un chiffre unique.
 
-> **État au 2026-08-02** — 757 tests, aucun ignoré : 611 au niveau 1, 109 au niveau 2, 37 au
+> **État au 2026-08-02** — 761 tests, aucun ignoré : 611 au niveau 1, 113 au niveau 2, 37 au
 > niveau 3. Le niveau 3 est exécuté par `./scripts/test-integration.sh`, appelé par la CI sans
 > qu'elle déclare de service propre.
 > Niveau 4 : non commencé. Son blocage historique est levé — les endpoints de santé existent depuis
