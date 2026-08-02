@@ -114,7 +114,7 @@ serveur », qui en est un et reste en 500.
   "title": "Ressource introuvable",
   "status": 404,
   "detail": "DietPlan not found.",
-  "traceId": "0HN7GK2M4V9PL:00000003"
+  "traceId": "4bf92f3577b34da6a3ce929d0e0e4736"
 }
 ```
 
@@ -123,13 +123,29 @@ serveur », qui en est un et reste en 500.
 | `type` | Identifiant **stable** du type de problème — c'est sur lui que s'appuie un client généré (NSwag, Kiota), pas sur le libellé |
 | `title` | Libellé de la catégorie, invariant pour un même statut |
 | `detail` | Message destiné à l'appelant. **Générique** pour les 500 et 503. |
-| `traceId` | `HttpContext.TraceIdentifier` |
+| `traceId` | L'identifiant de **trace** W3C — trente-deux caractères hexadécimaux |
 
 ### Pourquoi le `traceId` est indispensable
 
 Sans lui, un utilisateur signalant « j'ai eu une erreur » ne laisse **aucun moyen** de retrouver
 l'entrée de journal correspondante. Le réflexe devient alors de rendre les messages plus bavards —
 c'est-à-dire exactement ce qu'il faut éviter.
+
+### Ce qu'il contient a changé — NTR-139
+
+Jusqu'à NTR-139, ce champ portait `HttpContext.TraceIdentifier`, de la forme
+`0HN7GK2M4V9PL:00000003`. C'est l'identifiant de requête de **Kestrel** : il est propre à la
+connexion et n'apparaît dans aucune trace. Un utilisateur qui le signalait ne menait donc nulle
+part, alors que le volet 3 de l'[Observabilité](observabilite.md) en fait le point de jonction entre
+l'erreur vue par l'utilisateur et la trace serveur.
+
+Le champ porte désormais l'identifiant de trace W3C, celui-là même qui figure dans les traces
+envoyées au collecteur. **Le repli reste l'identifiant Kestrel** lorsqu'aucune trace n'est en cours
+— observabilité désactivée, ou appel hors pipeline HTTP : mieux vaut un identifiant qui ne mène
+qu'aux journaux que pas d'identifiant du tout.
+
+> Un client qui analyserait la forme de ce champ est concerné. Rien dans l'API ne le documentait
+> comme stable, et il reste opaque — mais il a changé de longueur et d'alphabet.
 
 L'identifiant est opaque : il n'a aucune valeur pour un attaquant, et c'est lui qui **permet** de
 garder les messages muets.
@@ -216,6 +232,7 @@ Un 503 y serait disproportionné : le service rend le résultat attendu. Mais l'
 |---|---|
 | ✅ | Les sept traductions — 16 tests unitaires dans `ExceptionMiddlewareTest` |
 | ✅ | `traceId`, `title` et `type` présents dans toute réponse d'erreur |
+| ✅ | Le `traceId` publié est celui de la trace, et non l'identifiant Kestrel — un cas de niveau 1 pour chaque branche, et un cas de niveau 3 qui compare l'identifiant publié à la trace réellement produite (NTR-139) |
 | ✅ | Aucune fuite de message interne en 500, ni de nom de dépendance en 503 |
 | ✅ | Discrimination des échecs PostgreSQL — 5 tests sur `DatabaseExceptionInterceptor.Translate` |
 | ✅ | Keycloak injoignable et délai dépassé — 2 tests |

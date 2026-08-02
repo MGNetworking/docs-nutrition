@@ -466,11 +466,17 @@ d'exécution des middlewares n'existe qu'à l'exécution d'une vraie requête.
 
 ## 10. État
 
-**37 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-02 : `Réussi! - échec : 0, réussite : 37,
-ignorée(s) : 0, total : 37` en 2 min 13. Les niveaux 1 et 2 restent verts — **733 tests** (620 et 113),
+**39 tests, tous verts, aucun ignoré.** Vérifié le 2026-08-02 : `Réussi! - échec : 0, réussite : 39,
+ignorée(s) : 0, total : 39` en 3 min 04. Les niveaux 1 et 2 restent verts — **734 tests** (621 et 113),
 les onze derniers couvrant les branches d'échec des sondes de santé, ajoutées le 2026-08-02, les
-quatre suivants le socle OpenTelemetry (NTR-140) et les neuf derniers les métriques du cache et des
-jobs (NTR-138).
+quatre suivants le socle OpenTelemetry (NTR-140), les neuf derniers les métriques du cache et des
+jobs (NTR-138), et le dernier le repli du `traceId` (NTR-139).
+
+Les **deux tests ajoutés à ce niveau** viennent de `Observability/TraceCorrelationTest.cs`
+(NTR-139) : une requête réelle produit un arbre dont toutes les étapes partagent un identifiant, et
+l'identifiant publié dans une réponse d'erreur est celui de la trace correspondante. Ce niveau est
+le seul où la question se pose — ailleurs, PostgreSQL et Redis sont doublés, aucune commande réelle
+n'est émise et l'arbre serait vide.
 
 Les quatre derniers viennent de `Startup/HealthProbeTest.cs` (NTR-174) : pile complète, sondes
 anonymes, serveur d'identité coupé alors que les clés sont en cache, cache coupé. Le cinquième cas

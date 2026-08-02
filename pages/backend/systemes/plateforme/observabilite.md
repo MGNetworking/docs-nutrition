@@ -27,7 +27,7 @@ Plusieurs briques produisent déjà de la donnée d'observabilité, sans qu'elle
 |---|---|---|
 | `RequestLoggingMiddleware` (NTR-121) | méthode, route, statut, **durée** par requête | c'est une métrique, traitée comme du texte |
 | `ExceptionMiddleware` | journalisation des erreurs | aucune corrélation entre l'erreur vue par l'utilisateur et la trace serveur |
-| `traceId` (NTR-135) | identifiant par requête dans les `ProblemDetails` | rien pour l'exploiter |
+| `traceId` (NTR-135, NTR-139) | l'identifiant de trace W3C dans les `ProblemDetails` | un collecteur où aller le chercher |
 | `JobMonitoringService` | dernière exécution, prochaine, état des jobs | lisible seulement via `GET /admin/system/health` |
 | Sortie des journaux | console | **en K3s, tout disparaît au redémarrage d'un pod** |
 | Requêtes SQL (NTR-140) | chaque commande, avec sa durée, dans la trace | le seuil de lenteur et sa journalisation dédiée |
@@ -98,6 +98,23 @@ cause.
 
 Le `traceId` livré par NTR-135 dans les `ProblemDetails` devient ici le **point de jonction** : un
 utilisateur signale une erreur, l'identifiant mène directement à la trace complète.
+
+**Ce qui a été fait, et ce qui l'était déjà.** L'arbre lui-même venait du volet 4 : la propagation
+du contexte et l'instrumentation des appels sortants sont des conséquences de l'instrumentation
+automatique, non un travail propre à ce volet.
+
+Restait le point de jonction — et il ne fonctionnait pas. Le champ `traceId` portait
+`HttpContext.TraceIdentifier`, l'identifiant de requête de **Kestrel**, propre à la connexion et
+absent de toute trace. L'utilisateur signalait un jeton qui ne menait nulle part. Il porte désormais
+l'identifiant de trace W3C, avec repli sur l'identifiant Kestrel quand aucune trace n'est en cours.
+
+Deux cas de niveau 3 l'éprouvent contre PostgreSQL et Redis réels : une requête produit bien un
+arbre dont toutes les étapes partagent un identifiant, et l'identifiant publié dans une réponse
+d'erreur est celui de la trace correspondante. Ce niveau est le seul où la question se pose —
+ailleurs, les dépendances sont doublées et l'arbre serait vide.
+
+➜ Voir [Exception Filter](exception-filter.md) pour la forme du champ et ce que son changement
+implique pour un client.
 
 ### Volet 4 — Socle OpenTelemetry (NTR-140)
 
@@ -179,8 +196,9 @@ et sensibilité des données qui transiteraient par un tiers.
 |---|---|
 | ✅ | Le socle OpenTelemetry est enregistré et porte l'identité du service — quatre cas de niveau 2 (NTR-140) |
 | ✅ | Le compteur du cache distingue succès, défaut et panne, et la durée des jobs est enregistrée en secondes avec son issue — neuf cas de niveau 1 (NTR-138) |
+| ✅ | L'arbre d'une requête réelle et la jonction par le `traceId` — deux cas de niveau 3 contre PostgreSQL et Redis (NTR-139) |
 | ⚠️ | Le **filtre Hangfire** n'est éprouvé qu'indirectement : aucun test ne fait exécuter un vrai job pour vérifier qu'il mesure |
-| ⚠️ | Les instrumentations HTTP, SQL et Redis sont branchées, mais **aucune trace ni métrique n'a été constatée de bout en bout** : rien ne les reçoit encore |
+| ⚠️ | Les **métriques** n'ont été constatées qu'à la source : aucune n'a encore atteint un collecteur |
 | ⚠️ | `RequestLoggingMiddleware` et `JobMonitoringService` produisent de la donnée exploitable — vérifié par tests, mais rien ne la collecte |
 | ❌ | Journaux structurés, supervision de la base |
 | ❌ | Conservation des journaux après redémarrage d'un pod |
