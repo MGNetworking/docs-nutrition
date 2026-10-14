@@ -36,10 +36,10 @@ réimporté à chaque recréation du conteneur, ce qui garantit un environnement
 ```
 nutrition-api/
 ├── docker-compose.yml            ← 3 services + profil « full »
-├── Dockerfile.migrations         ← conteneur one-shot des migrations EF Core
-├── seed-dev.sql                  ← données métier de développement
-├── keycloak/
-│   └── realm-export.json         ← realm, client, rôles, comptes de test
+├── dev/
+│   ├── seed-dev.sql              ← données métier de développement
+│   └── keycloak/
+│       └── realm-export.json     ← realm, client, rôles, comptes de test
 ├── scripts/
 │   ├── lib.sh                    ← fonctions partagées, sourcé par les autres
 │   ├── dev-up.sh                 ← démarre les services, migre, seede
@@ -47,9 +47,16 @@ nutrition-api/
 │   ├── dev-reset.sh              ← remet à zéro (supprime les volumes)
 │   ├── docker-up.sh              ← stack complète, API conteneurisée
 │   └── test-integration.sh       ← même pile + tests de niveau 3
-└── src/NutritionApi.Api/
-    └── Dockerfile                ← image de l'API
+└── src/
+    ├── NutritionApi.Api/
+    │   └── Dockerfile            ← image de l'API
+    └── NutritionApi.Infrastructure/
+        └── Dockerfile.migrations ← conteneur one-shot des migrations EF Core
 ```
+
+> Arborescence mise à jour le 2026-10-14 (NTR-195) : le jeu de données et le realm Keycloak sont
+> regroupés dans `dev/`, et `Dockerfile.migrations` vit désormais dans le projet Infrastructure,
+> qui porte les migrations.
 
 > Il n'y a **ni fichier `.env`, ni dossier `infra/`** : les valeurs de développement sont écrites
 > directement dans `docker-compose.yml` (elles ne sont pas des secrets) et la configuration de
@@ -134,7 +141,7 @@ terminées avec succès** et Redis et Keycloak déclarés sains.
 | `test-pro` | `user` | Pro |
 | `test-admin` | `admin` | Free |
 
-Mot de passe commun : `test`. Ces comptes sont définis dans `keycloak/realm-export.json` et
+Mot de passe commun : `test`. Ces comptes sont définis dans `dev/keycloak/realm-export.json` et
 leurs profils correspondants sont créés par `seed-dev.sql`.
 
 ### Points d'attention
@@ -195,9 +202,9 @@ K3s cluster (projet infra séparé)
 
 ```
 nutrition-api/
-├── src/NutritionApi.Api/Dockerfile   ✅ existe (image de l'API)
-├── Dockerfile.migrations             ✅ existe (migrations one-shot)
-└── infra/                            🔲 à créer
+├── src/NutritionApi.Api/Dockerfile                          ✅ existe (image de l'API)
+├── src/NutritionApi.Infrastructure/Dockerfile.migrations    ✅ existe (migrations one-shot)
+└── infra/                                                   🔲 à créer
     └── k8s/
         ├── configmap.yaml
         ├── secret.yaml.example

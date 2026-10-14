@@ -137,7 +137,7 @@ Le partage se fait donc par nature de valeur :
 
 ## 4 ter. Le realm est la source de vérité
 
-`RealmExport` lit `keycloak/realm-export.json`, copié dans la sortie de compilation. **Aucun compte,
+`RealmExport` lit `dev/keycloak/realm-export.json`, copié dans la sortie de compilation. **Aucun compte,
 identifiant, mot de passe ou secret n'est ressaisi dans les fixtures.**
 
 ```csharp
@@ -150,7 +150,7 @@ public static string RequireClient(string clientId);
 Avant, ces valeurs existaient à trois endroits : l'export du realm, les fixtures, et `seed-dev.sql`.
 Un renommage de compte laissait les tests interroger un identifiant obsolète, sans que rien ne le
 signale avant l'échec. Désormais l'erreur est explicite — « le compte *x* n'existe pas dans
-keycloak/realm-export.json ».
+dev/keycloak/realm-export.json ».
 
 **Trois clients de test** y sont déclarés, en plus de `nutrition-api` et du service account :
 

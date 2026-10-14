@@ -10,7 +10,7 @@
 > | ✅ | `KeycloakAdminService` et `KeycloakTokenProvider` sont implémentés et couverts par 22 tests unitaires (NTR-133) |
 > | ✅ | `RgpdPurgeJob` consomme `DeleteUserAsync` (NTR-56) |
 > | 🔲 | `RgpdService` n'appelle pas encore `DisableUserAsync` / `EnableUserAsync` — la désactivation au moment de la demande de suppression n'est donc pas effective |
-> | ✅ | Le client de service `nutrition-api-service` est déclaré dans `keycloak/realm-export.json` — créé automatiquement à l'import du realm (2026-07-30) |
+> | ✅ | Le client de service `nutrition-api-service` est déclaré dans `dev/keycloak/realm-export.json` — créé automatiquement à l'import du realm (2026-07-30) |
 > | ✅ | Le flux complet est éprouvé au niveau 3 : le test crée un compte jetable, lance la purge, et vérifie sa disparition de Keycloak **et** de la base |
 > | ✅ | L'application refuse de démarrer si l'un des quatre paramètres d'administration est vide — `KeycloakAdminConfigurationValidator` (NTR-149, 2026-07-31) |
 
@@ -75,7 +75,7 @@ Le service token est obtenu à la demande et mis en cache jusqu'à expiration (T
 ## Configuration côté Keycloak
 
 > **En développement, rien de tout cela n'est à faire à la main.** Le client, son service account et
-> ses rôles sont déclarés dans `keycloak/realm-export.json` : le realm les crée à l'import, à chaque
+> ses rôles sont déclarés dans `dev/keycloak/realm-export.json` : le realm les crée à l'import, à chaque
 > recréation du conteneur. Le secret de développement y figure en clair, ce realm étant jetable.
 >
 > Les trois étapes ci-dessous décrivent la création manuelle — utile pour un realm de recette ou de
@@ -193,7 +193,7 @@ délégué s'applique après le `ConfigureWebHost` de la fabrique. `CreateClient
 démarrage de l'hôte, et c'est là que l'échec se produit.
 
 > La fabrique de niveau 3 injecte par ailleurs `AdminBaseUrl`, `Realm` et `ServiceClientSecret`
-> depuis `keycloak/realm-export.json`, et `ServiceClientId` porte sa valeur par défaut
+> depuis `dev/keycloak/realm-export.json`, et `ServiceClientId` porte sa valeur par défaut
 > d'`appsettings.json` : les 23 autres cas du niveau démarrent donc normalement.
 
 ### Le contrat — `IKeycloakAdminService`
