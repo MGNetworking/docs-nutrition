@@ -13,7 +13,6 @@ docs-nutrition/                         ← racine du repo (ce dépôt)
 ├── README.md                           ← ce fichier
 ├── mkdocs.yml                          ← configuration MkDocs (nav, thème, plugins)
 ├── requirements.txt                    ← dépendances Python du site
-├── jira-registry.json                  ← registre des imports Jira (ne pas modifier manuellement)
 ├── .gitignore
 ├── .github/
 │   └── workflows/
