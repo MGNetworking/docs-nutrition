@@ -2760,10 +2760,10 @@ réimporté à chaque recréation du conteneur, ce qui garantit un environnement
 <h3 id="fichiers-reels">Fichiers réels<a class="headerlink" href="#fichiers-reels" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code>nutrition-api/
 ├── docker-compose.yml            ← 3 services + profil « full »
-├── Dockerfile.migrations         ← conteneur one-shot des migrations EF Core
-├── seed-dev.sql                  ← données métier de développement
-├── keycloak/
-│   └── realm-export.json         ← realm, client, rôles, comptes de test
+├── dev/
+│   ├── seed-dev.sql              ← données métier de développement
+│   └── keycloak/
+│       └── realm-export.json     ← realm, client, rôles, comptes de test
 ├── scripts/
 │   ├── lib.sh                    ← fonctions partagées, sourcé par les autres
 │   ├── dev-up.sh                 ← démarre les services, migre, seede
@@ -2771,10 +2771,16 @@ réimporté à chaque recréation du conteneur, ce qui garantit un environnement
 │   ├── dev-reset.sh              ← remet à zéro (supprime les volumes)
 │   ├── docker-up.sh              ← stack complète, API conteneurisée
 │   └── test-integration.sh       ← même pile + tests de niveau 3
-└── src/NutritionApi.Api/
-    └── Dockerfile                ← image de l&#39;API
+└── src/
+    ├── NutritionApi.Api/
+    │   └── Dockerfile            ← image de l&#39;API
+    └── NutritionApi.Infrastructure/
+        └── Dockerfile.migrations ← conteneur one-shot des migrations EF Core
 </code></pre></div>
 <blockquote>
+<p>Arborescence mise à jour le 2026-10-14 (NTR-195) : le jeu de données et le realm Keycloak sont
+regroupés dans <code>dev/</code>, et <code>Dockerfile.migrations</code> vit désormais dans le projet Infrastructure,
+qui porte les migrations.</p>
 <p>Il n'y a <strong>ni fichier <code>.env</code>, ni dossier <code>infra/</code></strong> : les valeurs de développement sont écrites
 directement dans <code>docker-compose.yml</code> (elles ne sont pas des secrets) et la configuration de
 l'API vit dans <code>appsettings.Development.json</code> / <code>appsettings.Docker.json</code>.</p>
@@ -2948,7 +2954,7 @@ non-admin, spec bien générée) — leur contenu n'y est pas exploitable.</p>
 </tr>
 </tbody>
 </table>
-<p>Mot de passe commun : <code>test</code>. Ces comptes sont définis dans <code>keycloak/realm-export.json</code> et
+<p>Mot de passe commun : <code>test</code>. Ces comptes sont définis dans <code>dev/keycloak/realm-export.json</code> et
 leurs profils correspondants sont créés par <code>seed-dev.sql</code>.</p>
 <h3 id="points-dattention">Points d'attention<a class="headerlink" href="#points-dattention" title="Permanent link">&para;</a></h3>
 <p><strong>Les migrations ne sont jamais appliquées au démarrage de l'application.</strong> Elles passent par
@@ -2993,9 +2999,9 @@ sont les deux Dockerfile (API et migrations).</p>
 <p><strong>État au 2026-07-23</strong> — le <code>Dockerfile</code> <strong>existe déjà</strong> ; les manifests K8s restent à créer.</p>
 </blockquote>
 <div class="language-text highlight"><pre><span></span><code>nutrition-api/
-├── src/NutritionApi.Api/Dockerfile   ✅ existe (image de l&#39;API)
-├── Dockerfile.migrations             ✅ existe (migrations one-shot)
-└── infra/                            🔲 à créer
+├── src/NutritionApi.Api/Dockerfile                          ✅ existe (image de l&#39;API)
+├── src/NutritionApi.Infrastructure/Dockerfile.migrations    ✅ existe (migrations one-shot)
+└── infra/                                                   🔲 à créer
     └── k8s/
         ├── configmap.yaml
         ├── secret.yaml.example

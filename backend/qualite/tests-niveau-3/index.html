@@ -2555,7 +2555,7 @@ empilée après celle de l'hôte. Les tests de niveau 2 se mettraient à viser l
 </table>
 <hr />
 <h2 id="4-ter-le-realm-est-la-source-de-verite">4 ter. Le realm est la source de vérité<a class="headerlink" href="#4-ter-le-realm-est-la-source-de-verite" title="Permanent link">&para;</a></h2>
-<p><code>RealmExport</code> lit <code>keycloak/realm-export.json</code>, copié dans la sortie de compilation. <strong>Aucun compte,
+<p><code>RealmExport</code> lit <code>dev/keycloak/realm-export.json</code>, copié dans la sortie de compilation. <strong>Aucun compte,
 identifiant, mot de passe ou secret n'est ressaisi dans les fixtures.</strong></p>
 <div class="language-csharp highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">SubjectOf</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">username</span><span class="p">);</span><span class="w">   </span><span class="c1">// le sub que porteront ses jetons</span>
 <span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">PasswordOf</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">username</span><span class="p">);</span>
@@ -2565,7 +2565,7 @@ identifiant, mot de passe ou secret n'est ressaisi dans les fixtures.</strong></
 <p>Avant, ces valeurs existaient à trois endroits : l'export du realm, les fixtures, et <code>seed-dev.sql</code>.
 Un renommage de compte laissait les tests interroger un identifiant obsolète, sans que rien ne le
 signale avant l'échec. Désormais l'erreur est explicite — « le compte <em>x</em> n'existe pas dans
-keycloak/realm-export.json ».</p>
+dev/keycloak/realm-export.json ».</p>
 <p><strong>Trois clients de test</strong> y sont déclarés, en plus de <code>nutrition-api</code> et du service account :</p>
 <table>
 <thead>

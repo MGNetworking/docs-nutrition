@@ -1156,7 +1156,7 @@
 </tr>
 <tr>
 <td>✅</td>
-<td>Le client de service <code>nutrition-api-service</code> est déclaré dans <code>keycloak/realm-export.json</code> — créé automatiquement à l'import du realm (2026-07-30)</td>
+<td>Le client de service <code>nutrition-api-service</code> est déclaré dans <code>dev/keycloak/realm-export.json</code> — créé automatiquement à l'import du realm (2026-07-30)</td>
 </tr>
 <tr>
 <td>✅</td>
@@ -1255,7 +1255,7 @@ API → Keycloak Admin API
 <h2 id="configuration-cote-keycloak">Configuration côté Keycloak<a class="headerlink" href="#configuration-cote-keycloak" title="Permanent link">¶</a></h2>
 <blockquote>
 <p><strong>En développement, rien de tout cela n'est à faire à la main.</strong> Le client, son service account et
-ses rôles sont déclarés dans <code>keycloak/realm-export.json</code> : le realm les crée à l'import, à chaque
+ses rôles sont déclarés dans <code>dev/keycloak/realm-export.json</code> : le realm les crée à l'import, à chaque
 recréation du conteneur. Le secret de développement y figure en clair, ce realm étant jetable.</p>
 <p>Les trois étapes ci-dessous décrivent la création manuelle — utile pour un realm de recette ou de
 production, où le secret ne doit jamais être versionné.</p>
@@ -1399,7 +1399,7 @@ délégué s'applique après le <code>ConfigureWebHost</code> de la fabrique. <c
 démarrage de l'hôte, et c'est là que l'échec se produit.</p>
 <blockquote>
 <p>La fabrique de niveau 3 injecte par ailleurs <code>AdminBaseUrl</code>, <code>Realm</code> et <code>ServiceClientSecret</code>
-depuis <code>keycloak/realm-export.json</code>, et <code>ServiceClientId</code> porte sa valeur par défaut
+depuis <code>dev/keycloak/realm-export.json</code>, et <code>ServiceClientId</code> porte sa valeur par défaut
 d'<code>appsettings.json</code> : les 23 autres cas du niveau démarrent donc normalement.</p>
 </blockquote>
 <h3 id="le-contrat-ikeycloakadminservice">Le contrat — <code>IKeycloakAdminService</code><a class="headerlink" href="#le-contrat-ikeycloakadminservice" title="Permanent link">¶</a></h3>
